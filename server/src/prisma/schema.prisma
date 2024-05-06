@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+model Categories {
+  id          Int             @id @default(autoincrement())
+  title       String          @db.VarChar(255)
+  Products    Products[]
+  Subcategory Subcategories[]
+}
+
+model Subcategories {
+  id          Int         @id @default(autoincrement())
+  title       String      @db.VarChar(255)
+  categories  Categories? @relation(fields: [category_id], references: [id])
+  category_id Int?
+  Products    Products[]
+}
+
+model Brands {
+  id       Int        @id @default(autoincrement())
+  title    String     @db.VarChar(255)
+  Products Products[]
+}
+
+model Products {
+  id             Int            @id @default(autoincrement())
+  title          String         @db.VarChar(255)
+  description    String         @db.Text
+  price          Int            @db.Integer
+  discount       Int?           @db.Integer
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  status         String         @default("in stock") @db.VarChar(20)
+  category       Categories?    @relation(fields: [category_id], references: [id])
+  category_id    Int?
+  subcategory    Subcategories? @relation(fields: [subcategory_id], references: [id])
+  subcategory_id Int?
+  brand          Brands?        @relation(fields: [brand_id], references: [id])
+  brand_id       Int?
+  Cart           Cart[]
+  Wishlist       Wishlist[]
+  Reviews        Reviews[]
+  Orders         Orders[]
+}
+
+model Cart {
+  id         Int       @id @default(autoincrement())
+  user_token String    @db.Text
+  amount     Int       @db.Integer
+  product    Products? @relation(fields: [product_id], references: [id])
+  product_id Int?
+}
+
+model Wishlist {
+  id         Int       @id @default(autoincrement())
+  user_token String    @db.Text
+  product    Products? @relation(fields: [product_id], references: [id])
+  product_id Int?
+}
+
+model Users {
+  id       Int       @id @default(autoincrement())
+  login    String    @unique @db.VarChar(255)
+  email    String    @unique @db.VarChar(255)
+  password String    @db.Text
+  role     String    @default("user") @db.VarChar(20)
+  Reviews  Reviews[]
+  Orders   Orders[]
+}
+
+model Reviews {
+  id         Int       @id @default(autoincrement())
+  rating     Int       @default(0)
+  text       String?   @db.Text
+  user       Users?    @relation(fields: [user_id], references: [id])
+  user_id    Int?
+  product    Products? @relation(fields: [product_id], references: [id])
+  product_id Int?
+}
+
+model Orders {
+  id         Int       @id @default(autoincrement())
+  amount     Int       @db.Integer
+  price      Int       @db.Integer
+  status     String    @default("in progres") @db.VarChar(50)
+  user       Users?    @relation(fields: [user_id], references: [id])
+  user_id    Int?
+  product    Products? @relation(fields: [product_id], references: [id])
+  product_id Int?
+}

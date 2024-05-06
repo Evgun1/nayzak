@@ -1,0 +1,36 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: comforty-db
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+    volumes:
+      - ./docker/postgres:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - comforty
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: comforty-pg-admin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - ./docker/pgadmin:/var/lib/pgadmin
+    ports:
+      - "5051:80"
+    networks:
+      - comforty
+    restart: unless-stopped
+    user: "${UID}:${GID}"
+
+networks:
+  comforty:
+    driver: bridge

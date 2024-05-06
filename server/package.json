@@ -1,0 +1,26 @@
+{
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "create-faker-data": "tsx src/tools/create-faker-data.ts",
+    "delete-faker-data": "tsx src/tools/delete-faker-data.ts",
+    "drop-tables": "tsx src/tools/drop-tables.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.9.0",
+    "@prisma/client": "^5.12.1",
+    "dotenv": "^16.4.5",
+    "hono": "^4.2.1",
+    "pg": "^8.11.5",
+    "postgres": "^3.4.4"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@types/faker": "^6.6.9",
+    "@types/node": "^20.12.4",
+    "prisma": "^5.12.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.3"
+  },
+  "type": "module"
+}
