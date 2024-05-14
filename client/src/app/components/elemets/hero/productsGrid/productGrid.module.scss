@@ -1,0 +1,12 @@
+.wrapper {
+  display: grid;
+  gap: 52px;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    gap: 12px;
+
+  }
+}

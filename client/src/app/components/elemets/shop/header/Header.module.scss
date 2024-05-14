@@ -1,0 +1,18 @@
+.header {
+  display: grid;
+  gap: 12px;
+  align-items: center;
+  background: no-repeat
+    url("https://s3-alpha-sig.figma.com/img/0abd/095c/294acd8a59edb9d0a61acf0b2a05d53e?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=NLs2dJag3ws~lmPUeLx4pR3n4emnjEoD-P8guxIgnuxCZKf-sItHyJvvLog6fy-qe-UapKl3T6NVXXEZ6rGEn8iri32nmvjSV2B76gAgQ0S8fJukAMaBze-RT5SO4piKaowj9fQVZIfYKhFub67PEAsgRdikJOCcrVOlaPnNP4ViPkvYwGJ5jBVkqEYsqRMnRCf~MY9sebYmsUd1~U8HzI~7-9kT-ld6i2A9A8woY3iMHYiOykFlUwagfGnrksuqmWjMuO06WS~ummWCSsi8QlkbWm4Ay6xzSdNOuttcZYixnxeO12Y0Y4QG89X0Cf59I1qfuWCtoNylVky3UFyZkg__");
+  background-size: cover;
+  width: 100%;
+  min-height: 400px;
+  height: 100%;
+
+  &__block {
+    display: grid;
+    gap: 12px;
+    margin: auto;
+    max-width: 600px;
+  }
+}

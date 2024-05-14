@@ -1,0 +1,22 @@
+.item {
+  display: flex;
+  gap: 40px;
+  padding: 0;
+  margin: 0;
+
+  &__list {
+    list-style: none;
+
+    &-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--black-900);
+    }
+    &-title {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 24px;
+    }
+  }
+}

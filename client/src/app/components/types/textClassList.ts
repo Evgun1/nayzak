@@ -1,0 +1,25 @@
+export enum TextClassList {
+  REGULAR_26 = "text-regular-26",
+  REGULAR_22 = "text-regular-22",
+  REGULAR_20 = "text-regular-20",
+  REGULAR_18 = "text-regular-18",
+  REGULAR_16 = "text-regular-16",
+  REGULAR_14 = "text-regular-14",
+  REGULAR_12 = "text-regular-12",
+
+  SEMIBOLD_26 = "text-semibold-26",
+  SEMIBOLD_22 = "text-semibold-22",
+  SEMIBOLD_20 = "text-semibold-20",
+  SEMIBOLD_18 = "text-semibold-18",
+  SEMIBOLD_16 = "text-semibold-16",
+  SEMIBOLD_14 = "text-semibold-14",
+  SEMIBOLD_12 = "text-semibold-12",
+
+  BOLD_26 = "text-bold-26",
+  BOLD_22 = "text-bold-22",
+  BOLD_20 = "text-bold-20",
+  BOLD_18 = "text-bold-18",
+  BOLD_16 = "text-bold-16",
+  BOLD_14 = "text-bold-14",
+  BOLD_12 = "text-bold-12",
+}

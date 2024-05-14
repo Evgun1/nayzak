@@ -1,0 +1,15 @@
+.swiper-custom {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.swiper-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.swiper-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

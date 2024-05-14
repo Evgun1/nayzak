@@ -1,0 +1,42 @@
+.wrapper {
+  display: flex;
+  gap: 20px;
+
+  &__form {
+    display: flex;
+    overflow: hidden;
+    max-width: 255px;
+    &-input {
+      flex-grow: 1;
+    }
+  }
+
+  &__button {
+    max-width: 50px;
+    height: 28px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    gap: 2px;
+
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      padding: 5px 6px;
+      color: white;
+      background: var(--black-900);
+      border-radius: 100%;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 10px;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+.wrapper {
+  &__title {
+    text-align: left;
+  }
+}
+
+.card {
+  text-decoration: none;
+  position: relative;
+  background: url("https://placehold.co/400");
+  background-repeat: no-repeat;
+  background-size: 413px, cover;
+  background-position: center top;
+  min-height: 479px;
+  height: 100%;
+
+  &__block {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    text-align: left;
+  }
+}
+
+.swiper {
+}

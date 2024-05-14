@@ -1,0 +1,28 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  // grid-template-rows: repeat(3, 1fr);
+
+  &__block {
+    position: relative;
+    width: 100%;
+    min-height: 384px;
+    height: 100%;
+    background: url("https://placehold.co/400");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &-link {
+      text-decoration: none;
+      left: 50%;
+      bottom: 40px;
+      min-width: 204px;
+      transform: translate(-50%, 0);
+      position: absolute;
+      padding: 12px;
+      background: white;
+    }
+  }
+}

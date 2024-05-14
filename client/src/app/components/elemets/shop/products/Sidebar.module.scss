@@ -1,0 +1,27 @@
+.wrapper {
+  max-width: 310px;
+  width: 100%;
+  padding: 24px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  &__item {
+    display: grid;
+    gap: 40px;
+    text-align: left;
+
+    &-section {
+      display: grid;
+      gap: 16px;
+
+      ul {
+        display: grid;
+        gap: 12px;
+      }
+    }
+  }
+}
