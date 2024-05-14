@@ -45,8 +45,9 @@ class ProductsController {
     }
 
     const products = await prismaClient.products.findMany(option);
+    const productCounts = await prismaClient.products.count();
 
-    return c.json({ products });
+    return c.json({ products, productCounts });
   }
 }
 
