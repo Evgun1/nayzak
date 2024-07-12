@@ -1,6 +1,8 @@
 import { FC } from "react";
 import IconsIdList from "./IconsIdList";
 
+import "./style.scss";
+
 type DisplayIconProps = {
   iconName: IconsIdList;
   width?: string;
@@ -18,6 +20,7 @@ const DisplayIcon: FC<DisplayIconProps> = ({
 }) => {
   return (
     <svg
+      className={className}
       width={width ? width : "24"}
       height={height ? height : "24"}
       // style={color ? { color: `${color}` } : { color: "var(--black-900)" }}

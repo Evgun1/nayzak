@@ -24,6 +24,10 @@
     text-decoration: none;
     gap: 2px;
 
+    svg {
+      color: var(--black-900);
+    }
+
     div {
       display: flex;
       align-items: center;

@@ -40,9 +40,8 @@ const DropDown: FC<DropDownProps> = ({
 
   const buttonClickHandler: EventListener = (event) => {
     const target = event.target as HTMLElement;
-    if (!target || !btnRef) return;
+    if (!target) return;
 
-    console.log(target);
     // const { current } = btnRef as RefObject<HTMLDivElement>;
     // if (!current) return;
 

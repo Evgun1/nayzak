@@ -1,5 +1,5 @@
 import Image from "next/image";
-import NavLink from "./navlink";
+import Navigation from "./navigation";
 import Actions from "./actions";
 
 import classes from "./navigationBar.module.scss";
@@ -11,7 +11,7 @@ export default function NavigationBar() {
     <div className={classes.nav}>
       <div className={`container ${classes.nav__wrapper}`}>
         <DisplayIcon iconName={IconsIdList.LOGOTYPE} height="30" width="155" />
-        <NavLink />
+        <Navigation />
         <Actions />
       </div>
     </div>

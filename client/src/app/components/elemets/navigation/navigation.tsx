@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import classes from "./navlink.module.scss";
+import classes from "./navigation.module.scss";
 import DisplayIcon from "../../icons/displayIcon";
 import IconsIdList from "../../icons/IconsIdList";
 
@@ -26,7 +26,7 @@ const NavLink_Link_Arr = [
   },
 ];
 
-export default function NavLink() {
+export default function Navigation() {
   return (
     <ul className={classes.item}>
       {NavLink_Link_Arr &&

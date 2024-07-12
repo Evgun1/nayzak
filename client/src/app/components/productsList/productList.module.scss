@@ -1,26 +1,9 @@
-.wrapper {
-  &__products {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    row-gap: 56px;
-    column-gap: 32px;
+.grid {
+  display: grid;
+  row-gap: 56px;
+  column-gap: 32px;
+}
 
-    &-list {
-      text-decoration: none;
-      position: relative;
-      background: url("https://placehold.co/400");
-      background-repeat: no-repeat;
-      background-size: 413px, cover;
-      background-position: center top;
-      min-height: 479px;
-      height: 100%;
-    }
-    &-title {
-      position: absolute;
-      width: 100%;
-      bottom: 0;
-      left: 50%;
-      transform: translate(-50%, 0);
-    }
-  }
+.grid__home {
+  grid-template-columns: repeat(4, 1fr);
 }

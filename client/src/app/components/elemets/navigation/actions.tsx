@@ -7,17 +7,15 @@ import classes from "./actions.module.scss";
 
 import { useAppDispatch, useAppSelector } from "@/lib/redux";
 import { toggle } from "@/lib/store/popup/popup";
-import SearchPopup from "../../searchPopup/searchPopup";
 import DisplayIcon from "../../icons/displayIcon";
 import IconsIdList from "../../icons/IconsIdList";
+import { useState } from "react";
+import SearchPopup from "../../searchPopup/searchPopup";
 
-type ActionProps = {
-  amount?: number;
-};
-
-export default function Actions({ amount }: ActionProps) {
+export default function Actions() {
   const dispatch = useAppDispatch();
   const toggleSearchHandler = () => dispatch(toggle(<SearchPopup />));
+
   return (
     <div className={classes.wrapper}>
       <button
@@ -33,8 +31,7 @@ export default function Actions({ amount }: ActionProps) {
       </Link>
       <Link className={classes["wrapper__button"]} href={"/cart"}>
         <DisplayIcon iconName={IconsIdList.CART} />
-        {amount && <div>{amount}</div>}
-        {/* <div>2</div> */}
+        {/* <div>amount</div> */}
       </Link>
     </div>
   );

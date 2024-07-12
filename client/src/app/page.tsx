@@ -11,10 +11,9 @@ import Reviews from "./components/elemets/hero/reviews/Reviews";
 import classes from "./mainPage.module.scss";
 
 export default async function Home(props: PageProps) {
-  return ( 
+  return (
     <>
       <header>
-        asdfasdf
         <Banner />
       </header>
       <section className={classes.section}>

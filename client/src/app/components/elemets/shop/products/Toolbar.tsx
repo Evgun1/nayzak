@@ -18,7 +18,6 @@ import { useSearchParams } from "next/navigation";
 import { FilterContext } from "./FilterCtx";
 
 type ToolbarProps = {
-  counts: number;
 };
 
 enum TypeList {
@@ -37,15 +36,15 @@ const SELECTOR = [
   { icon: IconsIdList.LIST_COLUMS, typeList: TypeList.LIST },
 ];
 
-export default function Toolbar({ counts }: ToolbarProps) {
-  const {isActive, setIsActive } = useContext(FilterContext);
+export default function Toolbar({  }: ToolbarProps) {
+  const { isActive, setIsActive, count } = useContext(FilterContext);
 
   const btnClickFilter: MouseEventHandler = (event) => setIsActive(!isActive);
 
   return (
     <div className={classes.wrapper}>
       <div className={classes.wrapper__toolbar}>
-        <span>{counts} products</span>
+        <span>{count} products</span>
         <div className={classes["wrapper__toolbar-filter"]}>
           <button
             name="btnFilter"
@@ -106,7 +105,7 @@ const ListBtn: FC<ListBtnProps> = ({ typeList, icon }) => {
     <Link
       scroll={false}
       href={`?list_type=${typeList}`}
-      className={`${classes.selector__link} ${activeBtn ? "active" : ""}`}
+      className={`${classes.selector__link} ${activeBtn ? classes.active : ""}`}
     >
       <DisplayIcon iconName={icon} height="24" width="24" />
     </Link>

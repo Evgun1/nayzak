@@ -1,0 +1,17 @@
+.card {
+  text-decoration: none;
+
+  &__img {
+    max-width: 100%;
+    margin-bottom: 12px;
+  }
+  &__content {
+    &-title {
+      margin-bottom: 4px;
+    }
+    &-price {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

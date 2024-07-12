@@ -1,0 +1,12 @@
+.wrapper {
+  &__title {
+    display: inline-block;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+
+  &__list {
+    display: grid;
+    gap: 12px;
+  }
+}

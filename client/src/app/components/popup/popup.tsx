@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, ReactNode, useEffect, useState } from "react";
-import classes from "./Popup.module.css";
+import classes from "./Popup.module.scss";
 import { toggle } from "@/lib/store/popup/popup";
 import { useAppDispatch, useAppSelector } from "@/lib/redux";
 import { createPortal } from "react-dom";

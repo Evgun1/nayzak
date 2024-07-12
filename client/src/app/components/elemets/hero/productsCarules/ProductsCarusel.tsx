@@ -1,4 +1,5 @@
 "use client";
+
 import { ProductTypes } from "@/app/components/types/products";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Navigation, Pagination, Scrollbar } from "swiper/modules";
@@ -25,6 +26,8 @@ const ProductsCarusel = async () => {
           modules={[Navigation, Pagination]}
           spaceBetween={32}
           slidesPerView={4}
+
+          
           // navigation
           // pagination={{ clickable: true }}
           pagination={{ el: ".swiper--custom-pagnation" }}
@@ -32,10 +35,9 @@ const ProductsCarusel = async () => {
             prevEl: ".swiper-arrow-left",
             nextEl: ".swiper-arrow-right",
           }}
-          onSwiper={(swiper) => console.log(swiper)}
-          onSlideChange={() => console.log("slide change")}
+          // onSwiper={(swiper) => console.log(swiper)}
+          // onSlideChange={() => console.log("slide change")}
           className="swiper-custom"
-          
         >
           <div className="swiper-head">
             <div className={classes.wrapper__title}>

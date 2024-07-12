@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { PageProps } from "../../../.next/types/app/layout";
 import Header from "../components/elemets/shop/header/Header";
 import Products from "../components/elemets/shop/products/Products";

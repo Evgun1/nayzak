@@ -1,0 +1,54 @@
+.loop {
+  padding: 52px 0;
+  display: flex;
+  justify-content: space-between;
+
+  &__header {
+    position: relative;
+    display: grid;
+    gap: 16px;
+    padding-bottom: 24px;
+
+    &::before {
+      position: absolute;
+      content: "";
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background-color: var(--black-200);
+    }
+
+    &-info {
+      display: grid;
+      gap: 12px;
+      &_rating {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        span {
+          color: var(--black-600);
+        }
+      }
+    }
+  }
+
+  &__cart {
+    padding: 24px 0;
+  }
+
+  &__meta {
+    display: grid;
+    gap: 8px;
+    padding: 24px 0;
+
+    &-block {
+      display: grid;
+      grid-template-columns: minmax(25%, auto) 1fr;
+
+      &_title {
+        color: var(--black-500);
+      }
+    }
+  }
+}

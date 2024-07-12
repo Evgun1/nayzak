@@ -5,6 +5,7 @@ import NavigationBar from "./components/elemets/navigation/navigationBar";
 import StoreProvider from "./storeProvider";
 import IconsSprite from "./components/icons/IconsSprite";
 import Footer from "./components/elemets/footer/Footer";
+import Popup from "./components/popup/popup";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,12 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StoreProvider>
+    <StoreProvider> 
       <html lang="en">
         <body className={inter.className}>
           <div id="root">
             <div id="popup"></div>
             <div id="overlay"></div>
+              <Popup/>
             <nav>
               <NavigationBar />
             </nav>

@@ -1,0 +1,50 @@
+.wishlist {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding-bottom: 24px;
+
+  &::before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background: var(--black-300);
+    left: 0;
+    bottom: 0;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    &-img {
+      max-width: 128px;
+    }
+  }
+
+  &__btn {
+    width: 174px;
+    height: 52px;
+  }
+}
+
+.header__title {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &-btn {
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    width: max-content;
+    height: max-content;
+    background: none;
+    border: none;
+  }
+}

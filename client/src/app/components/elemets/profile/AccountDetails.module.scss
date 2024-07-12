@@ -1,0 +1,32 @@
+.account {
+  &__fields {
+    display: grid;
+    gap: 24px;
+    max-width: 652px;
+
+    &:not(:last-child) {
+      margin-bottom: 32px;
+    }
+
+    &-input {
+      border-radius: 6px;
+      border: 1px solid var(--black-300);
+      padding: 13px 16px;
+      width: 100%;
+      // max-height: 26px;
+    }
+  }
+
+  &__password {
+    max-width: 652px;
+
+    &-title {
+      margin-bottom: 32px;
+    }
+  }
+}
+
+.form_input {
+  display: grid;
+  gap: 8px;
+}

@@ -8,15 +8,15 @@ import { ProductTypes } from "@/app/components/types/products";
 import ProductList from "../../../productsList/productList";
 import DropDown from "@/app/components/dropDown/DropDown";
 import classes from "./productGrid.module.scss";
-import LoardMore from "./LoardMore";
-import { fetchProducts } from "@/app/utils/fetchProducts";
+// import LoardMore from "../../../loardMore/LoardMore";
+import { fetchProducts } from "@/app/components/utils/fetchProducts";
 
 export default async function ProductGrid(props: PageProps) {
   const urlSearchParams = new URLSearchParams(props.searchParams);
 
   const categoriesData = await fetchCategories();
   const subcategoriesData = await fetchSubcategories({ urlSearchParams });
-  const productsData = await fetchProducts({ urlSearchParams });
+  const { products } = await fetchProducts({ urlSearchParams });
 
   const urlCategoryName = urlSearchParams.get("category");
   const urlSubategoryName = urlSearchParams.get("subcategory");
@@ -48,11 +48,11 @@ export default async function ProductGrid(props: PageProps) {
               : "Subcategory"
           }
           urlQueryName="subcategory"
-          searchParams={props.searchParams}
+          searchParams={urlSearchParams}
         />
       </div>
-      <ProductList objactArray={productsData} />
-      {/* <LoardMore initialProductsCount={productsData.length} /> */}
+      <ProductList page={{ home: true }} />
+      {/* <LoardMore initialProductsCount={products.length} /> */}
     </div>
   );
 }

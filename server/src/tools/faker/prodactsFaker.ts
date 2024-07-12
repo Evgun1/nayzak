@@ -35,7 +35,6 @@ async function productsFaker() {
     const brand_id = brandsId[randomIndexBrand];
 
     const discount = Math.floor(Math.random() * 100 + 1);
-    console.log(discount);
 
     await prismaClient.products.create({
       data: {

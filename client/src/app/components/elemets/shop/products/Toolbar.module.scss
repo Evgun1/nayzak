@@ -46,7 +46,14 @@
   }
 }
 
-.selector_action {
+// .selector_action {
+//   background: var(--black-100);
+//   svg {
+//     color: var(--black-900);
+//   }
+// }
+
+.active {
   background: var(--black-100);
   svg {
     color: var(--black-900);

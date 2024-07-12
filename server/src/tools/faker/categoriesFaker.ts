@@ -3,7 +3,6 @@ import prismaClient from "../../prismaClient";
 
 async function categoriesFake() {
   for (let index = 1; index <= 4; index++) {
-    console.log(index);
     faker;
 
     await prismaClient.categories.create({
