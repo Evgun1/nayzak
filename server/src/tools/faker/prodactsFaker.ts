@@ -18,6 +18,13 @@ async function productsFaker() {
   const brandsId = resultBrnads.map((value) => value.id);
 
   for (let index = 1; index <= 100; index++) {
+    const title = faker.commerce.productName();
+    const description = faker.commerce.productDescription();
+
+    const price = parseInt(faker.commerce.price({ min: 10, max: 1000 }));
+    const discount = Math.floor(Math.random() * 100);
+    const mainPrice = discount ? price - (price * discount) / 100 : price;
+
     const randomIndexStatus = Math.floor(Math.random() * statusArr.length);
     const status = statusArr[randomIndexStatus];
 
@@ -34,15 +41,14 @@ async function productsFaker() {
     const randomIndexBrand = Math.floor(Math.random() * brandsId.length);
     const brand_id = brandsId[randomIndexBrand];
 
-    const discount = Math.floor(Math.random() * 100 + 1);
-
     await prismaClient.products.create({
       data: {
-        title: faker.commerce.productName(),
-        description: faker.commerce.productDescription(),
-        price: parseInt(faker.commerce.price({ min: 10, max: 1000 })),
+        title,
+        description,
+        price,
         status,
         discount,
+        mainPrice,
         brand_id,
         category_id,
         subcategory_id,

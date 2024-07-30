@@ -3,44 +3,44 @@ import classes from "./Price.module.scss";
 
 type PriceProps = {
   price: number;
-  discountPercentage: number;
+  mainPrice: number;
+  discount?: number;
+  style?: string;
   classOldPrice?: TextClassList;
   classBasePrice?: TextClassList;
 };
 
 export default function Price({
   price,
-  discountPercentage,
+  mainPrice,
+  style,
   classBasePrice,
   classOldPrice,
 }: PriceProps) {
-  const discount = (price - (price * discountPercentage) / 100).toFixed(2);
-
-  const mainPrice = price.toFixed(2);
   return (
-    <div className={classes.wrapper}>
-      {discount !== mainPrice && (
-        <span
+    <div className={`${style} ${classes.price}`}>
+      {mainPrice !== price && (
+        <div
           className={` ${
             classBasePrice ? classBasePrice : TextClassList.SEMIBOLD_26
-          } ${classes.wrapper__basePrice} `}
+          } ${classes["price-base--price"]}`}
         >
-          ${discount}
-        </span>
+          ${mainPrice}
+        </div>
       )}
-      <span
+      <div
         className={
-          discount !== mainPrice
-            ? `${classes.wrapper__oldPrice} ${
-                classOldPrice ? classOldPrice : TextClassList.REGULAR_16
+          mainPrice !== price
+            ? `${classOldPrice ? classOldPrice : TextClassList.REGULAR_16} ${
+                classes["price-old--price"]
               }`
-            : `${classes.wrapper__basePrice} ${
-                classBasePrice ? classBasePrice : TextClassList.SEMIBOLD_26
+            : `${classBasePrice ? classBasePrice : TextClassList.SEMIBOLD_26} ${
+                classes["price-base--price"]
               }`
         }
       >
-        ${mainPrice}
-      </span>
+        ${price}
+      </div>
     </div>
   );
 }

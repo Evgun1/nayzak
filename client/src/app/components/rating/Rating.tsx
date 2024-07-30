@@ -8,24 +8,20 @@ import classes from "./Rating.module.scss";
 type RatingProps = {
   reviewArray: ReviewsType[];
   userRating?: number;
-  width: string;
-  height: string;
 };
 
-export default function Rating({
-  reviewArray,
-  userRating,
-  height,
-  width,
-}: RatingProps) {
+export default function Rating({ reviewArray, userRating }: RatingProps) {
   let ratingSum = 0;
   reviewArray.forEach((review) => {
     ratingSum += review.rating;
   });
+
   const avarageRating = Math.floor(ratingSum / reviewArray.length);
 
   let ratingUser = 0;
   reviewArray.forEach((value) => (ratingUser = value.rating));
+
+  // console.log(avarageRating);
 
   const iconsArray: React.JSX.Element[] = [];
   for (let index = 1; index <= 5; index++) {
@@ -39,9 +35,7 @@ export default function Rating({
           <DisplayIcon
             key={index}
             iconName={IconsIdList.STAR}
-            height={height}
-            width={width}
-            className={className}
+            className={`${className} ${classes.icon}`}
           />
         );
       })()

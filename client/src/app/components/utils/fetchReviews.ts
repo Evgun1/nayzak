@@ -15,13 +15,9 @@ export const fetchReviews = async ({ id }: fetchReviewProps) => {
   const result = await res.json();
 
   const reviewsData: ReviewsType[] = result.reviews;
-  const totalReviews: number = result.totalReviews;
 
-  return { reviewsData, totalReviews };
+  return { reviewsData };
 };
-
-
-
 
 type fetchReviewProductProps = {
   params: { slug: string };

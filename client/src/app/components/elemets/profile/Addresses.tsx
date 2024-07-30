@@ -48,9 +48,8 @@ export default function Addresses() {
               <div className={TextClassList.SEMIBOLD_18}>{address.title}</div>
               <button className={classes["address__header-btn"]}>
                 <DisplayIcon
+                  className={classes.icon}
                   iconName={IconsIdList.DIT}
-                  height="20"
-                  width="20"
                 />
                 <span className={` ${ButtonClassList.BUTTON_SMALL}`}>Edit</span>
               </button>

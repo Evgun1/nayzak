@@ -35,7 +35,10 @@ export default function Navigation() {
           <li key={index} className={classes.item__list}>
             <Link className={classes["item__list-link"]} href={value.href}>
               <div className={classes["item__list-title"]}>{value.title}</div>
-              <DisplayIcon iconName={IconsIdList.CHEVRONE} />
+              <DisplayIcon
+                className={classes.icon}
+                iconName={IconsIdList.CHEVRONE}
+              />
             </Link>
           </li>
         ))}

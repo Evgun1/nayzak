@@ -1,66 +1,66 @@
-"use client";
+// "use client";
 
-import { ProductTypes } from "@/app/components/types/products";
-import { FC, MouseEventHandler, useContext, useEffect, useState } from "react";
-import { fetchProducts } from "@/app/components/utils/fetchProducts";
-import Link from "next/link";
-import { ButtonClassList } from "@/app/components/types/buttonClassList";
-import { TextClassList } from "@/app/components/types/textClassList";
+// import { ProductTypes } from "@/app/components/types/products";
+// import { FC, MouseEventHandler, useContext, useEffect, useState } from "react";
+// import { fetchProducts } from "@/app/components/utils/fetchProducts";
+// import Link from "next/link";
+// import { ButtonClassList } from "@/app/components/types/buttonClassList";
+// import { TextClassList } from "@/app/components/types/textClassList";
 
-import classes from "../../../productsList/productList.module.scss";
-import ProductList from "@/app/components/productsList/productList";
-import page from "@/app/shop/page";
-import { PageProps } from "../../../../.next/types/app/layout";
-import { FilterContext } from "../elemets/shop/products/FilterCtx";
+// import classes from "../../../productsList/productList.module.scss";
+// import ProductList from "@/app/components/productsList/productList";
+// import page from "@/app/shop/page";
+// import { PageProps } from "../../../../.next/types/app/layout";
+// import { FilterContext } from "../elemets/shop/products/FilterCtx";
 
-type LoadMorePropd = {
-  // initialProductsCount: number;
-  // searchParams: URLSearchParams;
-};
-
-// type RESPONSEdATA = {
-//   products: ProductTypes[];
-//   productCounts: number;
+// type LoadMorePropd = {
+//   // initialProductsCount: number;
+//   // searchParams: URLSearchParams;
 // };
 
-const LoardMore: FC<LoadMorePropd> = (
-  {
-    // initialProductsCount,
-    // searchParams,
-  }
-) => {
-  const { productsArray, setPoductsArray, count, setCount } =
-    useContext(FilterContext);
-  const limit = 8;
+// // type RESPONSEdATA = {
+// //   products: ProductTypes[];
+// //   productCounts: number;
+// // };
 
-  // searchParams.append("limit", "2");
+// const LoardMore: FC<LoadMorePropd> = (
+//   {
+//     // initialProductsCount,
+//     // searchParams,
+//   }
+// ) => {
+//   const { productsArray, setPoductsArray, count, setCount } =
+//     useContext(FilterContext);
+//   const limit = 8;
 
-  const updateData = async (searchParams: URLSearchParams) => {
-    const { products } = await fetchProducts({
-      urlSearchParams: searchParams,
-    });
+//   // searchParams.append("limit", "2");
 
-    setPoductsArray(productsArray.concat(products));
-    setCount(count + products.length);
-  };
+//   const updateData = async (searchParams: URLSearchParams) => {
+//     const { products } = await fetchProducts({
+//       urlSearchParams: searchParams,
+//     });
 
-  const btnClickHandler: MouseEventHandler = () => {
-    const urlSearchParams = new URLSearchParams({
-      limit: limit.toString(),
-      offset: count.toString(),
-    });
+//     setPoductsArray(productsArray.concat(products));
+//     setCount(count + products.length);
+//   };
 
-    updateData(urlSearchParams);
-  };
+//   const btnClickHandler: MouseEventHandler = () => {
+//     const urlSearchParams = new URLSearchParams({
+//       limit: limit.toString(),
+//       offset: count.toString(),
+//     });
 
-  return (
-    <>
-      <ProductList productsArray={productsArray} page={{ home: true }} />
-      {productsPerPage < 100 && (
-        <button onClick={btnClickHandler}>Loard More</button>
-      )}
-    </>
-  );
-};
+//     updateData(urlSearchParams);
+//   };
 
-export default LoardMore;
+//   return (
+//     <>
+//       <ProductList productsArray={productsArray} page={{ home: true }} />
+//       {productsPerPage < 100 && (
+//         <button onClick={btnClickHandler}>Loard More</button>
+//       )}
+//     </>
+//   );
+// };
+
+// export default LoardMore;

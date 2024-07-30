@@ -21,7 +21,12 @@ export default function Wishlist() {
           <button
             className={` ${classes["header__title-btn"]} ${ButtonClassList.BUTTON_XSMALL}`}
           >
-            <DisplayIcon iconName={IconsIdList.TRASH} width="18" height="18" />
+            <DisplayIcon
+              className={classes.icon}
+              iconName={IconsIdList.TRASH}
+              width="18"
+              height="18"
+            />
             <span>Remove</span>
           </button>
         </div>

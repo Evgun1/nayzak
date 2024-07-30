@@ -75,3 +75,19 @@
     cursor: pointer;
   }
 }
+
+.icon {
+  &-logo {
+    width: 155px;
+    height: 30px;
+  }
+  &-search {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+.grid-search {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}

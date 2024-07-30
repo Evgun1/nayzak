@@ -70,3 +70,14 @@
     }
   }
 }
+
+.icon {
+  &-logo {
+    width: 155px;
+    height: 30px;
+  }
+  &-social {
+    width: 18px;
+    height: 18px;
+  }
+}

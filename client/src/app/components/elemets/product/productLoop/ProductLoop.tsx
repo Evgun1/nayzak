@@ -7,6 +7,7 @@ import { ProductTypes } from "../../../types/products";
 import { TextClassList } from "../../../types/textClassList";
 import classes from "./ProductLoop.module.scss";
 import AddToCart from "./AddToCart";
+import ProductList from "@/app/components/ProductsList/ProductList";
 
 type ProductLoopProps = {
   productData: ProductTypes;
@@ -36,7 +37,7 @@ export default function ProductLoop({
                 {productData.description}
               </p>
               <div className={classes["loop__header-info_rating"]}>
-                <Rating reviewArray={reviewsArray} height="16" width="16" />
+                <Rating reviewArray={reviewsArray} />
                 <span className={TextClassList.REGULAR_12}>
                   {totalReviews} Reviews
                 </span>
@@ -46,13 +47,13 @@ export default function ProductLoop({
               className={`${classes["loop__header-price"]} ${TextClassList.SEMIBOLD_26}`}
             >
               <Price
+                discount={productData.discount}
+                mainPrice={productData.mainPrice}
                 price={productData.price}
-                discountPercentage={productData.discount}
               />
             </div>
           </div>
-          {/* <div>Swatches</div> */}
-          <AddToCart />
+          <AddToCart hideQuantity={true} />
         </div>
       </div>
     </div>

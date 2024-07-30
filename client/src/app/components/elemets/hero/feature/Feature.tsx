@@ -21,7 +21,7 @@ export default function Feature() {
           <div className={`${ButtonClassList.BUTTON_SMALL}`}>
             See Collection
           </div>
-          <DisplayIcon iconName={IconsIdList.ARROW} width="20" height="20" />
+          <DisplayIcon className={classes.icon} iconName={IconsIdList.ARROW} />
         </Link>
       </div>
     </div>

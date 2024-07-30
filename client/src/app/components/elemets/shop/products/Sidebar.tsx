@@ -1,15 +1,11 @@
 "use client";
 
-import { CategoriesType } from "@/app/components/types/categories";
 import classes from "./Sidebar.module.scss";
-import Link from "next/link";
-import { TextClassList } from "@/app/components/types/textClassList";
-import { SubategoriesType } from "@/app/components/types/subcategoriesClass";
 import { MouseEventHandler, useContext, useEffect, useState } from "react";
 import { FilterContext } from "./FilterCtx";
 import FilterSection from "./FilterSection";
-import { fetchCategories } from "@/app/components/utils/fetchCategories";
 import { PageProps } from "../../../../../../.next/types/app/layout";
+import { TextClassList } from "@/app/components/types/textClassList";
 
 type SidebarProps = {
   props: PageProps;
@@ -40,17 +36,15 @@ export default function Sidebar({ props }: SidebarProps) {
       id="sidebarFilter"
     >
       <div className={classes.wrapper__header}>
-        <span>Filter</span>
-        <button name="hiddenFilter" onClick={btnHiddenFilter}>
-          close
-        </button>
+        <span className={TextClassList.SEMIBOLD_22}>Filter</span>
+        <button
+          className={classes["btn-close"]}
+          name="hiddenFilter"
+          onClick={btnHiddenFilter}
+        ></button>
       </div>
       <div className={classes.wrapper__item}>
-        <FilterSection
-          searhcParam={searchParams}
-          objectArray={categories}
-          title="Categories"
-        />
+        <FilterSection urlSearchParams={searchParams} objectArray={categories} />
       </div>
     </div>
   );

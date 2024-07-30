@@ -1,12 +1,9 @@
 .wrapper {
-  display: grid;
-  gap: 52px;
-
   &__title {
     display: flex;
     align-items: center;
-    margin: 0 auto;
+    justify-content: center;
+    margin-bottom: 52px;
     gap: 12px;
-
   }
 }

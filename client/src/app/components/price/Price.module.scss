@@ -1,16 +1,17 @@
-.wrapper {
+.price {
   display: flex;
   gap: 12px;
   align-items: center;
+  justify-content: left;
 
-  &__basePrice {
+  &-base--price {
     color: var(--black-900);
+    display: block;
   }
 
-  &__oldPrice {
-    display: block;
-    position: relative;
+  &-old--price {
     color: var(--black-400);
+    position: relative;
 
     &::before {
       position: absolute;

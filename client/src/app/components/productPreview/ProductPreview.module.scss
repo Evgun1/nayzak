@@ -1,17 +1,49 @@
+.img {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
 .card {
   text-decoration: none;
+  // text-align: center;
 
-  &__img {
-    max-width: 100%;
-    margin-bottom: 12px;
-  }
   &__content {
-    &-title {
-      margin-bottom: 4px;
-    }
+    display: grid;
+    gap: 4px;
     &-price {
       display: flex;
       justify-content: center;
     }
+  }
+}
+
+.card-list_type {
+  display: flex;
+  text-align: left;
+  gap: 40px;
+
+  .img {
+    max-width: 228px;
+    margin: 0;
+  }
+
+  &--info {
+    margin-bottom: 24px;
+    &-elemet {
+      max-width: 630px;
+      text-decoration: none;
+      &:not(:last-child, :first-child) {
+        margin-bottom: 16px;
+      }
+      &:first-child {
+        display: block;
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+  &--price {
+    max-width: 300px;
+    width: 100%;
   }
 }

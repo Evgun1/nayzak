@@ -38,7 +38,7 @@ export default function IconsBox() {
         CONTENT.length > 0 &&
         CONTENT.map((value, index) => (
           <li key={index} className={classes.wrapper__list}>
-            <DisplayIcon iconName={value.icon} width="32" height="32" />
+            <DisplayIcon className={classes.icon} iconName={value.icon} />
             <div className={classes["wrapper__block-info"]}>
               <div className={ButtonClassList.BUTTON_MEDIUM}>{value.title}</div>
               <span className={TextClassList.REGULAR_14}>{value.span}</span>

@@ -33,9 +33,8 @@ export default function Breadcrumbs({ style }: BreadcrumbsProps) {
                 {value[0].toUpperCase() + value.slice(1).replaceAll("_", " ")}
               </Link>
               <DisplayIcon
+                className={classes.icon}
                 iconName={IconsIdList.CHEVRONE}
-                width="12"
-                height="12"
               />
             </li>
           ))}

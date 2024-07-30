@@ -2,8 +2,9 @@
   display: grid;
   row-gap: 56px;
   column-gap: 32px;
+  margin-bottom: 56px;
 }
 
-.grid__home {
+.grid-home {
   grid-template-columns: repeat(4, 1fr);
 }

@@ -1,114 +1,109 @@
 "use client";
 
-import {
+import React, {
+  ComponentPropsWithoutRef,
   FC,
   LegacyRef,
+  ReactNode,
   RefObject,
-  createRef,
   useEffect,
-  useId,
+  useRef,
   useState,
 } from "react";
+import ButtonCustom, { Size, Type } from "../button-custom/ButtonCustom";
+import IconsIdList from "../icons/IconsIdList";
 import classes from "./DropDown.module.scss";
-import Link from "next/link";
+import { ButtonClassList } from "../types/buttonClassList";
 
-interface ObjectInterface {
-  id?: number;
-  title: string;
+interface SettinghtIntrface {
+  type: Type;
+  size: Size;
+  icon_left?: IconsIdList;
+  icon_right?: IconsIdList;
+  className?: string;
 }
 
 type DropDownProps = {
-  objectArray: ObjectInterface[];
-  titleBtn: string;
-  urlQueryName: string;
-  deleteUrlQueryName?: string;
-  searchParams: any;
+  btnCustomSettingth?: SettinghtIntrface;
+  title: string;
+  children?: ReactNode;
 };
 
-const DropDown: FC<DropDownProps> = ({
-  objectArray,
-  titleBtn,
-  urlQueryName,
-  searchParams,
-  deleteUrlQueryName,
+const DropDownComponent: FC<DropDownProps> = ({
+  title,
+  btnCustomSettingth,
+  children,
 }) => {
-  const [showBlock, setShowBlosk] = useState(false);
+  const [showElemets, setShowElements] = useState<boolean>(false);
 
-  const btnRef = createRef() as LegacyRef<HTMLDivElement>;
-  const urlSearchParams = new URLSearchParams(searchParams);
-  const id = useId();
+  const btnRef = useRef() as RefObject<HTMLButtonElement>;
+  const wrapperElementsRef = useRef() as RefObject<HTMLDivElement>;
 
-  const buttonClickHandler: EventListener = (event) => {
+  const btnClickHandler: EventListener = (event) => {
     const target = event.target as HTMLElement;
+    const btnRefId = btnRef.current;
     if (!target) return;
 
-    // const { current } = btnRef as RefObject<HTMLDivElement>;
-    // if (!current) return;
-
-    const dropdown = target.closest(`[id="${id}"]`);
-
-    if (!dropdown) {
-      return setShowBlosk(false);
+    if (wrapperElementsRef.current) {
+      const wrapperRefId = wrapperElementsRef.current.id;
+      const currentWrappert = target.closest(`#${wrapperRefId}`);
+      if (currentWrappert) return;
     }
 
-    setShowBlosk(true);
+    const btnCurret = target === btnRefId;
+
+    if (btnCurret) {
+      setShowElements((prev) => !prev);
+    } else {
+      setShowElements((prev) => (prev ? !prev : prev));
+    }
   };
+
   useEffect(() => {
-    document.addEventListener("click", buttonClickHandler);
-    return () => {
-      document.removeEventListener("click", buttonClickHandler);
-    };
+    document.addEventListener("click", btnClickHandler);
+    return () => document.removeEventListener("click", btnClickHandler);
   }, []);
 
   return (
-    <div className={classes.dropDown} ref={btnRef} id={id}>
-      <button className={classes.dropDown__btn}>{titleBtn}</button>
-      {objectArray && objectArray.length > 0 && showBlock && (
-        <ul className={classes.dropDown__item}>
-          {objectArray &&
-            objectArray.length > 0 &&
-            objectArray.map((value, index) => (
-              <li key={index}>
-                <LinkItem
-                  deleteUrlQueryName={deleteUrlQueryName}
-                  index={value.id ? value.id : 0}
-                  linkTitle={value.title}
-                  urlQueryName={urlQueryName}
-                  urlSearchParams={urlSearchParams}
-                />
-              </li>
-            ))}
-        </ul>
+    <div className={classes["drop-down"]}>
+      <ButtonCustom.SiteButton
+        className={
+          showElemets ? classes["drob-down--open"] : classes["drob-down--close"]
+        }
+        btnRef={btnRef}
+        type={ButtonCustom.Type.text}
+        size={ButtonCustom.Size.S}
+        icon={{
+          icon_left: btnCustomSettingth?.icon_left,
+          icon_right: btnCustomSettingth?.icon_right,
+        }}
+        element={{ button: () => {} }}
+      >
+        {title}
+      </ButtonCustom.SiteButton>
+      {showElemets && (
+        <div
+          id="hidden-elements"
+          ref={wrapperElementsRef}
+          className={classes["drop-down--items"]}
+        >
+          {children}
+        </div>
       )}
     </div>
   );
 };
 
+interface DropDownItemProps extends ComponentPropsWithoutRef<"div"> {
+  children: ReactNode;
+}
+
+const DropDownItem: FC<DropDownItemProps> = ({ children }) => {
+  return <div className={classes["drop-down--items-content"]}>{children}</div>;
+};
+
+const DropDown = Object.assign(DropDownComponent, {
+  Item: DropDownItem,
+});
+
 export default DropDown;
-
-type LinkItemProps = {
-  index: number;
-  linkTitle: string;
-  urlQueryName: string;
-  deleteUrlQueryName?: string;
-  urlSearchParams: URLSearchParams;
-};
-const LinkItem: FC<LinkItemProps> = ({
-  index,
-  linkTitle,
-  urlQueryName,
-  deleteUrlQueryName,
-  urlSearchParams,
-}) => {
-  urlSearchParams.set(urlQueryName, linkTitle.toLowerCase());
-  const href = `?${urlSearchParams}`;
-  if (deleteUrlQueryName) {
-    urlSearchParams.delete(deleteUrlQueryName);
-  }
-
-  return (
-    <Link className={classes.link} scroll={false} href={href}>
-      {linkTitle}
-    </Link>
-  );
-};

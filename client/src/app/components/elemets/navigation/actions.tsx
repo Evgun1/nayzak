@@ -10,7 +10,7 @@ import { toggle } from "@/lib/store/popup/popup";
 import DisplayIcon from "../../icons/displayIcon";
 import IconsIdList from "../../icons/IconsIdList";
 import { useState } from "react";
-import SearchPopup from "../../searchPopup/searchPopup";
+import SearchPopup from "../../searchPopup/SearchPopup";
 
 export default function Actions() {
   const dispatch = useAppDispatch();
@@ -23,14 +23,14 @@ export default function Actions() {
         className={classes.wrapper__button}
         type={"button"}
       >
-        <DisplayIcon iconName={IconsIdList.SEARCH} />
+        <DisplayIcon className={classes.icon} iconName={IconsIdList.SEARCH} />
       </button>
 
       <Link className={classes.wrapper__button} href={"/profile"}>
-        <DisplayIcon iconName={IconsIdList.USER} />
+        <DisplayIcon className={classes.icon} iconName={IconsIdList.USER} />
       </Link>
       <Link className={classes["wrapper__button"]} href={"/cart"}>
-        <DisplayIcon iconName={IconsIdList.CART} />
+        <DisplayIcon className={classes.icon} iconName={IconsIdList.CART} />
         {/* <div>amount</div> */}
       </Link>
     </div>

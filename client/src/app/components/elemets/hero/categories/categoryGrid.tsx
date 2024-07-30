@@ -1,4 +1,4 @@
-import classes from "./categories.module.scss";
+import classes from "./Categories.module.scss";
 import { CategoriesType } from "../../../types/categories";
 import Link from "next/link";
 
@@ -11,7 +11,6 @@ const CategoryGrid = async () => {
   }
   const result: { categories: CategoriesType[] } = await res.json();
   const categoriesData = result.categories;
-
 
   return (
     <ul className={`container ${classes.wrapper}`}>

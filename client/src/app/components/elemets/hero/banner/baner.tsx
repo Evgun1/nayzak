@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import classes from "./banner.module.scss";
+import classes from "./Banner.module.scss";
 import DisplayIcon from "@/app/components/icons/displayIcon";
 import IconsIdList from "@/app/components/icons/IconsIdList";
 import { TextClassList } from "@/app/components/types/textClassList";
 import { ButtonClassList } from "@/app/components/types/buttonClassList";
+import ButtonCustom from "@/app/components/button-custom/ButtonCustom";
 
 const Banner = () => {
   return (
@@ -18,12 +19,23 @@ const Banner = () => {
             styles to choose from.
           </p>
         </div>
-        <Link href={"/"} className={classes["wrapper__block-link"]}>
+
+        <ButtonCustom.SiteButton
+          color={ButtonCustom.Color.dark}
+          roundess={ButtonCustom.Roundness.sharp}
+          size={ButtonCustom.Size.S}
+          type={ButtonCustom.Type.default}
+        >
           <div className={`${ButtonClassList.BUTTON_SMALL}`}>
             See Collection
           </div>
-          <DisplayIcon iconName={IconsIdList.ARROW} width="20" height="20" />
-        </Link>
+          <DisplayIcon
+            className={classes.icon}
+            iconName={IconsIdList.ARROW_RIGHT}
+          />
+        </ButtonCustom.SiteButton>
+
+        {/* <Link href={"/"} className={classes["wrapper__block-link"]}></Link> */}
       </div>
     </div>
   );

@@ -16,9 +16,13 @@ import {
 } from "react";
 import { useSearchParams } from "next/navigation";
 import { FilterContext } from "./FilterCtx";
+import DropDown from "@/app/components/dropDown/DropDown";
+import ButtonCustom, {
+  Size,
+  Type,
+} from "@/app/components/button-custom/ButtonCustom";
 
-type ToolbarProps = {
-};
+type ToolbarProps = {};
 
 enum TypeList {
   FIVE = "five_grid",
@@ -36,16 +40,24 @@ const SELECTOR = [
   { icon: IconsIdList.LIST_COLUMS, typeList: TypeList.LIST },
 ];
 
-export default function Toolbar({  }: ToolbarProps) {
-  const { isActive, setIsActive, count } = useContext(FilterContext);
+const array = ["test1", "test2", "test3"];
+
+export default function Toolbar({}: ToolbarProps) {
+  const { isActive, setIsActive, count, totalCount } =
+    useContext(FilterContext);
 
   const btnClickFilter: MouseEventHandler = (event) => setIsActive(!isActive);
 
   return (
     <div className={classes.wrapper}>
       <div className={classes.wrapper__toolbar}>
-        <span>{count} products</span>
+        <span>{totalCount} products</span>
         <div className={classes["wrapper__toolbar-filter"]}>
+          <ButtonCustom.SiteButton
+            element={{ button: btnClickFilter }}
+            size={ButtonCustom.Size.S}
+            type={ButtonCustom.Type.text}
+          ></ButtonCustom.SiteButton>
           <button
             name="btnFilter"
             className={classes["wrapper__toolbar-filter_item"]}
@@ -53,18 +65,30 @@ export default function Toolbar({  }: ToolbarProps) {
           >
             <span className={ButtonClassList.BUTTON_SMALL}>Filter</span>
             <DisplayIcon
+              className={classes["icon-btn"]}
               iconName={IconsIdList.SETTINGS}
-              height="20"
-              width="20"
             />
           </button>
           <div className={classes["wrapper__toolbar-filter_item"]}>
-            <span>Sort by (Drop Down)</span>
-            <DisplayIcon
+            {/* <span>Sort by (Drop Down)</span> */}
+            {/* <DisplayIcon
+              className={classes["icon-btn"]}
               iconName={IconsIdList.CHEVRONE}
-              height="20"
-              width="20"
-            />
+            /> */}
+            <DropDown
+              title="Sort by"
+              btnCustomSettingth={{
+                size: Size.S,
+                type: Type.text,
+                icon_right: IconsIdList.CHEVRONE,
+              }}
+            >
+              {array.map((value, index) => (
+                <DropDown.Item key={index}>
+                  <div>{value}</div>
+                </DropDown.Item>
+              ))}
+            </DropDown>
           </div>
           <ul className={classes.selector}>
             {SELECTOR.map((value, index) => (
@@ -107,7 +131,7 @@ const ListBtn: FC<ListBtnProps> = ({ typeList, icon }) => {
       href={`?list_type=${typeList}`}
       className={`${classes.selector__link} ${activeBtn ? classes.active : ""}`}
     >
-      <DisplayIcon iconName={icon} height="24" width="24" />
+      <DisplayIcon className={classes["icon-selector"]} iconName={icon} />
     </Link>
   );
 };

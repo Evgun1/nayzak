@@ -1,15 +1,93 @@
-.swiper-custom {
-  display: flex;
-  flex-direction: column-reverse;
-}
+// .swiper-custom {
+//   display: flex;
+//   flex-direction: column-reverse;
+// }
 
-.swiper-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.swiper-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+// .swiper-head {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+// }
+// .swiper-controls {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+// .swiper--custom-pagnation {
+//   margin: 0 12px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 5px;
+// }
+
+// .swiper--custom-bullet {
+//   position: relative;
+//   width: 16px;
+//   height: 16px;
+//   background: none;
+//   border-radius: 100%;
+
+//   &::after {
+//     position: absolute;
+//     content: "";
+//     background: var(--black-900);
+//     border-radius: 100%;
+//     width: 6px;
+//     height: 6px;
+//     top: 50%;
+//     left: 50%;
+//     transform: translate(-50%, -50%);
+//   }
+// }
+
+// .swiper--custom-bullet-action {
+//   position: relative;
+//   width: 16px;
+//   height: 16px;
+//   border: 1px solid var(--black-900);
+//   background: none;
+//   border-radius: 100%;
+
+//   &::after {
+//     position: absolute;
+//     content: "";
+//     background: var(--black-900);
+//     border-radius: 100%;
+//     width: 6px;
+//     height: 6px;
+//     top: 50%;
+//     left: 50%;
+//     transform: translate(-50%, -50%);
+//   }
+// }
+
+// .swiper-arrow-left {
+//   background: none;
+//   border: none;
+//   cursor: pointer;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 24px;
+//   height: 24px;
+//   svg {
+//     width: 24px;
+//     height: 24px;
+//   }
+// }
+// .swiper-arrow-right {
+//   background: none;
+//   border: none;
+//   cursor: pointer;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 24px;
+//   height: 24px;
+//   svg {
+//     width: 24px;
+//     height: 24px;
+//   }
+// }

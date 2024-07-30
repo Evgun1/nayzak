@@ -30,10 +30,8 @@ export default function FeatureTwo() {
           >
             See collection{" "}
             <DisplayIcon
+              className={classes.icon}
               iconName={IconsIdList.ARROW}
-              color="white"
-              height="24"
-              width="24"
             />
           </Link>
         </div>

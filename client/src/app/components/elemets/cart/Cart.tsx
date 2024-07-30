@@ -34,9 +34,8 @@ export default function Cart() {
                 className={`${classes["btn"]} ${ButtonClassList.BUTTON_XSMALL}`}
               >
                 <DisplayIcon
+                  className={classes.icon}
                   iconName={IconsIdList.TRASH}
-                  width="18"
-                  height="18"
                 />
                 <span>Remove</span>
               </button>

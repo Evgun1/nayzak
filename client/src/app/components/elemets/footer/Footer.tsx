@@ -51,6 +51,7 @@ export default function Footer() {
           <div className={classes[`footer__contact-main`]}>
             <div className={classes[`footer__contact-main-title`]}>
               <DisplayIcon
+                className={classes["icon-logo"]}
                 iconName={IconsIdList.LOGOTYPE}
                 width="155"
                 height="30"
@@ -64,7 +65,12 @@ export default function Footer() {
                 ICONS_ARRAY.length > 0 &&
                 ICONS_ARRAY.map((value, index) => (
                   <div key={index}>
-                    <DisplayIcon iconName={value.icon} width="18" height="18" />
+                    <DisplayIcon
+                      className={classes["icon-social"]}
+                      iconName={value.icon}
+                      width="18"
+                      height="18"
+                    />
                   </div>
                 ))}
             </div>

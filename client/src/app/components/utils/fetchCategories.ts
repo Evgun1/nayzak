@@ -1,12 +1,13 @@
+import { CategoriesType } from "../types/categories";
 import { ProductTypes } from "../types/products";
 
-export type fetchProductsProps = {
+export type fetchCategoriesProps = {
   urlSearchParams?: URLSearchParams;
 };
 
 export const fetchCategories = async ({
   urlSearchParams,
-}: fetchProductsProps) => {
+}: fetchCategoriesProps) => {
   const res = await fetch(
     `http://localhost:3030/categories?${urlSearchParams}`,
     {
@@ -14,8 +15,8 @@ export const fetchCategories = async ({
       cache: "no-cache",
     }
   );
-  const result: ProductTypes[] = await res.json().then((data) => {
-    return data.products;
+  const result: CategoriesType[] = await res.json().then((data) => {
+    return data.categories;
   });
 
   return result;

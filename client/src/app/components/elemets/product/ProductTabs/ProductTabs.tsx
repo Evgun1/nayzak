@@ -69,43 +69,39 @@ export default function ProductTabs({
           </div>
         )}
         {tabAction === 1 && (
-          <div className={classes.tab__info}>
-            <div className={classes["tab__info-grid"]}>
-              <span
-                className={`${TextClassList.SEMIBOLD_18} ${classes["tab__info-title"]}`}
-              >
-                SIZE
-              </span>
-              <span
-                className={`${TextClassList.REGULAR_18} ${classes["tab__info-value"]}`}
-              >
-                Value
-              </span>
-            </div>
-            <div className={classes["tab__info-grid"]}>
-              <span
-                className={`${TextClassList.SEMIBOLD_18} ${classes["tab__info-title"]}`}
-              >
-                COLOR
-              </span>
-              <span
-                className={`${TextClassList.REGULAR_18} ${classes["tab__info-value"]}`}
-              >
-                Value
-              </span>
-            </div>
-            <div className={classes["tab__info-grid"]}>
-              <span
-                className={`${TextClassList.SEMIBOLD_18} ${classes["tab__info-title"]}`}
-              >
-                WEIGHT
-              </span>
-              <span
-                className={`${TextClassList.REGULAR_18} ${classes["tab__info-value"]}`}
-              >
-                Value
-              </span>
-            </div>
+          <div className={classes["tab__info-grid"]}>
+            <span
+              className={`${TextClassList.SEMIBOLD_18} ${classes["tab__info-title"]}`}
+            >
+              SIZE
+            </span>
+            <span
+              className={`${TextClassList.REGULAR_18} ${classes["tab__info-value"]}`}
+            >
+              Value
+            </span>
+
+            <span
+              className={`${TextClassList.SEMIBOLD_18} ${classes["tab__info-title"]}`}
+            >
+              COLOR
+            </span>
+            <span
+              className={`${TextClassList.REGULAR_18} ${classes["tab__info-value"]}`}
+            >
+              Value
+            </span>
+
+            <span
+              className={`${TextClassList.SEMIBOLD_18} ${classes["tab__info-title"]}`}
+            >
+              WEIGHT
+            </span>
+            <span
+              className={`${TextClassList.REGULAR_18} ${classes["tab__info-value"]}`}
+            >
+              Value
+            </span>
           </div>
         )}
         {tabAction === 2 && (
@@ -116,7 +112,7 @@ export default function ProductTabs({
                 <div
                   className={`${TextClassList.REGULAR_12} ${classes["tab__reviews-header_rating"]}`}
                 >
-                  <Rating reviewArray={reviewArray} height="20" width="20" />
+                  <Rating reviewArray={reviewArray} />
                   {totalReviews} total Reviews
                 </div>
                 <button>Write reviews</button>
@@ -144,8 +140,6 @@ export default function ProductTabs({
                           </div>
                           <span className={classes["reviewCard__user-rating"]}>
                             <Rating
-                              height="16"
-                              width="16"
                               reviewArray={reviewArray}
                               userRating={value.rating}
                             />

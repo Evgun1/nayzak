@@ -2,13 +2,17 @@
 
 import IconsIdList from "@/app/components/icons/IconsIdList";
 import DisplayIcon from "@/app/components/icons/displayIcon";
-
-import classes from "./AddToCart.module.scss";
 import { ButtonClassList } from "@/app/components/types/buttonClassList";
-import { SiteButton } from "@/app/components/button/Button";
 import { useState } from "react";
+import classes from "./AddToCart.module.scss";
+import ButtonCustom from "@/app/components/button-custom/ButtonCustom";
 
-export default function AddToCart() {
+type AddToCartProps = {
+  hideQuantity?: boolean;
+  style?: string;
+};
+
+export default function AddToCart({ style, hideQuantity }: AddToCartProps) {
   const [quantity, setQuantity] = useState(1);
 
   const btnPlusQuantity = () => {
@@ -21,35 +25,44 @@ export default function AddToCart() {
   };
 
   return (
-    <div className={classes.wrapper}>
-      <div className={classes.quantity}>
-        <button
-          onClick={btnMinusQuantity}
-          className={classes.quantity__btn}
-        ></button>
-        <span className={classes.quantity__value}>{quantity}</span>
-        <button
-          onClick={btnPlusQuantity}
-          className={classes.quantity__btn}
-        ></button>
-      </div>
-
-      <SiteButton
-        color={{ dark: true }}
-        size={{ xlarge: true }}
-        type={{ text: true }}
+    <div className={` ${style} ${classes.wrapper}`}>
+      {!hideQuantity && (
+        <div className={classes.quantity}>
+          <button
+            onClick={btnMinusQuantity}
+            className={classes.quantity__btn}
+          ></button>
+          <span className={classes.quantity__value}>{quantity}</span>
+          <button
+            onClick={btnPlusQuantity}
+            className={classes.quantity__btn}
+          ></button>
+        </div>
+      )}
+      <ButtonCustom.SiteButton
+        className={classes.button}
+        color={ButtonCustom.Color.light}
+        roundess={ButtonCustom.Roundness.sharp}
+        size={ButtonCustom.Size.M}
+        type={ButtonCustom.Type.default}
+        element={{ button: () => {} }}
       >
-        <DisplayIcon iconName={IconsIdList.ARROW} />
-        Get started
-      </SiteButton>
-      {/* <button className={classes.button}>Add to Cart</button> */}
+        Add to Cart
+      </ButtonCustom.SiteButton>
+      {/* <button className={`${classes.button} button-medium`}>Add to Cart</button> */}
       <div className={classes.links}>
         <button className={classes.links__btn}>
-          <DisplayIcon iconName={IconsIdList.HEART} height="20" width="20" />
+          <DisplayIcon
+            className={classes["icon-link"]}
+            iconName={IconsIdList.HEART}
+          />
           <span className={ButtonClassList.BUTTON_XSMALL}>Wishlist</span>
         </button>
         <button className={classes.links__btn}>
-          <DisplayIcon iconName={IconsIdList.SHARE} height="20" width="20" />
+          <DisplayIcon
+            className={classes["icon-link"]}
+            iconName={IconsIdList.SHARE}
+          />
           <span className={ButtonClassList.BUTTON_XSMALL}>Share</span>
         </button>
       </div>

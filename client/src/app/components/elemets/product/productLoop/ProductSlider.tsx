@@ -10,74 +10,61 @@ import {
   Thumbs,
 } from "swiper/modules";
 
-import classes from "./ProductSlider.module.scss";
-
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
+import classes from "./ProductSlider.module.scss";
+
 export default function ProductSlider() {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
 
   return (
-    <>
+    <div className={classes["product-swiper"]}>
       <Swiper
-        cssMode={true}
+        loop={true}
         spaceBetween={10}
         thumbs={{ swiper: thumbsSwiper }}
-        modules={[FreeMode, Thumbs, Keyboard, EffectFade, Navigation]}
-        className={classes.custom_swiper}
+        modules={[FreeMode, Thumbs]}
       >
-        <SwiperSlide className={classes.custom_slider}>
-          <img src="https://placehold.co/400" alt="" />
+        <SwiperSlide>
+          <img className={classes.img} src="https://placehold.co/570x760" />
         </SwiperSlide>
-        <SwiperSlide className={classes.custom_slider}>
-          <img src="https://placehold.co/400x401" alt="" />
+        <SwiperSlide>
+          <img className={classes.img} src="https://placehold.co/570x760" />
         </SwiperSlide>
-        <SwiperSlide className={classes.custom_slider}>
-          <img src="https://placehold.co/400x402" alt="" />
+        <SwiperSlide>
+          <img className={classes.img} src="https://placehold.co/570x760" />
         </SwiperSlide>
-        <SwiperSlide className={classes.custom_slider}>
-          <img src="https://placehold.co/400x403" alt="" />
+        <SwiperSlide>
+          <img className={classes.img} src="https://placehold.co/570x760" />
         </SwiperSlide>
       </Swiper>
       <Swiper
         onSwiper={setThumbsSwiper}
         loop={true}
-        spaceBetween={19}
+        spaceBetween={10}
         slidesPerView={4}
         freeMode={true}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
-        className={classes.custom_swiper}
+        className="mySwiper"
       >
-        <SwiperSlide className={classes.slider}>
-          <img className={classes.img} src="https://placehold.co/400" alt="" />
+        <SwiperSlide>
+          <img className={classes.img} src="https://placehold.co/570x760" />
         </SwiperSlide>
-        <SwiperSlide className={classes.slider}>
-          <img
-            className={classes.img}
-            src="https://placehold.co/400x401"
-            alt=""
-          />
+        <SwiperSlide>
+          <img className={classes.img} src="https://placehold.co/570x760" />
         </SwiperSlide>
-        <SwiperSlide className={classes.slider}>
-          <img
-            className={classes.img}
-            src="https://placehold.co/400x402"
-            alt=""
-          />
+        <SwiperSlide>
+          <img className={classes.img} src="https://placehold.co/570x760" />
         </SwiperSlide>
-        <SwiperSlide className={classes.slider}>
-          <img
-            className={classes.img}
-            src="https://placehold.co/400x403"
-            alt=""
-          />
+        <SwiperSlide>
+          <img className={classes.img} src="https://placehold.co/570x760" />
         </SwiperSlide>
       </Swiper>
-    </>
+    </div>
   );
 }

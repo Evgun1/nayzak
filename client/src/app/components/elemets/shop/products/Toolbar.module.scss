@@ -40,7 +40,7 @@
     width: 46px;
     height: 40px;
     padding: 8px 11px;
-    svg {
+    .icon-selector {
       color: var(--black-400);
     }
   }
@@ -55,7 +55,18 @@
 
 .active {
   background: var(--black-100);
-  svg {
+  .icon-selector {
     color: var(--black-900);
+  }
+}
+
+.icon {
+  &-btn {
+    width: 20px;
+    height: 20px;
+  }
+  &-selector {
+    width: 20px;
+    height: 20px;
   }
 }

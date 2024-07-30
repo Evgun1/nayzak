@@ -2,7 +2,7 @@
 import { ProductTypes } from "@/app/components/types/products";
 import { fetchProducts } from "@/app/components/utils/fetchProducts";
 import { KeyObject } from "crypto";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { FC, ReactNode, createContext, useEffect, useState } from "react";
 
 type FilterContextValue = {
@@ -13,6 +13,7 @@ type FilterContextValue = {
   count: number;
   setCount: (newCount: number) => void;
   totalCount: number;
+  setLimit: (newLimit: number) => void;
 };
 
 export const FilterContext = createContext<FilterContextValue>({
@@ -23,23 +24,28 @@ export const FilterContext = createContext<FilterContextValue>({
   count: 0,
   setCount: (newCount) => {},
   totalCount: 0,
+  setLimit: (newLimit) => {},
 });
 
 export const FilterProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
+  const [limit, setLimit] = useState<number>(0);
   const [isActive, setIsActive] = useState<boolean>(true);
   const [productsArray, setPoductsArray] = useState<ProductTypes[]>([]);
   const [count, setCount] = useState<number>(0);
   const [totalCount, setTotalCount] = useState<number>(0);
+  const pathName = usePathname();
+
   const searchParams = useSearchParams();
+  const urlSearchParams = new URLSearchParams(searchParams.toString());
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(searchParams.toString());
+    const getListType = searchParams.get("list_type");
 
-    const limits = new Map([
-      [null, "15"],
+    const listTypeLimits = new Map([
       ["default", "15"],
+      [null, "15"],
       ["five_grid", "15"],
       ["four_grid", "12"],
       ["three_grid", "9"],
@@ -47,11 +53,11 @@ export const FilterProvider: FC<{
       ["list", "8"],
     ]);
 
-    if (urlSearchParams.has("list_type")) {
-      const listType = urlSearchParams.get("list_type");
+    if (pathName === "/") {
+      urlSearchParams.set("limit", "8");
+    } else {
+      urlSearchParams.set("limit", listTypeLimits.get(getListType) as string);
     }
-
-    urlSearchParams.set("limit", "15");
 
     fetchProducts({ urlSearchParams }).then(({ productCounts, products }) => {
       setCount(products.length);
@@ -70,6 +76,7 @@ export const FilterProvider: FC<{
         count,
         setCount,
         totalCount,
+        setLimit,
       }}
     >
       {children}

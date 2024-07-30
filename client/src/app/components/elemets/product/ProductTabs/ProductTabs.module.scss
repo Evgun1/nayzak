@@ -73,7 +73,9 @@
     gap: 32px;
     &-grid {
       display: grid;
-      grid-template-columns: minmax(12%, auto) 1fr;
+      grid-template-columns: max-content 1fr;
+      column-gap: 57px;
+      row-gap: 32px;
     }
 
     &-title {

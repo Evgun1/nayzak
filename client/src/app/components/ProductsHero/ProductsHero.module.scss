@@ -1,0 +1,7 @@
+.grid-hero {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.custom-price {
+  justify-content: center;
+}

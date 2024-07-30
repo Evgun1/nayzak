@@ -10,7 +10,7 @@ export default function NavigationBar() {
   return (
     <div className={classes.nav}>
       <div className={`container ${classes.nav__wrapper}`}>
-        <DisplayIcon iconName={IconsIdList.LOGOTYPE} height="30" width="155" />
+        <DisplayIcon className={classes.icon} iconName={IconsIdList.LOGOTYPE} />
         <Navigation />
         <Actions />
       </div>

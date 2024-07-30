@@ -7,12 +7,13 @@ class ReviewsController {
 
     const totalReviews = await prismaClient.reviews.count();
 
+    console.log(totalReviews);
+
     return c.json({ reviews, totalReviews });
   }
 
   async getAllReviewsOneProduct(c: Context) {
     const { productName } = c.req.param();
-
 
     let producId;
     const products = await prismaClient.products.findMany({
@@ -27,6 +28,9 @@ class ReviewsController {
     const totalReviews = await prismaClient.reviews.count({
       where: { product_id: producId },
     });
+
+    console.log(reviews, totalReviews);
+
     return c.json({ reviews, totalReviews });
   }
 
@@ -37,6 +41,7 @@ class ReviewsController {
       where: { product_id: parseInt(productId) },
     });
 
+    // console.log(reviews);
 
     return c.json({ reviews });
   }

@@ -25,3 +25,34 @@
     }
   }
 }
+
+.btn-close {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  &::after {
+    position: absolute;
+    content: "";
+    width: 12px;
+    height: 1px;
+    background: var(--black-900);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &::before {
+    position: absolute;
+    content: "";
+    width: 12px;
+    height: 1px;
+    background: var(--black-900);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+}

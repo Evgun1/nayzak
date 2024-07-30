@@ -6,8 +6,6 @@
   background: no-repeat left url(https://placehold.co/736x700) var(--red-500);
   // background-size: 50%;
   &__block {
-    display: grid;
-    gap: 8px;
     position: absolute;
     max-width: 456px;
     right: 40%;
@@ -17,7 +15,7 @@
     &-content {
       display: grid;
       gap: 8px;
-
+      margin-bottom: 28px;
       h3,
       span,
       p {
@@ -37,4 +35,9 @@
       text-decoration: none;
     }
   }
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
 }
