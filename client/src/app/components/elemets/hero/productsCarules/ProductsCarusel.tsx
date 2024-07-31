@@ -14,8 +14,10 @@ import DisplayIcon from "@/app/components/icons/displayIcon";
 import IconsIdList from "@/app/components/icons/IconsIdList";
 import { fetchProducts } from "@/app/components/utils/fetchProducts";
 import ProductPreview from "@/app/components/productPreview/ProductPreview";
+import { useSearchParams } from "next/navigation";
 
 const ProductsCarusel = async () => {
+  const searchParams = useSearchParams();
   // const res = await fetch(`http://localhost:3030/products`, {
   //   method: "GET",
   //   cache: "no-cache",
@@ -24,7 +26,13 @@ const ProductsCarusel = async () => {
   //   return data.products;
   // });
 
-  const { products } = await fetchProducts({});
+  const urlSearchParams = new URLSearchParams(searchParams.toString());
+
+  urlSearchParams.set("limit", "8");
+
+  const { products } = await fetchProducts({
+    urlSearchParams: urlSearchParams,
+  });
 
   return (
     <div className={`container  ${classes.wrapper}`}>

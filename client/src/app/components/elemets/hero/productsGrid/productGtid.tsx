@@ -11,6 +11,8 @@ import { fetchSubcategories } from "@/app/components/utils/fetchSubcategories";
 import { fetchCategories } from "@/app/components/utils/fetchCategories";
 import ProductsShop from "@/app/components/ProductsShop/ProductsShop";
 import DropDownT from "@/app/components/dropDown/DropDownT";
+import DropDown from "@/app/components/dropDown/DropDown";
+import LinkItem from "@/app/components/LinkItem/LinkItem";
 
 export default async function ProductGrid(props: PageProps) {
   const urlSearchParams = new URLSearchParams(props.searchParams);
@@ -22,7 +24,7 @@ export default async function ProductGrid(props: PageProps) {
     <div className={`container ${classes.wrapper}`}>
       <div className={classes.wrapper__title}>
         <div className={ButtonClassList.BUTTON_XLARGE}>You’re browsing</div>
-        <DropDownT
+        {/* <DropDownT
           btnCustomSettingth={{
             size: Size.XL,
             type: Type.underline,
@@ -33,9 +35,22 @@ export default async function ProductGrid(props: PageProps) {
           urlQueryName="category"
           deleteUrlQueryName="subcategory"
           searchParams={props.searchParams}
-        />
+        /> */}
+
+        <DropDown title="Category">
+          {categoriesData.map((category) => (
+            <DropDown.Item>
+              <LinkItem
+                linkName={category.title}
+                urlQueryName="category"
+                urlSearchParams={props.searchParams}
+                deleteUrlQueryName="subcategory"
+              />
+            </DropDown.Item>
+          ))}
+        </DropDown>
         <div className={ButtonClassList.BUTTON_XLARGE}>In</div>
-        <DropDownT
+        {/* <DropDownT
           btnCustomSettingth={{
             size: Size.XL,
             type: Type.underline,
@@ -45,7 +60,16 @@ export default async function ProductGrid(props: PageProps) {
           titleBtn="Subcategory"
           urlQueryName="subcategory"
           searchParams={urlSearchParams}
-        />
+        /> */}
+        <DropDown title="Subcategory">
+          <DropDown.Item>
+            <LinkItem
+              linkName="subcategory"
+              urlQueryName="subcategory"
+              urlSearchParams={props.searchParams}
+            />
+          </DropDown.Item>
+        </DropDown>
       </div>
       <FilterProvider>
         <ProductsHero />
