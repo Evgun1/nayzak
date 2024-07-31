@@ -48,9 +48,9 @@ interface IconInterface {
 }
 
 type SiteButtonProps = {
-  size: Size;
+  size?: Size;
   roundess?: Roundness;
-  type: Type;
+  type?: Type;
   color?: Color;
   children?: ReactNode;
   className?: string;
@@ -74,7 +74,7 @@ export const SiteButton: FC<SiteButtonProps> = ({
 
   return element?.link ? (
     <Link
-      scroll
+      scroll={false}
       href={element.link}
       className={`${className} ${classes.join(" ")}`}
     >

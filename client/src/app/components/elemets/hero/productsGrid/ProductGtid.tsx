@@ -1,3 +1,5 @@
+"use client";
+
 import { PageProps } from "../../../../../../.next/types/app/layout";
 
 import { ButtonClassList } from "@/app/components/types/buttonClassList";
@@ -24,51 +26,61 @@ export default async function ProductGrid(props: PageProps) {
     <div className={`container ${classes.wrapper}`}>
       <div className={classes.wrapper__title}>
         <div className={ButtonClassList.BUTTON_XLARGE}>You’re browsing</div>
-        {/* <DropDownT
+        <DropDown
+          title="Category"
           btnCustomSettingth={{
             size: Size.XL,
             type: Type.underline,
-            svg_right: IconsIdList.CHEVRONE,
+            icon_right: IconsIdList.CHEVRONE,
           }}
-          objectArray={categoriesData}
-          titleBtn="Category"
-          urlQueryName="category"
-          deleteUrlQueryName="subcategory"
-          searchParams={props.searchParams}
-        /> */}
-
-        <DropDown title="Category">
-          {categoriesData.map((category) => (
-            <DropDown.Item>
-              <LinkItem
-                linkName={category.title}
-                urlQueryName="category"
-                urlSearchParams={props.searchParams}
-                deleteUrlQueryName="subcategory"
-              />
-            </DropDown.Item>
-          ))}
-        </DropDown>
-        <div className={ButtonClassList.BUTTON_XLARGE}>In</div>
-        {/* <DropDownT
-          btnCustomSettingth={{
-            size: Size.XL,
-            type: Type.underline,
-            svg_right: IconsIdList.CHEVRONE,
-          }}
-          objectArray={subcategoriesData}
-          titleBtn="Subcategory"
-          urlQueryName="subcategory"
-          searchParams={urlSearchParams}
-        /> */}
-        <DropDown title="Subcategory">
+        >
           <DropDown.Item>
             <LinkItem
-              linkName="subcategory"
-              urlQueryName="subcategory"
-              urlSearchParams={props.searchParams}
+              linkName={"All"}
+              deleteUrlQueryName="category"
+              searchParams={props.searchParams}
             />
           </DropDown.Item>
+          {categoriesData &&
+            categoriesData.length > 0 &&
+            categoriesData.map((category, index) => (
+              <DropDown.Item key={index}>
+                <LinkItem
+                  linkName={category.title}
+                  urlQueryName="category"
+                  deleteUrlQueryName="subcategory"
+                  searchParams={props.searchParams}
+                />
+              </DropDown.Item>
+            ))}
+        </DropDown>
+        <div className={ButtonClassList.BUTTON_XLARGE}>In</div>
+        <DropDown
+          title="Subcategory"
+          btnCustomSettingth={{
+            size: Size.XL,
+            type: Type.underline,
+            icon_right: IconsIdList.CHEVRONE,
+          }}
+        >
+          <DropDown.Item>
+            <LinkItem
+              linkName={"All"}
+              deleteUrlQueryName="subcategory"
+              searchParams={props.searchParams}
+            />
+          </DropDown.Item>
+          {subcategoriesData &&
+            subcategoriesData.length > 0 &&
+            subcategoriesData.map((subcategory, index) => (
+              <DropDown.Item key={index}>
+                <LinkItem
+                  linkName={subcategory.title}
+                  urlQueryName="subcategory"
+                  searchParams={props.searchParams}
+                />
+              </DropDown.Item>
+            ))}
         </DropDown>
       </div>
       <FilterProvider>

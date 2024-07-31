@@ -9,34 +9,25 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import classes from "./ProductsCarusel.module.scss";
-import ButtonCustom from "@/app/components/button-custom/ButtonCustom";
 import DisplayIcon from "@/app/components/icons/displayIcon";
 import IconsIdList from "@/app/components/icons/IconsIdList";
 import { fetchProducts } from "@/app/components/utils/fetchProducts";
 import ProductPreview from "@/app/components/productPreview/ProductPreview";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const ProductsCarusel = async () => {
-  const searchParams = useSearchParams();
-  // const res = await fetch(`http://localhost:3030/products`, {
-  //   method: "GET",
-  //   cache: "no-cache",
-  // });
-  // const result: ProductTypes[] = await res.json().then((data) => {
-  //   return data.products;
-  // });
+const ProductsCarusel = () => {
+  const [productsData, setProductsData] = useState<ProductTypes[]>();
+  const urlSearchParams = new URLSearchParams({ limit: "8" });
 
-  const urlSearchParams = new URLSearchParams(searchParams.toString());
-
-  urlSearchParams.set("limit", "8");
-
-  const { products } = await fetchProducts({
-    urlSearchParams: urlSearchParams,
-  });
+  useEffect(() => {
+    fetchProducts({ urlSearchParams }).then(({ products }) =>
+      setProductsData(products)
+    );
+  }, []);
 
   return (
     <div className={`container  ${classes.wrapper}`}>
-      {products && (
+      {productsData && (
         <Swiper
           modules={[Navigation, Pagination]}
           spaceBetween={32}
@@ -80,7 +71,7 @@ const ProductsCarusel = async () => {
               </button>
             </div>
           </div>
-          {products.map((product) => (
+          {productsData.map((product) => (
             <SwiperSlide key={product.id}>
               {/* <div className={classes.card}>
                 <div className={classes.card__block}>

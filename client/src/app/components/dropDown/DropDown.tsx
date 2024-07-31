@@ -71,8 +71,8 @@ const DropDownComponent: FC<DropDownProps> = ({
           showElemets ? classes["drob-down--open"] : classes["drob-down--close"]
         }
         btnRef={btnRef}
-        type={ButtonCustom.Type.text}
-        size={ButtonCustom.Size.S}
+        type={btnCustomSettingth?.type}
+        size={btnCustomSettingth?.size}
         icon={{
           icon_left: btnCustomSettingth?.icon_left,
           icon_right: btnCustomSettingth?.icon_right,
