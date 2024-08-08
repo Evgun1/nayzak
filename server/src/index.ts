@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import prismaClient from "./prismaClient";
-import appRouter from "./router/router";
+import appRouter from "./route";
 import { cors } from "hono/cors";
 
 dotenv.config();

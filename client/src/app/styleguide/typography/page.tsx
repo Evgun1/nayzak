@@ -1,8 +1,8 @@
-import DisplayIcon from "@/app/components/icons/displayIcon";
-import IconsIdList from "@/app/components/icons/IconsIdList";
+import DisplayIcon from "@/components/icons/displayIcon";
+import IconsIdList from "@/components/icons/IconsIdList";
 
 import classes from "./page.module.scss";
-import { TextClassList } from "@/app/components/types/textClassList";
+import { TextClassList } from "@/components/types/textClassList";
 
 export default () => {
   return (

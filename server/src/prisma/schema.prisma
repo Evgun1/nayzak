@@ -78,13 +78,13 @@ model Users {
 }
 
 model Reviews {
-  id         Int       @id @default(autoincrement())
-  rating     Int       @default(0)
+  id         Int      @id @default(autoincrement())
+  rating     Int      @default(0)
   text       String?
   user_id    Int?
-  product_id Int?
-  product    Products? @relation(fields: [product_id], references: [id])
-  user       Users?    @relation(fields: [user_id], references: [id])
+  product_id Int
+  product    Products @relation(fields: [product_id], references: [id])
+  user       Users?   @relation(fields: [user_id], references: [id])
 }
 
 model Orders {

@@ -1,10 +1,10 @@
-import ProductLoop from "@/app/components/elemets/product/productLoop/ProductLoop";
-import { ProductTypes } from "@/app/components/types/products";
+import ProductLoop from "@/components/elemets/product/productLoop/ProductLoop";
+import { ProductTypes } from "@/components/types/products";
 
 import "./style.scss";
-import ProductTabs from "@/app/components/elemets/product/ProductTabs/ProductTabs";
-import { fetchProduct } from "@/app/components/utils/fetchProducts";
-import { fetchReviewsProduct } from "@/app/components/utils/fetchReviews";
+import ProductTabs from "@/components/elemets/product/ProductTabs/ProductTabs";
+import { fetchProduct } from "@/components/utils/fetchProducts";
+import { fetchReviewsProduct } from "@/components/utils/fetchReviews";
 
 export default async function page({ params }: { params: { slug: string } }) {
   const product = await fetchProduct({ params });

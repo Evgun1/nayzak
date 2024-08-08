@@ -1,0 +1,17 @@
+.header {
+  display: grid;
+  gap: 12px;
+  align-items: center;
+  background: no-repeat url("./../../../../../public/PasteImage.png");
+  background-size: cover;
+  width: 100%;
+  min-height: 400px;
+  height: 100%;
+
+  &__block {
+    display: grid;
+    gap: 12px;
+    margin: auto;
+    max-width: 600px;
+  }
+}

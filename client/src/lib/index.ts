@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import popup from "./store/popup/popup";
+import cart from "./store/cart/cart";
 
 const store = configureStore({
   reducer: {
     popup: popup,
+    cart: cart,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

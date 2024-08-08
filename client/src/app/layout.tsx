@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
-import NavigationBar from "./components/elemets/navigation/navigationBar";
 import StoreProvider from "./storeProvider";
-import IconsSprite from "./components/icons/IconsSprite";
-import Footer from "./components/elemets/footer/Footer";
-import Popup from "./components/popup/popup";
+import IconsSprite from "../components/icons/IconsSprite";
+import Footer from "../components/elemets/footer/Footer";
+import Popup from "../components/popup/popup";
+import NavigationBar from "@/components/elemets/header/navigationBar";
+import Header from "@/components/elemets/header/Navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,20 +21,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StoreProvider> 
+    <StoreProvider>
       <html lang="en">
         <body className={inter.className}>
           <div id="root">
             <div id="popup"></div>
             <div id="overlay"></div>
-              <Popup/>
-            <nav>
-              <NavigationBar />
-            </nav>
+            <Popup />
+            {/* <NavigationBar /> */}
+            <Header/>
             <main>{children}</main>
-            <footer>
-              <Footer />
-            </footer>
+            <Footer />
           </div>
           <IconsSprite />
         </body>
