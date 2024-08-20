@@ -16,8 +16,6 @@ async function getAllProducts(inputData: ProductGetDTO) {
   const take = getQueryLimit(inputData);
   const skip = getQueryOffset(inputData);
 
-
-
   const queryOprions: Prisma.ProductsFindManyArgs = {
     where,
     orderBy,
@@ -83,8 +81,6 @@ async function getAllProducts(inputData: ProductGetDTO) {
     where: queryOprions.where,
   });
 
-
-
   return {
     products,
     productCounts,
@@ -114,12 +110,17 @@ async function getProductWhere(productGetDTO: ProductGetDTO) {
   }
 
   if (productGetDTO.category) {
-    const categoryID = await categoriesService.getCategoriesIDByTitle(
+    const categoryID = await categoriesService.getCategoryIDByTitle(
       productGetDTO.category
     );
     if (categoryID) {
       where.category_id = categoryID.id;
     }
+  }
+
+  if (productGetDTO.id) {
+    const idArr = productGetDTO.id.toString().split(",");
+    where.id = { in: idArr.map((id) => +id) };
   }
 
   return where;
@@ -152,19 +153,6 @@ function getQueryOffset(productGetDTO: ProductGetDTO) {
 
   return parseInt(offset);
 }
-
-// async function getProductsAverageRating() {
-//   const review = await prismaClient.reviews.groupBy({
-//     by: ["product_id"],
-//     orderBy: {
-//       _avg: {
-//         rating: "desc",
-//       },
-//     },
-//   });
-
-//   return review.map((item) => item.product_id);
-// }
 
 export default {
   getAllProducts,

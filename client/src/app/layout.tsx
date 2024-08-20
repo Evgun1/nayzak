@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
 import StoreProvider from "./storeProvider";
-import IconsSprite from "../components/icons/IconsSprite";
-import Footer from "../components/elemets/footer/Footer";
-import Popup from "../components/popup/popup";
-import NavigationBar from "@/components/elemets/header/navigationBar";
-import Header from "@/components/elemets/header/Navigation";
+import IconsSprite from "../components/elemets/icons/IconsSprite";
+import Footer from "../components/footer/Footer";
+import Popup from "../components/elemets/popup/popup";
+import Header from "@/components/header/Header";
+
 
 const inter = Inter({ subsets: ["latin"] });
 

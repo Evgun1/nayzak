@@ -68,13 +68,22 @@ model Wishlist {
 }
 
 model Users {
-  id       Int       @id @default(autoincrement())
-  login    String    @unique @db.VarChar(255)
-  email    String    @unique @db.VarChar(255)
-  password String
-  role     String    @default("user") @db.VarChar(20)
-  Orders   Orders[]
-  Reviews  Reviews[]
+  id             Int       @id @default(autoincrement())
+  email          String    @unique @db.Text
+  password       String    @db.Text
+  role           String    @default("user") @db.VarChar(20)
+  isActive       Boolean   @default(false)
+  activationLink String?
+  Orders         Orders[]
+  Reviews        Reviews[]
+  Token          Token[]
+}
+
+model Token {
+  id           Int    @id @default(autoincrement())
+  refreshToken String
+  user_id      Int
+  user         Users  @relation(fields: [user_id], references: [id])
 }
 
 model Reviews {

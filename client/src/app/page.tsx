@@ -1,12 +1,12 @@
 import { PageProps } from "../../.next/types/app/layout";
-import Banner from "../components/elemets/hero/banner/Baner";
-import CategoryGrid from "../components/elemets/hero/categories/CategoryGrid";
-import FeatureTwo from "../components/elemets/hero/featureTwo/FeatureTwo";
-import Feature from "../components/elemets/hero/feature/Feature";
-import IconsBox from "../components/elemets/hero/iconsBox/IconsBox";
-import ProductsCarusel from "../components/elemets/hero/productsCarules/ProductsCarusel";
-import ProductGrid from "../components/elemets/hero/productsGrid/ProductGtid";
-import Reviews from "../components/elemets/hero/reviews/Reviews";
+import Banner from "../components/page-hero/banner/Baner";
+import CategoryGrid from "../components/page-hero/categories/CategoryGrid";
+import FeatureTwo from "../components/page-hero/feature-two/FeatureTwo";
+import Feature from "../components/page-hero/feature/Feature";
+import IconsBox from "../components/page-hero/iconsBox/IconsBox";
+import ProductsSwiper from "../components/page-hero/products-swiper/ProductsSwiper";
+import ProductGrid from "../components/page-hero/products-grid/ProductGtid";
+import Reviews from "../components/page-hero/reviews/Reviews";
 
 import classes from "./Hero.module.scss";
 
@@ -17,7 +17,7 @@ export default async function Home(props: PageProps) {
         <Banner />
       </section>
       <section className={classes.section}>
-        <ProductsCarusel />
+        <ProductsSwiper />
       </section>
       <section className={classes.section}>
         <CategoryGrid />

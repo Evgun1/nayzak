@@ -1,22 +1,23 @@
-import ProductLoop from "@/components/elemets/product/productLoop/ProductLoop";
-import { ProductTypes } from "@/components/types/products";
+import ProductLoop from "@/components/page-product/productLoop/ProductLoop";
+import { Product } from "@/types/product";
 
 import "./style.scss";
-import ProductTabs from "@/components/elemets/product/ProductTabs/ProductTabs";
-import { fetchProduct } from "@/components/utils/fetchProducts";
-import { fetchReviewsProduct } from "@/components/utils/fetchReviews";
+import ProductTabs from "@/components/page-product/ProductTabs/ProductTabs";
+import { useFetchReviewsProduct } from "@/hooks/useFetchReviews";
+import { useFetchProduct } from "@/hooks/useFetchProducts";
 
 export default async function page({ params }: { params: { slug: string } }) {
-  const product = await fetchProduct({ params });
+  const product = await useFetchProduct({ params });
   if (!product) return;
 
-  const { reviewsData, totalReviews } = (await fetchReviewsProduct({
+  const { reviewsData, totalReviews } = (await useFetchReviewsProduct({
     params,
   })) as any;
 
   return (
     <div className="wrapper">
       <ProductLoop
+        slug={params.slug}
         productData={product}
         reviewsArray={reviewsData}
         totalReviews={totalReviews}

@@ -5,19 +5,34 @@
     "delete-faker-data": "tsx src/tools/delete-faker-data.ts",
     "drop-tables": "tsx src/tools/drop-tables.ts"
   },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
+  },
   "dependencies": {
     "@hono/node-server": "^1.9.0",
-    "@prisma/client": "^5.12.1",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/nodemailer": "^6.4.15",
+    "@types/uuid": "^10.0.0",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "hono": "^4.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.14",
     "pg": "^8.11.5",
-    "postgres": "^3.4.4"
+    "postgres": "^3.4.4",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@prisma/client": "^5.18.0",
     "@types/faker": "^6.6.9",
     "@types/node": "^20.12.4",
-    "prisma": "^5.12.1",
+    "prisma": "^5.18.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"

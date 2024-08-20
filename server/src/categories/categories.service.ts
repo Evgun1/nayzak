@@ -13,4 +13,4 @@ async function getCategoryIDByTitle(categoriesTitles: string) {
   return category_id;
 }
 
-export default { getCategoriesIDByTitle: getCategoryIDByTitle };
+export default { getCategoryIDByTitle };

@@ -1,0 +1,45 @@
+.drop-down {
+  position: relative;
+
+  &--list {
+    text-align: left;
+    position: absolute;
+    display: grid;
+    grid-template-columns: minmax(196px, max-content);
+    list-style: none;
+    z-index: 2;
+    left: 50%;
+    transform: translate(-50%);
+    background: none;
+    border: none;
+    padding-top: 10px;
+  }
+
+  &--open {
+    svg {
+      rotate: 180deg;
+      transition: 0.2s ease-in-out;
+    }
+  }
+  &--close {
+    svg {
+      rotate: 360deg;
+      transition: 0.2s ease-in-out;
+    }
+  }
+
+  &--item {
+    // display: block;
+    // border: 1px solid var(--black-200);
+    a,
+    button,
+    div {
+      background: white;
+      padding: 12px 16px;
+    }
+
+    &:hover {
+      background: var(--black-100);
+    }
+  }
+}

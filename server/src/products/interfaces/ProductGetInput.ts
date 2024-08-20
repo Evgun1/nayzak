@@ -1,4 +1,5 @@
 export default interface ProductGetDTO {
+  id?: number;
   page?: string;
   limit?: string;
   category?: string;

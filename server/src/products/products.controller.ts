@@ -14,6 +14,17 @@ class ProductsController {
     return c.json({ products, productCounts });
   }
 
+  async getAllByParams(c: Context) {
+    const { category, subcategory } = c.req.param();
+    const query = c.req.query();
+
+    const inputData = { ...query, category, subcategory } as ProductGetDTO;
+    const { products, productCounts } = await productsService.getAllProducts(
+      inputData
+    );
+    return c.json({ products, productCounts });
+  }
+
   async getProduct(c: Context) {
     const { productName } = c.req.param();
 
