@@ -12,6 +12,8 @@ const CategoryGrid = async () => {
   const result: { categories: Category[] } = await res.json();
   const categoriesData = result.categories;
 
+  console.log(categoriesData);
+
   return (
     <ul className={`container ${classes.wrapper}`}>
       {categoriesData &&

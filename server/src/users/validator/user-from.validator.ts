@@ -26,14 +26,13 @@ const UserFromValidator = async (
     const zodValidator = schema.get(key);
     const result = zodValidator?.safeParse(value[key]);
 
-    if(result?.success){
-      continue
+    console.log(result?.error);
+
+    if (result?.success) {
+      continue;
     }
 
-
-
-
-    allResults.set(key, result)
+    allResults.set(key, result);
   }
 
   // console.log(messages);
