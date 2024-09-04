@@ -20,11 +20,10 @@ type BreadcrumbsProps = {
 export default function Breadcrumbs({ style }: BreadcrumbsProps) {
   const params = useParams<{ slug: string[] }>();
 
-
   return (
     <ul className={classes.breadcrumbs} style={style ? style : undefined}>
       <li className={classes["breadcrumbs-item"]}>
-        <LinkCustom.SiteLinkCustom
+        <LinkCustom.SiteLink
           styleSettings={{
             type: LinkCustom.Type.text,
             color: { dark: true },
@@ -35,7 +34,7 @@ export default function Breadcrumbs({ style }: BreadcrumbsProps) {
           className={`${TextClassList.REGULAR_12} ${classes["breadcrumbs-item--link"]}`}
         >
           Home
-        </LinkCustom.SiteLinkCustom>
+        </LinkCustom.SiteLink>
       </li>
       {params.slug &&
         params.slug.length > 0 &&
@@ -43,7 +42,7 @@ export default function Breadcrumbs({ style }: BreadcrumbsProps) {
           <li key={index} className={classes["breadcrumbs-item"]}>
             {index + 1 !== array.length ? (
               <>
-                <LinkCustom.SiteLinkCustom
+                <LinkCustom.SiteLink
                   styleSettings={{
                     type: LinkCustom.Type.text,
                     color: { dark: true },
@@ -54,7 +53,7 @@ export default function Breadcrumbs({ style }: BreadcrumbsProps) {
                   className={`${TextClassList.REGULAR_12} ${classes["breadcrumbs-item--link"]}`}
                 >
                   {value[0].toUpperCase() + value.slice(1).replaceAll("_", " ")}
-                </LinkCustom.SiteLinkCustom>
+                </LinkCustom.SiteLink>
                 <DisplayIcon
                   className={classes.icon}
                   iconName={IconsIdList.CHEVRONE}
@@ -72,6 +71,6 @@ export default function Breadcrumbs({ style }: BreadcrumbsProps) {
           </li>
         ))}
     </ul>
-    // </div>
+
   );
 }

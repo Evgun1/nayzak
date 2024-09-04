@@ -1,44 +1,46 @@
 import { Context, Next } from "hono";
 import usersService from "./users.service";
-import { setCookie } from "hono/cookie";
 import { HTTPException } from "hono/http-exception";
 import _default from "hono/jsx";
+import UserGetDTO from "./interface/UserGetInput";
 
 class UsersControler {
   async registration(c: Context, next: Next) {
-    const { email, password } = await c.req.parseBody();
-    const userData = await usersService.registration(
-      email.toString() as string,
-      password.toString() as string
-    );
+    const inputData = await c.req.json<UserGetDTO>();
 
-    const refreshToken = userData?.refreshToken;
+    console.log(inputData);
 
-    if (refreshToken) {
-      setCookie(c, "refreshtoken", refreshToken, {
-        maxAge: 60 * 60 * 24 * 30,
-        httpOnly: true,
-      });
-    }
+    const userToken = await usersService.registration(inputData);
+
+    return c.json(userToken);
+  }
+
+  async login(c: Context) {
+    const inputData = await c.req.json<UserGetDTO>();
+
+    const userData = await usersService.login(inputData);
 
     return c.json(userData);
-
-    // throw new HTTPException(400, {
-    //   message: "The email address is entered incorrectly",
-    // });
-
-    // console.log(error);
   }
-  async login(c: Context) {}
-  async logout(c: Context) {}
+
   async active(c: Context) {
     const { link } = c.req.param();
     await usersService.activate(link);
 
     return c.redirect(`${process.env.CLIENT_URL}`);
   }
-  async refresh(c: Context) {}
-  async getUsers(c: Context) {}
+
+  async check(c: Context) {
+    const authorization = c.req.header("Authorization");
+
+    if (!authorization) {
+      throw new HTTPException(401, { message: "Not authorized" });
+    }
+
+    const newToken = await usersService.check(authorization);
+
+    return c.json(newToken);
+  }
 }
 
 export default new UsersControler();

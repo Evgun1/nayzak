@@ -15,7 +15,7 @@ export default function Feature() {
           styles to choose from.
         </p>
 
-        <LinkCustom.SiteLinkCustom
+        <LinkCustom.SiteLink
           href={{ endpoint: "#" }}
           styleSettings={{
             roundess: LinkCustom.Roundness.sharp,
@@ -26,7 +26,7 @@ export default function Feature() {
           }}
         >
           See Collection
-        </LinkCustom.SiteLinkCustom>
+        </LinkCustom.SiteLink>
       </div>
     </div>
   );

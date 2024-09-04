@@ -29,7 +29,7 @@ const Social: FC = () => {
       {SOCIAL_ARRAY &&
         SOCIAL_ARRAY.length > 0 &&
         SOCIAL_ARRAY.map((value, index) => (
-          <LinkCustom.SiteLinkCustom
+          <LinkCustom.SiteLink
             key={index}
             styleSettings={{
               type: LinkCustom.Type.circle,

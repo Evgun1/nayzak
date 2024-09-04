@@ -6,12 +6,12 @@ import { FC, useEffect, useState } from "react";
 
 import classes from "./ProductPreview.module.scss";
 import Price from "../price/Price";
-import { useFetchReviews } from "../../../hooks/useFetchReviews";
 import Rating from "../rating/Rating";
 import { Review } from "../../../types/reviews";
 import { useSearchParams } from "next/navigation";
 import AddToCart from "../../page-product/productLoop/AddToCart";
 import ButtonCustom from "../../../lib/ui/custom-elemets/button-custom/ButtonCustom";
+import { Reviews } from "@/hooks/useFetchReviews";
 
 type ProductPreviewProps = {
   product: Product;
@@ -33,9 +33,7 @@ const ProductPreview: FC<ProductPreviewProps> = ({
   const list_type = searchParams.get("list_type");
 
   const reviewData = async () => {
-    const { reviewsData } = await useFetchReviews({
-      id: product.id,
-    });
+    const { reviewsData } = await Reviews.useFetchAll(product.id);
 
     setReviewsArray(reviewsData);
   };

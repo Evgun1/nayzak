@@ -6,7 +6,6 @@ import { ButtonClassList } from "@/types/buttonClassList";
 import classes from "./ProductGrid.module.scss";
 import IconsIdList from "@/components/elemets/icons/IconsIdList";
 import { FilterProvider } from "../../page-shop/products/FilterCtx";
-import { useFetchCategories } from "@/hooks/useFetchCategories";
 import DropDown from "@/lib/ui/drop-down/DropDown";
 import LinkCustom from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
 import {
@@ -17,22 +16,29 @@ import {
 import { useEffect, useState } from "react";
 import { Category } from "@/types/categories";
 import { Subcategory } from "@/types/subcategories";
-import { useFetchSubcategories } from "@/hooks/useFetchSubcategories";
 import ProductsHero from "../products-hero/ProductsHero";
+import { useSearchParams } from "next/navigation";
+import { Subcategories } from "@/hooks/useFetchSubcategories";
+import { Categories } from "@/hooks/useFetchCategories";
 
 export default function ProductGrid(props: PageProps) {
-  const urlSearchParams = new URLSearchParams(props.searchParams);
+  const searchParams = useSearchParams();
+
+  // const urlSearchParams = new URLSearchParams(searchParams.toString());
+  // // const categories = await useFetchCategories({ urlSearchParams });
+  // // const subcategories = await useFetchSubcategories({ urlSearchParams });
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
 
   useEffect(() => {
-    useFetchCategories({ urlSearchParams }).then((data) => {
+    Categories.useFetchAll(searchParams).then((data) => {
       setCategories(data);
     });
-    useFetchSubcategories({ urlSearchParams }).then((data) => {
+    Subcategories.useFetchAll(searchParams).then((data) => {
       setSubcategories(data);
     });
-  }, [urlSearchParams]);
+  }, [searchParams]);
 
   return (
     <div className={`container ${classes.wrapper}`}>
@@ -54,7 +60,7 @@ export default function ProductGrid(props: PageProps) {
             categories.length > 0 &&
             categories.map((category, index) => (
               <DropDown.Item key={index}>
-                <LinkCustom.SiteLinkCustom
+                <LinkCustom.SiteLink
                   styleSettings={{
                     size: LinkCustom.Size.S,
                     type: LinkCustom.Type.text,
@@ -65,10 +71,9 @@ export default function ProductGrid(props: PageProps) {
                     queryParams: { category: category.title },
                     deleteQuertParams: "subcategory",
                   }}
-                  searchParams={props.searchParams}
                 >
                   {category.title}
-                </LinkCustom.SiteLinkCustom>
+                </LinkCustom.SiteLink>
               </DropDown.Item>
             ))}
         </DropDown>
@@ -88,7 +93,7 @@ export default function ProductGrid(props: PageProps) {
             subcategories.length > 0 &&
             subcategories.map((subcategory, index) => (
               <DropDown.Item key={index}>
-                <LinkCustom.SiteLinkCustom
+                <LinkCustom.SiteLink
                   styleSettings={{
                     size: LinkCustom.Size.S,
                     type: LinkCustom.Type.text,
@@ -98,10 +103,9 @@ export default function ProductGrid(props: PageProps) {
                   href={{
                     queryParams: { subcategory: subcategory.title },
                   }}
-                  searchParams={props.searchParams}
                 >
                   {subcategory.title}
-                </LinkCustom.SiteLinkCustom>
+                </LinkCustom.SiteLink>
               </DropDown.Item>
             ))}
         </DropDown>

@@ -11,4 +11,4 @@ const popup = createSlice({
 });
 
 export default popup.reducer;
-export const { toggle } = popup.actions;
+export const popupActions = popup.actions;

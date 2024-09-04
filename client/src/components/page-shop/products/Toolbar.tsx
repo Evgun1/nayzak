@@ -18,10 +18,7 @@ import { useSearchParams } from "next/navigation";
 import { FilterContext } from "./FilterCtx";
 import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import { PageProps } from "../../../../.next/types/app/layout";
-import {
-  Size,
-  Type,
-} from "@/lib/ui/custom-elemets/button-custom/ButtonType";
+import { Size, Type } from "@/lib/ui/custom-elemets/button-custom/ButtonType";
 import LinkCustom from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
 import DropDown from "@/lib/ui/drop-down/DropDown";
 
@@ -118,8 +115,7 @@ export default function Toolbar(props: PageProps) {
           >
             {sortData.map((value, index) => (
               <DropDown.Item key={index}>
-                <LinkCustom.SiteLinkCustom
-                  searchParams={props.searchParams}
+                <LinkCustom.SiteLink
                   href={{ queryParams: value.valueName }}
                   styleSettings={{
                     type: LinkCustom.Type.text,
@@ -129,7 +125,7 @@ export default function Toolbar(props: PageProps) {
                   }}
                 >
                   {value.title}
-                </LinkCustom.SiteLinkCustom>
+                </LinkCustom.SiteLink>
                 {/* <LinkItem
                   searchParams={props.searchParams}
                   urlName={value.valueName}

@@ -6,11 +6,9 @@ import { ButtonClassList } from "@/types/buttonClassList";
 import { FC, useState } from "react";
 import classes from "./AddToCart.module.scss";
 import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
-import { useAppDispatch } from "@/lib/retux/redux";
-import { popupActions } from "@/lib/retux/store/popup/popup";
-import { cartActions, CartItemData } from "@/lib/store/cart/cart.redux";
-import { updateCart } from "@/lib/retux/store/cart/action";
-import { useAppSelector } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
+import { popupActions } from "@/lib/redux/store/popup/popup";
+import { updateCart } from "@/lib/redux/store/cart/action";
 
 type AddToCartProps = {
   style?: string;
@@ -20,19 +18,10 @@ type AddToCartProps = {
 const AddToCart: FC<AddToCartProps> = ({ style, productID }) => {
   const [quantity, setQuantity] = useState(1);
   const dispatch = useAppDispatch();
-  const productsCart = useAppSelector(
-    (selector) => selector.cart.productsArray
-  );
-
-  console.log(productsCart);
+  const productsCart = useAppSelector((selector) => selector.cart);
 
   const addToCart = () => {
-    dispatch(
-      updateCart({
-        cart: productsCart,
-        curentProduct: { productID, amount: quantity },
-      })
-    );
+    dispatch(updateCart({ productID, amount: quantity }));
   };
 
   const btnPlusQuantity = () => {

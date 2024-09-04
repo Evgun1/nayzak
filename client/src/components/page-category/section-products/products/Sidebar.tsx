@@ -4,8 +4,8 @@ import classes from "./Sidebar.module.scss";
 import { MouseEventHandler, useContext, useEffect, useState } from "react";
 import { FilterContext } from "./FilterCtx";
 import FilterSection from "./FilterSection";
-import { PageProps } from "../../../../.next/types/app/layout";
 import { TextClassList } from "@/types/textClassList";
+import { PageProps } from "../../../../../.next/types/app/layout";
 
 type SidebarProps = {
   props: PageProps;

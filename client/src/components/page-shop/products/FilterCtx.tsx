@@ -1,5 +1,5 @@
 "use client";
-import { useFetchAllProducts } from "@/hooks/useFetchProducts";
+import { Products } from "@/hooks/useFetchProducts";
 import { Product } from "@/types/product";
 import { log } from "console";
 import { KeyObject } from "crypto";
@@ -61,7 +61,7 @@ export const FilterProvider: FC<{
       urlSearchParams.set("limit", listTypeLimits.get(getListType) as string);
     }
 
-    useFetchAllProducts({ urlSearchParams }).then(
+    Products.useFetchAll({ urlSearchParams }).then(
       ({ productCounts, products }) => {
         setCount(products.length);
         setPoductsArray(products);

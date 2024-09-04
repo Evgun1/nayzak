@@ -53,11 +53,12 @@ model Products {
 }
 
 model Cart {
-  id         Int       @id @default(autoincrement())
-  user_token String
+  id         Int      @id @default(autoincrement())
   amount     Int
-  product_id Int?
-  product    Products? @relation(fields: [product_id], references: [id])
+  user       Users    @relation(fields: [user_id], references: [id])
+  user_id    Int
+  product    Products @relation(fields: [product_id], references: [id])
+  product_id Int
 }
 
 model Wishlist {
@@ -74,16 +75,10 @@ model Users {
   role           String    @default("user") @db.VarChar(20)
   isActive       Boolean   @default(false)
   activationLink String?
+  createdAt      DateTime  @default(now())
   Orders         Orders[]
   Reviews        Reviews[]
-  Token          Token[]
-}
-
-model Token {
-  id           Int    @id @default(autoincrement())
-  refreshToken String
-  user_id      Int
-  user         Users  @relation(fields: [user_id], references: [id])
+  Cart           Cart[]
 }
 
 model Reviews {

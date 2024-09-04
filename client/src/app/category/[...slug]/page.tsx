@@ -1,8 +1,7 @@
 import HeaderProducts from "@/components/page-category/section-products/header-productsct/HeaderProducts";
 import Products from "@/components/page-category/section-products/products/Products";
 import HeaderSubcategory from "@/components/page-category/section-subcategory/header-subcategory/HeaderSubcategory";
-import Subcategories from "@/components/page-category/section-subcategory/subcategories/Subcategories";
-import { useFetchSubcategoriesByCategory } from "@/hooks/useFetchSubcategories";
+import SubcategoriesItem from "@/components/page-category/section-subcategory/subcategories/Subcategories";
 
 interface paramsData {
   slug: string[];
@@ -19,7 +18,7 @@ export default async function page({ params }: pageProps) {
         <HeaderSubcategory
           title={params.slug[0][0].toUpperCase() + params.slug[0].slice(1)}
         />
-        <Subcategories slug={params.slug[0]} />
+        <SubcategoriesItem slug={params.slug[0]} />
       </section>
     );
   } else if (params.slug.length === 2) {

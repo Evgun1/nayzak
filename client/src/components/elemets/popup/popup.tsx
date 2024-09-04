@@ -2,9 +2,9 @@
 
 import { FC, ReactNode, useEffect, useState } from "react";
 import classes from "./Popup.module.scss";
-import { toggle } from "@/lib/retux/store/popup/popup";
-import { useAppDispatch, useAppSelector } from "@/lib/retux/redux";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 import { createPortal } from "react-dom";
+import { popupActions } from "@/lib/redux/store/popup/popup";
 
 const Popup: FC = () => {
   const popupContent = useAppSelector((state) => state.popup.popupContent);
@@ -35,7 +35,7 @@ const Popup: FC = () => {
 const Overlay: FC = () => {
   const dispatch = useAppDispatch();
   const togglePopupHandler = () => {
-    dispatch(toggle(null));
+    dispatch(popupActions.toggle(null));
   };
 
   return <div className={classes.overlay} onClick={togglePopupHandler}></div>;

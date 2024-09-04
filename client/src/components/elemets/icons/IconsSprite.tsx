@@ -120,6 +120,7 @@ const IconsSprite: FC = () => {
           />
         </symbol>
       </defs>
+      
       <defs>
         <symbol
           id={IconsIdList.USER}

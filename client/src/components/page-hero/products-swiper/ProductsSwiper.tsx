@@ -13,14 +13,15 @@ import DisplayIcon from "@/components/elemets/icons/displayIcon";
 import IconsIdList from "@/components/elemets/icons/IconsIdList";
 import ProductPreview from "@/components/elemets/product-preview/ProductPreview";
 import { useEffect, useState } from "react";
-import { useFetchAllProducts } from "@/hooks/useFetchProducts";
+import { Products } from "@/hooks/useFetchProducts";
+// import { useFetchAllProducts } from "@/hooks/fetchProducts";
 
 const ProductsSwiper = () => {
   const [productsData, setProductsData] = useState<Product[]>();
   const urlSearchParams = new URLSearchParams({ limit: "8" });
 
   useEffect(() => {
-    useFetchAllProducts({ urlSearchParams }).then(({ products }) =>
+    Products.useFetchAll({ urlSearchParams }).then(({ products }) =>
       setProductsData(products)
     );
   }, []);

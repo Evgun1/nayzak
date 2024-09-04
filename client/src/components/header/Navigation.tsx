@@ -12,9 +12,9 @@ import classes from "./Navigation.module.scss";
 import LinkCustom from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
 import { Category } from "@/types/categories";
 import { Subcategory } from "@/types/subcategories";
-import { useFetchCategories } from "@/hooks/useFetchCategories";
-import { useFetchSubcategories } from "@/hooks/useFetchSubcategories";
 import NavLink from "@/lib/ui/nav-link/NavLink";
+import { Subcategories } from "@/hooks/useFetchSubcategories";
+import { Categories } from "@/hooks/useFetchCategories";
 
 interface NavigationItem {
   label: string;
@@ -26,16 +26,14 @@ type AppNavigation = NavigationItem[];
 export default function Navigation() {
   const [navigation, setNavigation] = useState<AppNavigation>([]);
 
-  const buildNavItem = (
-    category: Category | Subcategory
-  ): NavigationItem => ({
+  const buildNavItem = (category: Category | Subcategory): NavigationItem => ({
     label: category.title,
     url: category.title.replaceAll(" ", "-").toLowerCase(),
   });
 
   const setupData = async () => {
     try {
-      const categories = await useFetchCategories({});
+      const categories = await Categories.useFetchAll();
 
       const navigation: AppNavigation = [];
 
@@ -46,7 +44,7 @@ export default function Navigation() {
           category: category.title,
         });
 
-        const subCategories = await useFetchSubcategories({ urlSearchParams });
+        const subCategories = await Subcategories.useFetchAll(urlSearchParams);
 
         if (subCategories && subCategories.length) {
           navItem.children = subCategories.map(buildNavItem);
@@ -87,7 +85,7 @@ export default function Navigation() {
                 item.children.length > 0 &&
                 item.children.map((subItem, index) => (
                   <DropDown.Item key={index}>
-                    <LinkCustom.SiteLinkCustom
+                    <LinkCustom.SiteLink
                       href={{
                         endpoint: `/category/${item.url}/${subItem.url}`,
                       }}
@@ -99,7 +97,7 @@ export default function Navigation() {
                       }}
                     >
                       {subItem.label}
-                    </LinkCustom.SiteLinkCustom>
+                    </LinkCustom.SiteLink>
                   </DropDown.Item>
                 ))}
             </DropDown>

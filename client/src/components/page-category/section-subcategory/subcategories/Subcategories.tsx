@@ -1,25 +1,23 @@
 "use client";
 
-import { useFetchSubcategoriesByCategory } from "@/hooks/useFetchSubcategories";
 import { FC, useEffect, useState } from "react";
 
 import classes from "./Subcategories.module.scss";
 import LinkCustom from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
 import { usePathname } from "next/navigation";
 import { Subcategory } from "@/types/subcategories";
+import { Subcategories } from "@/hooks/useFetchSubcategories";
 
 type SubcategoriesGridProps = {
   slug: string;
 };
 
-const Subcategories: FC<SubcategoriesGridProps> = ({ slug }) => {
+const SubcategoriesItem: FC<SubcategoriesGridProps> = ({ slug }) => {
   const pathname = usePathname();
   const [subcategories, setSubcategories] = useState<Subcategory[]>();
 
   const setData = async () => {
-    const subcategories = await useFetchSubcategoriesByCategory({
-      params: { slug },
-    });
+    const subcategories = await Subcategories.useFetchByCategory(slug);
 
     setSubcategories(subcategories);
   };
@@ -34,7 +32,7 @@ const Subcategories: FC<SubcategoriesGridProps> = ({ slug }) => {
         subcategories.length > 0 &&
         subcategories.map(({ title }, index) => (
           <div key={index} className={classes["subcategories--item"]}>
-            <LinkCustom.SiteLinkCustom
+            <LinkCustom.SiteLink
               styleSettings={{
                 color: { dark: true },
                 roundess: LinkCustom.Roundness.rounded,
@@ -47,11 +45,11 @@ const Subcategories: FC<SubcategoriesGridProps> = ({ slug }) => {
               className={classes["subcategories--item-btn"]}
             >
               {title}
-            </LinkCustom.SiteLinkCustom>
+            </LinkCustom.SiteLink>
           </div>
         ))}
     </div>
   );
 };
 
-export default Subcategories;
+export default SubcategoriesItem;

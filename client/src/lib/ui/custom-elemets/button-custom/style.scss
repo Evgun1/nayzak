@@ -13,17 +13,15 @@
   }
 
   &-text {
-    &.btn-color {
-      &--dark {
-        position: relative;
-        background: none;
-        color: var(--black-900);
-      }
-      &--light {
-        position: relative;
-        background: none;
-        color: white;
-      }
+    &--dark {
+      position: relative;
+      background: none;
+      color: var(--black-900);
+    }
+    &--light {
+      position: relative;
+      background: none;
+      color: white;
     }
   }
 

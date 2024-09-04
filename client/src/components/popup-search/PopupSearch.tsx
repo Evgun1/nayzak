@@ -7,11 +7,12 @@ import { Product } from "../../types/product";
 import { MouseEventHandler, useState } from "react";
 import { FilterProvider } from "../page-shop/products/FilterCtx";
 import { useSearchParams } from "next/navigation";
-import { useFetchAllProducts } from "../../hooks/useFetchProducts";
-import { useAppDispatch } from "@/lib/retux/redux";
+// import { useFetchAllProducts } from "../../hooks/useFetchProducts";
+import { useAppDispatch } from "@/lib/redux/redux";
 
 import ProductList from "../elemets/products-list/ProductList";
-import { popupActions } from "@/lib/retux/store/popup/popup";
+import { popupActions } from "@/lib/redux/store/popup/popup";
+import { Products } from "@/hooks/useFetchProducts";
 
 const PopupSearch = () => {
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ const PopupSearch = () => {
   const limit = 8;
 
   const updateData = async (urlSearchParams: URLSearchParams) => {
-    const { products, productCounts } = await useFetchAllProducts({
+    const { products, productCounts } = await Products.useFetchAll({
       urlSearchParams,
     });
 

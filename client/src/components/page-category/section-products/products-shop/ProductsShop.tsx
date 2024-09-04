@@ -6,19 +6,18 @@ import { useParams, useSearchParams } from "next/navigation";
 
 import { FilterContext } from "../products/FilterCtx";
 import ProductList from "@/components/elemets/products-list/ProductList";
-import { useFetchAllProducts } from "@/hooks/useFetchProducts";
+import { Products } from "@/hooks/useFetchProducts";
 
 const ProductsShop: FC = () => {
   const [style, setStyle] = useState<any>();
   const searchParams = useSearchParams();
- 
+
   const { productsArray, setPoductsArray, setCount, count, totalCount } =
     useContext(FilterContext);
 
   const limit = 12;
 
   useEffect(() => {
-    
     const classListType = searchParams.get("list_type");
     classListType
       ? setStyle(classes[classListType])
@@ -26,9 +25,10 @@ const ProductsShop: FC = () => {
   }, [searchParams]);
 
   const updateData = async (searchParams: URLSearchParams) => {
-    const { products } = await useFetchAllProducts({
+    const { products } = await Products.useFetchAll({
       urlSearchParams: searchParams,
     });
+
     setPoductsArray(productsArray.concat(products));
     setCount(count + products.length);
   };

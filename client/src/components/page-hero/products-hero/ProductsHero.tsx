@@ -6,8 +6,9 @@ import { FC, MouseEventHandler, useContext, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { FilterContext } from "../../page-shop/products/FilterCtx";
-import { useFetchAllProducts } from "../../../hooks/useFetchProducts";
+// import { useFetchAllProducts } from "../../../hooks/useFetchProducts";
 import ProductList from "@/components/elemets/products-list/ProductList";
+import { Products } from "@/hooks/useFetchProducts";
 
 const ProductsHero: FC = () => {
   const searchParams = useSearchParams();
@@ -23,7 +24,7 @@ const ProductsHero: FC = () => {
   const limit = 8;
 
   const updateData = async (searchParams: URLSearchParams) => {
-    const { products } = await useFetchAllProducts({
+    const { products } = await Products.useFetchAll({
       urlSearchParams: searchParams,
     });
 

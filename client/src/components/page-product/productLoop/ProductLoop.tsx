@@ -12,15 +12,14 @@ type ProductLoopProps = {
   productData: Product;
   reviewsArray: Review[];
   totalReviews: number;
-  slug: string;
 };
 
 export default function ProductLoop({
   productData,
   reviewsArray,
   totalReviews,
-  slug,
 }: ProductLoopProps) {
+
   return (
     <div className={classes.loop}>
       <div>

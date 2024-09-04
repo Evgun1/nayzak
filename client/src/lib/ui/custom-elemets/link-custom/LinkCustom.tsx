@@ -1,3 +1,5 @@
+// "use client";
+
 import Link from "next/link";
 import { FC, ReactNode, RefObject } from "react";
 
@@ -7,6 +9,7 @@ import { Color, Roundness, Size, Type } from "./LinkType";
 import IconsIdList from "@/components/elemets/icons/IconsIdList";
 import DisplayIcon from "@/components/elemets/icons/displayIcon";
 
+
 interface HrefObject {
   endpoint?: Url | string;
   queryParams?: { [key: string]: string };
@@ -14,35 +17,34 @@ interface HrefObject {
 }
 
 export interface StyleSettingsObject {
-  size: Size;
-  roundess: Roundness;
-  type: Type;
-  color: { dark?: boolean; light?: boolean };
+  size?: Size;
+  roundess?: Roundness;
+  type?: Type;
+  color?: { dark?: boolean; light?: boolean };
   icon?: IconsIdList;
 }
 
 type SiteLinkProps = {
   styleSettings: StyleSettingsObject;
-
   className?: string;
   children?: ReactNode;
-
   target?: boolean;
   searchParams?: URLSearchParams;
   linkRef?: RefObject<HTMLAnchorElement>;
   href: HrefObject;
 };
+
 const SiteLink: FC<SiteLinkProps> = ({
   styleSettings: { color, icon, roundess, size, type },
-
   className,
   searchParams,
   href: { queryParams, deleteQuertParams, endpoint },
-
   linkRef,
   children,
   target,
 }) => {
+  const urlSearchParams = new URLSearchParams(searchParams);
+
   let linkColor;
 
   if (type === Type.default || type === Type.circle) {
@@ -64,8 +66,6 @@ const SiteLink: FC<SiteLinkProps> = ({
   }
 
   const classes: any[] = [linkColor, size, roundess, type];
-
-  const urlSearchParams = new URLSearchParams(searchParams);
 
   if (queryParams)
     for (const urlNameKey in queryParams) {
@@ -91,7 +91,7 @@ const SiteLink: FC<SiteLinkProps> = ({
 };
 
 export default {
-  SiteLinkCustom: SiteLink,
+  SiteLink,
   Size,
   Color,
   Roundness,

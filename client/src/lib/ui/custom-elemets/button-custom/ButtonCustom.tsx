@@ -14,12 +14,19 @@ export interface StyleSettingsObject {
   icon?: IconsIdList;
 }
 
+interface TypeObject {
+  button: "button";
+  reset: "reset";
+  submit: "submit";
+}
+
 type SiteButtonProps = {
   styleSettings: StyleSettingsObject;
   className?: string;
   btnRef?: RefObject<HTMLButtonElement>;
   id?: string;
   children?: ReactNode;
+  typeProperty?: "button" | "reset" | "submit";
   onClick?: MouseEventHandler;
 };
 
@@ -29,6 +36,7 @@ export const SiteButton: FC<SiteButtonProps> = ({
   children,
   btnRef,
   id,
+  typeProperty,
   onClick,
 }) => {
   let btnColor;
@@ -57,7 +65,8 @@ export const SiteButton: FC<SiteButtonProps> = ({
       id={id}
       ref={btnRef}
       onClick={onClick}
-      className={`${className} ${classes.join(" ")}`}
+      className={`${className ?? ""} ${classes.join(" ")}`}
+      type={typeProperty ?? "button"}
     >
       {children ?? ""}
       {icon ? <DisplayIcon iconName={icon} /> : ""}
@@ -67,7 +76,7 @@ export const SiteButton: FC<SiteButtonProps> = ({
 
 export default {
   SiteButton,
-  Color,
+  // Color,
   Size,
   Roundness,
   Type,

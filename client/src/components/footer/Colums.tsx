@@ -55,7 +55,7 @@ const Colums: FC = () => {
                 data.item.length &&
                 data.item.map((itemData, index) => (
                   <li key={index}>
-                    <LinkCustom.SiteLinkCustom
+                    <LinkCustom.SiteLink
                       href={{ endpoint: "#" }}
                       styleSettings={{
                         roundess: LinkCustom.Roundness.sharp,
@@ -68,7 +68,7 @@ const Colums: FC = () => {
                       }`}
                     >
                       {itemData.title}
-                    </LinkCustom.SiteLinkCustom>
+                    </LinkCustom.SiteLink>
                   </li>
                 ))}
             </ul>

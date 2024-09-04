@@ -5,16 +5,17 @@ import prismaClient from "../prismaClient";
 import categoriesService from "../categories/categories.service";
 import subcategoryService from "../subcategories/subcategory.service";
 import { en } from "@faker-js/faker";
-import ProductGetDTO, {
+import ProductsGetDTO, {
   ProductsSort,
   ProductsSortBy,
-} from "./interfaces/ProductGetInput";
+} from "./interfaces/ProductsGetInput";
+import ProductGetDTO from "./interfaces/ProductGetInput";
 
-async function getAllProducts(inputData: ProductGetDTO) {
-  const where = await getProductWhere(inputData);
-  const orderBy = getOrderProducts(inputData);
-  const take = getQueryLimit(inputData);
-  const skip = getQueryOffset(inputData);
+async function getAllProducts(inputData: ProductsGetDTO) {
+  const where = await productWhere(inputData);
+  const orderBy = orderProducts(inputData);
+  const take = queryLimit(inputData);
+  const skip = queryOffset(inputData);
 
   const queryOprions: Prisma.ProductsFindManyArgs = {
     where,
@@ -87,7 +88,7 @@ async function getAllProducts(inputData: ProductGetDTO) {
   };
 }
 
-async function getProductWhere(productGetDTO: ProductGetDTO) {
+async function productWhere(productGetDTO: ProductsGetDTO) {
   const where: Prisma.ProductsWhereInput = {};
 
   if (productGetDTO.minPrice && productGetDTO.maxPrice) {
@@ -126,7 +127,7 @@ async function getProductWhere(productGetDTO: ProductGetDTO) {
   return where;
 }
 
-function getOrderProducts(productGetDTO: ProductGetDTO) {
+function orderProducts(productGetDTO: ProductsGetDTO) {
   const orderBy: Prisma.ProductsOrderByWithRelationInput = {};
 
   if (productGetDTO.sortBy === ProductsSortBy.PRICE) {
@@ -142,18 +143,27 @@ function getOrderProducts(productGetDTO: ProductGetDTO) {
   return orderBy;
 }
 
-function getQueryLimit(productGetDTO: ProductGetDTO) {
+function queryLimit(productGetDTO: ProductsGetDTO) {
   const limit = productGetDTO.limit || "15";
 
   return parseInt(limit);
 }
 
-function getQueryOffset(productGetDTO: ProductGetDTO) {
+function queryOffset(productGetDTO: ProductsGetDTO) {
   const offset = productGetDTO.offset ?? "0";
 
   return parseInt(offset);
 }
 
+async function getProduct(productName: string) {
+  const product = await prismaClient.products.findFirst({
+    where: { title: productName },
+  });
+
+  return product;
+}
+
 export default {
   getAllProducts,
+  getProduct,
 };

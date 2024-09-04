@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import { ComponentPropsWithoutRef, FC, ReactNode } from "react";
 import classes from "./DropDown.module.scss";

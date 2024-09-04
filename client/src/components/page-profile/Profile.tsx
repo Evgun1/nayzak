@@ -7,7 +7,10 @@ import AccountDetails from "./AccountDetails";
 import Wishlist from "./Wishlist";
 import classes from "./Profile.module.scss";
 import Dashboard from "./Dashboard";
-import { ButtonClassList } from "../../types/buttonClassList";
+import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
+import { useAppDispatch } from "@/lib/redux/redux";
+import { authAction } from "@/lib/redux/store/auth/auth";
+import { useRouter } from "next/navigation";
 
 type PageContentType = {
   label: string;
@@ -38,39 +41,61 @@ const MENU: PageContentType[] = [
 ];
 
 export default function Profile() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const [tabAction, setTabAction] = useState(0);
 
+  const btnLogOut = () => {
+    dispatch(authAction.logOut(null));
+    router.push("/");
+  };
+
   return (
-    <div className={classes.container}>
+    <div className={classes.profile}>
       <h3>My account</h3>
-      <div className={classes.elements}>
-        <div className={classes.menu}>
-          <div className={classes.menu__image}>
-            <img src="https://placehold.co/400" alt="" />
-          </div>
-          <ul className={classes.menu__list}>
+      <div className={classes["profile--dashboard"]}>
+        <div className={classes["profile--dashboard-menu"]}>
+          <img
+            className={classes["profile--menu-image"]}
+            src="https://placehold.co/400"
+            alt="avatar"
+          />
+          <ul className={classes["profile--menu-list"]}>
             {MENU &&
               MENU.length > 0 &&
-              MENU.map((value, index) => (
-                <li className={`${classes["menu__list-item"]} `} key={index}>
-                  <button
-                    className={`${classes["menu__list-btn"]} ${
-                      index === tabAction ? classes.action : ""
-                    }
-                    ${ButtonClassList.BUTTON_MEDIUM}
-                    `}
+              MENU.map((data, index) => (
+                <li key={index} className={classes["profile--menu-item"]}>
+                  <ButtonCustom.SiteButton
+                    styleSettings={{
+                      type: ButtonCustom.Type.text,
+                      roundess: ButtonCustom.Roundness.sharp,
+                      color: { dark: true },
+                      size: ButtonCustom.Size.M,
+                    }}
                     onClick={() => setTabAction(index)}
+                    className={
+                      index === tabAction
+                        ? classes["profile--btn-action"]
+                        : classes["profile--btn"]
+                    }
                   >
-                    {value.label}
-                  </button>
+                    {data.label}
+                  </ButtonCustom.SiteButton>
                 </li>
               ))}
-            <li>
-              <button
-                className={`${classes["menu__list-btn"]} ${ButtonClassList.BUTTON_MEDIUM}`}
+            <li className={classes["profile--menu-item"]}>
+              <ButtonCustom.SiteButton
+                styleSettings={{
+                  type: ButtonCustom.Type.text,
+                  roundess: ButtonCustom.Roundness.sharp,
+                  color: { dark: true },
+                  size: ButtonCustom.Size.M,
+                }}
+                className={classes["profile--btn"]}
+                onClick={btnLogOut}
               >
                 Logout
-              </button>
+              </ButtonCustom.SiteButton>
             </li>
           </ul>
         </div>

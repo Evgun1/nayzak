@@ -1,18 +1,10 @@
 import classes from "./Categories.module.scss";
 import { Category } from "../../../types/categories";
 import Link from "next/link";
+import { Categories } from "@/hooks/useFetchCategories";
 
 const CategoryGrid = async () => {
-  const res = await fetch("http://localhost:3030/categories", {
-    cache: "no-cache",
-  });
-  if (!res.ok || res.status !== 200) {
-    throw new Error(res.statusText);
-  }
-  const result: { categories: Category[] } = await res.json();
-  const categoriesData = result.categories;
-
-  console.log(categoriesData);
+  const categoriesData = await Categories.useFetchAll();
 
   return (
     <ul className={`container ${classes.wrapper}`}>

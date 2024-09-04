@@ -3,21 +3,20 @@ import { Product } from "@/types/product";
 
 import "./style.scss";
 import ProductTabs from "@/components/page-product/ProductTabs/ProductTabs";
-import { useFetchReviewsProduct } from "@/hooks/useFetchReviews";
-import { useFetchProduct } from "@/hooks/useFetchProducts";
+import { Products } from "@/hooks/useFetchProducts";
+import { Reviews } from "@/hooks/useFetchReviews";
+// import { useFetchProduct } from "@/hooks/fetchProducts";
 
 export default async function page({ params }: { params: { slug: string } }) {
-  const product = await useFetchProduct({ params });
-  if (!product) return;
+  const product = await Products.useFetchOne(params.slug);
 
-  const { reviewsData, totalReviews } = (await useFetchReviewsProduct({
-    params,
-  })) as any;
+  const { reviewsData, totalReviews } = (await Reviews.useFetchProduct(
+    params.slug
+  )) as any;
 
   return (
     <div className="wrapper">
       <ProductLoop
-        slug={params.slug}
         productData={product}
         reviewsArray={reviewsData}
         totalReviews={totalReviews}

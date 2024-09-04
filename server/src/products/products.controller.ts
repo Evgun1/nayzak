@@ -2,11 +2,12 @@ import { Context } from "hono";
 import prismaClient from "../prismaClient";
 import { Prisma } from "@prisma/client";
 import productsService from "./products.service";
+import ProductsGetDTO from "./interfaces/ProductsGetInput";
 import ProductGetDTO from "./interfaces/ProductGetInput";
 
 class ProductsController {
   async getAll(c: Context) {
-    const inputData = c.req.query() as ProductGetDTO;
+    const inputData = c.req.query() as ProductsGetDTO;
 
     const { products, productCounts } = await productsService.getAllProducts(
       inputData
@@ -18,7 +19,7 @@ class ProductsController {
     const { category, subcategory } = c.req.param();
     const query = c.req.query();
 
-    const inputData = { ...query, category, subcategory } as ProductGetDTO;
+    const inputData = { ...query, category, subcategory } as ProductsGetDTO;
     const { products, productCounts } = await productsService.getAllProducts(
       inputData
     );
@@ -28,13 +29,10 @@ class ProductsController {
   async getProduct(c: Context) {
     const { productName } = c.req.param();
 
-    const product = await prismaClient.products.findMany({
-      where: { title: productName },
-    });
+    const product = await productsService.getProduct(productName);
 
-    return c.json({ product });
+    return c.json(product);
   }
-
   async getMinMaxPrice(c: Context) {
     let { category, subcategory } = c.req.query();
 
