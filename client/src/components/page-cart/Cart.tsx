@@ -14,25 +14,23 @@ import CartItem from "./CartItem";
 
 export default function Cart() {
   const cart = useAppSelector((select) => select.cart.productsArray);
+
   const products = useFetchProductsById(cart);
 
   return (
-    <div className={` ${classes.container} ${classes.cart}`}>
+    <div className={`${classes.container} ${classes.cart}`}>
       <h3 className={classes[`cart--title`]}>Cart</h3>
-      <div className={classes["cart--content"]}>
-        <div
-          className={`${classes["cart--content-header"]} ${classes["cart--table"]}`}
-        >
-          <div className={ButtonClassList.BUTTON_SMALL}>Product</div>
-          <div className={classes["cart--table-left"]}>
+      {products && products.length > 0 ? (
+        <div className={classes["cart--content"]}>
+          <div
+            className={`${classes["cart--content-header"]} ${classes["cart--table"]}`}
+          >
+            <div className={ButtonClassList.BUTTON_SMALL}>Product</div>
             <div className={ButtonClassList.BUTTON_SMALL}>Quantity</div>
             <div className={ButtonClassList.BUTTON_SMALL}>Price</div>
             <div className={ButtonClassList.BUTTON_SMALL}>Subtotal</div>
           </div>
-        </div>
-        {products &&
-          products.length > 0 &&
-          products.map((product, index) => (
+          {products.map((product, index) => (
             <div
               key={index}
               className={`${classes["cart--content-product"]} ${classes["cart--table"]}`}
@@ -46,7 +44,14 @@ export default function Cart() {
               />
             </div>
           ))}
-      </div>
+        </div>
+      ) : (
+        <div
+          className={`${TextClassList.REGULAR_22} ${classes["cart--message"]}`}
+        >
+          The cart is empty
+        </div>
+      )}
     </div>
   );
 }

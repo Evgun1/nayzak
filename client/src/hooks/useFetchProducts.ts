@@ -7,8 +7,7 @@ export type fetchProductsProps = {
   params?: string[];
 };
 
-export namespace Products {
-  export const useFetchAll = async ({
+  export const useFetchProductsAll = async ({
     urlSearchParams,
     params,
   }: fetchProductsProps) => {
@@ -37,7 +36,7 @@ export namespace Products {
     return { products, productCounts, productsPriceList };
   };
 
-  export const useFetchOne = async (params: string) => {
+  export const useFetchProductsOne = async (params: string) => {
     const result = await useFetch<Product>({
       url: `http://localhost:3030/products/${params.replaceAll("_", " ")}`,
     });
@@ -45,7 +44,7 @@ export namespace Products {
     return result;
   };
 
-  export const useFetchMinMaxPrice = async (
+  export const useFetchProductsMinMaxPrice = async (
     urlSearchParams: URLSearchParams
   ) => {
     type Result = {
@@ -59,4 +58,3 @@ export namespace Products {
 
     return res;
   };
-}

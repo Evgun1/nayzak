@@ -48,7 +48,7 @@ const PopupAuth = () => {
               type: ButtonCustom.Type.circle,
               roundess: ButtonCustom.Roundness.sharp,
               size: ButtonCustom.Size.M,
-              icon: ButtonCustom.IconsIdList.CLOSE,
+              icon: { left: ButtonCustom.IconsIdList.CLOSE },
             }}
             onClick={() => dispatch(popupActions.toggle(null))}
           />
@@ -90,7 +90,7 @@ const PopupAuth = () => {
               roundess: ButtonCustom.Roundness.rounded,
               size: ButtonCustom.Size.M,
               type: ButtonCustom.Type.circle,
-              icon: ButtonCustom.IconsIdList.VIEWS,
+              icon: { left: ButtonCustom.IconsIdList.VIEWS },
             }}
             onClick={() => setShowPassword((prev) => !prev)}
           />

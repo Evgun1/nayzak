@@ -13,13 +13,15 @@
   &--table {
     display: grid;
     align-items: center;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 3fr repeat(3, 1fr);
+    text-align: center;
 
-    &-left {
-      display: flex;
-      // grid-template-columns: repeat(3, 1fr);
-      justify-content: space-between;
-      // gap: 185px;
+    :first-child,
+    :nth-child(2) {
+      text-align: start;
+    }
+    :last-child {
+      text-align: end;
     }
   }
 
@@ -29,6 +31,7 @@
     &-header {
       padding-bottom: 24px;
       position: relative;
+
       &::before {
         position: absolute;
         content: "";
@@ -58,6 +61,7 @@
   &--product {
     max-width: 376px;
     display: flex;
+    gap: 16px;
     &-img {
       max-width: 77px;
       max-height: 102px;
@@ -65,16 +69,16 @@
 
     &-info {
       max-width: 376px;
+      display: grid;
     }
 
     &-amount {
       border: 1px solid var(--black-300);
-      min-width: 64px;
+      max-width: max-content;
       gap: 13px;
       padding: 6px 8px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
     }
 
     &-price {
@@ -99,52 +103,60 @@
       display: flex;
     }
   }
-}
 
-.item {
-  position: relative;
-  padding: 24px 0;
-
-  &::before {
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 1px;
-    background: var(--black-300);
-    left: 0;
-    bottom: 0;
-  }
-
-  &__header {
-    display: flex;
-    gap: 16px;
-
-    &-img {
-      max-width: 77px;
-    }
-
-    &-title {
-      display: flex;
-      gap: 8px;
-      flex-direction: column;
-      justify-content: center;
-    }
+  &--message {
+    text-align: center;
+    padding: 20px 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--black-400);
+    border-radius: 1em;
   }
 }
 
-.btn {
-  cursor: pointer;
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  max-width: max-content;
-  max-height: max-content;
-  padding: 0;
-  background: none;
-  border: none;
-}
+// .item {
+//   position: relative;
+//   padding: 24px 0;
 
-.icon {
-  width: 18px;
-  height: 18px;
-}
+//   &::before {
+//     position: absolute;
+//     content: "";
+//     width: 100%;
+//     height: 1px;
+//     background: var(--black-300);
+//     left: 0;
+//     bottom: 0;
+//   }
+
+//   &__header {
+//     display: flex;
+//     gap: 16px;
+
+//     &-img {
+//       max-width: 77px;
+//     }
+
+//     &-title {
+//       display: flex;
+//       gap: 8px;
+//       flex-direction: column;
+//       justify-content: center;
+//     }
+//   }
+// }
+
+// .btn {
+//   cursor: pointer;
+//   display: flex;
+//   gap: 4px;
+//   align-items: center;
+//   max-width: max-content;
+//   max-height: max-content;
+//   padding: 0;
+//   background: none;
+//   border: none;
+// }
+
+// .icon {
+//   width: 18px;
+//   height: 18px;
+// }

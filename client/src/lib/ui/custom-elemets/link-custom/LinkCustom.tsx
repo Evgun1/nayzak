@@ -9,7 +9,6 @@ import { Color, Roundness, Size, Type } from "./LinkType";
 import IconsIdList from "@/components/elemets/icons/IconsIdList";
 import DisplayIcon from "@/components/elemets/icons/displayIcon";
 
-
 interface HrefObject {
   endpoint?: Url | string;
   queryParams?: { [key: string]: string };
@@ -21,7 +20,10 @@ export interface StyleSettingsObject {
   roundess?: Roundness;
   type?: Type;
   color?: { dark?: boolean; light?: boolean };
-  icon?: IconsIdList;
+  icon?: {
+    left?: IconsIdList;
+    right?: IconsIdList;
+  };
 }
 
 type SiteLinkProps = {
@@ -32,6 +34,7 @@ type SiteLinkProps = {
   searchParams?: URLSearchParams;
   linkRef?: RefObject<HTMLAnchorElement>;
   href: HrefObject;
+  onClick?: () => void;
 };
 
 const SiteLink: FC<SiteLinkProps> = ({
@@ -42,11 +45,11 @@ const SiteLink: FC<SiteLinkProps> = ({
   linkRef,
   children,
   target,
+  onClick,
 }) => {
   const urlSearchParams = new URLSearchParams(searchParams);
 
   let linkColor;
-
   if (type === Type.default || type === Type.circle) {
     color?.dark
       ? (linkColor = Color.dark_default)
@@ -81,11 +84,13 @@ const SiteLink: FC<SiteLinkProps> = ({
       ref={linkRef}
       scroll={false}
       href={queryParams ? setQueryParams : `${endpoint}`}
-      className={`${className} ${classes.join(" ")}`}
+      className={`${className ?? ""} ${classes.join(" ")}`}
       target={target ? "_blank" : "_self"}
+      onClick={onClick}
     >
+      {icon?.left ? <DisplayIcon iconName={icon.left} /> : ""}
       {children ?? ""}
-      {icon ? <DisplayIcon iconName={icon} /> : ""}
+      {icon?.right ? <DisplayIcon iconName={icon.right} /> : ""}
     </Link>
   );
 };

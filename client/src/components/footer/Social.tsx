@@ -36,7 +36,7 @@ const Social: FC = () => {
               color: { dark: true },
               size: LinkCustom.Size.S,
               roundess: LinkCustom.Roundness.pill,
-              icon: value.icon,
+              icon: { left: value.icon },
             }}
             className={classes["social--link"]}
             href={{ endpoint: value.link }}

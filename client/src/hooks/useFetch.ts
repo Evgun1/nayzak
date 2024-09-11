@@ -1,4 +1,4 @@
-type MethodData = "PUT" | "GET" | "POST" | "DELET";
+type MethodData = "PUT" | "GET" | "POST" | "DELETE";
 
 type ContentTypeData = "application/json" | "multipart/form-data";
 
@@ -26,6 +26,7 @@ export default async function useFetch<T>({
 }: UseFethcProps): Promise<T> {
   const headers = new Headers({
     "Content-Type": contentType,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
   });
 
   const init: RequestInit = {
@@ -48,7 +49,9 @@ export default async function useFetch<T>({
 
   if (!res.ok || res.status !== 200) {
     throw new Error(await res.text());
-    customError;
+    if (customError) {
+      customError;
+    }
   }
 
   return (await res.json()) as Promise<T>;

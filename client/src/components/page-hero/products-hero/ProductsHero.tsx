@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { FilterContext } from "../../page-shop/products/FilterCtx";
 // import { useFetchAllProducts } from "../../../hooks/useFetchProducts";
 import ProductList from "@/components/elemets/products-list/ProductList";
-import { Products } from "@/hooks/useFetchProducts";
+import { useFetchProductsAll } from "@/hooks/useFetchProducts";
 
 const ProductsHero: FC = () => {
   const searchParams = useSearchParams();
@@ -23,8 +23,8 @@ const ProductsHero: FC = () => {
 
   const limit = 8;
 
-  const updateData = async (searchParams: URLSearchParams) => {
-    const { products } = await Products.useFetchAll({
+  const useProductsUpdateData = async (searchParams: URLSearchParams) => {
+    const { products } = await useFetchProductsAll({
       urlSearchParams: searchParams,
     });
 
@@ -32,16 +32,16 @@ const ProductsHero: FC = () => {
     setCount(count + products.length);
   };
 
-  const btnClickHandler: MouseEventHandler = () => {
+  const useBtnClickHandler: MouseEventHandler = () => {
     const urlSearchParams = new URLSearchParams(searchParams.toString());
     urlSearchParams.append("limit", limit.toString());
     urlSearchParams.append("offset", count.toString());
-    updateData(urlSearchParams);
+    useProductsUpdateData(urlSearchParams);
   };
 
   useEffect(() => {
     setLimit(8);
-  }, []);
+  });
 
   return (
     <ProductList
@@ -50,7 +50,7 @@ const ProductsHero: FC = () => {
       stylePrice={classes["custom-price"]}
       totalCount={totalCount}
       count={count}
-      btnClickHandler={btnClickHandler}
+      btnClickHandler={useBtnClickHandler}
     />
   );
 };

@@ -4,44 +4,42 @@ export type fetchSubcategoriesProps = {
   urlSearchParams?: URLSearchParams;
 };
 
-export namespace Subcategories {
-  export const useFetchAll = async (urlSearchParams: URLSearchParams) => {
-    const res = await fetch(
-      `http://localhost:3030/subcategories?${urlSearchParams}`,
-      {
-        method: "GET",
-        cache: "no-cache",
-      }
-    );
-    if (!res.ok || res.status !== 200) {
-      throw new Error(res.statusText);
+export const useFetchSubcategoryAll = async (urlSearchParams: URLSearchParams) => {
+  const res = await fetch(
+    `http://localhost:3030/subcategories?${urlSearchParams}`,
+    {
+      method: "GET",
+      cache: "no-cache",
     }
+  );
+  if (!res.ok || res.status !== 200) {
+    throw new Error(res.statusText);
+  }
 
-    const result: Subcategory[] = await res.json().then((data) => {
-      return data.subcategories;
-    });
-    return result;
-  };
+  const result: Subcategory[] = await res.json().then((data) => {
+    return data.subcategories;
+  });
+  return result;
+};
 
-  export const useFetchByCategory = async (params: string) => {
-    const res = await fetch(
-      `http://localhost:3030/subcategories/${
-        params[0].toUpperCase() + params.slice(1)
-      }`,
-      {
-        method: "GET",
-        cache: "no-cache",
-      }
-    );
-
-    if (!res.ok || res.status !== 200) {
-      throw new Error(res.statusText);
+export const useFetchSubcategoryByCategory = async (params: string) => {
+  const res = await fetch(
+    `http://localhost:3030/subcategories/${
+      params[0].toUpperCase() + params.slice(1)
+    }`,
+    {
+      method: "GET",
+      cache: "no-cache",
     }
+  );
 
-    const result: Subcategory[] = await res.json().then((data) => {
-      return data.subcategories;
-    });
+  if (!res.ok || res.status !== 200) {
+    throw new Error(res.statusText);
+  }
 
-    return result;
-  };
-}
+  const result: Subcategory[] = await res.json().then((data) => {
+    return data.subcategories;
+  });
+
+  return result;
+};

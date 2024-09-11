@@ -7,7 +7,7 @@ import { Product } from "@/types/product";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { cartAction } from "@/lib/redux/store/cart/cart";
-import { changeAmount } from "@/lib/redux/store/cart/action";
+import { changeAmount, removeCart } from "@/lib/redux/store/cart/action";
 
 type CartItemProps = {
   title: string;
@@ -34,6 +34,10 @@ export default function CartItem({
     if (quantity !== 1) {
       setQuantity(quantity - 1);
     }
+  };
+
+  const btnRemoveProductCart = () => {
+    dispatch(removeCart(productID));
   };
 
   useEffect(() => {
@@ -65,44 +69,43 @@ export default function CartItem({
               roundess: ButtonCustom.Roundness.sharp,
               type: ButtonCustom.Type.text,
               size: ButtonCustom.Size.XS,
-              icon: ButtonCustom.IconsIdList.TRASH,
+              icon: { left: ButtonCustom.IconsIdList.TRASH },
             }}
+            onClick={btnRemoveProductCart}
           >
             Remove
           </ButtonCustom.SiteButton>
         </div>
       </div>
-      <div className={classes["cart--table-left"]}>
-        <div className={classes["cart--product-amount"]}>
-          <ButtonCustom.SiteButton
-            styleSettings={{
-              color: { dark: true },
-              roundess: ButtonCustom.Roundness.sharp,
-              size: ButtonCustom.Size.XS,
-              type: ButtonCustom.Type.text,
-              icon: ButtonCustom.IconsIdList.MINUS,
-            }}
-            onClick={btnMinusQuantity}
-            className={classes["cart--amount-btn"]}
-          />
-          <div className={TextClassList.SEMIBOLD_12}>{quantity}</div>
-          <ButtonCustom.SiteButton
-            styleSettings={{
-              color: { dark: true },
-              roundess: ButtonCustom.Roundness.sharp,
-              size: ButtonCustom.Size.XS,
-              type: ButtonCustom.Type.text,
-              icon: ButtonCustom.IconsIdList.ADD,
-            }}
-            onClick={btnPlusQuantity}
-            className={classes["cart--amount-btn"]}
-          />
-        </div>
-        <span className={TextClassList.REGULAR_18}>${mainPrice}</span>
-        <span className={TextClassList.SEMIBOLD_18}>
-          ${mainPrice * (amount as number)}
-        </span>
+      <div className={classes["cart--product-amount"]}>
+        <ButtonCustom.SiteButton
+          styleSettings={{
+            color: { dark: true },
+            roundess: ButtonCustom.Roundness.sharp,
+            size: ButtonCustom.Size.XS,
+            type: ButtonCustom.Type.text,
+            icon: { left: ButtonCustom.IconsIdList.MINUS },
+          }}
+          onClick={btnMinusQuantity}
+          className={classes["cart--amount-btn"]}
+        />
+        <div className={TextClassList.SEMIBOLD_12}>{quantity}</div>
+        <ButtonCustom.SiteButton
+          styleSettings={{
+            color: { dark: true },
+            roundess: ButtonCustom.Roundness.sharp,
+            size: ButtonCustom.Size.XS,
+            type: ButtonCustom.Type.text,
+            icon: { left: ButtonCustom.IconsIdList.ADD },
+          }}
+          onClick={btnPlusQuantity}
+          className={classes["cart--amount-btn"]}
+        />
       </div>
+      <span className={TextClassList.REGULAR_18}>${mainPrice}</span>
+      <span className={TextClassList.SEMIBOLD_18}>
+        ${mainPrice * (amount as number)}
+      </span>
     </>
   );
 }

@@ -1,14 +1,20 @@
 "use client";
-import { Products } from "@/hooks/useFetchProducts";
 
 import { useEffect, useState } from "react";
 import { Product } from "../types/product";
 // import { CartItemData } from "@/lib/store/cart/cart.redux";
 import { useSearchParams } from "next/navigation";
 import { CartItemData } from "@/lib/redux/store/cart/cart";
+import { useFetchProductsAll } from "./useFetchProducts";
+
+type ProductsArrayData = {
+  id?: number;
+  amount?: number;
+  productID: number;
+};
 
 const useFetchProductsById = (
-  productsArray: CartItemData[],
+  productsArray: ProductsArrayData[],
   returnAmount = true
 ) => {
   const searchParams = useSearchParams();
@@ -25,7 +31,7 @@ const useFetchProductsById = (
 
     const urlSearchParams = new URLSearchParams(searchParams.toString());
     urlSearchParams.set(`id`, `${productsID}`);
-    const products = (await Products.useFetchAll({ urlSearchParams })).products;
+    const products = (await useFetchProductsAll({ urlSearchParams })).products;
 
     if (!returnAmount) {
       setProducts(products);

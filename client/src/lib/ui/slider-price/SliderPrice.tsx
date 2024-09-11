@@ -6,7 +6,7 @@ import classes from "./SliderPrice.module.scss";
 
 import { FC, MouseEventHandler, useEffect, useState } from "react";
 import ButtonCustom from "../custom-elemets/button-custom/ButtonCustom";
-import { Products } from "@/hooks/useFetchProducts";
+import { useFetchProductsMinMaxPrice } from "@/hooks/useFetchProducts";
 
 type ScrollPriceProps = {
   urlSearchparams: URLSearchParams;
@@ -22,7 +22,7 @@ const SliderPrice: FC<ScrollPriceProps> = () => {
   const router = useRouter();
 
   const sliderHandler = async (searhcParam: URLSearchParams) => {
-    const { minPrice, maxPrice } = await Products.useFetchMinMaxPrice(
+    const { minPrice, maxPrice } = await useFetchProductsMinMaxPrice(
       searhcParam
     );
 

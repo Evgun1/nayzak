@@ -14,7 +14,7 @@ appRouter.route("/products", productRouter);
 appRouter.route("/categories", categoriesRouter);
 appRouter.route("/brands", brandsRouter);
 appRouter.route("/cart", cartRouter);
-appRouter.route("/wishlist", wishlistRouter);
+appRouter.route("/wishlists", wishlistRouter);
 appRouter.route("/user", usersRouter);
 appRouter.route("/reviews", reviewsRouter);
 appRouter.route("subcategories", subcategoriesRouter);

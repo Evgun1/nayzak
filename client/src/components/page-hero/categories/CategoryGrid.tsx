@@ -1,10 +1,10 @@
 import classes from "./Categories.module.scss";
 import { Category } from "../../../types/categories";
 import Link from "next/link";
-import { Categories } from "@/hooks/useFetchCategories";
+import { useFetchCategoriesall } from "@/hooks/useFetchCategories";
 
 const CategoryGrid = async () => {
-  const categoriesData = await Categories.useFetchAll();
+  const categoriesData = await useFetchCategoriesall();
 
   return (
     <ul className={`container ${classes.wrapper}`}>

@@ -5,7 +5,7 @@ import { Review } from "@/types/reviews";
 import { Product } from "../../../types/product";
 import { TextClassList } from "../../../types/textClassList";
 import classes from "./ProductLoop.module.scss";
-import AddToCart from "./AddToCart";
+import ProductActions from "./ProductActions";
 import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs";
 
 type ProductLoopProps = {
@@ -19,7 +19,6 @@ export default function ProductLoop({
   reviewsArray,
   totalReviews,
 }: ProductLoopProps) {
-
   return (
     <div className={classes.loop}>
       <div>
@@ -53,7 +52,7 @@ export default function ProductLoop({
               />
             </div>
           </div>
-          <AddToCart productID={productData.id} />
+          <ProductActions productID={productData.id} />
         </div>
       </div>
     </div>

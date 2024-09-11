@@ -138,5 +138,6 @@ export default {
   registration,
   login,
   check,
+  activate,
   findUserByToken,
 };

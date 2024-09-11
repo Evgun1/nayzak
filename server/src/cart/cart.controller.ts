@@ -37,6 +37,14 @@ class CartController {
 
     return c.json({ cart });
   }
+
+  async removeCart(c: Context) {
+    const { id } = await c.req.json();
+
+    await cartService.removeCart(id);
+
+    return c.json({message: "Remove product"});
+  }
 }
 
 export default new CartController();

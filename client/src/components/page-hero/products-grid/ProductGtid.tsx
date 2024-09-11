@@ -13,32 +13,46 @@ import {
   Size,
   Type,
 } from "@/lib/ui/custom-elemets/button-custom/ButtonType";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Category } from "@/types/categories";
 import { Subcategory } from "@/types/subcategories";
 import ProductsHero from "../products-hero/ProductsHero";
-import { useSearchParams } from "next/navigation";
-import { Subcategories } from "@/hooks/useFetchSubcategories";
-import { Categories } from "@/hooks/useFetchCategories";
+import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
+import { useFetchCategoriesall as useFetchCategoriesAll } from "@/hooks/useFetchCategories";
+import { useFetchSubcategoryAll } from "@/hooks/useFetchSubcategories";
 
 export default function ProductGrid(props: PageProps) {
   const searchParams = useSearchParams();
 
-  // const urlSearchParams = new URLSearchParams(searchParams.toString());
-  // // const categories = await useFetchCategories({ urlSearchParams });
-  // // const subcategories = await useFetchSubcategories({ urlSearchParams });
+  const useFethcData = (searchParams: ReadonlyURLSearchParams) => {
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+    useEffect(() => {
+      const useFetchHandler = async () => {
+        const categories = await useFetchCategoriesAll(searchParams);
+        setCategories(categories);
 
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+        const subcategories = await useFetchSubcategoryAll(searchParams);
+        setSubcategories(subcategories);
+      };
 
-  useEffect(() => {
-    Categories.useFetchAll(searchParams).then((data) => {
-      setCategories(data);
-    });
-    Subcategories.useFetchAll(searchParams).then((data) => {
-      setSubcategories(data);
-    });
-  }, [searchParams]);
+      useFetchHandler();
+    }, [searchParams]);
+
+    return { categories, subcategories };
+  };
+
+  // const useFetchData = async () => {
+  //   const categories = await useFetchCategoriesAll(searchParams);
+  //   setCategories(categories);
+
+  //   const subcategories = await useFetchSubcategoryAll(searchParams);
+  //   setSubcategories(subcategories);
+  // };
+
+  // useEffect(() => {
+  //   useFetchData();
+  // }, [searchParams]);
 
   return (
     <div className={`container ${classes.wrapper}`}>
@@ -52,7 +66,7 @@ export default function ProductGrid(props: PageProps) {
 
             size: Size.XL,
             type: Type.underline,
-            icon: IconsIdList.CHEVRONE,
+            icon: { right: IconsIdList.CHEVRONE },
             roundess: Roundness.sharp,
           }}
         >
@@ -85,7 +99,7 @@ export default function ProductGrid(props: PageProps) {
             color: { dark: true },
             size: Size.XL,
             type: Type.underline,
-            icon: IconsIdList.CHEVRONE,
+            icon: { right: IconsIdList.CHEVRONE },
             roundess: Roundness.sharp,
           }}
         >

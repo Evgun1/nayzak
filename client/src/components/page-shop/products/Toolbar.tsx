@@ -110,7 +110,7 @@ export default function Toolbar(props: PageProps) {
               size: Size.S,
               type: Type.text,
               // icon_right: IconsIdList.CHEVRONE,
-              icon: IconsIdList.CHEVRONE,
+              icon: { right: IconsIdList.CHEVRONE },
             }}
           >
             {sortData.map((value, index) => (

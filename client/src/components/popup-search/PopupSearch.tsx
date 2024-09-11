@@ -12,7 +12,7 @@ import { useAppDispatch } from "@/lib/redux/redux";
 
 import ProductList from "../elemets/products-list/ProductList";
 import { popupActions } from "@/lib/redux/store/popup/popup";
-import { Products } from "@/hooks/useFetchProducts";
+import { useFetchProductsAll } from "@/hooks/useFetchProducts";
 
 const PopupSearch = () => {
   const dispatch = useAppDispatch();
@@ -27,7 +27,7 @@ const PopupSearch = () => {
   const limit = 8;
 
   const updateData = async (urlSearchParams: URLSearchParams) => {
-    const { products, productCounts } = await Products.useFetchAll({
+    const { products, productCounts } = await useFetchProductsAll({
       urlSearchParams,
     });
 

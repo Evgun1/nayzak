@@ -1,22 +1,33 @@
-import { Token } from "@/hooks/useToken";
 import { AppDispatch, RootState } from "../../store";
 import { cartAction, CartItemData } from "./cart";
-import { Cart } from "@/hooks/useFetchCart";
-import useFetch from "@/hooks/useFetch";
-import { CartType } from "@/types/cart";
+import { useCookiGet } from "@/hooks/useCookie";
+import {
+  useFetchCartCheck,
+  useFetchCartSave,
+  useFetchCartUpdate,
+  useFethcDelete,
+} from "@/hooks/useFetchCart";
 
 export function initCart() {
   return async function (dispatch: AppDispatch, getState: () => RootState) {
-    const cartProducts = await Cart.useFetchCheck();
-    if (!cartProducts) return;
+    const productsArray = [...getState().cart.productsArray];
+    const localToken = useCookiGet("user-token");
 
-    dispatch(cartAction.saveCart(cartProducts));
+    if (!localToken) {
+      return;
+    }
+
+    const cartProducts = await useFetchCartCheck(`${localToken}`);
+    if (!cartProducts) return;
+    productsArray.push(...cartProducts);
+
+    dispatch(cartAction.saveCart(productsArray));
   };
 }
 
 export function updateCart(currentProduct: CartItemData) {
   return async function (dispatch: AppDispatch, getState: () => RootState) {
-    const tocken = await Token.useGet();
+    const tocken = useCookiGet("user-token");
 
     if (!tocken) return;
 
@@ -27,9 +38,9 @@ export function updateCart(currentProduct: CartItemData) {
     );
 
     if (productIndex === -1) {
-      const saveProduct = await Cart.useFetchSave({
+      const saveProduct = await useFetchCartSave({
         product: currentProduct,
-        userToken: tocken,
+        userToken: `${tocken}`,
       });
 
       productsCartArray.push(
@@ -48,13 +59,13 @@ export function updateCart(currentProduct: CartItemData) {
         .filter((item) => item.productID === currentProduct.productID)
         .map((data) => data.id);
 
-      const updateProduct = await Cart.useFetchUpdate({
+      const updateProduct = await useFetchCartUpdate({
         product: {
           amount: currentProduct.amount,
           productID: currentProduct.productID,
           id: cartId[0],
         },
-        userToken: tocken,
+        userToken: `${tocken}`,
       });
 
       productsCartArray[productIndex] = {
@@ -72,7 +83,7 @@ export function changeAmount(currentProduct: CartItemData) {
   return async function (dispatch: AppDispatch, getState: () => RootState) {
     const productsArray = [...getState().cart.productsArray];
 
-    const userToken = Token.useGet();
+    const userToken = useCookiGet("user-token");
     if (!userToken) return;
 
     const productIndex = productsArray.findIndex(
@@ -84,7 +95,7 @@ export function changeAmount(currentProduct: CartItemData) {
       .filter((item) => item.productID === currentProduct.productID)
       .map((data) => data.id);
 
-    const cartProduct = await Cart.useFetchUpdate({
+    const cartProduct = await useFetchCartUpdate({
       product: {
         amount: currentProduct.amount,
         productID: currentProduct.productID,
@@ -103,4 +114,15 @@ export function changeAmount(currentProduct: CartItemData) {
   };
 }
 
-export function removeCart() {}
+export function removeCart(productId: number) {
+  return async function (dispatch: AppDispatch, getState: () => RootState) {
+    const id = getState()
+      .cart.productsArray.filter((cart) => cart.productID === productId)
+      .map((product) => product.id);
+
+    if (!id[0]) return;
+
+    await useFethcDelete(id[0]);
+    dispatch(cartAction.removeCart(productId));
+  };
+}

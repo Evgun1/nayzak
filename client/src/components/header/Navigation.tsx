@@ -32,33 +32,31 @@ export default function Navigation() {
   });
 
   const setupData = async () => {
-    try {
-      const categories = await Categories.useFetchAll();
+    const categories = await Categories.useFetchAll();
 
-      const navigation: AppNavigation = [];
+    const navigation: AppNavigation = [];
 
-      for await (const category of categories) {
-        const navItem: NavigationItem = buildNavItem(category);
+    for await (const category of categories) {
+      const navItem: NavigationItem = buildNavItem(category);
 
-        const urlSearchParams = new URLSearchParams({
-          category: category.title,
-        });
+      const urlSearchParams = new URLSearchParams({
+        category: category.title,
+      });
 
-        const subCategories = await Subcategories.useFetchAll(urlSearchParams);
+      const subCategories = await Subcategories.useFetchAll(urlSearchParams);
 
-        if (subCategories && subCategories.length) {
-          navItem.children = subCategories.map(buildNavItem);
-        }
-
-        navigation.push(navItem);
+      if (subCategories && subCategories.length) {
+        navItem.children = subCategories.map(buildNavItem);
       }
 
-      setNavigation(navigation);
-    } catch (error) {}
+      navigation.push(navItem);
+    }
+
+    setNavigation(navigation);
   };
 
   useEffect(() => {
-    setupData().catch((error) => console.error(error));
+    setupData();
   }, []);
 
   return (

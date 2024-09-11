@@ -5,9 +5,11 @@ import appRouter from "./router";
 import { cors } from "hono/cors";
 import errors from "./errors/errors";
 import { HTTPException } from "hono/http-exception";
+import corsMiddleware from "./middleware/corsMiddleware";
 
 const app = new Hono();
-app.use(cors());
+
+app.use(corsMiddleware);
 app.route("/", appRouter);
 app.onError(errors);
 

@@ -5,24 +5,24 @@ export type fetchCategoriesProps = {
   urlSearchParams?: URLSearchParams;
 };
 
-export namespace Categories {
-  export const useFetchAll = async (urlSearchParams?: URLSearchParams) => {
-    const res = await fetch(
-      `http://localhost:3030/categories?${urlSearchParams}`,
-      {
-        method: "GET",
-        cache: "no-cache",
-      }
-    );
-
-    if (!res.ok || res.status !== 200) {
-      throw new Error(res.statusText);
+export const useFetchCategoriesall = async (
+  urlSearchParams?: URLSearchParams
+) => {
+  const res = await fetch(
+    `http://localhost:3030/categories?${urlSearchParams}`,
+    {
+      method: "GET",
+      cache: "no-cache",
     }
+  );
 
-    const result: Category[] = await res.json().then((data) => {
-      return data.categories;
-    });
+  if (!res.ok || res.status !== 200) {
+    throw new Error(res.statusText);
+  }
 
-    return result;
-  };
-}
+  const result: Category[] = await res.json().then((data) => {
+    return data.categories;
+  });
+
+  return result;
+};

@@ -26,8 +26,6 @@ export async function saveCart({ cartProduct, userToken }: CartGetDTO) {
 export async function updateCart({ cartProduct, userToken }: CartGetDTO) {
   const user = await usersService.findUserByToken(userToken);
 
-  console.log(cartProduct);
-
   const updateCart = await prismaClient.cart.update({
     where: {
       id: cartProduct.id,
@@ -44,6 +42,18 @@ export async function updateCart({ cartProduct, userToken }: CartGetDTO) {
   });
 
   return cartDTO;
+}
+export async function removeCart(id: number) {
+  // const user = await usersService.findUserByToken(userToken);
+
+  const deleteProduct = await prismaClient.cart.delete({
+    where: {
+      id: +id,
+    },
+  });
+
+
+  return deleteProduct;
 }
 
 export async function check(token: string) {
@@ -69,5 +79,6 @@ export async function check(token: string) {
 export default {
   saveCart,
   check,
+  removeCart,
   updateCart,
 };

@@ -1,3 +1,5 @@
+import { useCookiDelete } from "@/hooks/useCookie";
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserData {
@@ -21,9 +23,8 @@ const authSlice = createSlice({
     setUser(state, action) {
       state.user = action.payload;
     },
-    logOut(state, action: PayloadAction<null>) {
-      state.user = action.payload;
-      document.cookie = `user-token=; max-age=0; path=/;`;
+    logOut(state) {
+      state.user = null;
     },
   },
 });

@@ -21,7 +21,7 @@ export default function Feature() {
             roundess: LinkCustom.Roundness.sharp,
             size: LinkCustom.Size.L,
             type: LinkCustom.Type.text,
-            icon: LinkCustom.IconsIdList.ARROW_RIGHT,
+            icon: { right: LinkCustom.IconsIdList.ARROW_RIGHT },
             color: { dark: true },
           }}
         >

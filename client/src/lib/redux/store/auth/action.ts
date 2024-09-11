@@ -1,15 +1,20 @@
-import { User } from "@/hooks/useFetchUser";
 import { AppDispatch } from "../../store";
 import { authAction, UserData } from "./auth";
 import { jwtDecode } from "jwt-decode";
+import { useCookiDelete, useCookiSet } from "@/hooks/useCookie";
+import { useFetchUserAuth, useFetchUserCheck } from "@/hooks/useFetchUser";
 
 export const registrationAction = (userData: UserData) => {
   return async function (dispath: AppDispatch) {
-    const token = await User.useFetchAuth({ registration: userData });
+    const token = await useFetchUserAuth({ registration: userData });
 
     if (!token) return;
 
-    document.cookie = `user-token=${token}; max-age=3600`;
+    useCookiSet({
+      name: "user-token",
+      value: token,
+      options: { path: "/", maxAge: 3600 },
+    });
 
     const user = jwtDecode<UserData>(token);
     dispath(authAction.setUser(user));
@@ -17,25 +22,41 @@ export const registrationAction = (userData: UserData) => {
 };
 export const loginAction = (userData: UserData) => {
   return async function (dispath: AppDispatch) {
-    const token = await User.useFetchAuth({ login: userData });
+    const token = await useFetchUserAuth({ login: userData });
 
     if (!token) return;
 
-    document.cookie = `user-token=${token}; max-age=3600`;
+    useCookiSet({
+      name: "user-token",
+      value: token,
+      options: { path: "/", maxAge: 3600 },
+    });
 
     const user = jwtDecode<UserData>(token);
     dispath(authAction.setUser(user));
   };
 };
 
+export const logOut = () => {
+  return async function (dispatch: AppDispatch) {
+    dispatch(authAction.logOut());
+
+    useCookiDelete("user-token");
+  };
+};
+
 export function checkAuth() {
   return async function (dispathc: AppDispatch) {
-    const tocken = await User.useFetchCheck();
+    const token = await useFetchUserCheck();
 
-    if (!tocken) return;
+    if (!token) return;
 
-    document.cookie = `user-token=${tocken};  max-age=3600`;
-    const user = jwtDecode(tocken);
+    useCookiSet({
+      name: "user-token",
+      value: token,
+      options: { path: "/", maxAge: 3600 },
+    });
+    const user = jwtDecode(token);
 
     dispathc(authAction.setUser(user));
   };

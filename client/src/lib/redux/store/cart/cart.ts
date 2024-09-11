@@ -33,6 +33,12 @@ export const cartSlice = createSlice({
       );
 
       state.productsArray.splice(productIndex, 1);
+      state.totalAmount = state.productsArray.length;
+    },
+
+    cleanCart(state) {
+      state.productsArray.splice(0);
+      state.totalAmount = 0;
     },
   },
 });

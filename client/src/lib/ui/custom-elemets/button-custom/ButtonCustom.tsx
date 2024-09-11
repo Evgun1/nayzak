@@ -11,7 +11,10 @@ export interface StyleSettingsObject {
   roundess: Roundness;
   type: Type;
   color: { dark?: boolean; light?: boolean };
-  icon?: IconsIdList;
+  icon?: {
+    left?: IconsIdList;
+    right?: IconsIdList;
+  };
 }
 
 interface TypeObject {
@@ -22,7 +25,7 @@ interface TypeObject {
 
 type SiteButtonProps = {
   styleSettings: StyleSettingsObject;
-  className?: string;
+  className?: string | null;
   btnRef?: RefObject<HTMLButtonElement>;
   id?: string;
   children?: ReactNode;
@@ -31,7 +34,7 @@ type SiteButtonProps = {
 };
 
 export const SiteButton: FC<SiteButtonProps> = ({
-  styleSettings,
+  styleSettings: { color, roundess, size, type, icon },
   className,
   children,
   btnRef,
@@ -40,7 +43,7 @@ export const SiteButton: FC<SiteButtonProps> = ({
   onClick,
 }) => {
   let btnColor;
-  const { color, size, roundess, type, icon } = styleSettings;
+  // const { color, size, roundess, type, icon } = styleSettings;
 
   if (type === Type.default || type === Type.circle) {
     color?.dark
@@ -68,8 +71,9 @@ export const SiteButton: FC<SiteButtonProps> = ({
       className={`${className ?? ""} ${classes.join(" ")}`}
       type={typeProperty ?? "button"}
     >
+      {icon?.left ? <DisplayIcon iconName={icon.left} /> : ""}
       {children ?? ""}
-      {icon ? <DisplayIcon iconName={icon} /> : ""}
+      {icon?.right ? <DisplayIcon iconName={icon.right} /> : ""}
     </button>
   );
 };

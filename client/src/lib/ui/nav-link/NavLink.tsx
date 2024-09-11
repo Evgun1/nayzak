@@ -3,8 +3,7 @@ import { TextClassList } from "@/types/textClassList";
 import classes from "./NavLink.module.scss";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   JSXElementConstructor,
   ReactElement,
@@ -47,7 +46,6 @@ export default function NavLink({
 
     pathname.split("/")[1].toLowerCase();
   }
-
 
   const setQueryParams = `?${urlSearchParams}`;
 

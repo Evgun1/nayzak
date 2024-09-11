@@ -9,7 +9,7 @@ import Price from "../price/Price";
 import Rating from "../rating/Rating";
 import { Review } from "../../../types/reviews";
 import { useSearchParams } from "next/navigation";
-import AddToCart from "../../page-product/productLoop/AddToCart";
+import ProductActions from "../../page-product/productLoop/ProductActions";
 import ButtonCustom from "../../../lib/ui/custom-elemets/button-custom/ButtonCustom";
 import { Reviews } from "@/hooks/useFetchReviews";
 

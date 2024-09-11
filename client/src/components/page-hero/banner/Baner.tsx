@@ -32,7 +32,7 @@ const Banner = () => {
             size: ButtonCustom.Size.S,
             type: ButtonCustom.Type.default,
             roundess: ButtonCustom.Roundness.sharp,
-            icon: ButtonCustom.IconsIdList.ARROW_RIGHT,
+            icon: { right: ButtonCustom.IconsIdList.ARROW_RIGHT },
             color: { dark: true },
           }}
         >

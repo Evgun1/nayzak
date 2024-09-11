@@ -1,10 +1,7 @@
 "use client";
-import { Products } from "@/hooks/useFetchProducts";
+import { useFetchProductsAll } from "@/hooks/useFetchProducts";
 import { Product } from "@/types/product";
-import { log } from "console";
-import { KeyObject } from "crypto";
-import { url } from "inspector";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { FC, ReactNode, createContext, useEffect, useState } from "react";
 
 type FilterContextValue = {
@@ -42,6 +39,16 @@ export const FilterProvider: FC<{
   const searchParams = useSearchParams();
   const urlSearchParams = new URLSearchParams(searchParams.toString());
 
+  const fetchProductsHandler = async () => {
+    await useFetchProductsAll({ urlSearchParams }).then(
+      ({ productCounts, products }) => {
+        setCount(products.length);
+        setPoductsArray(products);
+        setTotalCount(productCounts);
+      }
+    );
+  };
+
   useEffect(() => {
     const getListType = searchParams.get("list_type");
 
@@ -61,13 +68,7 @@ export const FilterProvider: FC<{
       urlSearchParams.set("limit", listTypeLimits.get(getListType) as string);
     }
 
-    Products.useFetchAll({ urlSearchParams }).then(
-      ({ productCounts, products }) => {
-        setCount(products.length);
-        setPoductsArray(products);
-        setTotalCount(productCounts);
-      }
-    );
+    fetchProductsHandler;
   }, [searchParams]);
 
   return (

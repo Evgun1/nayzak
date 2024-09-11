@@ -1,16 +1,20 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Orders from "./Orders";
 import Addresses from "./Addresses";
 import AccountDetails from "./AccountDetails";
-import Wishlist from "./Wishlist";
 import classes from "./Profile.module.scss";
 import Dashboard from "./Dashboard";
 import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { authAction } from "@/lib/redux/store/auth/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
+import { cartAction } from "@/lib/redux/store/cart/cart";
+import Wishlist from "./wishlist/Wishlist";
+import Image from "next/image";
+import { logOut } from "@/lib/redux/store/auth/action";
+import { useCookiGet } from "@/hooks/useCookie";
 
 type PageContentType = {
   label: string;
@@ -46,16 +50,21 @@ export default function Profile() {
   const [tabAction, setTabAction] = useState(0);
 
   const btnLogOut = () => {
-    dispatch(authAction.logOut(null));
+    dispatch(logOut());
+    dispatch(cartAction.cleanCart());
     router.push("/");
   };
+
+  if (!useCookiGet("user-token")) {
+    redirect("/");
+  }
 
   return (
     <div className={classes.profile}>
       <h3>My account</h3>
       <div className={classes["profile--dashboard"]}>
         <div className={classes["profile--dashboard-menu"]}>
-          <img
+          <Image
             className={classes["profile--menu-image"]}
             src="https://placehold.co/400"
             alt="avatar"
