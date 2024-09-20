@@ -1,18 +1,24 @@
 // "use client";
 // import classes from "./ProductsShop.module.scss";
 
-// import { FC, MouseEventHandler, useContext, useEffect, useState } from "react";
+// import { FC, useEffect, useState } from "react";
 // import { useSearchParams } from "next/navigation";
 
-// import { useFetchAllProducts } from "../../../hooks/useFetchProducts";
 // import ProductList from "@/components/elemets/products-list/ProductList";
 // import { FilterContext } from "../products/FilterCtx";
+// import { useFetchProductsAll } from "@/hooks/useFetchProducts";
+// import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
+// import { updateProducts } from "@/lib/redux/store/product/action";
 
 // const ProductsShop: FC = () => {
 //   const [style, setStyle] = useState<any>();
+//   const [isHydrated, setIsHydrated] = useState(false);
+
+//   const { count, productsArray, totalCount } = useAppSelector(
+//     (state) => state.products
+//   );
+//   const dispatch = useAppDispatch();
 //   const searchParams = useSearchParams();
-//   const { productsArray, setPoductsArray, setCount, count, totalCount } =
-//     useContext(FilterContext);
 
 //   const limit = 12;
 
@@ -23,20 +29,22 @@
 //       : setStyle(classes["five_grid"]);
 //   }, [searchParams]);
 
-//   const updateData = async (searchParams: URLSearchParams) => {
-//     const { products } = await useFetchAllProducts({
+//   const UpdateData = async (searchParams: URLSearchParams) => {
+//     const { products } = await useFetchProductsAll({
 //       urlSearchParams: searchParams,
 //     });
-//     setPoductsArray(productsArray.concat(products));
-//     setCount(count + products.length);
+
+//     dispatch(updateProducts(products, products.length));
 //   };
 
-//   const btnClickHandler: MouseEventHandler = () => {
+//   const btnClickHandler = () => {
 //     const urlSearchParams = new URLSearchParams(searchParams.toString());
 //     urlSearchParams.append("limit", limit.toString());
 //     urlSearchParams.append("offset", count.toString());
-//     updateData(urlSearchParams);
+//     UpdateData(urlSearchParams);
 //   };
+
+//   if (!isHydrated) return;
 
 //   return (
 //     <ProductList

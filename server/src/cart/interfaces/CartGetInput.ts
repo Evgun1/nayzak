@@ -5,6 +5,6 @@ interface CartProductData {
 }
 
 export interface CartGetDTO {
-  cartProduct: CartProductData;
+  product: CartProductData;
   userToken: string;
 }

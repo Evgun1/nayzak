@@ -6,7 +6,6 @@ import { Product } from "../../../types/product";
 import { TextClassList } from "../../../types/textClassList";
 import classes from "./ProductLoop.module.scss";
 import ProductActions from "./ProductActions";
-import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs";
 
 type ProductLoopProps = {
   productData: Product;
@@ -14,11 +13,11 @@ type ProductLoopProps = {
   totalReviews: number;
 };
 
-export default function ProductLoop({
+const ProductLoop = async ({
   productData,
   reviewsArray,
   totalReviews,
-}: ProductLoopProps) {
+}: ProductLoopProps) => {
   return (
     <div className={classes.loop}>
       <div>
@@ -57,4 +56,6 @@ export default function ProductLoop({
       </div>
     </div>
   );
-}
+};
+
+export default ProductLoop;

@@ -30,7 +30,7 @@ type SiteButtonProps = {
   id?: string;
   children?: ReactNode;
   typeProperty?: "button" | "reset" | "submit";
-  onClick?: MouseEventHandler;
+  onClick?: () => void;
 };
 
 export const SiteButton: FC<SiteButtonProps> = ({
@@ -43,7 +43,6 @@ export const SiteButton: FC<SiteButtonProps> = ({
   onClick,
 }) => {
   let btnColor;
-  // const { color, size, roundess, type, icon } = styleSettings;
 
   if (type === Type.default || type === Type.circle) {
     color?.dark
@@ -78,9 +77,8 @@ export const SiteButton: FC<SiteButtonProps> = ({
   );
 };
 
-export default {
+export const ButtonCustom = {
   SiteButton,
-  // Color,
   Size,
   Roundness,
   Type,

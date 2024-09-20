@@ -1,14 +1,11 @@
-import { title } from "process";
 import IconsIdList from "../elemets/icons/IconsIdList";
 import DisplayIcon from "../elemets/icons/displayIcon";
 import classes from "./Footer.module.scss";
-import Link from "next/link";
-import { ButtonClassList } from "../../types/buttonClassList";
 import { TextClassList } from "../../types/textClassList";
 import Social from "./Social";
 import Colums from "./Colums";
 
-export default function Footer() {
+export default async function Footer() {
   return (
     <footer className={classes.footer}>
       <div className="container">

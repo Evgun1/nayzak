@@ -1,19 +1,20 @@
 import classes from "./Products.module.scss";
-import Toolbar from "./Toolbar";
-import Sidebar from "./Sidebar";
-import { FilterProvider } from "./FilterCtx";
-import { PageProps } from "../../../../../.next/types/app/layout";
-import ProductsShop from "../products-shop/ProductsShop";
+import Toolbar from "./grid/Toolbar";
+import { FilterProvider } from "./filter/FilterCtx";
+import Sidebar from "./filter/Sidebar";
+import ProductsGrid from "./grid/ProductsGrid";
 
-export default async function Products(props: PageProps) {
+export default async function Products() {
   return (
     <FilterProvider>
       <div className={`container ${classes.wrapper}`}>
-        <Sidebar props={props} />
-        <div className={classes.wrapper__grid}>
-          <Toolbar searchParams={props.searchParams} />
+        <Sidebar />
+        {/* <div className={classes.wrapper__grid}>
+          <Toolbar />
           <ProductsShop />
-        </div>
+        </div> */}
+
+        <ProductsGrid />
       </div>
     </FilterProvider>
   );

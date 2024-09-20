@@ -7,7 +7,7 @@ import classes from "./Breadcrumbs.module.scss";
 
 import { CSSProperties, HTMLAttributes } from "react";
 import { Type } from "../custom-elemets/button-custom/ButtonType";
-import LinkCustom from "../custom-elemets/link-custom/LinkCustom";
+import {LinkCustom} from "../custom-elemets/link-custom/LinkCustom";
 import { TextClassList } from "@/types/textClassList";
 import IconsIdList from "@/components/elemets/icons/IconsIdList";
 import DisplayIcon from "@/components/elemets/icons/displayIcon";

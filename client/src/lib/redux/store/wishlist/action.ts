@@ -1,11 +1,12 @@
 import {
-  useFetchWishlistInit,
-  useFetchWishlistRemove,
-  useFetchWishlistSave,
-} from "@/hooks/useFethcWishlisths";
+  appWishlistsDelet,
+  appWishlistsInitGet,
+  appWishlistsPost,
+} from "@/utils/http/wihslists";
 import { AppDispatch, RootState } from "../../store";
 import { wishlistAction, WishlistItemData } from "./wishlist";
 import { useCookiGet } from "@/hooks/useCookie";
+import { useEffect, useState } from "react";
 
 export function initWishlist() {
   return async function (dispatch: AppDispatch, getState: () => RootState) {
@@ -13,7 +14,7 @@ export function initWishlist() {
     const userToken = useCookiGet("user-tokenn");
     if (!userToken) return;
 
-    const wishlist = await useFetchWishlistInit(userToken);
+    const wishlist = await appWishlistsInitGet(userToken);
 
     productsArray.push(...wishlist);
 
@@ -33,7 +34,7 @@ export function saveWishlist({ productID }: WishlistItemData) {
     );
 
     if (productsIndex === -1) {
-      const result = await useFetchWishlistSave({ productID }, userToken);
+      const result = await appWishlistsPost({ productID }, userToken);
       productsWishlists.push(result);
     } else {
       const wishlistsID = productsWishlists.find(
@@ -42,7 +43,7 @@ export function saveWishlist({ productID }: WishlistItemData) {
 
       if (!wishlistsID) return;
 
-      await useFetchWishlistRemove(wishlistsID);
+      await appWishlistsDelet(wishlistsID);
 
       dispatch(wishlistAction.removeWishlist({ productID }));
       productsWishlists.splice(productsIndex, 1);
@@ -62,7 +63,7 @@ export function removeWishlist(productID: number) {
 
     if (!wishlistID) return;
 
-    await useFetchWishlistRemove(wishlistID);
+    await appWishlistsDelet(wishlistID);
     dispatch(wishlistAction.removeWishlist({ productID }));
   };
 }

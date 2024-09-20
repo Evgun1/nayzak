@@ -29,6 +29,8 @@ class ProductsController {
   async getProduct(c: Context) {
     const { productName } = c.req.param();
 
+    console.log(productName);
+
     const product = await productsService.getProduct(productName);
 
     return c.json(product);

@@ -2,11 +2,9 @@
 
 import { TextClassList } from "@/types/textClassList";
 import classes from "./Cart.module.scss";
-import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
-import { Product } from "@/types/product";
+import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/lib/redux/redux";
-import { cartAction } from "@/lib/redux/store/cart/cart";
 import { changeAmount, removeCart } from "@/lib/redux/store/cart/action";
 
 type CartItemProps = {

@@ -1,15 +1,10 @@
 "use client";
 
-import IconsIdList from "../elemets/icons/IconsIdList";
-import DisplayIcon from "../elemets/icons/displayIcon";
 import { ButtonClassList } from "../../types/buttonClassList";
 import { TextClassList } from "../../types/textClassList";
 import classes from "./Cart.module.scss";
-import { useEffect, useState } from "react";
-import { Product } from "@/types/product";
 import useFetchProductsById from "@/hooks/useFetchProductByID";
 import { useAppSelector } from "@/lib/redux/redux";
-import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import CartItem from "./CartItem";
 
 export default function Cart() {

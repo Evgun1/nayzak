@@ -11,15 +11,15 @@ type RatingProps = {
 };
 
 export default function Rating({ reviewArray, userRating }: RatingProps) {
-  let ratingSum = 0;
-  reviewArray.forEach((review) => {
-    ratingSum += review.rating;
+  if (!reviewArray) return;
+
+  const ratingSum = reviewArray.map((review) => {
+    return review.rating;
   });
 
-  const avarageRating = Math.floor(ratingSum / reviewArray.length);
+  const avarageRating = Math.floor(ratingSum[0] / reviewArray.length);
 
-  let ratingUser = 0;
-  reviewArray.forEach((value) => (ratingUser = value.rating));
+  // const ratingUser = reviewArray.map((value) => value.rating);
 
   const iconsArray: React.JSX.Element[] = [];
   for (let index = 1; index <= 5; index++) {
@@ -40,5 +40,5 @@ export default function Rating({ reviewArray, userRating }: RatingProps) {
     );
   }
 
-  return <div className={classes.rating}>{iconsArray}</div>;
+  return <div className={classes.rating}>{"test"}</div>;
 }

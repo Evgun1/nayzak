@@ -9,8 +9,11 @@ import ProductGrid from "../components/page-hero/products-grid/ProductGtid";
 import Reviews from "../components/page-hero/reviews/Reviews";
 
 import classes from "./Hero.module.scss";
+import { appProductsGet } from "@/utils/http/products";
 
 export default async function Home(props: PageProps) {
+  const { productCounts, products } = await appProductsGet();
+
   return (
     <>
       <section>
@@ -23,7 +26,7 @@ export default async function Home(props: PageProps) {
         <CategoryGrid />
       </section>
       <section className={classes.section}>
-        <ProductGrid {...props} />
+        <ProductGrid products={products} productsCount={productCounts} />
       </section>
       <section className={classes.section}>
         <Feature />

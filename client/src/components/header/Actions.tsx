@@ -4,22 +4,25 @@ import classes from "./actions.module.scss";
 
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import PopupSearch from "../popup-search/PopupSearch";
 import { popupActions } from "@/lib/redux/store/popup/popup";
 import PopupAuth from "../popup-auth/PopupAuth";
 import { checkAuth } from "@/lib/redux/store/auth/action";
 import { initCart } from "@/lib/redux/store/cart/action";
-import LinkCustom from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
-import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
+import { LinkCustom } from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
 import { initWishlist } from "@/lib/redux/store/wishlist/action";
 import PopupError from "../popup-error/PopupError";
 import { useCookiGet } from "@/hooks/useCookie";
+import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
+import { appCookiGet } from "@/utils/http/cookie";
 
 export default function Actions() {
   const dispatch = useAppDispatch();
   const cartAmount = useAppSelector((selector) => selector.cart.totalAmount);
   const userData = useAppSelector((selector) => selector.auth.user);
+
+  const token = appCookiGet("user-token");
 
   const btnAuthHandler = () => {
     dispatch(popupActions.toggle(<PopupAuth />));
@@ -38,13 +41,10 @@ export default function Actions() {
   }
 
   useEffect(() => {
-    dispatch(checkAuth());
-  });
-
-  useEffect(() => {
     dispatch(initWishlist());
+    dispatch(checkAuth());
     dispatch(initCart());
-  }, [useCookiGet("user-token")]);
+  }, [dispatch, token]);
 
   return (
     <div className={classes.actions}>

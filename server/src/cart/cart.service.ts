@@ -4,13 +4,13 @@ import usersService from "../users/users.service";
 import { CartDTO, CartModel } from "./cart.dto";
 import { HTTPException } from "hono/http-exception";
 
-export async function saveCart({ cartProduct, userToken }: CartGetDTO) {
+export async function saveCart({ product, userToken }: CartGetDTO) {
   const user = await usersService.findUserByToken(userToken);
 
   const saveCart = await prismaClient.cart.create({
     data: {
-      product_id: cartProduct.productID,
-      amount: cartProduct.amount,
+      product_id: product.productID,
+      amount: product.amount,
       user_id: user.id,
     },
   });
@@ -23,16 +23,16 @@ export async function saveCart({ cartProduct, userToken }: CartGetDTO) {
 
   return cartDTO;
 }
-export async function updateCart({ cartProduct, userToken }: CartGetDTO) {
+export async function updateCart({ product, userToken }: CartGetDTO) {
   const user = await usersService.findUserByToken(userToken);
 
   const updateCart = await prismaClient.cart.update({
     where: {
-      id: cartProduct.id,
-      product_id: cartProduct.productID,
+      id: product.id,
+      product_id: product.productID,
       user_id: user.id,
     },
-    data: { amount: cartProduct.amount },
+    data: { amount: product.amount },
   });
 
   const cartDTO = new CartDTO({
@@ -51,7 +51,6 @@ export async function removeCart(id: number) {
       id: +id,
     },
   });
-
 
   return deleteProduct;
 }

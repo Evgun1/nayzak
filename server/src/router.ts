@@ -3,7 +3,7 @@ import productRouter from "./products/products.router";
 import categoriesRouter from "./categories/categories.router";
 import brandsRouter from "./brands/brands.router";
 import cartRouter from "./cart/cart.router";
-import wishlistRouter from "./wishlist/wishlist.router";
+import wishlistRouter from "./wishlists/wishlist.router";
 import reviewsRouter from "./reviews/reviews.router";
 import subcategoriesRouter from "./subcategories/subcategories.router";
 import usersRouter from "./users/users.router";

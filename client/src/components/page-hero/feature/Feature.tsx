@@ -1,6 +1,6 @@
 import { TextClassList } from "@/types/textClassList";
 import classes from "./Feature.module.scss";
-import LinkCustom from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
+import { LinkCustom } from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
 
 export default function Feature() {
   return (

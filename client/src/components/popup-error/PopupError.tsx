@@ -1,7 +1,7 @@
 import classes from "./PopupError.module.scss";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { popupActions } from "@/lib/redux/store/popup/popup";
-import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
+import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import { TextClassList } from "@/types/textClassList";
 
 export default function PopupError({ title }: { title: string }) {

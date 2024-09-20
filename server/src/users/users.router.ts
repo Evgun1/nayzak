@@ -15,6 +15,11 @@ usersRouter.post(
   validator("json", UserFromValidator),
   UsersControler.registration
 );
+// usersRouter.post(
+//   "/registration",
+//   validator("form", UserFromValidator),
+//   UsersControler.registration
+// );
 
 usersRouter.get("/active/:link ", UsersControler.active);
 

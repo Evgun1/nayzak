@@ -4,11 +4,7 @@ import IconsIdList from "@/components/elemets/icons/IconsIdList";
 import classes from "./Header.module.scss";
 import DropDown from "@/lib/ui/drop-down/DropDown";
 import Actions from "./Actions";
-import {
-  Roundness,
-  Size,
-  Type,
-} from "@/lib/ui/custom-elemets/button-custom/ButtonType";
+
 import Navigation from "./Navigation";
 import Link from "next/link";
 

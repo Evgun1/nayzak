@@ -2,56 +2,38 @@
 
 import classes from "./ProductsHero.module.scss";
 
-import { FC, MouseEventHandler, useContext, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { FC } from "react";
 
-import { FilterContext } from "../../page-shop/products/FilterCtx";
-// import { useFetchAllProducts } from "../../../hooks/useFetchProducts";
-import ProductList from "@/components/elemets/products-list/ProductList";
-import { useFetchProductsAll } from "@/hooks/useFetchProducts";
+import Loader from "@/components/elemets/loader/Loader";
+import ProductPreview from "@/components/elemets/product-preview/ProductPreview";
+import { useProductsReducer } from "@/hooks/useProductsReducer";
 
-const ProductsHero: FC = () => {
-  const searchParams = useSearchParams();
-  const {
-    productsArray,
-    setPoductsArray,
-    setCount,
-    count,
-    totalCount,
-    setLimit,
-  } = useContext(FilterContext);
+const ProductsHero: FC<{ searchParams: URLSearchParams }> = () => {
+  const { state, loadMoreProducts } = useProductsReducer();
 
-  const limit = 8;
-
-  const useProductsUpdateData = async (searchParams: URLSearchParams) => {
-    const { products } = await useFetchProductsAll({
-      urlSearchParams: searchParams,
-    });
-
-    setPoductsArray(productsArray.concat(products));
-    setCount(count + products.length);
+  const btnClickHandler = () => {
+    loadMoreProducts(state.products.length);
   };
-
-  const useBtnClickHandler: MouseEventHandler = () => {
-    const urlSearchParams = new URLSearchParams(searchParams.toString());
-    urlSearchParams.append("limit", limit.toString());
-    urlSearchParams.append("offset", count.toString());
-    useProductsUpdateData(urlSearchParams);
-  };
-
-  useEffect(() => {
-    setLimit(8);
-  });
 
   return (
-    <ProductList
-      productsArray={productsArray}
+    <Loader
       style={classes["grid-hero"]}
-      stylePrice={classes["custom-price"]}
-      totalCount={totalCount}
-      count={count}
-      btnClickHandler={useBtnClickHandler}
-    />
+      count={state.products.length}
+      totalCount={state.totalCount}
+      btnClickHandler={btnClickHandler}
+    >
+      {state.isLoading ? <>Load</> : ""}
+
+      {state.products ? (
+        state.products.map((product, i) => (
+          <li key={i}>
+            <ProductPreview product={product} />
+          </li>
+        ))
+      ) : (
+        <div>No product</div>
+      )}
+    </Loader>
   );
 };
 

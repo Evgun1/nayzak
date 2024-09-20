@@ -1,12 +1,13 @@
 "use client";
 
-import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import classes from "./PopupAuthc.module.scss";
 import { FC, FormEvent, useState } from "react";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { popupActions } from "@/lib/redux/store/popup/popup";
 import test from "node:test";
 import { loginAction, registrationAction } from "@/lib/redux/store/auth/action";
+import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
+import { initCart } from "@/lib/redux/store/cart/action";
 
 const PopupAuth = () => {
   const dispatch = useAppDispatch();

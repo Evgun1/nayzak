@@ -17,6 +17,7 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "hono": "^4.2.1",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.14",
     "pg": "^8.11.5",
     "postgres": "^3.4.4",

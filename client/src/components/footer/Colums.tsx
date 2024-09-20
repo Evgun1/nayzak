@@ -1,10 +1,9 @@
 import { ButtonClassList } from "@/types/buttonClassList";
 import { TextClassList } from "@/types/textClassList";
-import Link from "next/link";
 
 import classes from "./Colums.module.scss";
 import { FC } from "react";
-import LinkCustom from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
+import { LinkCustom } from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
 
 const COLUM_DATA = [
   {
@@ -36,7 +35,7 @@ const COLUM_DATA = [
   },
 ];
 
-const Colums: FC = () => {
+const Colums: FC = async () => {
   return (
     <div className={classes["colums"]}>
       {COLUM_DATA &&

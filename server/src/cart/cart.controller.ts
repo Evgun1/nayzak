@@ -43,7 +43,7 @@ class CartController {
 
     await cartService.removeCart(id);
 
-    return c.json({message: "Remove product"});
+    return c.json({ message: "Remove product" });
   }
 }
 

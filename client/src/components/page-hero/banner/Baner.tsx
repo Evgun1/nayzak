@@ -1,16 +1,19 @@
 import Image from "next/image";
-import Link from "next/link";
 import classes from "./Banner.module.scss";
-import DisplayIcon from "@/components/elemets/icons/displayIcon";
-import IconsIdList from "@/components/elemets/icons/IconsIdList";
 import { TextClassList } from "@/types/textClassList";
-import { ButtonClassList } from "@/types/buttonClassList";
-import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
+import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 
 const Banner = () => {
   return (
     <div className={classes.banner}>
-      <img src="https://placehold.co/700x736" alt="" />
+      <Image
+        unoptimized
+        width={0}
+        height={0}
+        layout="responsive"
+        src="https://placehold.co/700x736"
+        alt="baner"
+      />
       <div className={classes["banner--content"]}>
         <span
           className={`${classes["banner--content-span"]} ${TextClassList.SEMIBOLD_16}`}
@@ -38,8 +41,6 @@ const Banner = () => {
         >
           See Collection
         </ButtonCustom.SiteButton>
-
-        {/* <Link href={"/"} className={classes["wrapper__block-link"]}></Link> */}
       </div>
     </div>
   );

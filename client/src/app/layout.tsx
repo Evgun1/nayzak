@@ -7,7 +7,6 @@ import Footer from "../components/footer/Footer";
 import Popup from "../components/elemets/popup/popup";
 import Header from "@/components/header/Header";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -29,7 +28,7 @@ export default function RootLayout({
             <div id="overlay"></div>
             <Popup />
             {/* <NavigationBar /> */}
-            <Header/>
+            <Header />
             <main>{children}</main>
             <Footer />
           </div>

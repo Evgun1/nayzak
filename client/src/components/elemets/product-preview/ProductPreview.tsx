@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ButtonClassList } from "../../../types/buttonClassList";
 import { TextClassList } from "../../../types/textClassList";
@@ -9,9 +11,9 @@ import Price from "../price/Price";
 import Rating from "../rating/Rating";
 import { Review } from "../../../types/reviews";
 import { useSearchParams } from "next/navigation";
-import ProductActions from "../../page-product/productLoop/ProductActions";
-import ButtonCustom from "../../../lib/ui/custom-elemets/button-custom/ButtonCustom";
-import { Reviews } from "@/hooks/useFetchReviews";
+import Image from "next/image";
+import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
+import { appReviewsGet } from "@/utils/http/reviews";
 
 type ProductPreviewProps = {
   product: Product;
@@ -32,25 +34,28 @@ const ProductPreview: FC<ProductPreviewProps> = ({
 
   const list_type = searchParams.get("list_type");
 
-  const reviewData = async () => {
-    const { reviewsData } = await Reviews.useFetchAll(product.id);
-
-    setReviewsArray(reviewsData);
+  const ReviewData = async (id: number) => {
+    const rewies = await appReviewsGet(id);
+    setReviewsArray(rewies);
   };
 
   useEffect(() => {
-    reviewData();
-  }, []);
+    ReviewData(product.id);
+  }, [product.id]);
 
   return list_type !== "list" ? (
     <Link
       className={`${style} ${classes.card}`}
       href={`/product/${productTitle}`}
     >
-      <img
+      <Image
+        unoptimized
+        width={0}
+        height={0}
+        layout="responsive"
         className={classes["img"]}
         src="https://placehold.co/652x889"
-        alt=""
+        alt="product"
       />
       <div className={classes["card__content"]}>
         {rating && <Rating reviewArray={reviewsArray} />}
@@ -69,15 +74,16 @@ const ProductPreview: FC<ProductPreviewProps> = ({
       </div>
     </Link>
   ) : (
-    <div
-      className={classes["card-list_type"]}
-      // href={`/product/${productTitle}`}
-    >
+    <div className={classes["card-list_type"]}>
       <Link href={`/product/${productTitle}`}>
-        <img
+        <Image
+          unoptimized
+          width={0}
+          height={0}
+          layout="responsive"
           className={classes["img"]}
           src="https://placehold.co/652x889"
-          alt=""
+          alt="product"
         />
       </Link>
       <div>

@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Product } from "../types/product";
-// import { CartItemData } from "@/lib/store/cart/cart.redux";
 import { useSearchParams } from "next/navigation";
-import { CartItemData } from "@/lib/redux/store/cart/cart";
-import { useFetchProductsAll } from "./useFetchProducts";
+import { appProductsGet } from "@/utils/http/products";
 
 type ProductsArrayData = {
   id?: number;
@@ -31,7 +29,9 @@ const useFetchProductsById = (
 
     const urlSearchParams = new URLSearchParams(searchParams.toString());
     urlSearchParams.set(`id`, `${productsID}`);
-    const products = (await useFetchProductsAll({ urlSearchParams })).products;
+    const { products } = await appProductsGet({
+      searchParams: urlSearchParams,
+    });
 
     if (!returnAmount) {
       setProducts(products);

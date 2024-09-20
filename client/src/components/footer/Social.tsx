@@ -2,7 +2,7 @@ import IconsIdList from "@/components/elemets/icons/IconsIdList";
 
 import classes from "./Social.module.scss";
 import { FC } from "react";
-import LinkCustom from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
+import { LinkCustom } from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
 
 const SOCIAL_ARRAY = [
   {

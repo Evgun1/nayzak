@@ -3,6 +3,7 @@ import popup from "./store/popup/popup";
 import cart from "./store/cart/cart";
 import auth from "./store/auth/auth";
 import wishlist from "./store/wishlist/wishlist";
+import products from "./store/product/products";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     cart,
     auth,
     wishlist,
+    products,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

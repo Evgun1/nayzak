@@ -6,8 +6,8 @@ import { FC, MouseEventHandler } from "react";
 
 import classes from "./productList.module.scss";
 import "./style.scss";
-import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import ProductPreview from "../product-preview/ProductPreview";
+import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 
 type ProductListProps = {
   productsArray: Product[];
@@ -17,7 +17,7 @@ type ProductListProps = {
   stylePreview?: string;
   totalCount: number;
   count: number;
-  btnClickHandler?: MouseEventHandler;
+  btnClickHandler?: () => void;
 };
 
 const ProductList: FC<ProductListProps> = ({
@@ -47,7 +47,6 @@ const ProductList: FC<ProductListProps> = ({
           ))}
       </ul>
       {totalCount > count && (
-        // <button onClick={btnClickHandler}>Loard More</button>
         <ButtonCustom.SiteButton
           onClick={btnClickHandler}
           styleSettings={{

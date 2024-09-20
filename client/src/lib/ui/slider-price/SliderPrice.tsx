@@ -5,8 +5,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import classes from "./SliderPrice.module.scss";
 
 import { FC, MouseEventHandler, useEffect, useState } from "react";
-import ButtonCustom from "../custom-elemets/button-custom/ButtonCustom";
-import { useFetchProductsMinMaxPrice } from "@/hooks/useFetchProducts";
+import { ButtonCustom } from "../custom-elemets/button-custom/ButtonCustom";
+import { appMinMaxPriceGet } from "@/utils/http/products";
 
 type ScrollPriceProps = {
   urlSearchparams: URLSearchParams;
@@ -21,8 +21,8 @@ const SliderPrice: FC<ScrollPriceProps> = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const sliderHandler = async (searhcParam: URLSearchParams) => {
-    const { minPrice, maxPrice } = await useFetchProductsMinMaxPrice(
+  const SliderHandler = async (searhcParam: URLSearchParams) => {
+    const { minPrice, maxPrice } = await appMinMaxPriceGet(
       searhcParam
     );
 
@@ -54,11 +54,11 @@ const SliderPrice: FC<ScrollPriceProps> = () => {
 
     router.push(`${pathname}?${urlSearchParams}`);
 
-    sliderHandler(urlSearchParams);
+    SliderHandler(urlSearchParams);
   };
 
   useEffect(() => {
-    sliderHandler(searhcParam);
+    SliderHandler(searhcParam);
   }, [searhcParam]);
 
   return (

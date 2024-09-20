@@ -8,6 +8,7 @@ import {
   JSXElementConstructor,
   ReactElement,
   ReactNode,
+  useEffect,
   useState,
 } from "react";
 
@@ -32,19 +33,25 @@ export default function NavLink({
   const searhcParams = useSearchParams();
   const pathname = usePathname();
   const urlSearchParams = new URLSearchParams(searchParams);
-
-  let search: boolean;
+  let active: boolean;
+  // const [active, setActive] = useState<boolean>(false);
 
   if (queryParams) {
     for (const key in queryParams) {
       urlSearchParams.set(key, queryParams[key].toLowerCase());
     }
-    search =
+
+    active =
       searhcParams.get("category") === children?.toString().toLocaleLowerCase();
   } else {
-    search = pathname.endsWith(`${endpoint?.toLowerCase()}`);
-
-    pathname.split("/")[1].toLowerCase();
+    endpoint
+      ?.toString()
+      .split("/")
+      .find(
+        (value) => value === pathname.replaceAll("/", " ").trim().split(" ")[1]
+      )
+      ? (active = true)
+      : null;
   }
 
   const setQueryParams = `?${urlSearchParams}`;
@@ -55,7 +62,7 @@ export default function NavLink({
         classesName
           ? classesName && TextClassList.SEMIBOLD_14
           : TextClassList.SEMIBOLD_14
-      } ${search ? classes.action || classes.link : classes.link}`}
+      } ${active ? classes.action || classes.link : classes.link}`}
       scroll={false}
       href={queryParams ? setQueryParams : `/${endpoint}`}
     >

@@ -5,14 +5,15 @@ import DisplayIcon from "../elemets/icons/displayIcon";
 import classes from "./PopupSearch.module.scss";
 import { Product } from "../../types/product";
 import { MouseEventHandler, useState } from "react";
-import { FilterProvider } from "../page-shop/products/FilterCtx";
+
 import { useSearchParams } from "next/navigation";
 // import { useFetchAllProducts } from "../../hooks/useFetchProducts";
 import { useAppDispatch } from "@/lib/redux/redux";
 
 import ProductList from "../elemets/products-list/ProductList";
 import { popupActions } from "@/lib/redux/store/popup/popup";
-import { useFetchProductsAll } from "@/hooks/useFetchProducts";
+import { appProductsGet } from "@/utils/http/products";
+import { FilterProvider } from "../page-category/section-products/products/filter/FilterCtx";
 
 const PopupSearch = () => {
   const dispatch = useAppDispatch();
@@ -27,9 +28,7 @@ const PopupSearch = () => {
   const limit = 8;
 
   const updateData = async (urlSearchParams: URLSearchParams) => {
-    const { products, productCounts } = await useFetchProductsAll({
-      urlSearchParams,
-    });
+    const { products, productCounts } = await appProductsGet(urlSearchParams);
 
     setProductsArray(productsArray.concat(products));
     setCount(count + products.length);
@@ -47,7 +46,7 @@ const PopupSearch = () => {
     updateData(urlSearchParams);
   }
 
-  const btnClickHandler: MouseEventHandler = () => {
+  const btnClickHandler = () => {
     const urlSearchParams = new URLSearchParams(searchParams.toString());
     urlSearchParams.append("limit", limit.toString());
     urlSearchParams.append("offset", count.toString());

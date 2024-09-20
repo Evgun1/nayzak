@@ -12,12 +12,13 @@ import React, {
 } from "react";
 
 import DropDownItem from "./DropDownItem";
-import ButtonCustom, {
-  StyleSettingsObject,
-} from "../custom-elemets/button-custom/ButtonCustom";
 
 import classes from "./DropDown.module.scss";
 import { Size, Type } from "../custom-elemets/button-custom/ButtonType";
+import {
+  ButtonCustom,
+  StyleSettingsObject,
+} from "../custom-elemets/button-custom/ButtonCustom";
 
 interface TypePropertyObject {
   click: MouseEvent;
@@ -67,7 +68,7 @@ const DropDownComponent: FC<DropDownProps> = ({
   useEffect(() => {
     document.addEventListener(typeProperty, btnClickHandler);
     return () => document.removeEventListener(typeProperty, btnClickHandler);
-  }, []);
+  });
 
   return (
     <div className={classes["drop-down"]}>

@@ -6,9 +6,8 @@ import Addresses from "./Addresses";
 import AccountDetails from "./AccountDetails";
 import classes from "./Profile.module.scss";
 import Dashboard from "./Dashboard";
-import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
+import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import { useAppDispatch } from "@/lib/redux/redux";
-import { authAction } from "@/lib/redux/store/auth/auth";
 import { useRouter, redirect } from "next/navigation";
 import { cartAction } from "@/lib/redux/store/cart/cart";
 import Wishlist from "./wishlist/Wishlist";
@@ -65,6 +64,10 @@ export default function Profile() {
       <div className={classes["profile--dashboard"]}>
         <div className={classes["profile--dashboard-menu"]}>
           <Image
+            unoptimized
+            width={0}
+            height={0}
+            layout="responsive"
             className={classes["profile--menu-image"]}
             src="https://placehold.co/400"
             alt="avatar"

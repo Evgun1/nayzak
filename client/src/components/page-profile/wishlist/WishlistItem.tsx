@@ -1,5 +1,4 @@
-import ButtonCustom from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
-import { Product } from "@/types/product";
+import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import { TextClassList } from "@/types/textClassList";
 
 import classes from "./Wishlist.module.scss";

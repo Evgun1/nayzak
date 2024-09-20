@@ -9,12 +9,12 @@ import { useEffect, useState } from "react";
 
 import DropDown from "@/lib/ui/drop-down/DropDown";
 import classes from "./Navigation.module.scss";
-import LinkCustom from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
+import { LinkCustom } from "@/lib/ui/custom-elemets/link-custom/LinkCustom";
 import { Category } from "@/types/categories";
 import { Subcategory } from "@/types/subcategories";
 import NavLink from "@/lib/ui/nav-link/NavLink";
-import { Subcategories } from "@/hooks/useFetchSubcategories";
-import { Categories } from "@/hooks/useFetchCategories";
+import { appCategoriesGet } from "@/utils/http/categories";
+import { appSubcategoriesGet } from "@/utils/http/subcategories";
 
 interface NavigationItem {
   label: string;
@@ -31,32 +31,30 @@ export default function Navigation() {
     url: category.title.replaceAll(" ", "-").toLowerCase(),
   });
 
-  const setupData = async () => {
-    const categories = await Categories.useFetchAll();
+  useEffect(() => {
+    (async () => {
+      const categories = await appCategoriesGet();
 
-    const navigation: AppNavigation = [];
+      const navigation: AppNavigation = [];
 
-    for await (const category of categories) {
-      const navItem: NavigationItem = buildNavItem(category);
+      for await (const category of categories) {
+        const navItem: NavigationItem = buildNavItem(category);
 
-      const urlSearchParams = new URLSearchParams({
-        category: category.title,
-      });
+        const urlSearchParams = new URLSearchParams({
+          category: category.title,
+        });
 
-      const subCategories = await Subcategories.useFetchAll(urlSearchParams);
+        const subCategories = await appSubcategoriesGet(urlSearchParams);
 
-      if (subCategories && subCategories.length) {
-        navItem.children = subCategories.map(buildNavItem);
+        if (subCategories && subCategories.length) {
+          navItem.children = subCategories.map(buildNavItem);
+        }
+
+        navigation.push(navItem);
       }
 
-      navigation.push(navItem);
-    }
-
-    setNavigation(navigation);
-  };
-
-  useEffect(() => {
-    setupData();
+      setNavigation(navigation);
+    })();
   }, []);
 
   return (
@@ -87,6 +85,7 @@ export default function Navigation() {
                       href={{
                         endpoint: `/category/${item.url}/${subItem.url}`,
                       }}
+                      className={classes["navigation--link"]}
                       styleSettings={{
                         type: LinkCustom.Type.text,
                         color: { dark: true },

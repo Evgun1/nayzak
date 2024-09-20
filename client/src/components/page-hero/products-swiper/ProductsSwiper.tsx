@@ -13,22 +13,26 @@ import DisplayIcon from "@/components/elemets/icons/displayIcon";
 import IconsIdList from "@/components/elemets/icons/IconsIdList";
 import ProductPreview from "@/components/elemets/product-preview/ProductPreview";
 import { useEffect, useState } from "react";
-import { useFetchProductsAll } from "@/hooks/useFetchProducts";
+import { appProductsGet } from "@/utils/http/products";
+import { useSearchParams } from "next/navigation";
 // import { useFetchAllProducts } from "@/hooks/fetchProducts";
 
 const ProductsSwiper = () => {
   const [productsData, setProductsData] = useState<Product[]>();
-  const urlSearchParams = new URLSearchParams({ limit: "8" });
 
-  const useFethcProductsHandler = () => {
-    useFetchProductsAll({ urlSearchParams }).then(({ products }) =>
-      setProductsData(products)
-    );
-  };
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    useFethcProductsHandler;
-  });
+    (async () => {
+      const urlSearchParams = new URLSearchParams(searchParams.toString());
+      urlSearchParams.set("limit", "8");
+
+      const { products } = await appProductsGet({
+        searchParams: urlSearchParams,
+      });
+      setProductsData(products);
+    })();
+  }, [searchParams]);
 
   return (
     <div className={`container  ${classes.wrapper}`}>

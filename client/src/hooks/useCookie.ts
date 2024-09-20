@@ -9,8 +9,8 @@ type SetProps = {
   options?: OptionsItem;
 };
 
-export function useCookiGet(name: string) {
-  if (typeof document === "undefined") return;
+export function  useCookiGet(name: string) {
+  // if (typeof document === "undefined") return;
   const cookie = document.cookie
     .split(";")
     .map((data) => data.trim().split("="))

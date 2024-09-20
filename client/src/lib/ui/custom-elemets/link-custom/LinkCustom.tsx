@@ -1,5 +1,3 @@
-// "use client";
-
 import Link from "next/link";
 import { FC, ReactNode, RefObject } from "react";
 
@@ -37,7 +35,7 @@ type SiteLinkProps = {
   onClick?: () => void;
 };
 
-const SiteLink: FC<SiteLinkProps> = ({
+const SiteLink: FC<SiteLinkProps> =  ({
   styleSettings: { color, icon, roundess, size, type },
   className,
   searchParams,
@@ -70,11 +68,11 @@ const SiteLink: FC<SiteLinkProps> = ({
 
   const classes: any[] = [linkColor, size, roundess, type];
 
-  if (queryParams)
+  if (queryParams) {
     for (const urlNameKey in queryParams) {
       urlSearchParams.set(urlNameKey, queryParams[urlNameKey].toLowerCase());
     }
-
+  }
   if (deleteQuertParams) urlSearchParams.delete(deleteQuertParams);
 
   const setQueryParams = `?${urlSearchParams}`;
@@ -95,7 +93,7 @@ const SiteLink: FC<SiteLinkProps> = ({
   );
 };
 
-export default {
+export const LinkCustom = {
   SiteLink,
   Size,
   Color,

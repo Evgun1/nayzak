@@ -1,16 +1,14 @@
 import ProductLoop from "@/components/page-product/productLoop/ProductLoop";
-import { Product } from "@/types/product";
 
 import "./style.scss";
 import ProductTabs from "@/components/page-product/ProductTabs/ProductTabs";
-import { Products } from "@/hooks/useFetchProducts";
-import { Reviews } from "@/hooks/useFetchReviews";
-// import { useFetchProduct } from "@/hooks/fetchProducts";
+import { appReviewsProductGet } from "@/utils/http/reviews";
+import { appOneProductGet } from "@/utils/http/products";
 
 export default async function page({ params }: { params: { slug: string } }) {
-  const product = await Products.useFetchOne(params.slug);
+  const product = await appOneProductGet(params.slug.replaceAll("_", " "));
 
-  const { reviewsData, totalReviews } = (await Reviews.useFetchProduct(
+  const { reviewsData, totalReviews } = (await appReviewsProductGet(
     params.slug
   )) as any;
 

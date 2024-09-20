@@ -2,11 +2,12 @@ import { AppDispatch } from "../../store";
 import { authAction, UserData } from "./auth";
 import { jwtDecode } from "jwt-decode";
 import { useCookiDelete, useCookiSet } from "@/hooks/useCookie";
-import { useFetchUserAuth, useFetchUserCheck } from "@/hooks/useFetchUser";
+import { appUserCheckGet, appUserPost } from "@/utils/http/user";
+import { appCookiGet } from "@/utils/http/cookie";
 
 export const registrationAction = (userData: UserData) => {
   return async function (dispath: AppDispatch) {
-    const token = await useFetchUserAuth({ registration: userData });
+    const token = await appUserPost({ registration: userData });
 
     if (!token) return;
 
@@ -22,7 +23,7 @@ export const registrationAction = (userData: UserData) => {
 };
 export const loginAction = (userData: UserData) => {
   return async function (dispath: AppDispatch) {
-    const token = await useFetchUserAuth({ login: userData });
+    const token = await appUserPost({ login: userData });
 
     if (!token) return;
 
@@ -47,9 +48,10 @@ export const logOut = () => {
 
 export function checkAuth() {
   return async function (dispathc: AppDispatch) {
-    const token = await useFetchUserCheck();
+    const userTokn = await appCookiGet("user-token");
+    if (!userTokn) return;
 
-    if (!token) return;
+    const token = await appUserCheckGet(userTokn);
 
     useCookiSet({
       name: "user-token",
