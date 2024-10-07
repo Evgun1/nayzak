@@ -1,13 +1,15 @@
 "use client";
 
 import classes from "./PopupAuthc.module.scss";
-import { FC, FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useAppDispatch } from "@/lib/redux/redux";
-import { popupActions } from "@/lib/redux/store/popup/popup";
-import test from "node:test";
 import { loginAction, registrationAction } from "@/lib/redux/store/auth/action";
 import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import { initCart } from "@/lib/redux/store/cart/action";
+import Form from "../elemets/form-component/FormComponent";
+import { login, registration } from "@/utils/validator";
+import IconsIdList from "../elemets/icons/IconsIdList";
+import { popupActions } from "@/lib/redux/store/popup/popup";
 
 const PopupAuth = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +20,8 @@ const PopupAuth = () => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
+
+    console.log(formData.get("email"));
 
     const email = formData.has("email")
       ? (formData.get("email") as string)
@@ -69,12 +73,57 @@ const PopupAuth = () => {
           </ButtonCustom.SiteButton>
         </div>
       </div>
-      <form className={classes["auth--form"]} onSubmit={submitHandler}>
+      <Form
+        schema={isRegister ? registration : login}
+        submitHandler={submitHandler}
+      >
+        <Form.InputDefault
+          style="line"
+          inputSettings={{
+            id: "email",
+            name: "email",
+            type: "text",
+            placeholder: "Email",
+            required: true,
+            autoComplete: "email",
+          }}
+        />
+        <Form.InputDefault
+          style="line"
+          inputSettings={{
+            id: "password",
+            name: "password",
+            type: showPassword ? "text" : "password",
+            placeholder: "Password",
+            required: true,
+            autoComplete: "current-password",
+          }}
+          buttonSettings={{
+            right: {
+              type: "button",
+              icon: IconsIdList.VIEWS,
+              onClick: () => setShowPassword((prev) => !prev),
+            },
+          }}
+        />
+        <ButtonCustom.SiteButton
+          typeProperty="submit"
+          styleSettings={{
+            color: { light: true },
+            roundess: ButtonCustom.Roundness.rounded,
+            size: ButtonCustom.Size.L,
+            type: ButtonCustom.Type.default,
+          }}
+        >
+          {isRegister ? "Sing up" : "Sing in"}
+        </ButtonCustom.SiteButton>
+      </Form>
+      {/* <form className={classes["auth--form"]} onSubmit={submitHandler}>
         <input
           name="email"
+          type="email"
           placeholder="Your email"
           className={classes["auth--form-input"]}
-          type="email"
         />
         <div>
           <input
@@ -96,19 +145,9 @@ const PopupAuth = () => {
             onClick={() => setShowPassword((prev) => !prev)}
           />
         </div>
+*/}
 
-        <ButtonCustom.SiteButton
-          typeProperty="submit"
-          styleSettings={{
-            color: { light: true },
-            roundess: ButtonCustom.Roundness.rounded,
-            size: ButtonCustom.Size.L,
-            type: ButtonCustom.Type.default,
-          }}
-        >
-          {isRegister ? "Sing up" : "Sing in"}
-        </ButtonCustom.SiteButton>
-      </form>
+      {/* </form>  */}
     </div>
   );
 };

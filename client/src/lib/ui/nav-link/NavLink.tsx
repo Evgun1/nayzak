@@ -1,16 +1,13 @@
 "use client";
-import { TextClassList } from "@/types/textClassList";
+
 import classes from "./NavLink.module.scss";
 
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { ReactNode } from "react";
 import {
-  JSXElementConstructor,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
+  LinkCustom,
+  StyleSettingsObject,
+} from "../custom-elemets/link-custom/LinkCustom";
 
 interface HrefObject {
   endpoint?: string;
@@ -19,22 +16,27 @@ interface HrefObject {
 
 type NavLinkProps = {
   href: HrefObject;
+  searchParams?: URLSearchParams;
   classesName?: string;
   children: ReactNode;
-  searchParams?: URLSearchParams;
+  customStyleActive?: string;
+  styleSetings: StyleSettingsObject;
 };
 
 export default function NavLink({
   children,
   href: { queryParams, endpoint },
   searchParams,
+  styleSetings: { color, icon, roundess, size, type },
   classesName,
+  customStyleActive,
 }: NavLinkProps) {
   const searhcParams = useSearchParams();
   const pathname = usePathname();
   const urlSearchParams = new URLSearchParams(searchParams);
-  let active: boolean;
-  // const [active, setActive] = useState<boolean>(false);
+  const params = useParams();
+
+  let active: boolean = false;
 
   if (queryParams) {
     for (const key in queryParams) {
@@ -57,16 +59,26 @@ export default function NavLink({
   const setQueryParams = `?${urlSearchParams}`;
 
   return (
-    <Link
-      className={`${
-        classesName
-          ? classesName && TextClassList.SEMIBOLD_14
-          : TextClassList.SEMIBOLD_14
-      } ${active ? classes.action || classes.link : classes.link}`}
-      scroll={false}
-      href={queryParams ? setQueryParams : `/${endpoint}`}
+    <LinkCustom.SiteLink
+      className={`${classesName} ${
+        active
+          ? (customStyleActive ?? classes.action) || classes.link
+          : classes.link
+      }`}
+      styleSettings={{
+        color,
+        roundess,
+        size,
+        type,
+        icon,
+      }}
+      href={
+        queryParams
+          ? { queryParams: { setQueryParams } }
+          : { endpoint: `/${endpoint}` }
+      }
     >
       {children}
-    </Link>
+    </LinkCustom.SiteLink>
   );
 }

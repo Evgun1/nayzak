@@ -7,11 +7,11 @@ import {
 } from "./interfaces/SubcategoryGetInput";
 import subcategoryService from "./subcategory.service";
 import categoriesService from "../categories/categories.service";
-import { log } from "util";
 
 class SubcategoriesContronner {
   async getAll(c: Context) {
     const inputData = c.req.query() as SubcategoryGetGTO;
+
     const { subcategories } = await subcategoryService.getAllSubcategories(
       inputData
     );
@@ -25,8 +25,7 @@ class SubcategoriesContronner {
       inputData
     );
 
-
-    return c.json({subcategories});
+    return c.json({ subcategories });
   }
 }
 export default new SubcategoriesContronner();

@@ -1,0 +1,29 @@
+.textArea {
+  &--container {
+    &-contained {
+      width: 100%;
+      min-height: 250px;
+      padding: 16px;
+      border: 1px solid var(--black-300);
+      border-radius: 6px;
+      resize: none;
+
+      &:focus-visible {
+        outline: 1px solid var(--black-900);
+      }
+    }
+
+    &-line {
+      width: 100%;
+      min-height: 150px;
+      border: none;
+      border-bottom: 1px solid var(--black-300);
+      resize: none;
+
+      &:focus-visible {
+        outline: none;
+        border-bottom: 1px solid var(--black-900);
+      }
+    }
+  }
+}

@@ -32,6 +32,7 @@ type DropDownProps = {
   typeProperty: keyof TypePropertyObject;
   lable: ReactNode;
   children: ReactNode;
+  styles?: string;
 };
 
 const DropDownComponent: FC<DropDownProps> = ({
@@ -39,6 +40,7 @@ const DropDownComponent: FC<DropDownProps> = ({
   btnCustomSettingth,
   typeProperty,
   children,
+  styles,
 }) => {
   const [showElemets, setShowElements] = useState<boolean>(false);
   const btnRef = useRef() as RefObject<HTMLButtonElement>;
@@ -71,7 +73,7 @@ const DropDownComponent: FC<DropDownProps> = ({
   });
 
   return (
-    <div className={classes["drop-down"]}>
+    <div className={`${styles ?? ""} ${classes["drop-down"]}`}>
       <ButtonCustom.SiteButton
         id={generateId.replaceAll(":", "")}
         className={

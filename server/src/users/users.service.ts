@@ -1,5 +1,4 @@
-import { email } from "./../utils/validator";
-import { randomUUID } from "crypto";
+import {  randomUUID } from "crypto";
 import prismaClient from "../prismaClient";
 import bcrypt from "bcrypt";
 import { UserDto } from "./user.dto";
@@ -8,9 +7,10 @@ import { HTTPException } from "hono/http-exception";
 import { sign, decode } from "hono/jwt";
 import UserGetDTO from "./interface/UserGetInput";
 import { Prisma } from "@prisma/client";
-import { log } from "util";
 
 export async function registration(inputData: UserGetDTO) {
+  if (!inputData.password || !inputData.email) return;
+
   const where = await userWhere(inputData);
   const queryOprions: Prisma.UsersFindFirstArgs = {
     where,
@@ -18,7 +18,7 @@ export async function registration(inputData: UserGetDTO) {
 
   const user = await prismaClient.users.findFirst(queryOprions);
   if (user)
-    throw new HTTPException(401, {
+    throw new HTTPException(409, {
       message: `Email already exists`,
     });
 
@@ -50,6 +50,7 @@ export async function registration(inputData: UserGetDTO) {
 }
 
 export async function login(inputData: UserGetDTO) {
+  if (!inputData.password) return;
   const where = await userWhere(inputData);
   const queryOprions: Prisma.UsersFindFirstArgs = {
     where,

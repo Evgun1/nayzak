@@ -1,19 +1,18 @@
 import { Context, Hono, Next } from "hono";
 import appRouter from "../router";
 
-import UsersControler from "./users.controler";
 import { validator } from "hono/validator";
 import UserFromValidator from "./validator/user-from.validator";
+import usersMiddleware from "./users.middleware";
 import usersControler from "./users.controler";
-import { bearerAuth } from "hono/bearer-auth";
-import { basicAuth } from "hono/basic-auth";
 
 const usersRouter = new Hono();
 
 usersRouter.post(
   "/registration",
-  validator("json", UserFromValidator),
-  UsersControler.registration
+  validator("form", UserFromValidator),
+  // usersMiddleware.registration,
+  usersControler.registration
 );
 // usersRouter.post(
 //   "/registration",
@@ -21,9 +20,9 @@ usersRouter.post(
 //   UsersControler.registration
 // );
 
-usersRouter.get("/active/:link ", UsersControler.active);
+usersRouter.get("/active/:link ", usersControler.active);
 
-usersRouter.post("/login", UsersControler.login);
+usersRouter.post("/login", usersControler.login);
 
 usersRouter.use("/check", usersControler.check);
 

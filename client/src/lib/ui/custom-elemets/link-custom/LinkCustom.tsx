@@ -35,7 +35,7 @@ type SiteLinkProps = {
   onClick?: () => void;
 };
 
-const SiteLink: FC<SiteLinkProps> =  ({
+const SiteLink: FC<SiteLinkProps> = ({
   styleSettings: { color, icon, roundess, size, type },
   className,
   searchParams,
@@ -70,6 +70,7 @@ const SiteLink: FC<SiteLinkProps> =  ({
 
   if (queryParams) {
     for (const urlNameKey in queryParams) {
+      // console.log(urlNameKey);
       urlSearchParams.set(urlNameKey, queryParams[urlNameKey].toLowerCase());
     }
   }

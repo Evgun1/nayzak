@@ -20,31 +20,19 @@ import { Product } from "@/types/product";
 import { appCategoriesGet } from "@/utils/http/categories";
 import { appSubcategoriesGet } from "@/utils/http/subcategories";
 
-type ProductGridProps = {
-  products: Product[];
-  productsCount: number;
-};
-
-export default function ProductGrid({
-  products,
-  productsCount,
-}: ProductGridProps) {
+export default function ProductGrid() {
   const searchParams = useSearchParams();
-  const dispatch = useAppDispatch();
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [dataArray, setDataArray] = useState<Product[]>(products);
-  const [totalCount, setTotalCount] = useState<number>(productsCount);
 
   useEffect(() => {
-    const FetchHandler = async () => {
+    (async () => {
       const categories = await appCategoriesGet();
       setCategories(categories);
 
       const subcategories = await appSubcategoriesGet(searchParams);
       setSubcategories(subcategories);
-    };
-    FetchHandler();
+    })();
   }, [searchParams]);
 
   return (
@@ -117,9 +105,7 @@ export default function ProductGrid({
             ))}
         </DropDown>
       </div>
-      {/* <FilterProvider> */}
-      <ProductsHero searchParams={searchParams} />
-      {/* </FilterProvider> */}
+      <ProductsHero />
     </div>
   );
 }

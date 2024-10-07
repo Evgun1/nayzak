@@ -1,3 +1,4 @@
+import { initCart } from "@/lib/redux/store/cart/action";
 import { log } from "util";
 // ("use client");
 
@@ -5,7 +6,13 @@ import { productsAction } from "../lib/redux/store/product/products";
 import { AllPrice, Product } from "../types/product";
 import { GetDynamicParamFromSegment } from "next/dist/server/app-render/app-render";
 import useFetch from "./useFetch";
-import { Reducer, ReducerWithoutAction, useEffect, useReducer } from "react";
+import {
+  Reducer,
+  ReducerWithoutAction,
+  useCallback,
+  useEffect,
+  useReducer,
+} from "react";
 import { PrepareAction } from "@reduxjs/toolkit";
 import { number } from "zod";
 import { useSearchParams } from "next/navigation";
@@ -64,41 +71,45 @@ export const useProductsReducer = () => {
     totalCount: 0,
     isLoading: false,
   });
+
   const searchParams = useSearchParams();
 
-  const initData = async <T extends { [key: string]: any }, P>(
-    fetch: FetchType<T, P>,
-    params?: P
-  ) => {
-    const result = await fetch(params);
+  const initData = useCallback(
+    async <T extends { [key: string]: any }, P>(
+      fetch: FetchType<T, P>,
+      params?: P
+    ) => {
+      const result = await fetch(params);
 
-    const arrayKey = Object.keys(result).find((key) =>
-      Array.isArray(result[key])
-    );
-    const countKey = Object.keys(result).find(
-      (key) => typeof result[key] === "number"
-    );
+      const arrayKey = Object.keys(result).find((key) =>
+        Array.isArray(result[key])
+      );
+      const countKey = Object.keys(result).find(
+        (key) => typeof result[key] === "number"
+      );
 
-    if (arrayKey && countKey) {
-      dispatch({
-        type: ProductsActionType.INIT,
-        payload: {
-          products: result[arrayKey],
-          totalCount: result[countKey],
-          isLoading: false,
-        },
-      });
-    }
+      if (arrayKey && countKey) {
+        dispatch({
+          type: ProductsActionType.INIT,
+          payload: {
+            products: result[arrayKey],
+            totalCount: result[countKey],
+            isLoading: false,
+          },
+        });
+      }
+    },
+    []
+  );
 
-    // dispatch({
-    //   type: ProductsActionType.INIT,
-    //   payload: {
-    //     isLoading: false,
-    //     products: result.products,
-    //     totalCount: result.productCounts,
-    //   },
-    // });
-  };
+  // dispatch({
+  //   type: ProductsActionType.INIT,
+  //   payload: {
+  //     isLoading: false,
+  //     products: result.products,
+  //     totalCount: result.productCounts,
+  //   },
+  // });
 
   // useEffect(() => {
   //   dispatch({ type: ProductsActionType.START_LOAD });
@@ -126,6 +137,8 @@ export const useProductsReducer = () => {
       requestParams.set("limit", limit.toString());
 
       const result = await appProductsGet({ searchParams: requestParams });
+
+      console.log(result);
 
       const payload: ProductsState = {
         isLoading: false,

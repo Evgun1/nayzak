@@ -6,7 +6,7 @@ import UserGetDTO from "./interface/UserGetInput";
 
 class UsersControler {
   async registration(c: Context, next: Next) {
-    const inputData = await c.req.parseBody();
+    const inputData = await c.req.formData();
 
     console.log(inputData);
 

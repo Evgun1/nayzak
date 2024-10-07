@@ -1,3 +1,4 @@
+// import InputCustom from "@/lib/ui/custom-elemets/input-castom/InputCustom";
 import { TextClassList } from "../../types/textClassList";
 import classes from "./AccountDetails.module.scss";
 
@@ -66,14 +67,15 @@ export default function AccountDetails() {
             />
           </div>
           <div className={classes.form_input}>
-            <span className={TextClassList.SEMIBOLD_16}>
+            {/* <span className={TextClassList.SEMIBOLD_16}>
               Repeat new password
             </span>
             <input
               className={classes["account__fields-input"]}
               placeholder="Repeat new password"
               type="text"
-            />
+            /> */}
+            {/* <InputCustom styleSettings={{}} name="t" type="text" /> */}
           </div>
         </div>
       </div>

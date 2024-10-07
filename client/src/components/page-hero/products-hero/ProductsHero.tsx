@@ -2,31 +2,39 @@
 
 import classes from "./ProductsHero.module.scss";
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import Loader from "@/components/elemets/loader/Loader";
 import ProductPreview from "@/components/elemets/product-preview/ProductPreview";
 import { useProductsReducer } from "@/hooks/useProductsReducer";
+import { appProductsGet } from "@/utils/http/products";
+import { useSearchParams } from "next/navigation";
 
-const ProductsHero: FC<{ searchParams: URLSearchParams }> = () => {
-  const { state, loadMoreProducts } = useProductsReducer();
+const ProductsHero = () => {
+  const searchParams = useSearchParams();
+
+  const { state, loadMoreProducts, initData } = useProductsReducer();
 
   const btnClickHandler = () => {
     loadMoreProducts(state.products.length);
   };
 
-  return (
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(searchParams.toString());
+    urlSearchParams.set("limit", "8");
+    initData(appProductsGet, { searchParams: urlSearchParams });
+  }, [searchParams, initData]);
+
+  return !state.isLoading ? (
     <Loader
       style={classes["grid-hero"]}
       count={state.products.length}
       totalCount={state.totalCount}
       btnClickHandler={btnClickHandler}
     >
-      {state.isLoading ? <>Load</> : ""}
-
       {state.products ? (
         state.products.map((product, i) => (
-          <li key={i}>
+          <li key={i} className={classes["grid-li"]}>
             <ProductPreview product={product} />
           </li>
         ))
@@ -34,6 +42,8 @@ const ProductsHero: FC<{ searchParams: URLSearchParams }> = () => {
         <div>No product</div>
       )}
     </Loader>
+  ) : (
+    <div>Loading...</div>
   );
 };
 

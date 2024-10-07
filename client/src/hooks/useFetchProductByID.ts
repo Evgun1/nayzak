@@ -13,7 +13,7 @@ type ProductsArrayData = {
 
 const useFetchProductsById = (
   productsArray: ProductsArrayData[],
-  returnAmount = true
+  returnAmount: boolean = true
 ) => {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
@@ -23,22 +23,24 @@ const useFetchProductsById = (
       setProducts([]);
       return;
     }
+
     const productsID: number[] = productsArray.map(
       (element) => element.productID
     );
 
     const urlSearchParams = new URLSearchParams(searchParams.toString());
+
     urlSearchParams.set(`id`, `${productsID}`);
-    const { products } = await appProductsGet({
+    const productsData = await appProductsGet({
       searchParams: urlSearchParams,
     });
 
     if (!returnAmount) {
-      setProducts(products);
+      setProducts(productsData.products);
       return;
     }
 
-    const output: Product[] = products.map((item) => {
+    const output: Product[] = productsData.products.map((item) => {
       const index = productsArray.findIndex(
         (element) => element.productID === item.id
       );

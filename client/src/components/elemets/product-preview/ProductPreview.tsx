@@ -48,11 +48,7 @@ const ProductPreview: FC<ProductPreviewProps> = ({
       className={`${style} ${classes.card}`}
       href={`/product/${productTitle}`}
     >
-      <Image
-        unoptimized
-        width={0}
-        height={0}
-        layout="responsive"
+      <img
         className={classes["img"]}
         src="https://placehold.co/652x889"
         alt="product"
@@ -76,11 +72,7 @@ const ProductPreview: FC<ProductPreviewProps> = ({
   ) : (
     <div className={classes["card-list_type"]}>
       <Link href={`/product/${productTitle}`}>
-        <Image
-          unoptimized
-          width={0}
-          height={0}
-          layout="responsive"
+        <img
           className={classes["img"]}
           src="https://placehold.co/652x889"
           alt="product"

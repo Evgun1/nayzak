@@ -10,7 +10,7 @@ type SetProps = {
 };
 
 export function  useCookiGet(name: string) {
-  // if (typeof document === "undefined") return;
+  if (typeof document === "undefined") return;
   const cookie = document.cookie
     .split(";")
     .map((data) => data.trim().split("="))

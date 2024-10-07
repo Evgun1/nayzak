@@ -14,7 +14,10 @@ import { Category } from "@/types/categories";
 import { Subcategory } from "@/types/subcategories";
 import NavLink from "@/lib/ui/nav-link/NavLink";
 import { appCategoriesGet } from "@/utils/http/categories";
-import { appSubcategoriesGet } from "@/utils/http/subcategories";
+import {
+  appSubcategoriesGet,
+  appSubcategoryByCategoryGet,
+} from "@/utils/http/subcategories";
 
 interface NavigationItem {
   label: string;
@@ -72,7 +75,16 @@ export default function Navigation() {
                 type: Type.text,
               }}
               lable={
-                <NavLink href={{ endpoint: `category/${item.url}` }}>
+                <NavLink
+                  href={{ endpoint: `category/${item.url}` }}
+                  styleSetings={{
+                    color: { dark: true },
+                    roundess: LinkCustom.Roundness.sharp,
+                    size: LinkCustom.Size.XS,
+                    type: LinkCustom.Type.text,
+                    icon: { right: LinkCustom.IconsIdList.CHEVRONE },
+                  }}
+                >
                   {item.label}
                 </NavLink>
               }
@@ -85,7 +97,7 @@ export default function Navigation() {
                       href={{
                         endpoint: `/category/${item.url}/${subItem.url}`,
                       }}
-                      className={classes["navigation--link"]}
+                      // className={classes["navigation--link"]}
                       styleSettings={{
                         type: LinkCustom.Type.text,
                         color: { dark: true },

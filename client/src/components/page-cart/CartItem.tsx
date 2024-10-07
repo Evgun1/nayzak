@@ -6,6 +6,7 @@ import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { changeAmount, removeCart } from "@/lib/redux/store/cart/action";
+import Image from "next/image";
 
 type CartItemProps = {
   title: string;
@@ -42,10 +43,16 @@ export default function CartItem({
     dispatch(changeAmount({ amount: quantity, productID }));
   }, [quantity]);
 
+ 
+
   return (
     <>
       <div className={classes["cart--product"]}>
-        <img
+        <Image
+         unoptimized
+         width={0}
+         height={0}
+         layout="responsive"
           className={classes["cart--product-img"]}
           src="https://placehold.co/652x889"
           alt=""

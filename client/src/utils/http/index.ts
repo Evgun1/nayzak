@@ -30,62 +30,69 @@ const appFetch = async <T>({
   customError,
   init,
   searchParams,
-}: AppFetchProps): Promise<T> => {
-  const url = `${BASE_URL}/${pathname}?${searchParams}`;
+}: AppFetchProps): Promise<T | Error> => {
+  const url = `${BASE_URL}/${pathname}${
+    searchParams ? `?${searchParams}` : ""
+  }`;
 
   init.cache = "no-cache";
 
-  const res = await fetch(url, init);
+  try {
+    const res = await fetch(url, init);
 
-  if (!res.ok || res.status !== 200) {
-    throw new Error(await res.text());
-    if (customError) {
-      customError;
+    if (!res.ok) {
+      throw new Error(await res.text());
+      // if (customError) {
+      //   customError;
+      // }
     }
-  }
 
-  return (await res.json()) as T;
+    return (await res.json()) as T;
+  } catch (error) {
+    return error as Error;
+  }
 };
 
 type AppGetFetch = {
   pathname: string;
   searchParams?: URLSearchParams;
-  authorization?: string;
+  // authorization?: string;
 };
 
 export const appFetchGet = async <T>({
   pathname,
-  authorization,
+  // authorization,
   searchParams,
 }: AppGetFetch) => {
   const init: RequestInit = {};
   init.method = "GET";
 
-  if (authorization) {
-    init.headers = { Authorization: authorization };
-  }
+  // if (authorization) {
+  //   init.headers = { Authorization: authorization };
+  // }
 
   return await appFetch<T>({ init, pathname, searchParams });
 };
 
 type AppPostFetch = {
   pathname: string;
-  sendData: { json?: FormData | object; formData?: FormData };
+  // authorization?: string;
+  sendData: FormData;
 };
 export const appFetchPost = async <T>({ pathname, sendData }: AppPostFetch) => {
   const init: RequestInit = {};
   init.method = "POST";
 
-  if (sendData.json) {
-    const formDataJsonString = JSON.stringify(sendData.json);
+  // if (sendData.json) {
+  //   const formDataJsonString = JSON.stringify(sendData.json);
 
-    init.headers = { "Content-Type": "application/json" };
-    init.body = formDataJsonString;
-  }
+  //   init.headers = { "Content-Type": "application/json" };
+  //   init.body = formDataJsonString;
+  // }
 
-  if (sendData.formData) {
+  if (sendData) {
     init.headers = { "Content-Type": "multipart/form-data" };
-    init.body = sendData.formData;
+    init.body = sendData;
   }
 
   return await appFetch<T>({ pathname, init });

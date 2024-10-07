@@ -16,7 +16,6 @@ const SubcategoriesItem: FC<SubcategoriesGridProps> = ({ slug }) => {
   const pathname = usePathname();
   const [subcategories, setSubcategories] = useState<Subcategory[]>();
 
-  console.log(pathname);
 
   useEffect(() => {
     (async () => {

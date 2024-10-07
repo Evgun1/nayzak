@@ -7,6 +7,7 @@ import wishlistRouter from "./wishlists/wishlist.router";
 import reviewsRouter from "./reviews/reviews.router";
 import subcategoriesRouter from "./subcategories/subcategories.router";
 import usersRouter from "./users/users.router";
+import personalDataRouter from "./personal-data/personal-data.router";
 
 const appRouter = new Hono();
 
@@ -17,6 +18,7 @@ appRouter.route("/cart", cartRouter);
 appRouter.route("/wishlists", wishlistRouter);
 appRouter.route("/user", usersRouter);
 appRouter.route("/reviews", reviewsRouter);
-appRouter.route("subcategories", subcategoriesRouter);
+appRouter.route("/subcategories", subcategoriesRouter);
+appRouter.route("/personal-data", personalDataRouter);
 
 export default appRouter;

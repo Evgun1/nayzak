@@ -1,40 +1,60 @@
 import { AppDispatch } from "../../store";
 import { authAction, UserData } from "./auth";
-import { jwtDecode } from "jwt-decode";
+
 import { useCookiDelete, useCookiSet } from "@/hooks/useCookie";
 import { appUserCheckGet, appUserPost } from "@/utils/http/user";
 import { appCookiGet } from "@/utils/http/cookie";
+import { appHash } from "@/utils/bcrypt/bcrypt";
+import { appJwtDecode, appJwtSign } from "@/utils/jwt/jwt";
 
 export const registrationAction = (userData: UserData) => {
   return async function (dispath: AppDispatch) {
-    const token = await appUserPost({ registration: userData });
+    const hashPassword = await appHash(userData.password);
+    if (!hashPassword) return;
 
+    const userToken = await appJwtSign({
+      email: userData.email,
+      password: hashPassword,
+    });
+    if (!userToken) return;
+
+    const token = await appUserPost({ registration: userToken });
     if (!token) return;
 
-    useCookiSet({
-      name: "user-token",
-      value: token,
-      options: { path: "/", maxAge: 3600 },
-    });
+    if (token instanceof Error) {
+      console.log(token.message);
+    } else {
+      useCookiSet({
+        name: "user-token",
+        value: token,
+        options: { path: "/", maxAge: 3600 },
+      });
 
-    const user = jwtDecode<UserData>(token);
-    dispath(authAction.setUser(user));
+      const user = appJwtDecode<UserData>(token);
+
+      dispath(authAction.setUser(user));
+    }
   };
 };
 export const loginAction = (userData: UserData) => {
   return async function (dispath: AppDispatch) {
-    const token = await appUserPost({ login: userData });
+    const token = await appUserPost({ login: "" });
 
     if (!token) return;
 
-    useCookiSet({
-      name: "user-token",
-      value: token,
-      options: { path: "/", maxAge: 3600 },
-    });
+    if (token instanceof Error) {
+      console.log(token.message);
+    } else {
+      useCookiSet({
+        name: "user-token",
+        value: token,
+        options: { path: "/", maxAge: 3600 },
+      });
 
-    const user = jwtDecode<UserData>(token);
-    dispath(authAction.setUser(user));
+      // const user = appJwtDecode<UserData>(token);
+
+      dispath(authAction.setUser("user"));
+    }
   };
 };
 
@@ -53,13 +73,17 @@ export function checkAuth() {
 
     const token = await appUserCheckGet(userTokn);
 
-    useCookiSet({
-      name: "user-token",
-      value: token,
-      options: { path: "/", maxAge: 3600 },
-    });
-    const user = jwtDecode(token);
+    if (token instanceof Error) {
+      console.log(token.message);
+    } else {
+      useCookiSet({
+        name: "user-token",
+        value: token,
+        options: { path: "/", maxAge: 3600 },
+      });
+      // const user = appJwtDecode<UserData>(token);
 
-    dispathc(authAction.setUser(user));
+      dispathc(authAction.setUser("user"));
+    }
   };
 }

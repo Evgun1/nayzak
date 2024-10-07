@@ -28,7 +28,9 @@ const PopupSearch = () => {
   const limit = 8;
 
   const updateData = async (urlSearchParams: URLSearchParams) => {
-    const { products, productCounts } = await appProductsGet(urlSearchParams);
+    const { products, productCounts } = await appProductsGet({
+      searchParams: urlSearchParams,
+    });
 
     setProductsArray(productsArray.concat(products));
     setCount(count + products.length);

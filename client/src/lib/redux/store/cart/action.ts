@@ -11,16 +11,15 @@ import { appCookiGet } from "@/utils/http/cookie";
 
 export function initCart() {
   return async function (dispatch: AppDispatch, getState: () => RootState) {
-    const productsArray = [...getState().cart.productsArray];
     const userToken = await appCookiGet("user-token");
 
     if (!userToken) return;
 
     const cartProducts = await appCartCheckGet(userToken);
-    if (!cartProducts) return;
-    productsArray.push(...cartProducts);
 
-    dispatch(cartAction.saveCart(productsArray));
+    if (!cartProducts) return;
+
+    dispatch(cartAction.saveCart(cartProducts));
   };
 }
 

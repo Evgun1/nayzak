@@ -12,8 +12,6 @@ import classes from "./Hero.module.scss";
 import { appProductsGet } from "@/utils/http/products";
 
 export default async function Home(props: PageProps) {
-  const { productCounts, products } = await appProductsGet();
-
   return (
     <>
       <section>
@@ -26,7 +24,7 @@ export default async function Home(props: PageProps) {
         <CategoryGrid />
       </section>
       <section className={classes.section}>
-        <ProductGrid products={products} productsCount={productCounts} />
+        <ProductGrid />
       </section>
       <section className={classes.section}>
         <Feature />

@@ -17,6 +17,7 @@ async function getAllProducts(inputData: ProductsGetDTO) {
   const take = queryLimit(inputData);
   const skip = queryOffset(inputData);
 
+
   const queryOprions: Prisma.ProductsFindManyArgs = {
     where,
     orderBy,

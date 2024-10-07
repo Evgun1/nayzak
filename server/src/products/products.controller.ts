@@ -12,6 +12,7 @@ class ProductsController {
     const { products, productCounts } = await productsService.getAllProducts(
       inputData
     );
+
     return c.json({ products, productCounts });
   }
 
@@ -96,6 +97,10 @@ class ProductsController {
 
     return c.json({ minPrice, maxPrice });
   }
+
+  async create() {}
+  async change() {}
+  async delete() {}
 }
 
 export default new ProductsController();

@@ -6,11 +6,17 @@ import classes from "./Cart.module.scss";
 import useFetchProductsById from "@/hooks/useFetchProductByID";
 import { useAppSelector } from "@/lib/redux/redux";
 import CartItem from "./CartItem";
+import { useEffect, useState } from "react";
+import { Product } from "@/types/product";
+import { CartItemData } from "@/lib/redux/store/cart/cart";
 
 export default function Cart() {
   const cart = useAppSelector((select) => select.cart.productsArray);
 
   const products = useFetchProductsById(cart);
+
+console.log(products);
+
 
   return (
     <div className={`${classes.container} ${classes.cart}`}>

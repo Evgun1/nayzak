@@ -20,12 +20,19 @@ export default function ProductsGrid() {
 
   useEffect(() => {
     initData(appProductsGet, { params: slug });
-  }, [slug]);
+  }, [slug, initData]);
 
   return (
     <div className={classes["products--grid"]}>
       <Toolbar totalCount={state.totalCount} />
-      <ProductsLoader products={state.products} totalCount={state.totalCount} />
+      {state.isLoading ? (
+        <ProductsLoader
+          products={state.products}
+          totalCount={state.totalCount}
+        />
+      ) : (
+        <div>Loading...</div>
+      )}
     </div>
   );
 }
