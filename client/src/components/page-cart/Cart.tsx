@@ -15,9 +15,6 @@ export default function Cart() {
 
   const products = useFetchProductsById(cart);
 
-console.log(products);
-
-
   return (
     <div className={`${classes.container} ${classes.cart}`}>
       <h3 className={classes[`cart--title`]}>Cart</h3>

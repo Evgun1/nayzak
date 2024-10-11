@@ -6,6 +6,7 @@ import { Url } from "url";
 import { Color, Roundness, Size, Type } from "./LinkType";
 import IconsIdList from "@/components/elemets/icons/IconsIdList";
 import DisplayIcon from "@/components/elemets/icons/displayIcon";
+import { ReadonlyURLSearchParams } from "next/navigation";
 
 interface HrefObject {
   endpoint?: Url | string;
@@ -29,7 +30,7 @@ type SiteLinkProps = {
   className?: string;
   children?: ReactNode;
   target?: boolean;
-  searchParams?: URLSearchParams;
+  searchParams?: URLSearchParams | ReadonlyURLSearchParams;
   linkRef?: RefObject<HTMLAnchorElement>;
   href: HrefObject;
   onClick?: () => void;
@@ -45,7 +46,7 @@ const SiteLink: FC<SiteLinkProps> = ({
   target,
   onClick,
 }) => {
-  const urlSearchParams = new URLSearchParams(searchParams);
+  const urlSearchParams = new URLSearchParams(searchParams?.toString());
 
   let linkColor;
   if (type === Type.default || type === Type.circle) {
@@ -70,7 +71,6 @@ const SiteLink: FC<SiteLinkProps> = ({
 
   if (queryParams) {
     for (const urlNameKey in queryParams) {
-      // console.log(urlNameKey);
       urlSearchParams.set(urlNameKey, queryParams[urlNameKey].toLowerCase());
     }
   }
@@ -85,6 +85,7 @@ const SiteLink: FC<SiteLinkProps> = ({
       href={queryParams ? setQueryParams : `${endpoint}`}
       className={`${className ?? ""} ${classes.join(" ")}`}
       target={target ? "_blank" : "_self"}
+      // style={{ pointerEvents: true ? "none" : "auto" }}
       onClick={onClick}
     >
       {icon?.left ? <DisplayIcon iconName={icon.left} /> : ""}

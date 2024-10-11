@@ -25,14 +25,14 @@ const ProductsHero = () => {
     initData(appProductsGet, { searchParams: urlSearchParams });
   }, [searchParams, initData]);
 
-  return !state.isLoading ? (
+  return (
     <Loader
       style={classes["grid-hero"]}
       count={state.products.length}
       totalCount={state.totalCount}
       btnClickHandler={btnClickHandler}
     >
-      {state.products ? (
+      {state.products && state.products.length > 0 ? (
         state.products.map((product, i) => (
           <li key={i} className={classes["grid-li"]}>
             <ProductPreview product={product} />
@@ -42,8 +42,6 @@ const ProductsHero = () => {
         <div>No product</div>
       )}
     </Loader>
-  ) : (
-    <div>Loading...</div>
   );
 };
 

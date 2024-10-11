@@ -5,11 +5,28 @@ import { FormEvent, useState } from "react";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { loginAction, registrationAction } from "@/lib/redux/store/auth/action";
 import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
-import { initCart } from "@/lib/redux/store/cart/action";
 import Form from "../elemets/form-component/FormComponent";
-import { login, registration } from "@/utils/validator";
+import { schemeEmail, schemePassword } from "@/utils/validator";
 import IconsIdList from "../elemets/icons/IconsIdList";
 import { popupActions } from "@/lib/redux/store/popup/popup";
+import { z } from "zod";
+
+const schemeRegistration = z.object({
+  email: schemeEmail,
+  password: schemePassword,
+});
+
+const schemeLogin = z.object({
+  email: z
+    .string()
+    .refine((val) => val, {
+      message: "Email is required",
+    })
+    .refine((val) => val.trim().includes("@"), { message: "Invalid email" }),
+  password: z.string().refine((val) => val, {
+    message: "Password is required",
+  }),
+});
 
 const PopupAuth = () => {
   const dispatch = useAppDispatch();
@@ -20,8 +37,6 @@ const PopupAuth = () => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-
-    console.log(formData.get("email"));
 
     const email = formData.has("email")
       ? (formData.get("email") as string)
@@ -41,6 +56,8 @@ const PopupAuth = () => {
       dispatch(loginAction({ email, password }));
     }
   };
+
+  const resSchema = isRegister ? schemeRegistration : schemeLogin;
 
   return (
     <div className={classes.auth}>
@@ -73,10 +90,7 @@ const PopupAuth = () => {
           </ButtonCustom.SiteButton>
         </div>
       </div>
-      <Form
-        schema={isRegister ? registration : login}
-        submitHandler={submitHandler}
-      >
+      <Form schema={resSchema} submitHandler={submitHandler}>
         <Form.InputDefault
           style="line"
           inputSettings={{

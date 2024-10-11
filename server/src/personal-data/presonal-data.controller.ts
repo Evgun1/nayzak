@@ -15,6 +15,8 @@ class PersonalDataControler {
   async create(c: Context) {
     const inputData = (await c.req.parseBody()) as PersonalDataFormDTO;
 
+    if (!inputData) return;
+
     const personalData = await personalDataService.create(inputData);
 
     return c.json({ personalData });

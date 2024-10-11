@@ -1,22 +1,20 @@
-import { json } from "stream/consumers";
-import { UserData } from "@/lib/redux/store/auth/auth";
 import { appFetchGet, appFetchPost } from ".";
 import { appCookiGet } from "./cookie";
 
 type AppUserProps = {
   registration?: string;
   login?: string;
+  check?: string;
 };
 
 export const appUserPost = async (userData: AppUserProps) => {
   for (const key of Object.keys(userData) as (keyof AppUserProps)[]) {
-    if (userData[key]) return;
-
+    if (!userData[key]) return;
     const pathname = `user/${key}`;
 
     const result = await appFetchPost<string>({
       pathname,
-      sendData: { json: { userToken: userData[key] } },
+      authorization: userData[key],
     });
     return result;
   }
@@ -25,7 +23,7 @@ export const appUserPost = async (userData: AppUserProps) => {
 export const appUserCheckGet = async (userToken: string) => {
   const pathname = "user/check";
 
-  const token = await appFetchGet<string>({
+  const token = await appFetchPost<string>({
     pathname,
     authorization: userToken,
   });

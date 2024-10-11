@@ -1,4 +1,4 @@
-import {  randomUUID } from "crypto";
+import { randomUUID } from "crypto";
 import prismaClient from "../prismaClient";
 import bcrypt from "bcrypt";
 import { UserDto } from "./user.dto";
@@ -8,33 +8,35 @@ import { sign, decode } from "hono/jwt";
 import UserGetDTO from "./interface/UserGetInput";
 import { Prisma } from "@prisma/client";
 
-export async function registration(inputData: UserGetDTO) {
-  if (!inputData.password || !inputData.email) return;
+export async function registration(useToken: string) {
+  const {
+    payload: { email, password },
+  }: { payload: { email: string; password: string } } = decode(useToken);
 
-  const where = await userWhere(inputData);
+  const where = await userWhere({ email });
   const queryOprions: Prisma.UsersFindFirstArgs = {
     where,
   };
 
   const user = await prismaClient.users.findFirst(queryOprions);
-  if (user)
-    throw new HTTPException(409, {
-      message: `Email already exists`,
-    });
+  // if (user)
+  //   throw new HTTPException(409, {
+  //     message: `Email already exists`,
+  //   });
 
-  const hashPassword = await bcrypt.hash(inputData.password.trim(), 3);
+  // const hashPassword = await bcrypt.hash(inputData.password.trim(), 3);
   const activationLink = randomUUID();
 
   const createUser = await prismaClient.users.create({
     data: {
-      email: inputData.email.trim(),
-      password: hashPassword,
+      email: email.trim(),
+      password: password,
       activationLink,
     },
   });
 
   await mailService.sendActivateMail(
-    inputData.email,
+    email,
     `${process.env.API_URL}user/active/${activationLink}`
   );
 
@@ -49,22 +51,28 @@ export async function registration(inputData: UserGetDTO) {
   return token;
 }
 
-export async function login(inputData: UserGetDTO) {
-  if (!inputData.password) return;
-  const where = await userWhere(inputData);
+export async function login(userToken: string) {
+  const {
+    payload: { email, password },
+  }: { payload: { email: string; password: string } } = decode(userToken);
+
+  const where = await userWhere({ email });
   const queryOprions: Prisma.UsersFindFirstArgs = {
     where,
   };
 
   const user = await prismaClient.users.findFirst(queryOprions);
-  if (!user) throw new HTTPException(401, { message: "User not found" });
+  if (!user) {
+    return;
+    // throw new HTTPException(401, { message: "User not found" });
+  }
 
-  const isPasswordEquals = await bcrypt.compare(
-    inputData.password,
-    user.password
-  );
-  if (!isPasswordEquals)
-    throw new HTTPException(401, { message: "Incorrect password" });
+  // const isPasswordEquals = await bcrypt.compare(
+  //   password as string,
+  //   user.password
+  // );
+  // if (!isPasswordEquals)
+  //   throw new HTTPException(401, { message: "Incorrect password" });
 
   const userDTO = new UserDto({
     id: user.id,
@@ -83,7 +91,8 @@ export async function activate(activationLink: string) {
   });
 
   if (!user) {
-    throw new HTTPException(400, { message: "Invalid activation link" });
+    return;
+    // throw new HTTPException(400, { message: "Invalid activation link" });
   }
 
   await prismaClient.users.update({
@@ -100,7 +109,8 @@ export async function check(token: string) {
   });
 
   if (!user) {
-    throw new HTTPException(401, { message: "Not authorized" });
+    // throw new HTTPException(401, { message: "Not authorized" });
+    return;
   }
 
   const userData = new UserDto({

@@ -31,6 +31,7 @@ const ProductsLoader: FC<ProductsLoaderProps> = ({ products, totalCount }) => {
   ]);
 
   const getLimit = listTypeLimits.get(getListType) as string;
+
   urlSearchParams.set("limit", getLimit);
 
   const btnClickHandler = () => {
@@ -40,9 +41,9 @@ const ProductsLoader: FC<ProductsLoaderProps> = ({ products, totalCount }) => {
   return (
     <Loader
       style={
-        classes[`${getListType}`]
-          ? classes[`${getListType}`]
-          : classes["five_grid"]
+        !classes[`${getListType}`]
+          ? classes["five_grid"]
+          : classes[`${getListType}`]
       }
       totalCount={totalCount}
       count={products.length}

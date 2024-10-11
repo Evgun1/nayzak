@@ -12,6 +12,12 @@ import {
   useSelectedLayoutSegments,
 } from "next/navigation";
 import { appProductsGet } from "@/utils/http/products";
+import dynamic from "next/dynamic";
+
+const DynamicProductsLoader = dynamic(
+  () => import("./products-loader/ProductsLoader"),
+  { loading: () => <span>Loading...</span>, ssr: false }
+);
 
 export default function ProductsGrid() {
   const { state, initData } = useProductsReducer();
@@ -25,14 +31,11 @@ export default function ProductsGrid() {
   return (
     <div className={classes["products--grid"]}>
       <Toolbar totalCount={state.totalCount} />
-      {state.isLoading ? (
-        <ProductsLoader
-          products={state.products}
-          totalCount={state.totalCount}
-        />
-      ) : (
-        <div>Loading...</div>
-      )}
+
+      <DynamicProductsLoader
+        products={state.products}
+        totalCount={state.totalCount}
+      />
     </div>
   );
 }

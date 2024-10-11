@@ -1,6 +1,6 @@
 "use client";
 
-import { email, password } from "@/utils/validator";
+import { schemeEmail, schemePassword } from "@/utils/validator";
 import { TextClassList } from "../../types/textClassList";
 import Form from "../elemets/form-component/FormComponent";
 import IconsIdList from "../elemets/icons/IconsIdList";
@@ -9,8 +9,8 @@ import classes from "./Dashboard.module.scss";
 export default function Dashboard() {
   const schema = new Map();
 
-  schema.set("email", email);
-  schema.set("password", password);
+  schema.set("email", schemeEmail);
+  schema.set("password", schemePassword);
 
   return (
     <div className={classes.dashboard}>

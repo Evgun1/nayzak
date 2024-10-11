@@ -14,6 +14,7 @@ import Wishlist from "./wishlist/Wishlist";
 import Image from "next/image";
 import { logOut } from "@/lib/redux/store/auth/action";
 import { useCookiGet } from "@/hooks/useCookie";
+import dynamic from "next/dynamic";
 
 type PageContentType = {
   label: string;

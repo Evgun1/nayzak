@@ -1,3 +1,4 @@
+import ErrorComponent from "@/components/elemets/error-component/ErrorComponent";
 import { ReactNode } from "react";
 
 type MethodData = "PUT" | "GET" | "POST" | "DELETE";
@@ -56,76 +57,90 @@ const appFetch = async <T>({
 type AppGetFetch = {
   pathname: string;
   searchParams?: URLSearchParams;
-  // authorization?: string;
+  authorization?: string;
 };
 
 export const appFetchGet = async <T>({
   pathname,
-  // authorization,
+  authorization,
   searchParams,
 }: AppGetFetch) => {
   const init: RequestInit = {};
   init.method = "GET";
 
-  // if (authorization) {
-  //   init.headers = { Authorization: authorization };
-  // }
+  if (authorization) {
+    init.headers = { Authorization: authorization };
+  }
 
-  return await appFetch<T>({ init, pathname, searchParams });
+  const result = await appFetch<T>({ init, pathname, searchParams });
+
+  if (result instanceof Error) {
+    throw new Error(result.message);
+  }
+
+  return result;
 };
 
 type AppPostFetch = {
   pathname: string;
-  // authorization?: string;
-  sendData: FormData;
+  authorization?: string;
+  sendData?: FormData | string;
 };
-export const appFetchPost = async <T>({ pathname, sendData }: AppPostFetch) => {
+export const appFetchPost = async <T>({
+  pathname,
+  sendData,
+  authorization,
+}: AppPostFetch) => {
   const init: RequestInit = {};
   init.method = "POST";
-
-  // if (sendData.json) {
-  //   const formDataJsonString = JSON.stringify(sendData.json);
-
-  //   init.headers = { "Content-Type": "application/json" };
-  //   init.body = formDataJsonString;
-  // }
-
-  if (sendData) {
-    init.headers = { "Content-Type": "multipart/form-data" };
-    init.body = sendData;
+  if (authorization) {
+    init.headers = { Authorization: authorization };
   }
 
-  return await appFetch<T>({ pathname, init });
+  init.body = sendData;
+
+  const result = await appFetch<T>({ pathname, init });
+
+  if (result instanceof Error) {
+    console.log(result.message);
+    return;
+  }
+
+  return result;
 };
 
 type AppPutFetch = {
   pathname: string;
-  putData: { json?: FormData | object; formData?: FormData };
+  putData: FormData | string;
+  authorization?: string;
 };
 export const appFetchPut = async <T>({
   pathname,
-  putData: sendData,
+  putData,
+  authorization,
 }: AppPutFetch) => {
   const init: RequestInit = {};
   init.method = "PUT";
 
-  if (sendData.json) {
-    const formDataJsonString = JSON.stringify(sendData.json);
-    init.headers = { "Content-Type": "application/json" };
-    init.body = formDataJsonString;
+  if (authorization) {
+    init.headers = { Authorization: authorization };
   }
 
-  if (sendData.formData) {
-    init.headers = { "Content-Type": "multipart/form-data" };
-    init.body = sendData.formData;
+  init.body = putData;
+
+  const result = await appFetch<T>({ pathname, init });
+
+  if (result instanceof Error) {
+    console.log(result.message);
+    return;
   }
 
-  return await appFetch<T>({ pathname, init });
+  return result;
 };
 
 type AppDeleteFetch = {
   pathname: string;
-  deleteData: FormData | object;
+  deleteData: FormData | string;
 };
 export const appFetchDelete = async <T>({
   pathname,
@@ -133,11 +148,15 @@ export const appFetchDelete = async <T>({
 }: AppDeleteFetch) => {
   const init: RequestInit = {};
 
-  const formDataJsonString = JSON.stringify(deleteData);
-
   init.method = "DELETE";
-  init.headers = { "Content-Type": "application/json" };
-  init.body = formDataJsonString;
+  init.body = deleteData;
 
-  return await appFetch<T>({ pathname, init });
+  const result = await appFetch<T>({ pathname, init });
+
+  if (result instanceof Error) {
+    console.log(result.message);
+    return;
+  }
+
+  return result;
 };

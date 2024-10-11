@@ -3,24 +3,23 @@ import usersService from "./users.service";
 import { HTTPException } from "hono/http-exception";
 import _default from "hono/jsx";
 import UserGetDTO from "./interface/UserGetInput";
+import { email } from "../utils/validator";
 
 class UsersControler {
   async registration(c: Context, next: Next) {
-    const inputData = await c.req.formData();
+    const token = c.req.header("authorization");
+    if (!token) return;
+    const userToken = await usersService.registration(token);
 
-    console.log(inputData);
-
-    const userToken = await usersService.registration(inputData);
-
-    return c.json(userToken);
+    return c.json({ userToken });
   }
 
   async login(c: Context) {
-    const inputData = await c.req.json<UserGetDTO>();
+    const token = c.req.header("authorization");
+    if (!token) return;
+    const userToken = await usersService.login(token);
 
-    const userData = await usersService.login(inputData);
-
-    return c.json(userData);
+    return c.json(userToken);
   }
 
   async active(c: Context) {

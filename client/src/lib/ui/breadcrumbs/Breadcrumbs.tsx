@@ -23,10 +23,10 @@ type BreadcrumbsProps = {
 };
 
 export default function Breadcrumbs({ style }: BreadcrumbsProps) {
+  const path = usePathname();
   const params = useParams<{ slug: string[] }>();
-  const t = usePathname();
 
-  console.log(t);
+  console.log(path.split("/").filter((par) => par));
 
   return (
     <ul className={classes.breadcrumbs} style={style ? style : undefined}>
@@ -45,35 +45,33 @@ export default function Breadcrumbs({ style }: BreadcrumbsProps) {
           Home
         </LinkCustom.SiteLink>
       </li>
-      {params.slug &&
-        params.slug.length > 0 &&
-        params.slug.map((value, index, array) => (
-          <li key={index} className={classes["breadcrumbs-item"]}>
-            {index + 1 !== array.length ? (
-              <LinkCustom.SiteLink
-                styleSettings={{
-                  type: LinkCustom.Type.text,
-                  color: { dark: true },
-                  roundess: LinkCustom.Roundness.sharp,
-                  size: LinkCustom.Size.XS,
-                  icon: { right: IconsIdList.CHEVRONE },
-                }}
-                href={{ endpoint: `${value}` }}
-                className={`${TextClassList.REGULAR_12} ${classes["breadcrumbs-item--link"]}`}
-              >
-                {value[0].toUpperCase() + value.slice(1).replaceAll("_", " ")}
-              </LinkCustom.SiteLink>
-            ) : (
-              <span
-                className={`${
-                  TextClassList.REGULAR_12 && ButtonClassList.BUTTON_XSMALL
-                } ${classes["breadcrumbs-item--link"]}`}
-              >
-                {value[0].toUpperCase() + value.slice(1).replaceAll("_", " ")}
-              </span>
-            )}
-          </li>
-        ))}
+      {params.slug.map((value, index, array) => (
+        <li key={index} className={classes["breadcrumbs-item"]}>
+          {index + 1 !== array.length ? (
+            <LinkCustom.SiteLink
+              styleSettings={{
+                type: LinkCustom.Type.text,
+                color: { dark: true },
+                roundess: LinkCustom.Roundness.sharp,
+                size: LinkCustom.Size.XS,
+                icon: { right: IconsIdList.CHEVRONE },
+              }}
+              href={{ endpoint: value }}
+              className={`${TextClassList.REGULAR_12} ${classes["breadcrumbs-item--link"]}`}
+            >
+              {value[0].toUpperCase() + value.slice(1).replaceAll("_", " ")}
+            </LinkCustom.SiteLink>
+          ) : (
+            <span
+              className={`${
+                TextClassList.REGULAR_12 && ButtonClassList.BUTTON_XSMALL
+              } ${classes["breadcrumbs-item--link"]}`}
+            >
+              {value[0].toUpperCase() + value.slice(1).replaceAll("_", " ")}
+            </span>
+          )}
+        </li>
+      ))}
     </ul>
   );
 }

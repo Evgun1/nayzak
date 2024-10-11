@@ -24,8 +24,8 @@ const ProductsSwiper = () => {
 
   useEffect(() => {
     (async () => {
-      const urlSearchParams = new URLSearchParams(searchParams.toString());
-      urlSearchParams.set("limit", "8");
+      const urlSearchParams = new URLSearchParams({ limit: "8" });
+   
 
       const { products } = await appProductsGet({
         searchParams: urlSearchParams,

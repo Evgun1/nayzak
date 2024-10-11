@@ -8,14 +8,14 @@ import usersService from "../users/users.service";
 class PersonalDataServer {
   async getOne(inputData: PersonalDataParamsDTO) {}
 
-  async create({ firstName, lastName, phone, userToken }: PersonalDataFormDTO) {
-    if (!userToken) return;
-    const { id } = await usersService.findUserByToken(userToken);
-
-    if (!firstName || !lastName || !phone) return;
-
+  async create({ firstName, lastName, phone, userID }: PersonalDataFormDTO) {
     const result = await prismaClient.personalData.create({
-      data: { firstName, lastName, phone, users_id: id },
+      data: {
+        firstName: firstName as string,
+        lastName: lastName as string,
+        phone: phone as number,
+        users_id: userID as number,
+      },
     });
 
     return result;

@@ -6,6 +6,6 @@ const cartRouter = new Hono();
 cartRouter.post("/", cartController.saveCart);
 cartRouter.put("/", cartController.updateCart);
 cartRouter.delete("/", cartController.removeCart);
-cartRouter.use("/", cartController.initCart);
+cartRouter.post("/init", cartController.initCart);
 
 export default cartRouter;

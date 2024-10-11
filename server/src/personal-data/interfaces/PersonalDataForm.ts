@@ -1,5 +1,5 @@
 export default interface PersonalDataFormDTO {
-  userToken?: string;
+  userID?: number;
   firstName?: string;
   lastName?: string;
   phone?: number;

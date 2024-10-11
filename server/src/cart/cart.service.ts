@@ -9,8 +9,8 @@ export async function saveCart({ product, userToken }: CartGetDTO) {
 
   const saveCart = await prismaClient.cart.create({
     data: {
-      product_id: product.productID,
-      amount: product.amount,
+      product_id: +product.productID,
+      amount: +product.amount,
       user_id: user.id,
     },
   });
@@ -28,11 +28,11 @@ export async function updateCart({ product, userToken }: CartGetDTO) {
 
   const updateCart = await prismaClient.cart.update({
     where: {
-      id: product.id,
-      product_id: product.productID,
+      id: +product.id,
+      product_id: +product.productID,
       user_id: user.id,
     },
-    data: { amount: product.amount },
+    data: { amount: +product.amount },
   });
 
   const cartDTO = new CartDTO({

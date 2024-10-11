@@ -19,10 +19,11 @@ export const appProductsGet = async ({
     pathname += `/by-params/${params.join("/")}`;
   }
 
-  const { products, productCounts } = await appFetchGet<{
+  const result = await appFetchGet<{
     products: Product[];
     productCounts: number;
   }>({ pathname });
+  const { productCounts, products } = result;
 
   return { productCounts, products };
 };

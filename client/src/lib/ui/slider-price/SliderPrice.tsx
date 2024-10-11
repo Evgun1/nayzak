@@ -1,6 +1,11 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  ReadonlyURLSearchParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 // import { useFetchMinMaxPrice, useFetchAllProducts } from "../../../hooks/useFetchProducts";
 import classes from "./SliderPrice.module.scss";
 
@@ -22,9 +27,10 @@ const SliderPrice: FC<ScrollPriceProps> = () => {
   const router = useRouter();
 
   const SliderHandler = async (searhcParam: URLSearchParams) => {
-    const { minPrice, maxPrice } = await appMinMaxPriceGet(
-      searhcParam
-    );
+    const prices = await appMinMaxPriceGet(searhcParam);
+    if (!prices) return;
+
+    const { maxPrice, minPrice } = prices;
 
     setMinPrice(minPrice);
     setMaxPrice(maxPrice);
@@ -41,7 +47,7 @@ const SliderPrice: FC<ScrollPriceProps> = () => {
     setInputMaxPrice(inputMaxPrice);
   };
 
-  const btnClickHandel: MouseEventHandler = (elemets) => {
+  const btnClickHandel = () => {
     const urlSearchParams = new URLSearchParams(searhcParam.toString());
     urlSearchParams.set(
       "minPrice",
@@ -58,7 +64,8 @@ const SliderPrice: FC<ScrollPriceProps> = () => {
   };
 
   useEffect(() => {
-    SliderHandler(searhcParam);
+    const urlSearchParams = new URLSearchParams(searhcParam.toString());
+    SliderHandler(urlSearchParams);
   }, [searhcParam]);
 
   return (
@@ -109,6 +116,7 @@ const SliderPrice: FC<ScrollPriceProps> = () => {
           // </button>
           <ButtonCustom.SiteButton
             className={classes["btn--button-custom"]}
+            onClick={btnClickHandel}
             styleSettings={{
               type: ButtonCustom.Type.default,
               size: ButtonCustom.Size.XS,
@@ -119,7 +127,7 @@ const SliderPrice: FC<ScrollPriceProps> = () => {
             Show products
           </ButtonCustom.SiteButton>
         ) : (
-          ""
+          <></>
         )}
       </div>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { ButtonClassList } from "@/types/buttonClassList";
 import classes from "./ProductGrid.module.scss";
 import IconsIdList from "@/components/elemets/icons/IconsIdList";
@@ -13,12 +14,15 @@ import {
 import { useEffect, useState } from "react";
 import { Category } from "@/types/categories";
 import { Subcategory } from "@/types/subcategories";
-import ProductsHero from "../products-hero/ProductsHero";
 import { useSearchParams } from "next/navigation";
-import { useAppDispatch } from "@/lib/redux/redux";
-import { Product } from "@/types/product";
 import { appCategoriesGet } from "@/utils/http/categories";
 import { appSubcategoriesGet } from "@/utils/http/subcategories";
+import { appProductsGet } from "@/utils/http/products";
+
+const DynamicProductsHero = dynamic(
+  () => import("../products-hero/ProductsHero"),
+  { loading: () => <span>Loading...</span>, ssr: false }
+);
 
 export default function ProductGrid() {
   const searchParams = useSearchParams();
@@ -27,11 +31,14 @@ export default function ProductGrid() {
 
   useEffect(() => {
     (async () => {
+      const urlSearchParams = new URLSearchParams(searchParams.toString());
+
       const categories = await appCategoriesGet();
       setCategories(categories);
 
-      const subcategories = await appSubcategoriesGet(searchParams);
+      const subcategories = await appSubcategoriesGet(urlSearchParams);
       setSubcategories(subcategories);
+
     })();
   }, [searchParams]);
 
@@ -62,6 +69,7 @@ export default function ProductGrid() {
                     color: { dark: true },
                     roundess: LinkCustom.Roundness.sharp,
                   }}
+                  searchParams={searchParams}
                   href={{
                     queryParams: { category: category.title },
                     deleteQuertParams: "subcategory",
@@ -95,6 +103,7 @@ export default function ProductGrid() {
                     color: { dark: true },
                     roundess: LinkCustom.Roundness.sharp,
                   }}
+                  searchParams={searchParams}
                   href={{
                     queryParams: { subcategory: subcategory.title },
                   }}
@@ -105,7 +114,7 @@ export default function ProductGrid() {
             ))}
         </DropDown>
       </div>
-      <ProductsHero />
+      <DynamicProductsHero />
     </div>
   );
 }

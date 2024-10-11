@@ -12,49 +12,45 @@ export const registrationAction = (userData: UserData) => {
     const hashPassword = await appHash(userData.password);
     if (!hashPassword) return;
 
-    const userToken = await appJwtSign({
+    const userToken = appJwtSign({
       email: userData.email,
       password: hashPassword,
     });
-    if (!userToken) return;
 
     const token = await appUserPost({ registration: userToken });
     if (!token) return;
 
-    if (token instanceof Error) {
-      console.log(token.message);
-    } else {
-      useCookiSet({
-        name: "user-token",
-        value: token,
-        options: { path: "/", maxAge: 3600 },
-      });
+    useCookiSet({
+      name: "user-token",
+      value: token,
+      options: { path: "/", maxAge: 3600 },
+    });
 
-      const user = appJwtDecode<UserData>(token);
+    const user = appJwtDecode<UserData>(token);
 
-      dispath(authAction.setUser(user));
-    }
+    dispath(authAction.setUser(user));
   };
 };
 export const loginAction = (userData: UserData) => {
   return async function (dispath: AppDispatch) {
-    const token = await appUserPost({ login: "" });
+
+
+    const userToken = appJwtSign({
+      email: userData.email,
+      password: userData.password,
+    });
+
+    const token = await appUserPost({ login: userToken });
 
     if (!token) return;
 
-    if (token instanceof Error) {
-      console.log(token.message);
-    } else {
-      useCookiSet({
-        name: "user-token",
-        value: token,
-        options: { path: "/", maxAge: 3600 },
-      });
+    useCookiSet({
+      name: "user-token",
+      value: token,
+      options: { path: "/", maxAge: 3600 },
+    });
 
-      // const user = appJwtDecode<UserData>(token);
-
-      dispath(authAction.setUser("user"));
-    }
+    dispath(authAction.setUser("user"));
   };
 };
 
@@ -68,22 +64,21 @@ export const logOut = () => {
 
 export function checkAuth() {
   return async function (dispathc: AppDispatch) {
-    const userTokn = await appCookiGet("user-token");
-    if (!userTokn) return;
+    const userToken = await appCookiGet("user-token");
+    if (!userToken) return;
 
-    const token = await appUserCheckGet(userTokn);
+    const token = await appUserPost({ check: userToken });
 
-    if (token instanceof Error) {
-      console.log(token.message);
-    } else {
-      useCookiSet({
-        name: "user-token",
-        value: token,
-        options: { path: "/", maxAge: 3600 },
-      });
-      // const user = appJwtDecode<UserData>(token);
+    if (!token) return;
 
-      dispathc(authAction.setUser("user"));
-    }
+    useCookiSet({
+      name: "user-token",
+      value: token,
+      options: { path: "/", maxAge: 3600 },
+    });
+
+    console.log(authAction);
+
+    dispathc(authAction.setUser("user"));
   };
 }

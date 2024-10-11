@@ -1,6 +1,6 @@
 import {
-  appCartCheckGet,
   appCartDelete,
+  appCartInitPost,
   appCartPost,
   appCartPut,
 } from "@/utils/http/cart";
@@ -15,7 +15,7 @@ export function initCart() {
 
     if (!userToken) return;
 
-    const cartProducts = await appCartCheckGet(userToken);
+    const cartProducts = await appCartInitPost(userToken);
 
     if (!cartProducts) return;
 
@@ -36,8 +36,11 @@ export function updateCart(currentProduct: CartItemData) {
     );
 
     if (productIndex === -1) {
-      const saveProduct = await appCartPost(currentProduct, userToken);
-
+      const saveProduct = await appCartPost({
+        product: currentProduct,
+        userToken,
+      });
+      if (!saveProduct) return;
       productsCartArray.push(
         ...[
           {
@@ -62,6 +65,8 @@ export function updateCart(currentProduct: CartItemData) {
         },
         `${userToken}`
       );
+
+      if (!updateProduct) return;
 
       productsCartArray[productIndex] = {
         id: updateProduct.id,
@@ -98,6 +103,8 @@ export function changeAmount(currentProduct: CartItemData) {
       },
       userToken
     );
+
+    if (!cartProduct) return;
 
     productsArray[productIndex] = {
       amount: cartProduct.amount,

@@ -1,7 +1,8 @@
-interface CartProductData {
-  id: number;
-  productID: number;
-  amount: number;
+export interface CartProductData {
+  id: string;
+  productID: string;
+  amount: string;
+  [key: string]: any;
 }
 
 export interface CartGetDTO {
