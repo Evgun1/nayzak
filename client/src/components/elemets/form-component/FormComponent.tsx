@@ -1,12 +1,28 @@
-import React, { FormEvent, ReactNode, useState } from "react";
+import React, {
+  DetailedReactHTMLElement,
+  FormEvent,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useState,
+} from "react";
 import InputPhone from "./InputPhone";
 import InputTextArea from "./InputTextArea";
-import { ZodEffects, ZodError, ZodObject, ZodRawShape } from "zod";
+import {
+  SafeParseReturnType,
+  util,
+  ZodEffects,
+  ZodError,
+  ZodObject,
+  ZodRawShape,
+} from "zod";
 
 import InputDefault from "./InputDefault";
 
 import classes from "./FormComponent.module.scss";
 import { InputType } from "./InputType";
+import { log } from "console";
+import { Result } from "postcss";
 
 type FormComponentProps<T extends ZodRawShape> = {
   children: ReactNode;
@@ -15,6 +31,7 @@ type FormComponentProps<T extends ZodRawShape> = {
   submitHandler?: (event: FormEvent<HTMLFormElement>) => void;
   classes?: string;
 };
+
 const FormComponent = <T extends ZodRawShape>({
   children,
   schema,
@@ -28,32 +45,39 @@ const FormComponent = <T extends ZodRawShape>({
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const objectForm = Object.fromEntries(formData.entries());
+
     const newErrors: Record<string, string[]> = {};
 
+    const resultsCollection: Record<string, string> = {};
+
+    let reset: SafeParseReturnType<any, any>;
+
     schema.forEach((schema) => {
-      const effectiveSchema =
-        schema instanceof ZodEffects ? schema._def.schema : schema;
       for (const key in objectForm) {
-        // let reset:
-        //   | { success: true; data: any }
-        //   | { success: false; error: ZodError }
-        //   | undefined;
+        if (schema instanceof ZodEffects) {
+          if (!Object.keys(schema._def.schema.shape).includes(key)) {
+            continue;
+          }
 
-        if (!Object.keys(effectiveSchema.shape).includes(key)) {
-          continue;
+          reset = schema.safeParse(objectForm);
+        } else {
+          if (!Object.keys(schema.shape).includes(key)) {
+            continue;
+          }
+
+          reset = schema.shape[key].safeParse(objectForm[key]);
         }
-
-        const reset = effectiveSchema.shape[key].safeParse(objectForm[key]);
 
         if (!reset.success) {
           if (!newErrors[key]) {
             newErrors[key] = [];
           }
-          newErrors[key].push(
-            ...reset.error.issues.map((issue) => issue.message)
-          );
+
+          newErrors[key].push(...reset.error?.issues.map((val) => val.message));
         }
       }
+
+      console.log(resultsCollection);
     });
 
     if (Object.keys(newErrors).length > 0) {
@@ -66,19 +90,34 @@ const FormComponent = <T extends ZodRawShape>({
     if (submitHandler) submitHandler(event);
   };
 
-  return (
-    <form className={classes["form"]} onSubmit={onSubmitHandler} noValidate>
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement<InputType>(child)) {
-          const name = child.props.inputSettings?.name;
+  const formRecursion = (children: ReactNode) => {
+    return React.Children.map(children, (child): ReactNode => {
+      if (React.isValidElement(child)) {
+        if (child.type === InputDefault || child.type === InputTextArea) {
+          const inputChild = child as ReactElement<InputType>;
 
+          const name = inputChild.props.inputSettings?.name;
           const error = name ? errorMessages[name]?.[0] : undefined;
 
-          return React.cloneElement(child, { error });
-        }
+          return React.cloneElement(inputChild, { error });
+        } else {
+          const childWithChildren = child as ReactElement<{
+            children: ReactNode;
+          }>;
 
-        return child;
-      })}
+          return React.cloneElement(childWithChildren, {
+            children: formRecursion(childWithChildren.props.children),
+          });
+        }
+      }
+
+      return child;
+    });
+  };
+
+  return (
+    <form className={classes["form"]} onSubmit={onSubmitHandler} noValidate>
+      {formRecursion(children)}
     </form>
   );
 };

@@ -42,6 +42,8 @@ const InputDefault: FC<InputDefaultProps> = ({
 }) => {
   const inputContainerRef = useRef(null) as RefObject<HTMLDivElement>;
 
+  // console.log(error);
+
   const handleFocus = () => {
     if (!inputContainerRef.current) return;
     inputContainerRef.current.classList.add(classes["input--focus"]);
@@ -53,6 +55,8 @@ const InputDefault: FC<InputDefaultProps> = ({
   };
 
   useEffect(() => {
+    console.log(error);
+
     if (error !== undefined) {
       inputContainerRef.current?.classList.add(classes["input--error"]);
     } else {

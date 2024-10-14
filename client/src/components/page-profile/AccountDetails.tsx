@@ -36,27 +36,11 @@ export default function AccountDetails() {
   };
   const t = (event: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
+    const objectForm = Object.fromEntries(formData.entries());
 
-    const t2 = schemaConfirmPassword._def.schema;
+    const newErrors: Record<string, string[]> = {};
 
-    const res = t2.shape.newPassword.safeParse("T!1");
-
-    if (!res.success) {
-      const t = res.error.issues.map((val) => val.message);
-
-      console.log(t);
-    } else {
-      const t = schemaConfirmPassword.safeParse({
-        confirmPassword: "T!2",
-        newPassword: res.data,
-      });
-      const t = t.error?.issues.map((val) => val.message);
-
-if (t.success) {
-  
-}
-
-    }
+    const t = schemaConfirmPassword.safeParse(objectForm);
   };
 
   return (
@@ -109,7 +93,7 @@ if (t.success) {
         <button type="submit">ttt</button>
       </Form> */}
 
-      <Form schema={[]} submitHandler={t}>
+      <Form schema={[schemaConfirmPassword]} submitHandler={()=>{}}>
         <div
           className={`${TextClassList.SEMIBOLD_18} ${classes["account__password-title"]}`}
         >
@@ -123,7 +107,7 @@ if (t.success) {
               id: "oldPassword",
               name: "oldPassword",
               type: "password",
-              autoComplete: "current-password",
+              // autoComplete: "current-password",
             }}
             style="contained"
           />
@@ -134,7 +118,7 @@ if (t.success) {
               id: "newPassword",
               name: "newPassword",
               type: "password",
-              autoComplete: "current-password",
+              // autoComplete: "current-password",
             }}
             style="contained"
           />
@@ -145,7 +129,7 @@ if (t.success) {
               id: "repearPassword",
               name: "confirmPassword",
               type: "password",
-              autoComplete: "new-password",
+              // autoComplete: "new-password",
             }}
             style="contained"
           />
