@@ -1,6 +1,6 @@
 "use client";
 
-import { schemeEmail, schemePassword } from "@/utils/validator";
+import { schemeEmail, schemePassword } from "@/utils/validator/validator";
 import { TextClassList } from "../../types/textClassList";
 import Form from "../elemets/form-component/FormComponent";
 import IconsIdList from "../elemets/icons/IconsIdList";

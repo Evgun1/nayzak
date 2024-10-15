@@ -20,11 +20,7 @@ usersRouter.post(
   usersMiddleware.registration,
   usersControler.registration
 );
-// usersRouter.post(
-//   "/registration",
-//   validator("form", UserFromValidator),
-//   UsersControler.registration
-// );
+
 usersRouter.post("/login", usersMiddleware.login, usersControler.login);
 
 usersRouter.get(
@@ -32,7 +28,8 @@ usersRouter.get(
   usersMiddleware.active,
   usersControler.active
 );
-
 usersRouter.post("/check", usersControler.check);
+
+usersRouter.put("/change-password", usersControler.changePassword);
 
 export default usersRouter;

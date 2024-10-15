@@ -64,6 +64,8 @@ class UsersMiddleware {
 
     await next();
   }
+
+  async changePassword(c: Context, next: Next) {}
 }
 
 export default new UsersMiddleware();

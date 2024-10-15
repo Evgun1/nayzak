@@ -8,10 +8,10 @@ import { sign, decode } from "hono/jwt";
 import UserGetDTO from "./interface/UserGetInput";
 import { Prisma } from "@prisma/client";
 
-export async function registration(useToken: string) {
+export async function registration(userToken: string) {
   const {
     payload: { email, password },
-  }: { payload: { email: string; password: string } } = decode(useToken);
+  }: { payload: { email: string; password: string } } = decode(userToken);
 
   const where = await userWhere({ email });
   const queryOprions: Prisma.UsersFindFirstArgs = {
@@ -83,6 +83,16 @@ export async function login(userToken: string) {
   const token = await sign(userDTO, process.env.JWT_SECRET_KEY as string);
 
   return token;
+}
+
+export async function changePassword(userToken: string) {
+  const {
+    payload: { newPassword },
+  }: { payload: { newPassword: string } } = decode(userToken);
+
+
+
+
 }
 
 export async function activate(activationLink: string) {

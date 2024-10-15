@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/lib/redux/redux";
 import { loginAction, registrationAction } from "@/lib/redux/store/auth/action";
 import { ButtonCustom } from "@/lib/ui/custom-elemets/button-custom/ButtonCustom";
 import Form from "../elemets/form-component/FormComponent";
-import { schemeEmail, schemePassword } from "@/utils/validator";
+import { schemeEmail, schemePassword } from "@/utils/validator/validator";
 import IconsIdList from "../elemets/icons/IconsIdList";
 import { popupActions } from "@/lib/redux/store/popup/popup";
 import { z } from "zod";

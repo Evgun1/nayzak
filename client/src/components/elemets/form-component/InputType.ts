@@ -33,5 +33,5 @@ interface InputSettingsItem {
 
 export type InputType = {
   inputSettings: InputSettingsItem;
-  error?: string;
+  error?: string[];
 };

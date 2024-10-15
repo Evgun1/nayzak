@@ -1,28 +1,19 @@
-import React, {
-  DetailedReactHTMLElement,
-  FormEvent,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useState,
-} from "react";
-import InputPhone from "./InputPhone";
+import React, { FormEvent, ReactElement, ReactNode, useState } from "react";
 import InputTextArea from "./InputTextArea";
 import {
-  SafeParseReturnType,
-  util,
   ZodEffects,
-  ZodError,
+  ZodEffectsDef,
   ZodObject,
   ZodRawShape,
+  ZodType,
 } from "zod";
 
 import InputDefault from "./InputDefault";
 
 import classes from "./FormComponent.module.scss";
 import { InputType } from "./InputType";
-import { log } from "console";
-import { Result } from "postcss";
+import appObjectValidation from "../../../utils/validator/appObjectValidation";
+import appEffectsValidation from "../../../utils/validator/appEffectsValidation";
 
 type FormComponentProps<T extends ZodRawShape> = {
   children: ReactNode;
@@ -45,49 +36,40 @@ const FormComponent = <T extends ZodRawShape>({
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const objectForm = Object.fromEntries(formData.entries());
-
-    const newErrors: Record<string, string[]> = {};
-
-    const resultsCollection: Record<string, string> = {};
-
-    let reset: SafeParseReturnType<any, any>;
+    let hasErrors = false;
 
     schema.forEach((schema) => {
-      for (const key in objectForm) {
-        if (schema instanceof ZodEffects) {
-          if (!Object.keys(schema._def.schema.shape).includes(key)) {
-            continue;
-          }
+      if (schema instanceof ZodObject) {
+        const error = appObjectValidation({
+          objectSchema: schema,
+          object: objectForm,
+        });
 
-          reset = schema.safeParse(objectForm);
-        } else {
-          if (!Object.keys(schema.shape).includes(key)) {
-            continue;
-          }
-
-          reset = schema.shape[key].safeParse(objectForm[key]);
+        if (Object.keys(error).length > 0) {
+          setErrorMessages(error);
+          hasErrors = true;
+          return;
         }
-
-        if (!reset.success) {
-          if (!newErrors[key]) {
-            newErrors[key] = [];
-          }
-
-          newErrors[key].push(...reset.error?.issues.map((val) => val.message));
-        }
+        setErrorMessages({});
       }
 
-      console.log(resultsCollection);
+      if (schema instanceof ZodEffects) {
+        const error = appEffectsValidation({
+          effectsSchema: schema,
+          object: objectForm,
+        });
+
+        if (Object.keys(error).length > 0) {
+          setErrorMessages(error);
+          hasErrors = true;
+          return;
+        }
+
+        setErrorMessages({});
+      }
     });
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrorMessages(newErrors);
-      return;
-    }
-
-    setErrorMessages({});
-
-    if (submitHandler) submitHandler(event);
+    if (!hasErrors && submitHandler) submitHandler(event);
   };
 
   const formRecursion = (children: ReactNode) => {
@@ -97,7 +79,7 @@ const FormComponent = <T extends ZodRawShape>({
           const inputChild = child as ReactElement<InputType>;
 
           const name = inputChild.props.inputSettings?.name;
-          const error = name ? errorMessages[name]?.[0] : undefined;
+          const error = name ? errorMessages[name] : undefined;
 
           return React.cloneElement(inputChild, { error });
         } else {

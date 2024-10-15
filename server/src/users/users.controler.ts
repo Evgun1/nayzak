@@ -40,6 +40,12 @@ class UsersControler {
 
     return c.json(newToken);
   }
+
+  async changePassword(c: Context) {
+    const token = c.req.header("authorization");
+
+    if (!token) return;
+  }
 }
 
 export default new UsersControler();

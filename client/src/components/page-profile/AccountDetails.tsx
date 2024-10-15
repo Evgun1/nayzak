@@ -4,9 +4,7 @@ import Form from "../elemets/form-component/FormComponent";
 import classes from "./AccountDetails.module.scss";
 import { z, ZodObject } from "zod";
 import { FormEvent } from "react";
-import { schemaName, schemeEmail, schemePassword } from "@/utils/validator";
-
-// const schema = confirmPassword;
+import { schemaName, schemePassword } from "@/utils/validator/validator";
 
 const schemaDetalInformation = z.object({
   firstName: schemaName.refine((val) => !/[0-9]/.test(val), {
@@ -22,8 +20,17 @@ const schemaDetalInformation = z.object({
 
 const schemaConfirmPassword = z
   .object({
+    password: z
+      .string()
+      .refine((val) => val, { message: "The field must not be empty" }),
     newPassword: schemePassword,
-    confirmPassword: schemePassword,
+    confirmPassword: z
+      .string()
+      .refine((val) => val, { message: "The field must not be empty" }),
+  })
+  .refine((val) => val.password === val.newPassword, {
+    message: "The password must not match the old one",
+    path: ["newPassword"],
   })
   .refine((val) => val.newPassword === val.confirmPassword, {
     message: "The password does not match",
@@ -33,67 +40,70 @@ const schemaConfirmPassword = z
 export default function AccountDetails() {
   const detalInformationHandler = (event: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
+    const objectForm = Object.fromEntries(formData);
   };
-  const t = (event: FormEvent<HTMLFormElement>) => {
+
+  const changePasswordHandler = (event: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
-    const objectForm = Object.fromEntries(formData.entries());
-
-    const newErrors: Record<string, string[]> = {};
-
-    const t = schemaConfirmPassword.safeParse(objectForm);
+    const objectForm = Object.fromEntries(formData);
   };
 
   return (
     <div>
-      {/* <Form
+      <Form
         schema={[schemaDetalInformation]}
         submitHandler={detalInformationHandler}
       >
-        <Form.InputDefault
-          label="First name *"
-          inputSettings={{
-            placeholder: "Fist name",
-            id: "firstName",
-            name: "firstName",
-            type: "text",
-          }}
-          style="contained"
-        />
-        <Form.InputDefault
-          label="Last name *"
-          inputSettings={{
-            placeholder: "Last name",
-            id: "lastName",
-            name: "lastName",
-            type: "text",
-          }}
-          style="contained"
-        />
-        <Form.InputDefault
-          label="Display name *"
-          inputSettings={{
-            placeholder: "Display name",
-            id: "displayName",
-            name: "displayName",
-            type: "text",
-          }}
-          style="contained"
-        />
-        <Form.InputDefault
-          label="Email *"
-          inputSettings={{
-            placeholder: "Email",
-            id: "email",
-            name: "email",
-            type: "email",
-            autoComplete: "email",
-          }}
-          style="contained"
-        />
-        <button type="submit">ttt</button>
-      </Form> */}
+        <div>
+          <Form.InputDefault
+            label="First name *"
+            inputSettings={{
+              placeholder: "Fist name",
+              id: "firstName",
+              name: "firstName",
+              type: "text",
+            }}
+            style="contained"
+          />
+          <Form.InputDefault
+            label="Last name *"
+            inputSettings={{
+              placeholder: "Last name",
+              id: "lastName",
+              name: "lastName",
+              type: "text",
+            }}
+            style="contained"
+          />
+          <Form.InputDefault
+            label="Display name *"
+            inputSettings={{
+              placeholder: "Display name",
+              id: "displayName",
+              name: "displayName",
+              type: "text",
+            }}
+            style="contained"
+          />
+          <Form.InputDefault
+            label="Email *"
+            inputSettings={{
+              placeholder: "Email",
+              id: "email",
+              name: "email",
+              type: "email",
+              autoComplete: "email",
+            }}
+            style="contained"
+          />
+          <button type="submit">ttt</button>
+        </div>
+      </Form>
 
-      <Form schema={[schemaConfirmPassword]} submitHandler={()=>{}}>
+      <Form
+        schema={[schemaConfirmPassword]}
+        submitHandler={changePasswordHandler}
+      >
         <div
           className={`${TextClassList.SEMIBOLD_18} ${classes["account__password-title"]}`}
         >
@@ -105,7 +115,7 @@ export default function AccountDetails() {
             inputSettings={{
               placeholder: "Old password",
               id: "oldPassword",
-              name: "oldPassword",
+              name: "password",
               type: "password",
               // autoComplete: "current-password",
             }}
@@ -135,7 +145,7 @@ export default function AccountDetails() {
           />
         </div>
 
-        <button type="submit">ttt</button>
+        <button type="submit">submit</button>
       </Form>
     </div>
   );

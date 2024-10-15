@@ -55,8 +55,6 @@ const InputDefault: FC<InputDefaultProps> = ({
   };
 
   useEffect(() => {
-    console.log(error);
-
     if (error !== undefined) {
       inputContainerRef.current?.classList.add(classes["input--error"]);
     } else {
@@ -133,8 +131,15 @@ const InputDefault: FC<InputDefaultProps> = ({
           <></>
         )}
       </div>
-      {error ? (
-        <span className={TextClassList.REGULAR_12}>{error}</span>
+
+      {error && error.length ? (
+        <div>
+          {error.map((val, i) => (
+            <span key={i} className={TextClassList.REGULAR_12}>
+              {val}
+            </span>
+          ))}
+        </div>
       ) : (
         <></>
       )}
