@@ -7,5 +7,5 @@ export interface CartProductData {
 
 export interface CartGetDTO {
   product: CartProductData;
-  userToken: string;
+  customerID: number;
 }

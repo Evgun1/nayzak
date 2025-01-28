@@ -1,13 +1,23 @@
-import { Category } from "@/types/categories";
-import { appFetchGet } from ".";
+import { CategoryItem } from '@/types/categories.types';
+import { appFetchGet } from '.';
 
 export const appCategoriesGet = async (searchParams?: URLSearchParams) => {
-  const pathname = "categories";
+	const pathname = 'categories';
 
-  const { categories } = await appFetchGet<{ categories: Category[] }>({
-    pathname,
-    searchParams,
-  });
+	const { response, totalCount } = await appFetchGet<CategoryItem[]>({
+		pathname,
+		searchParams,
+	});
 
-  return categories;
+	return response;
+};
+
+export const appCategoriesOneGet = async (categoryId: number | string) => {
+	const pathname = `categories/${categoryId}`;
+
+	const { response, totalCount } = await appFetchGet<CategoryItem>({
+		pathname,
+	});
+
+	return response;
 };

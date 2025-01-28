@@ -1,44 +1,49 @@
-import HeaderProducts from "@/components/page-category/section-products/header-productsct/HeaderProducts";
-import Products from "@/components/page-category/section-products/products/Products";
-import HeaderSubcategory from "@/components/page-category/section-subcategory/header-subcategory/HeaderSubcategory";
-import SubcategoriesItem from "@/components/page-category/section-subcategory/subcategories/Subcategories";
-import dynamic from "next/dynamic";
+import HeaderProducts from '@/components/page-category/section-products/header-productsct/HeaderProducts';
+import Products from '@/components/page-category/section-products/products/Products';
+import HeaderSubcategory from '@/components/page-category/section-subcategory/header-subcategory/HeaderSubcategory';
+import PopupLoading from '@/components/popup-loading/PopupLoading';
+import dynamic from 'next/dynamic';
 
 interface paramsData {
-  slug: string[];
+	slug: string[];
 }
 
 type pageProps = {
-  params: paramsData;
+	params: paramsData;
 };
 
 const DynamicSubCategories = dynamic(
-  () =>
-    import(
-      "@/components/page-category/section-subcategory/subcategories/Subcategories"
-    ),
-  { loading: () => <span>Loading...</span>, ssr: false }
+	() =>
+		import(
+			'@/components/page-category/section-subcategory/subcategories/Subcategories'
+		),
+	{ loading: () => <PopupLoading />, ssr: true }
 );
 
-export default async function page({ params }: pageProps) {
-  if (params.slug.length === 1) {
-    return (
-      <section>
-        <HeaderSubcategory
-          title={params.slug[0][0].toUpperCase() + params.slug[0].slice(1)}
-        />
-        <DynamicSubCategories slug={params.slug[0]} />
-      </section>
-    );
-  } else if (params.slug.length === 2) {
-    return (
-      <section>
-        <HeaderProducts
-          title={params.slug[1][0].toUpperCase() + params.slug[0].slice(1)}
-        />
+const DynamicProducts = dynamic(
+	() => import(`@/components/page-category/section-products/products/Products`),
+	{ loading: () => <PopupLoading />, ssr: true }
+);
 
-        <Products />
-      </section>
-    );
-  }
+export default async function page(props: pageProps) {
+	if (props.params.slug.length === 1) {
+		return (
+			<section>
+				<HeaderSubcategory
+					title={
+						props.params.slug[0][0].toUpperCase() +
+						props.params.slug[0].slice(1)
+					}
+				/>
+				<DynamicSubCategories slug={props.params.slug[0]} />
+			</section>
+		);
+	}
+	return (
+		<section>
+			<HeaderProducts slug={props.params.slug} />
+
+			<DynamicProducts />
+		</section>
+	);
 }

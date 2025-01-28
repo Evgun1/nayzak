@@ -63,35 +63,42 @@ h1 {
   line-height: 84px;
   letter-spacing: -3px;
 }
+
 h2 {
   font-size: 72px;
   line-height: 76px;
   letter-spacing: -2px;
 }
+
 h3 {
   font-size: 54px;
   line-height: 58px;
   letter-spacing: -1px;
 }
+
 h4 {
   font-size: 40px;
   line-height: 44px;
   letter-spacing: -0.4px;
 }
+
 h5 {
   font-size: 34px;
   line-height: 38px;
   letter-spacing: -0.6px;
 }
+
 h6 {
   font-size: 28px;
   line-height: 34px;
   letter-spacing: -0.6px;
 }
+
 .h7 {
   font-size: 20px;
   line-height: 28px;
 }
+
 .text-regular-26,
 .text-regular-22,
 .text-regular-20,
@@ -103,30 +110,37 @@ h6 {
   font-weight: 400;
   color: var(--black-900);
 }
+
 .text-regular-26 {
   font-size: 26px;
   line-height: 40px;
 }
+
 .text-regular-22 {
   font-size: 22px;
   line-height: 34px;
 }
+
 .text-regular-20 {
   font-size: 20px;
   line-height: 32px;
 }
+
 .text-regular-18 {
   font-size: 18px;
   line-height: 30px;
 }
+
 .text-regular-16 {
   font-size: 16px;
   line-height: 26px;
 }
+
 .text-regular-14 {
   font-size: 14px;
   line-height: 22px;
 }
+
 .text-regular-12 {
   font-size: 12px;
   line-height: 20px;
@@ -143,30 +157,37 @@ h6 {
   font-weight: 600;
   color: var(--black-900);
 }
+
 .text-semibold-26 {
   font-size: 26px;
   line-height: 40px;
 }
+
 .text-semibold-22 {
   font-size: 22px;
   line-height: 34px;
 }
+
 .text-semibold-20 {
   font-size: 20px;
   line-height: 32px;
 }
+
 .text-semibold-18 {
   font-size: 18px;
   line-height: 30px;
 }
+
 .text-semibold-16 {
   font-size: 16px;
   line-height: 26px;
 }
+
 .text-semibold-14 {
   font-size: 14px;
   line-height: 22px;
 }
+
 .text-semibold-12 {
   font-size: 12px;
   line-height: 20px;
@@ -183,30 +204,37 @@ h6 {
   font-weight: 700;
   color: var(--black-900);
 }
+
 .text-bold-26 {
   font-size: 26px;
   line-height: 40px;
 }
+
 .text-bold-22 {
   font-size: 22px;
   line-height: 34px;
 }
+
 .text-bold-20 {
   font-size: 20px;
   line-height: 32px;
 }
+
 .text-bold-18 {
   font-size: 18px;
   line-height: 30px;
 }
+
 .text-bold-16 {
   font-size: 16px;
   line-height: 26px;
 }
+
 .text-bold-14 {
   font-size: 14px;
   line-height: 22px;
 }
+
 .text-bold-12 {
   font-size: 12px;
   line-height: 20px;
@@ -221,24 +249,29 @@ h6 {
   color: var(--black-900);
   font-family: "Space Grotesk";
 }
+
 .button-xlarge {
   font-size: 26px;
   line-height: 38px;
 }
+
 .button-large {
   font-size: 22px;
   line-height: 34px;
 }
+
 .button-medium {
   font-size: 18px;
   line-height: 32px;
   letter-spacing: -0.4px;
 }
+
 .button-small {
   font-size: 16px;
   line-height: 24px;
   letter-spacing: -0.4px;
 }
+
 .button-xsmall {
   font-size: 14px;
   line-height: 20px;
@@ -263,36 +296,36 @@ button {
 img {
   width: 100%;
 }
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-} */
+//@tailwind base;
+//@tailwind components;
+//@tailwind utilities;
+//
+//:root {
+//  --foreground-rgb: 0, 0, 0;
+//  --background-start-rgb: 214, 219, 220;
+//  --background-end-rgb: 255, 255, 255;
+//}
+//
+//@media (prefers-color-scheme: dark) {
+//  :root {
+//    --foreground-rgb: 255, 255, 255;
+//    --background-start-rgb: 0, 0, 0;
+//    --background-end-rgb: 0, 0, 0;
+//  }
+//}
+//
+//body {
+//  //color: rgb(var(--foreground-rgb));
+//  background: linear-gradient(
+//                  to bottom,
+//                  transparent,
+//                  rgb(var(--background-end-rgb))
+//  ) rgb(var(--background-start-rgb));
+//}
+//
+//@layer utilities {
+//  .text-balance {
+//    text-wrap: balance;
+//  }
+//}

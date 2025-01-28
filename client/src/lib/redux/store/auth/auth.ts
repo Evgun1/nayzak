@@ -1,28 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
+import {CredentialsStateItem} from "@/lib/redux/store/auth/credentials.type";
 
-export interface UserData {
-  email: string;
-  password: string;
-  role?: string;
-}
 
-type UserState = {
-  user: UserData | null;
+type CredentialsState = {
+  credentials: CredentialsStateItem | null;
 };
 
-const initialState: UserState = {
-  user: null,
+const initialState: CredentialsState = {
+  credentials: null,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser(state, action) {
-      state.user = action.payload;
+    setCredentials(state, action) {
+      state.credentials = action.payload;
     },
+
     logOut(state) {
-      state.user = null;
+      state.credentials = null;
     },
   },
 });

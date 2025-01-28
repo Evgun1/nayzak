@@ -1,48 +1,56 @@
-"use client";
+'use client';
 
-import classes from "./ProductsHero.module.scss";
+import classes from './ProductsHero.module.scss';
 
-import { FC, useEffect } from "react";
-
-import Loader from "@/components/elemets/loader/Loader";
-import ProductPreview from "@/components/elemets/product-preview/ProductPreview";
-import { useProductsReducer } from "@/hooks/useProductsReducer";
-import { appProductsGet } from "@/utils/http/products";
-import { useSearchParams } from "next/navigation";
+import { FC, useEffect, useState } from 'react';
+import Loader from '@/components/elements/loader/Loader';
+import { useProductsReducer } from '@/hooks/useProductsReducer';
+import { appProductsGet } from '@/utils/http/products';
+import { useSearchParams } from 'next/navigation';
+import ProductPreview from '@/components/elements/product-preview/ProductPreview';
+import { ProductItem } from '@/types/product.types';
+import PopupLoading from '@/components/popup-loading/PopupLoading';
 
 const ProductsHero = () => {
-  const searchParams = useSearchParams();
+	const searchParams = useSearchParams();
+	const [loading, setLoading] = useState<boolean>(true);
 
-  const { state, loadMoreProducts, initData } = useProductsReducer();
+	const { state, loadMoreProducts, initData } = useProductsReducer();
 
-  const btnClickHandler = () => {
-    loadMoreProducts(state.products.length);
-  };
+	const btnClickHandler = () => {
+		loadMoreProducts(state.products.length);
+	};
 
-  useEffect(() => {
-    const urlSearchParams = new URLSearchParams(searchParams.toString());
-    urlSearchParams.set("limit", "8");
-    initData(appProductsGet, { searchParams: urlSearchParams });
-  }, [searchParams, initData]);
+	useEffect(() => {
+		const urlSearchParams = new URLSearchParams(searchParams.toString());
+		urlSearchParams.set('limit', '8');
+		initData(appProductsGet, { searchParams: urlSearchParams });
+	}, [searchParams, initData]);
 
-  return (
-    <Loader
-      style={classes["grid-hero"]}
-      count={state.products.length}
-      totalCount={state.totalCount}
-      btnClickHandler={btnClickHandler}
-    >
-      {state.products && state.products.length > 0 ? (
-        state.products.map((product, i) => (
-          <li key={i} className={classes["grid-li"]}>
-            <ProductPreview product={product} />
-          </li>
-        ))
-      ) : (
-        <div>No product</div>
-      )}
-    </Loader>
-  );
+	useEffect(() => {
+		setLoading(false);
+	}, [state.products]);
+
+	if (loading) {
+		return <PopupLoading />;
+	}
+
+	return (
+		<Loader
+			style={classes['grid-hero']}
+			count={state.products.length}
+			totalCount={state.totalCount}
+			btnClickHandler={btnClickHandler}
+		>
+			{state.products.map((product, i) => (
+				<li key={i} className={classes['grid-li']}>
+					<ProductPreview product={product}>
+						<ProductPreview.Default />
+					</ProductPreview>
+				</li>
+			))}
+		</Loader>
+	);
 };
 
 export default ProductsHero;

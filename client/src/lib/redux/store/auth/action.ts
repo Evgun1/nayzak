@@ -1,88 +1,120 @@
-import { AppDispatch } from "../../store";
-import { authAction, UserData } from "./auth";
+import { AppDispatch } from '../../store';
+import { authAction } from './auth';
 
-import { useCookiDelete, useCookiSet } from "@/hooks/useCookie";
-import { appUserCheckGet, appUserPost } from "@/utils/http/user";
-import { appCookiGet } from "@/utils/http/cookie";
-import { appHash } from "@/utils/bcrypt/bcrypt";
-import { appJwtDecode, appJwtSign } from "@/utils/jwt/jwt";
+import { useCookieSet as useCookieSet } from '@/hooks/useCookie';
+import {
+	appCredentialsPasswordPut,
+	appCredentialsPost,
+} from '@/utils/http/credentials';
+import {
+	appCookieDelete,
+	appCookieGet,
+	appCookieSet,
+} from '@/utils/http/cookie';
+import { appJwtDecode, appJwtSign } from '@/utils/jwt/jwt';
+import {
+	CredentialsDTO,
+	CredentialsPasswordDTO,
+	CredentialsStateItem,
+} from '@/lib/redux/store/auth/credentials.type';
 
-type ChangePasswordProps = {
-  oldPassword: string;
-  newPassword: string;
+export const registrationAction = (userData: CredentialsDTO) => {
+	return async function (dispatch: AppDispatch) {
+		const formData = new FormData();
+
+		formData.set('email', userData.email);
+		formData.set('password', userData.password);
+
+		try {
+			const token = await appCredentialsPost({ registration: formData });
+
+			if (!token) return;
+
+			useCookieSet({
+				name: 'user-token',
+				value: token,
+				options: { path: '/', maxAge: 3600 },
+			});
+
+			const data = appJwtDecode<CredentialsStateItem>(token);
+			dispatch(authAction.setCredentials(data));
+		} catch (error) {
+			console.log(error);
+		}
+	};
 };
 
-export const registrationAction = (userData: UserData) => {
-  return async function (dispath: AppDispatch) {
-    const hashPassword = await appHash(userData.password);
-    if (!hashPassword) return;
+export const loginAction = (userData: CredentialsDTO) => {
+	return async function (dispatch: AppDispatch) {
+		try {
+			const token = await appCredentialsPost({ login: userData });
+			if (!token) return;
 
-    const userToken = appJwtSign({
-      email: userData.email,
-      password: hashPassword,
-    });
+			appCookieSet({
+				name: 'user-token',
+				value: token,
+				options: { path: '/', maxAge: 3600 },
+			});
 
-    const token = await appUserPost({ registration: userToken });
-    if (!token) return;
+			const data = appJwtDecode(token);
 
-    useCookiSet({
-      name: "user-token",
-      value: token,
-      options: { path: "/", maxAge: 3600 },
-    });
-
-    const user = appJwtDecode<UserData>(token);
-
-    dispath(authAction.setUser(user));
-  };
+			dispatch(authAction.setCredentials(data));
+		} catch (e) {
+			console.log(e);
+		}
+	};
 };
-export const loginAction = (userData: UserData) => {
-  return async function (dispath: AppDispatch) {
-    const userToken = appJwtSign({
-      email: userData.email,
-      password: userData.password,
-    });
+export const changePasswordAction = (passwordData: CredentialsPasswordDTO) => {
+	return async function () {
+		const userToken = appCookieGet('user-token');
+		if (!userToken) return;
 
-    const token = await appUserPost({ login: userToken });
+		const { email }: CredentialsStateItem = appJwtDecode(userToken);
 
-    if (!token) return;
+		const token = appJwtSign({
+			oldPassword: passwordData.oldPassword,
+			newPassword: passwordData.newPassword,
+			email,
+		});
 
-    useCookiSet({
-      name: "user-token",
-      value: token,
-      options: { path: "/", maxAge: 3600 },
-    });
+		try {
+			const text = await appCredentialsPasswordPut(token);
 
-    dispath(authAction.setUser("user"));
-  };
+		} catch (error) {
+			console.log(error);
+		}
+	};
 };
-export const changePassword = () => {
-  return async function (dispatch: AppDispatch) {};
+
+export const logOutActive = () => {
+	return async function (dispatch: AppDispatch) {
+		dispatch(authAction.logOut());
+
+		appCookieDelete('user-token');
+	};
 };
-export const logOut = () => {
-  return async function (dispatch: AppDispatch) {
-    dispatch(authAction.logOut());
 
-    useCookiDelete("user-token");
-  };
-};
-export function checkAuth() {
-  return async function (dispathc: AppDispatch) {
-    const userToken = await appCookiGet("user-token");
-    if (!userToken) return;
+export function initAuth() {
+	return async function (dispatch: AppDispatch) {
+		const userToken = await appCookieGet('user-token');
+		if (!userToken) return;
 
-    const token = await appUserPost({ check: userToken });
+		try {
+			const token = await appCredentialsPost({ init: userToken });
 
-    if (!token) return;
+			if (!token) return;
 
-    useCookiSet({
-      name: "user-token",
-      value: token,
-      options: { path: "/", maxAge: 3600 },
-    });
+			useCookieSet({
+				name: 'user-token',
+				value: token,
+				options: { path: '/', maxAge: 3600 },
+			});
 
-    console.log(authAction);
+			const user = appJwtDecode<CredentialsStateItem>(token);
 
-    dispathc(authAction.setUser("user"));
-  };
+			dispatch(authAction.setCredentials(user));
+		} catch (error) {
+			console.log(error);
+		}
+	};
 }

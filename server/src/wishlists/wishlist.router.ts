@@ -1,19 +1,17 @@
 import { Hono } from "hono";
 import WishlistController from "./wishlist.controller";
-import wishlistValidation from "./wishlist.validation";
+import wishlistController from "./wishlist.controller";
+import wishlistMiddleware from "./wishlist.middleware";
 
 const wishlistRouter = new Hono();
 
+wishlistRouter.get("/", wishlistController.getAll);
 wishlistRouter.use("/init", WishlistController.initWishlists);
-wishlistRouter.post(
-  "/",
-  wishlistValidation.save,
-  WishlistController.saveWishlists
-);
+wishlistRouter.post("/", WishlistController.saveWishlists);
 wishlistRouter.delete(
   "/",
-  wishlistValidation.remove,
-  WishlistController.removeWishlists
+  wishlistMiddleware.remove,
+  WishlistController.removeWishlists,
 );
 
 export default wishlistRouter;

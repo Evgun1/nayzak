@@ -1,15 +1,14 @@
 import dotenv from "dotenv";
 import prismaClient from "../prismaClient";
+import { Prisma } from "@prisma/client";
+
 dotenv.config();
 
-export default async function start() {
+export default (async function start() {
   await prismaClient.$connect();
-  await prismaClient.brands.deleteMany({});
-  await prismaClient.categories.deleteMany({});
-  await prismaClient.products.deleteMany({});
-  await prismaClient.reviews.deleteMany({});
-  await prismaClient.subcategories.deleteMany({});
+  for (const key in Prisma.ModelName) {
+    // @ts-ignore
+    prismaClient[key].deleteMany({});
+  }
   await prismaClient.$disconnect();
-}
-
-start();
+})();

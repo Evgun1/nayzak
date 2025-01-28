@@ -1,78 +1,166 @@
-import { Prisma } from "@prisma/client";
-import prismaClient from "../prismaClient";
+import { Prisma } from '@prisma/client';
+import prismaClient from '../prismaClient';
+import categoriesService from '../categories/categories.service';
 import {
-  SubcategoryGetGTO,
-  SubcategoryGetParamGTO,
-} from "./interfaces/SubcategoryGetInput";
-import categoriesService from "../categories/categories.service";
+	SubcategoriesGeDTO,
+	SubcategoriesGetParams,
+	SubcategoriesGetQuery,
+	SubcategoryByCategoryGetParams,
+} from './subcategories.type';
+import { MainService } from '../utils/service/main.service';
+import { QueryParameterTypes } from '../utils/service/service.type';
+import { QueryParamHandler } from '../utils/query-params/QueryParams.service';
 
-const getAllSubcategories = async (inputData: SubcategoryGetGTO) => {
-  const where = await getAllSubcategoryWhere(inputData);
+class SubcategoriesOption {
+	async getAllSubcategoryWhere(subcategoryGetGTO: SubcategoriesGetQuery) {
+		const where: Prisma.SubcategoriesWhereInput = {};
 
-  const queryOprions: Prisma.SubcategoriesFindManyArgs = {
-    where,
-  };
+		if (subcategoryGetGTO.category) {
+			const category = await categoriesService.getCategoryIDByTitle(
+				subcategoryGetGTO.category
+			);
 
-  const subcategories = await prismaClient.subcategories.findMany(queryOprions);
+			where.categoriesId = category?.id;
+		}
 
-  return { subcategories };
-};
-const getAllSubcategoryWhere = async (subcategoryGetGTO: SubcategoryGetGTO) => {
-  const where: Prisma.SubcategoriesWhereInput = {};
+		return where;
+	}
 
-  if (subcategoryGetGTO.category) {
-    const category_id = await categoriesService.getCategoryIDByTitle(
-      subcategoryGetGTO.category
-    );
+	async getSubcategoryByTitleWhere(
+		subcategoryGetParamGTO: SubcategoryByCategoryGetParams
+	) {
+		const where: Prisma.SubcategoriesWhereInput = {};
 
-    where.category_id = category_id?.id;
-  }
+		if (subcategoryGetParamGTO.categoryName) {
+			const category = await categoriesService.getCategoryIDByTitle(
+				subcategoryGetParamGTO.categoryName
+			);
 
-  return where;
-};
+			where.categoriesId = category?.id;
+		}
 
-const getSubcategoryByCategory = async (inputData: SubcategoryGetParamGTO) => {
-  const where = await getSubcategoryByTitleWhere(inputData);
-  const queryOprions: Prisma.SubcategoriesFindManyArgs = {
-    where,
-  };
+		return where;
+	}
+}
 
-  const subcategories = await prismaClient.subcategories.findMany(queryOprions);
+class SubcategoriesService {
+	protected supportedMimeTypes: Map<
+		boolean,
+		(data: string | number) => object
+	> = new Map();
 
-  return { subcategories };
-};
+	constructor() {
+		this.setupMimeTypes();
+	}
 
-const getSubcategoryByTitleWhere = async (
-  subcategoryGetParamGTO: SubcategoryGetParamGTO
-) => {
-  const where: Prisma.SubcategoriesWhereInput = {};
+	private setupMimeTypes() {
+		this.supportedMimeTypes.set(false, (data: string | number) => ({
+			id: data.toString(),
+		}));
+		this.supportedMimeTypes.set(true, (data: string | number) => ({
+			title: data,
+		}));
+	}
 
-  if (subcategoryGetParamGTO.categoryName) {
-    const category_id = await categoriesService.getCategoryIDByTitle(
-      subcategoryGetParamGTO.categoryName
-    );
+	private subcategoriesOptions = new SubcategoriesOption();
+	private mainService = new MainService();
+	private queryParams = new QueryParamHandler();
 
-    where.category_id = category_id?.id;
-  }
+	async getAllSubcategories(inputData: QueryParameterTypes) {
+		const where = this.queryParams.filter<Prisma.SubcategoriesWhereInput>(
+			inputData,
+			Prisma.SubcategoriesScalarFieldEnum
+		);
+		where.Categories = {
+			title: { contains: inputData.category, mode: 'insensitive' },
+		};
 
-  return where;
-};
+		const skip = this.queryParams.offset(inputData);
+		const orderBy =
+			this.queryParams.orderBy<Prisma.SubcategoriesOrderByWithRelationInput>(
+				inputData,
+				Prisma.SubcategoriesScalarFieldEnum
+			);
+		const take = this.queryParams.limit(inputData);
 
-const getSubcategoryIDByTitle = async (subcategoryTitle: string) => {
-  const subcategory_id = await prismaClient.subcategories.findFirst({
-    where: {
-      title: subcategoryTitle
-        ? subcategoryTitle[0].toUpperCase() + subcategoryTitle.slice(1)
-        : "",
-    },
-    select: { id: true },
-  });
+		const queryOptions: Prisma.SubcategoriesFindManyArgs = {
+			where,
+			skip,
+			orderBy,
+			take,
+		};
 
-  return subcategory_id;
-};
+		const subcategories =
+			await prismaClient.subcategories.findMany(queryOptions);
+		const totalCount = await prismaClient.subcategories.count({
+			where: queryOptions.where,
+		});
 
-export default {
-  getSubcategoryIDByTitle,
-  getAllSubcategories,
-  getSubcategoryByCategory,
-};
+		return { subcategories, totalCount };
+	}
+
+	async getOne({ subcategoriesParam }: SubcategoriesGetParams) {
+		if (!subcategoriesParam) return;
+
+		const subcategoriesData = this.supportedMimeTypes.get(
+			isNaN(Number(subcategoriesParam))
+		);
+
+		if (!subcategoriesData) return;
+		const inputData = subcategoriesData(
+			subcategoriesParam
+		) as QueryParameterTypes;
+
+		const where = this.queryParams.filter<Prisma.SubcategoriesWhereInput>(
+			inputData,
+			Prisma.SubcategoriesScalarFieldEnum
+		);
+
+		const options: Prisma.SubcategoriesFindFirstArgs = {
+			where,
+		};
+
+		const subcategories = await prismaClient.subcategories.findFirst(options);
+
+		return subcategories;
+	}
+
+	async getSubcategoryByCategory(inputData: SubcategoryByCategoryGetParams) {
+		const where: Prisma.SubcategoriesWhereInput = {
+			Categories: { title: inputData.categoryName },
+		};
+
+		const totalCount = await prismaClient.subcategories.count({ where });
+		const subcategories = await prismaClient.subcategories.findMany({
+			where,
+		});
+
+		return { subcategories, totalCount };
+	}
+
+	async getSubcategoryIDByTitle(subcategoryTitle: string) {
+		return prismaClient.subcategories.findFirst({
+			where: {
+				title: subcategoryTitle
+					? subcategoryTitle[0].toUpperCase() + subcategoryTitle.slice(1)
+					: '',
+			},
+			select: { id: true },
+		});
+	}
+
+	async create(body: SubcategoriesGeDTO) {
+		return prismaClient.subcategories.create({
+			data: {
+				title: body.title,
+				categoriesId: parseInt(body.categoriesId.toString()),
+			},
+		});
+	}
+
+	async deleteSubcategories(subcategoriesId: number | number[]) {
+		return await this.mainService.delete('Subcategories', subcategoriesId);
+	}
+}
+
+export default new SubcategoriesService();

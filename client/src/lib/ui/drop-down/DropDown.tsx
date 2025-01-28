@@ -1,106 +1,127 @@
-"use client";
+'use client';
 
 import React, {
-  FC,
-  MouseEvent,
-  ReactNode,
-  RefObject,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+	FC,
+	MouseEvent,
+	ReactElement,
+	ReactNode,
+	RefObject,
+	useEffect,
+	useId,
+	useRef,
+	useState,
+} from 'react';
 
-import DropDownItem from "./DropDownItem";
+import DropDownItem from './DropDownItem';
 
-import classes from "./DropDown.module.scss";
-import { Size, Type } from "../custom-elemets/button-custom/ButtonType";
+import classes from './DropDown.module.scss';
+import { Size, Type } from '../custom-elements/button-custom/ButtonType';
 import {
-  ButtonCustom,
-  StyleSettingsObject,
-} from "../custom-elemets/button-custom/ButtonCustom";
+	ButtonCustom,
+	StyleSettingsObject,
+} from '../custom-elements/button-custom/ButtonCustom';
 
 interface TypePropertyObject {
-  click: MouseEvent;
-  mouseout: MouseEvent;
-  mouseover: MouseEvent;
-  // mouseenter: boolean;
+	click: MouseEvent;
+	mouseenter: MouseEvent;
 }
 
 type DropDownProps = {
-  btnCustomSettingth: StyleSettingsObject;
-  typeProperty: keyof TypePropertyObject;
-  lable: ReactNode;
-  children: ReactNode;
-  styles?: string;
+	btnCustomSettings: StyleSettingsObject;
+	typeProperty: keyof TypePropertyObject;
+	label: ReactNode;
+	children: ReactNode;
+	styles?: string;
 };
 
 const DropDownComponent: FC<DropDownProps> = ({
-  lable,
-  btnCustomSettingth,
-  typeProperty,
-  children,
-  styles,
+	label,
+	btnCustomSettings,
+	typeProperty,
+	children,
+	styles,
 }) => {
-  const [showElemets, setShowElements] = useState<boolean>(false);
-  const btnRef = useRef() as RefObject<HTMLButtonElement>;
-  const wrapperElementsRef = useRef() as RefObject<HTMLDivElement>;
-  const generateId = useId();
+	const [showElements, setShowElements] = useState<boolean>(false);
+	const wrapperRef = useRef() as RefObject<HTMLDivElement>;
+	const childrenRef = useRef() as RefObject<HTMLDivElement>;
+	const generateId = useId();
 
-  const btnClickHandler: EventListener = (event) => {
-    const target = event.target as HTMLElement;
-    const btnRefId = btnRef?.current?.id.replaceAll(":", "");
-    if (!target) return;
+	const btnClickHandler: EventListener = (event) => {
+		const target = event.target as HTMLElement;
+		const wrapperRefId = wrapperRef?.current?.id.replaceAll(':', '');
 
-    if (wrapperElementsRef.current) {
-      const wrapperRefId = wrapperElementsRef.current.id;
-      const currentWrappert = target.closest(`#${wrapperRefId}`);
+		if (!target) return;
 
-      if (currentWrappert) return;
-    }
+		if (childrenRef.current) {
+			const childrenRefId = childrenRef.current.id;
+			const currentWrapper = target.closest(`#${childrenRefId}`);
 
-    const closestBtn = target.closest(`#${btnRefId}`);
-    if (closestBtn) {
-      setShowElements((prev) => !prev);
-    } else {
-      setShowElements((prev) => (prev ? !prev : prev));
-    }
-  };
+			if (currentWrapper) return;
+		}
 
-  useEffect(() => {
-    document.addEventListener(typeProperty, btnClickHandler);
-    return () => document.removeEventListener(typeProperty, btnClickHandler);
-  });
+		const closestBtn = target.closest(`#${wrapperRefId}`);
 
-  return (
-    <div className={`${styles ?? ""} ${classes["drop-down"]}`}>
-      <ButtonCustom.SiteButton
-        id={generateId.replaceAll(":", "")}
-        className={
-          showElemets ? classes["drop-down--open"] : classes["drop-down--close"]
-        }
-        btnRef={btnRef}
-        // styleSettings={btnCustomSettingth}
+		if (event.type === 'mouseenter' && closestBtn) {
+			setShowElements((prev) => !prev);
+		}
+		if (event.type === 'mouseleave') {
+			setShowElements(false);
+		}
 
-        styleSettings={btnCustomSettingth}
-      >
-        {lable}
-      </ButtonCustom.SiteButton>
-      {showElemets && (
-        <div
-          id="hidden-elements"
-          ref={wrapperElementsRef}
-          className={classes["drop-down--list"]}
-        >
-          {children}
-        </div>
-      )}
-    </div>
-  );
+		if (event.type === 'click') {
+			if (closestBtn) {
+				setShowElements((prev) => !prev);
+			} else {
+				setShowElements((prev) => (prev ? !prev : prev));
+			}
+		}
+	};
+
+	useEffect(() => {
+		if (typeProperty === 'mouseenter') {
+			document.querySelectorAll(`#${wrapperRef.current?.id}`).forEach((val) => {
+				val?.addEventListener('mouseenter', btnClickHandler);
+				val?.addEventListener('mouseleave', btnClickHandler);
+			});
+		} else {
+			document.addEventListener(typeProperty, btnClickHandler);
+		}
+
+		return () => document.removeEventListener(typeProperty, btnClickHandler);
+	}, [typeProperty]);
+
+
+	return (
+		<div
+			ref={wrapperRef}
+			id={generateId.replaceAll(':', '')}
+			className={`${styles ?? ''} ${classes['drop-down']}`}
+		>
+			<ButtonCustom
+				className={
+					showElements
+						? classes['drop-down--open']
+						: classes['drop-down--close']
+				}
+				styleSettings={btnCustomSettings}
+			>
+				{label}
+			</ButtonCustom>
+			{showElements && (
+				<div
+					id="hidden-elements"
+					ref={childrenRef}
+					className={classes['drop-down--list']}
+				>
+					{children}
+				</div>
+			)}
+		</div>
+	);
 };
 
 const DropDown = Object.assign(DropDownComponent, {
-  Item: DropDownItem,
+	Item: DropDownItem,
 });
 
 export default DropDown;

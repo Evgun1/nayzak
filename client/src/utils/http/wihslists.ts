@@ -1,36 +1,40 @@
-import { Wishlist } from "@/types/wishlist";
-import { appFetchDelete, appFetchGet, appFetchPost } from ".";
-import { WishlistItemData } from "@/lib/redux/store/wishlist/wishlist";
+import { WishlistItem } from '@/types/wishlist';
+import { appFetchDelete, appFetchGet, appFetchPost } from '.';
+import { WishlistItemData } from '@/lib/redux/store/wishlist/wishlist';
 
-export const appWishlistsInitGet = async (userToken: string) => {
-  const pathname = "wishlists/init";
+export const appWishlistsInitPost = async (customerID: number) => {
+	const pathname = 'wishlists/init';
 
-  const { wishlists } = await appFetchGet<{ wishlists: Wishlist[] }>({
-    pathname,
-    authorization: userToken,
-  });
-  return wishlists;
+	const { response, totalCount } = await appFetchPost<WishlistItem[]>({
+		pathname,
+		sendData: { customerID },
+	});
+
+	return response;
 };
 
 export const appWishlistsPost = async (
-  currentProduct: WishlistItemData,
-  userToken: string
+	currentProduct: WishlistItemData,
+	customerID: number
 ) => {
-  const pathname = "wishlists";
+	const pathname = 'wishlists';
 
-  const json = { currentProduct, userToken };
+	const data = { currentProduct, customerID };
 
-  const result = await appFetchPost<Wishlist>({ pathname, sendData: { json } });
-  return result;
+	const { response } = await appFetchPost<WishlistItem>({
+		pathname,
+		sendData: data,
+	});
+	return response;
 };
 
-export const appWishlistsDelet = async (wishlistID: number) => {
-  const pathname = "wishlists";
+export const appWishlistsDelete = async (wishlistId: number) => {
+	const pathname = 'wishlists';
 
-  const result = await appFetchDelete({
-    pathname,
-    deleteData: { id: wishlistID },
-  });
+	const result = await appFetchDelete({
+		pathname,
+		deleteData: { wishlistId },
+	});
 
-  console.log(result);
+	console.log(result);
 };

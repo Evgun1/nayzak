@@ -1,84 +1,99 @@
-"use client";
+'use client';
 
-import classes from "./NavLink.module.scss";
+import classes from './NavLink.module.scss';
 
-import { useParams, usePathname, useSearchParams } from "next/navigation";
-import { ReactNode } from "react";
-import {
-  LinkCustom,
-  StyleSettingsObject,
-} from "../custom-elemets/link-custom/LinkCustom";
+import { usePathname, useSearchParams } from 'next/navigation';
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react';
+import LinkCustom, {
+	StyleSettingsObject,
+} from '../custom-elements/link-custom/LinkCustom';
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs';
 
 interface HrefObject {
-  endpoint?: string;
-  queryParams?: { [key: string]: string };
+	endpoint?: string;
+	queryParams?: { [key: string]: string };
 }
 
 type NavLinkProps = {
-  href: HrefObject;
-  searchParams?: URLSearchParams;
-  classesName?: string;
-  children: ReactNode;
-  customStyleActive?: string;
-  styleSetings: StyleSettingsObject;
+	href: HrefObject;
+	classesName?: string;
+	children: ReactNode;
+	customStyleActive?: string;
+	styleSettings: StyleSettingsObject;
 };
 
 export default function NavLink({
-  children,
-  href: { queryParams, endpoint },
-  searchParams,
-  styleSetings: { color, icon, roundess, size, type },
-  classesName,
-  customStyleActive,
+	children,
+	href,
+	styleSettings,
+	classesName,
+	customStyleActive,
 }: NavLinkProps) {
-  const searhcParams = useSearchParams();
-  const pathname = usePathname();
-  const urlSearchParams = new URLSearchParams(searchParams);
-  const params = useParams();
+	const searchParams = useSearchParams();
+	const pathname = usePathname();
+	const urlSearchParams = new URLSearchParams(searchParams.toString());
 
-  let active: boolean = false;
+	const { endpoint, queryParams } = href;
 
-  if (queryParams) {
-    for (const key in queryParams) {
-      urlSearchParams.set(key, queryParams[key].toLowerCase());
-    }
+	let active: boolean = false;
 
-    active =
-      searhcParams.get("category") === children?.toString().toLocaleLowerCase();
-  } else {
-    endpoint
-      ?.toString()
-      .split("/")
-      .find(
-        (value) => value === pathname.replaceAll("/", " ").trim().split(" ")[1]
-      )
-      ? (active = true)
-      : null;
-  }
+	const getDataBreadcrumbs = (() => {
+		const breadcrumbsRecursionHandler = (children: ReactNode) => {
+			return React.Children.map(children, (child): ReactNode => {
+				if (React.isValidElement(child)) {
+					if (typeof child.props.children === 'string') {
+						return child.props.children;
+					} else {
+						const childWithChildren = child as ReactElement<{
+							children: ReactNode;
+						}>;
 
-  const setQueryParams = `?${urlSearchParams}`;
+						return breadcrumbsRecursionHandler(
+							childWithChildren.props.children
+						);
+					}
+				}
+			});
+		};
+		return breadcrumbsRecursionHandler(Breadcrumbs({})) as string[];
+	})();
 
-  return (
-    <LinkCustom.SiteLink
-      className={`${classesName} ${
-        active
-          ? (customStyleActive ?? classes.action) || classes.link
-          : classes.link
-      }`}
-      styleSettings={{
-        color,
-        roundess,
-        size,
-        type,
-        icon,
-      }}
-      href={
-        queryParams
-          ? { queryParams: { setQueryParams } }
-          : { endpoint: `/${endpoint}` }
-      }
-    >
-      {children}
-    </LinkCustom.SiteLink>
-  );
+	if (queryParams) {
+		for (const key in queryParams) {
+			urlSearchParams.set(key, queryParams[key].toLowerCase());
+		}
+
+		// active =
+		// 	searchParams.get('category') === children?.toString().toLocaleLowerCase();
+	}
+
+	if (endpoint) {
+		const findString = getDataBreadcrumbs
+			.slice(1)
+			.find((data) => data.toLowerCase() === endpoint.split('/')[1]);
+
+		if (findString) {
+			active = true;
+		}
+	}
+
+	const setQueryParams = `?${urlSearchParams}`;
+
+	return (
+		<LinkCustom
+			className={`${classesName} ${
+				active
+					? (customStyleActive ?? classes.action) || classes.link
+					: classes.link
+			}`}
+			styleSettings={styleSettings}
+			href={
+				queryParams
+					? { queryParams: { setQueryParams } }
+					: { endpoint: `/${endpoint}` }
+			}
+		>
+			{children}
+		</LinkCustom>
+	);
 }

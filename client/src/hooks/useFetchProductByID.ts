@@ -1,67 +1,68 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Product } from "../types/product";
-import { useSearchParams } from "next/navigation";
-import { appProductsGet } from "@/utils/http/products";
+import { useEffect, useState } from 'react';
+import { ProductItem } from '@/types/product.types';
+import { useSearchParams } from 'next/navigation';
+import { appProductsGet } from '@/utils/http/products';
 
 type ProductsArrayData = {
-  id?: number;
-  amount?: number;
-  productID: number;
+	id?: number;
+	amount?: number;
+	productID: number;
 };
 
 const useFetchProductsById = (
-  productsArray: ProductsArrayData[],
-  returnAmount: boolean = true
+	productsArray: ProductsArrayData[],
+	returnAmount: boolean = true
 ) => {
-  const searchParams = useSearchParams();
-  const [products, setProducts] = useState<Product[]>([]);
+	const searchParams = useSearchParams();
+	const [products, setProducts] = useState<ProductItem[]>([]);
 
-  const fetchProduct = async () => {
-    if (!productsArray || !productsArray.length) {
-      setProducts([]);
-      return;
-    }
+	const fetchProduct = async () => {
+		if (!productsArray || !productsArray.length) {
+			setProducts([]);
+			return;
+		}
 
-    const productsID: number[] = productsArray.map(
-      (element) => element.productID
-    );
+		const productsID: number[] = productsArray.map(
+			(element) => element.productID
+		);
 
-    const urlSearchParams = new URLSearchParams(searchParams.toString());
+		const urlSearchParams = new URLSearchParams(searchParams.toString());
 
-    urlSearchParams.set(`id`, `${productsID}`);
-    const productsData = await appProductsGet({
-      searchParams: urlSearchParams,
-    });
+		urlSearchParams.set(`id`, `${productsID}`);
 
-    if (!returnAmount) {
-      setProducts(productsData.products);
-      return;
-    }
+		const productsData = await appProductsGet({
+			searchParams: urlSearchParams,
+		});
 
-    const output: Product[] = productsData.products.map((item) => {
-      const index = productsArray.findIndex(
-        (element) => element.productID === item.id
-      );
+		if (!returnAmount) {
+			setProducts(productsData.products);
+			return;
+		}
 
-      const newItem = { ...item };
+		const output: ProductItem[] = productsData.products.map((item) => {
+			const index = productsArray.findIndex(
+				(element) => element.productID === item.id
+			);
 
-      if (index !== -1) {
-        newItem.amount = productsArray[index].amount;
-      }
+			const newItem = { ...item };
 
-      return newItem;
-    });
+			if (index !== -1) {
+				newItem.amount = productsArray[index].amount;
+			}
 
-    setProducts(output);
-  };
+			return newItem;
+		});
 
-  useEffect(() => {
-    fetchProduct();
-  }, [productsArray]);
+		setProducts(output);
+	};
 
-  return products;
+	useEffect(() => {
+		fetchProduct();
+	}, [productsArray]);
+
+	return products;
 };
 
 export default useFetchProductsById;

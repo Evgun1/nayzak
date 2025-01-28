@@ -1,8 +1,11 @@
-import { faker, tr } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 import prismaClient from "../../prismaClient";
 
 async function reviewsFaker() {
   const resultProducts = await prismaClient.products.findMany({
+    select: { id: true },
+  });
+  const resultCustomers = await prismaClient.customers.findMany({
     select: { id: true },
   });
 
@@ -10,16 +13,21 @@ async function reviewsFaker() {
 
   for (let index = 0; index < productsId.length; index++) {
     const randomIndexProducts = Math.floor(Math.random() * productsId.length);
-    const product_id = productsId[randomIndexProducts];
+    const productId = productsId[randomIndexProducts];
+    const randomIndexCustomers = Math.floor(
+      Math.random() * resultCustomers.length,
+    );
+
+    const customersId = resultCustomers[randomIndexCustomers].id;
 
     const rating = Math.floor(Math.random() * 5 + 1);
 
-
     await prismaClient.reviews.create({
       data: {
-        text: faker.lorem.text(),
+        customersId,
         rating,
-        product_id,
+        text: faker.lorem.text(),
+        productsId: productId,
       },
     });
   }

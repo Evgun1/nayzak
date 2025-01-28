@@ -6,7 +6,7 @@ const reviewsRouter = new Hono();
 reviewsRouter.get("/", ReviewsController.getAll);
 reviewsRouter.get(
   "/product-reviews/:productName",
-  ReviewsController.getAllReviewsOneProduct
+  ReviewsController.getAllReviewsOneProduct,
 );
 reviewsRouter.get("/:productId", ReviewsController.getAllProductReviews);
 

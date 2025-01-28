@@ -1,162 +1,162 @@
-import ErrorComponent from "@/components/elemets/error-component/ErrorComponent";
-import { ReactNode } from "react";
+import { CredentialsDTO } from '@/lib/redux/store/auth/credentials.type';
 
-type MethodData = "PUT" | "GET" | "POST" | "DELETE";
+type MethodData = 'PUT' | 'GET' | 'POST' | 'DELETE';
 
-type ContentTypeData = "application/json" | "multipart/form-data";
+type ContentTypeData = 'application/json' | 'multipart/form-data';
 
 interface BodyData {
-  formData?: FormData;
-  json?: object;
+	formData?: FormData;
+	json?: object;
 }
 
 type AppFetch = <T>(
-  pathname: string,
-  searchParams?: URLSearchParams,
-  init?: RequestInit,
-  customError?: React.ReactNode // Тип ReactNode потребує React імпорту
+	pathname: string,
+	searchParams?: URLSearchParams,
+	init?: RequestInit,
+	customError?: React.ReactNode
 ) => Promise<T>;
 
-const BASE_URL = "http://localhost:3030";
+const BASE_URL = 'http://localhost:3030';
 
 type AppFetchProps = {
-  pathname: string;
-  searchParams?: URLSearchParams;
-  init: RequestInit;
-  customError?: React.ReactNode;
+	pathname: string;
+	searchParams?: URLSearchParams;
+	init: RequestInit;
+	customError?: React.ReactNode;
 };
 
 const appFetch = async <T>({
-  pathname,
-  customError,
-  init,
-  searchParams,
-}: AppFetchProps): Promise<T | Error> => {
-  const url = `${BASE_URL}/${pathname}${
-    searchParams ? `?${searchParams}` : ""
-  }`;
+	pathname,
+	init,
+	searchParams,
+}: AppFetchProps): Promise<{ response: T; totalCount: number }> => {
+	const url = `${BASE_URL}/${pathname}${
+		searchParams ? `?${searchParams}` : ''
+	}`;
 
-  init.cache = "no-cache";
+	init.cache = 'no-cache';
 
-  try {
-    const res = await fetch(url, init);
+	try {
+		const res = await fetch(url, init);
 
-    if (!res.ok) {
-      throw new Error(await res.text());
-      // if (customError) {
-      //   customError;
-      // }
-    }
+		if (!res.ok || res.status !== 200) {
+			const text = await res.text();
+			throw new Error(text, {});
+		}
 
-    return (await res.json()) as T;
-  } catch (error) {
-    return error as Error;
-  }
+		const response = (await res.json()) as T;
+		const totalCount = parseInt(
+			(res.headers.get('X-Total-Count') as string) ?? null
+		);
+		return { response, totalCount } as { response: T; totalCount: number };
+	} catch (error) {
+		throw error;
+	}
 };
 
 type AppGetFetch = {
-  pathname: string;
-  searchParams?: URLSearchParams;
-  authorization?: string;
+	pathname: string;
+	searchParams?: URLSearchParams;
+	authorization?: string;
 };
 
 export const appFetchGet = async <T>({
-  pathname,
-  authorization,
-  searchParams,
+	pathname,
+	authorization,
+	searchParams,
 }: AppGetFetch) => {
-  const init: RequestInit = {};
-  init.method = "GET";
+	const init: RequestInit = {};
+	init.method = 'GET';
 
-  if (authorization) {
-    init.headers = { Authorization: authorization };
-  }
+	if (authorization) {
+		init.headers = { Authorization: `Bearer Token ${authorization}` };
+	}
 
-  const result = await appFetch<T>({ init, pathname, searchParams });
+	const result = await appFetch<T>({ init, pathname, searchParams });
 
-  if (result instanceof Error) {
-    throw new Error(result.message);
-  }
-
-  return result;
+	return result;
 };
 
-type AppPostFetch = {
-  pathname: string;
-  authorization?: string;
-  sendData?: FormData | string;
+export type AppPostFetch = {
+	pathname: string;
+	authorization?: string;
+	sendData?: FormData | object;
 };
 export const appFetchPost = async <T>({
-  pathname,
-  sendData,
-  authorization,
+	pathname,
+	sendData,
+	authorization,
 }: AppPostFetch) => {
-  const init: RequestInit = {};
-  init.method = "POST";
-  if (authorization) {
-    init.headers = { Authorization: authorization };
-  }
+	const init: RequestInit = {};
 
-  init.body = sendData;
+	init.method = 'POST';
 
-  const result = await appFetch<T>({ pathname, init });
+	if (authorization) {
+		init.headers = { Authorization: authorization };
+	}
 
-  if (result instanceof Error) {
-    console.log(result.message);
-    return;
-  }
+	if (sendData) {
+		if (!(sendData instanceof FormData)) {
+			init.headers = { 'Content-Type': 'application/json' };
+		}
 
-  return result;
+		init.body =
+			sendData instanceof FormData ? sendData : JSON.stringify(sendData);
+	}
+
+	const result = await appFetch<T>({ pathname, init });
+
+	return result;
 };
 
 type AppPutFetch = {
-  pathname: string;
-  putData: FormData | string;
-  authorization?: string;
+	pathname: string;
+	putData?: FormData | object;
+	authorization?: string;
 };
 export const appFetchPut = async <T>({
-  pathname,
-  putData,
-  authorization,
+	pathname,
+	putData,
+	authorization,
 }: AppPutFetch) => {
-  const init: RequestInit = {};
-  init.method = "PUT";
+	const init: RequestInit = {};
+	init.method = 'PUT';
 
-  if (authorization) {
-    init.headers = { Authorization: authorization };
-  }
+	if (authorization) {
+		init.headers = { Authorization: authorization };
+	}
 
-  init.body = putData;
+	if (!(putData instanceof FormData)) {
+		init.headers = { 'Content-Type': 'application/json' };
+	}
 
-  const result = await appFetch<T>({ pathname, init });
+	init.body = putData instanceof FormData ? putData : JSON.stringify(putData);
 
-  if (result instanceof Error) {
-    console.log(result.message);
-    return;
-  }
+	const result = await appFetch<T>({ pathname, init });
 
-  return result;
+	return result;
 };
 
 type AppDeleteFetch = {
-  pathname: string;
-  deleteData: FormData | string;
+	pathname: string;
+	deleteData: FormData | object;
 };
 export const appFetchDelete = async <T>({
-  pathname,
-  deleteData,
+	pathname,
+	deleteData,
 }: AppDeleteFetch) => {
-  const init: RequestInit = {};
+	const init: RequestInit = {};
 
-  init.method = "DELETE";
-  init.body = deleteData;
+	init.method = 'DELETE';
 
-  const result = await appFetch<T>({ pathname, init });
+	if (!(deleteData instanceof FormData)) {
+		init.headers = { 'Content-Type': 'application/json' };
+	}
 
-  if (result instanceof Error) {
-    console.log(result.message);
-    return;
-  }
+	init.body =
+		deleteData instanceof FormData ? deleteData : JSON.stringify(deleteData);
 
-  return result;
+	const result = await appFetch<T>({ pathname, init });
+
+	return result;
 };

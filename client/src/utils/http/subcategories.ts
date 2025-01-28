@@ -1,24 +1,38 @@
-import { useSearchParams } from "next/navigation";
-import { appFetchGet } from ".";
-import { Subcategory } from "@/types/subcategories";
+import { useSearchParams } from 'next/navigation';
+import { appFetchGet } from '.';
+import { SubcategoryItem } from '@/types/subcategories.types';
 
 export const appSubcategoriesGet = async (searchParams?: URLSearchParams) => {
-  const pathname = "subcategories";
+	const pathname = 'subcategories';
 
-  const { subcategories } = await appFetchGet<{ subcategories: Subcategory[] }>(
-    { pathname, searchParams }
-  );
+	const { response } = await appFetchGet<SubcategoryItem[]>({
+		pathname,
+		searchParams,
+	});
 
-  return subcategories;
+	return response;
 };
 
+export const appSubcategoriesOneGet = async (
+	subcategoriesId: number | string
+) => {
+	const pathname = `subcategories/${subcategoriesId}`;
+
+	const { response } = await appFetchGet<SubcategoryItem>({
+		pathname,
+	});
+
+	return response;
+};
 
 export const appSubcategoryByCategoryGet = async (params: string) => {
-  const pathname = `subcategories/${params[0].toUpperCase() + params.slice(1)}`;
+	const pathname = `subcategories/category/${
+		params[0].toUpperCase() + params.slice(1)
+	}`;
 
-  const { subcategories } = await appFetchGet<{ subcategories: Subcategory[] }>(
-    { pathname }
-  );
+	const { response } = await appFetchGet<SubcategoryItem[]>({
+		pathname,
+	});
 
-  return subcategories;
+	return response;
 };

@@ -1,31 +1,60 @@
-import { Context } from "hono";
-import prismaClient from "../prismaClient";
-import { Prisma } from "@prisma/client";
+import { Context } from 'hono';
+import subcategoryService from './subcategory.service';
 import {
-  SubcategoryGetGTO,
-  SubcategoryGetParamGTO,
-} from "./interfaces/SubcategoryGetInput";
-import subcategoryService from "./subcategory.service";
-import categoriesService from "../categories/categories.service";
+	SubcategoriesGeDTO,
+	SubcategoriesGetParams,
+	SubcategoriesGetQuery,
+	SubcategoryByCategoryGetParams,
+} from './subcategories.type';
+import getReqBody from '../tools/getReqBody';
+import { QueryParameterTypes } from '../utils/service/service.type';
 
-class SubcategoriesContronner {
-  async getAll(c: Context) {
-    const inputData = c.req.query() as SubcategoryGetGTO;
+class SubcategoriesController {
+	async getAll(c: Context) {
+		const query = c.req.query() as QueryParameterTypes;
 
-    const { subcategories } = await subcategoryService.getAllSubcategories(
-      inputData
-    );
+		delete query.id;
 
-    return c.json({ subcategories });
-  }
-  async getSubcategoryByCategory(c: Context) {
-    const inputData = c.req.param() as SubcategoryGetParamGTO;
+		const { subcategories, totalCount } =
+			await subcategoryService.getAllSubcategories(query);
 
-    const { subcategories } = await subcategoryService.getSubcategoryByCategory(
-      inputData
-    );
+		c.res.headers.append('X-Total-Count', totalCount.toString());
+		return c.json(subcategories);
+	}
 
-    return c.json({ subcategories });
-  }
+	async getOne(c: Context) {
+		const inputData = c.req.param() as SubcategoriesGetParams;
+
+		const subcategory = await subcategoryService.getOne(inputData);
+
+		return c.json(subcategory);
+	}
+
+	async getSubcategoryByCategory(c: Context) {
+		const inputData = c.req.param() as SubcategoryByCategoryGetParams;
+
+		const { subcategories, totalCount } =
+			await subcategoryService.getSubcategoryByCategory(inputData);
+
+		c.res.headers.append('X-Total-Count', totalCount.toString());
+
+		return c.json(subcategories);
+	}
+
+	async create(c: Context) {
+		const body = (await getReqBody(c)) as SubcategoriesGeDTO;
+
+		const subcategories = await subcategoryService.create(body);
+
+		return c.json(subcategories);
+	}
+
+	async delete(c: Context) {
+		const subcategoriesId = (await getReqBody(c)) as number | number[];
+
+		const id = await subcategoryService.deleteSubcategories(subcategoriesId);
+		return c.json(id);
+	}
 }
-export default new SubcategoriesContronner();
+
+export default new SubcategoriesController();

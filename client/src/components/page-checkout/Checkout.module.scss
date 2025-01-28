@@ -1,0 +1,11 @@
+.checkout {
+	&__header {
+		padding: 52px 0;
+	}
+	&__wrapper {
+		padding: 52px 0;
+		display: grid;
+		grid-template-columns: 1fr 424px;
+		gap: 32px;
+	}
+}

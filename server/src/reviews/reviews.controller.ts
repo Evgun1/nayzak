@@ -1,44 +1,34 @@
-import { Context } from "hono";
-import prismaClient from "../prismaClient";
+import { Context } from 'hono';
+import ReviewsService from './reviews.service';
+import { QueryParameterTypes } from '../utils/service/service.type';
 
 class ReviewsController {
-  async getAll(c: Context) {
-    const reviews = await prismaClient.reviews.findMany();
+	async getAll(c: Context) {
+		const queryParams = c.req.query() as QueryParameterTypes;
 
-    const totalReviews = await prismaClient.reviews.count();
+		const { reviews, reviewsCount } = await ReviewsService.getAll(queryParams);
 
-    return c.json({ reviews, totalReviews });
-  }
+		c.res.headers.append('X-Total-Count', reviewsCount.toString());
+		return c.json(reviews);
+	}
 
-  async getAllReviewsOneProduct(c: Context) {
-    const { productName } = c.req.param();
+	async getAllReviewsOneProduct(c: Context) {
+		const { productName } = c.req.param();
 
-    let producId;
-    const products = await prismaClient.products.findMany({
-      where: { title: productName },
-    });
-    products.map((value) => (producId = value.id));
+		const { reviews, reviewsCount } =
+			await ReviewsService.getAllReviewsByProduct(productName as string);
 
-    const reviews = await prismaClient.reviews.findMany({
-      where: { product_id: producId },
-    });
+		c.res.headers.append('X-Total-Count', reviewsCount.toString());
+		return c.json(reviews);
+	}
 
-    const totalReviews = await prismaClient.reviews.count({
-      where: { product_id: producId },
-    });
+	async getAllProductReviews(c: Context) {
+		const { productId } = c.req.param() as { productId: string };
 
-    return c.json({ reviews, totalReviews });
-  }
+		const reviews = await ReviewsService.getAllProductReviews(productId);
 
-  async getAllProductReviews(c: Context) {
-    const { productId } = c.req.param();
-
-    const reviews = await prismaClient.reviews.findMany({
-      where: { product_id: parseInt(productId) },
-    });
-
-    return c.json({ reviews });
-  }
+		return c.json(reviews);
+	}
 }
 
 export default new ReviewsController();

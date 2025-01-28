@@ -1,0 +1,22 @@
+.select {
+	position: relative;
+
+	&__options {
+		position: absolute;
+		display: grid;
+		grid-template-columns: minmax(190px, max-content);
+		left: 50%;
+		transform: translateX(-50%);
+		transform-origin: top center;
+		opacity: 0;
+		overflow: hidden;
+		visibility: hidden;
+		z-index: 2;
+
+		&--visible {
+			transform: translateX(-50%);
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+}

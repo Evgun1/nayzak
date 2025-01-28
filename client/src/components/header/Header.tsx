@@ -1,8 +1,7 @@
-import DisplayIcon from "@/components/elemets/icons/displayIcon";
-import IconsIdList from "@/components/elemets/icons/IconsIdList";
+import DisplayIcon from "@/components/elements/icons/displayIcon";
+import IconsIdList from "@/components/elements/icons/IconsIdList";
 
 import classes from "./Header.module.scss";
-import DropDown from "@/lib/ui/drop-down/DropDown";
 import Actions from "./Actions";
 
 import Navigation from "./Navigation";

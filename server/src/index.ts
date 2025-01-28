@@ -1,11 +1,10 @@
 import { serve } from "@hono/node-server";
-import { Context, Hono } from "hono";
+import { Hono } from "hono";
 import prismaClient from "./prismaClient";
-import appRouter from "./router";
-import { cors } from "hono/cors";
+import appRouter from "./route";
 import errors from "./errors/errors";
-import { HTTPException } from "hono/http-exception";
-import corsMiddleware from "./middleware/corsMiddleware";
+import corsMiddleware from "./utils/middleware/corsMiddleware";
+import "./appFirebase";
 
 const app = new Hono();
 

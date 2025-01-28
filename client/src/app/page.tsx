@@ -1,11 +1,11 @@
 import { PageProps } from "../../.next/types/app/layout";
-import Banner from "../components/page-hero/banner/Baner";
+import Banner from "../components/page-hero/banner/Banner";
 import CategoryGrid from "../components/page-hero/categories/CategoryGrid";
 import FeatureTwo from "../components/page-hero/feature-two/FeatureTwo";
 import Feature from "../components/page-hero/feature/Feature";
 import IconsBox from "../components/page-hero/iconsBox/IconsBox";
 import ProductsSwiper from "../components/page-hero/products-swiper/ProductsSwiper";
-import ProductGrid from "../components/page-hero/products-grid/ProductGtid";
+import ProductGrid from "../components/page-hero/products-grid/ProductGrid";
 import Reviews from "../components/page-hero/reviews/Reviews";
 
 import classes from "./Hero.module.scss";

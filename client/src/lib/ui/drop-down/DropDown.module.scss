@@ -29,16 +29,19 @@
   }
 
   &--item {
-    // display: block;
-    // border: 1px solid var(--black-200);
     a,
     button,
     div {
-      background: white;
       padding: 12px 16px;
-      &:hover {
-        background: var(--black-100);
-      }
+    }
+    background-color: white;
+    &:hover {
+      background: var(--black-100);
     }
   }
+}
+
+.disable {
+  pointer-events: none;
+  background: var(--black-300);
 }

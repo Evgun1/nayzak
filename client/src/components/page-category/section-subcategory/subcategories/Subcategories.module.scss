@@ -6,10 +6,8 @@
 
   &--item {
     position: relative;
-    background: url("https://placehold.co/400");
+    background: url("https://placehold.co/400") no-repeat center;
     background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
     height: 384px;
     width: 100%;
 
@@ -24,3 +22,4 @@
     }
   }
 }
+

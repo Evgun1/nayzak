@@ -1,22 +1,30 @@
-"use client";
-
-import { FC } from "react";
-import classes from "./HeaderProducts.module.scss";
-import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs";
+import { FC } from 'react';
+import classes from './HeaderProducts.module.scss';
+import { headers } from 'next/headers';
+import Breadcrumbs, {
+	BreadcrumbsPathItems,
+} from '@/lib/ui/breadcrumbs/Breadcrumbs';
 
 type HeaderProps = {
-  title: string;
+	slug: string[];
 };
 
-const HeaderProducts: FC<HeaderProps> = ({ title }) => {
-  return (
-    <div className={`container ${classes.header}`}>
-      <div className={classes.header__block}>
-        <Breadcrumbs />
-        <h3>{title}</h3>
-      </div>
-    </div>
-  );
+const HeaderProducts: FC<HeaderProps> = ({ slug }) => {
+	const header = headers();
+
+	const title =
+		String(slug.slice(-1).pop()).charAt(0).toUpperCase() +
+		String(slug.slice(-1).pop()).slice(1);
+
+	return (
+		<div className={`container ${classes.header}`}>
+			<div className={classes.header__block}>
+				<Breadcrumbs />
+				{/* <Breadcrumbs /> */}
+				<h3>{title}</h3>
+			</div>
+		</div>
+	);
 };
 
 export default HeaderProducts;

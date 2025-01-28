@@ -1,83 +1,78 @@
-import prismaClient from "../prismaClient";
-import { CartGetDTO } from "./interfaces/CartGetInput";
-import usersService from "../users/users.service";
-import { CartDTO, CartModel } from "./cart.dto";
-import { HTTPException } from "hono/http-exception";
+import prismaClient from '../prismaClient';
+import { CartGetDTO } from './interfaces/CartGetInput';
+import { CartDTO, CartModel } from './cart.dto';
+import { MainService } from '../utils/service/main.service';
+import { QueryParameterTypes } from '../utils/service/service.type';
 
-export async function saveCart({ product, userToken }: CartGetDTO) {
-  const user = await usersService.findUserByToken(userToken);
+class CartService {
+	private mainService = new MainService();
+	// private mainService = new MainService();
+	// private queryParam = this.mainService.queryParams;
 
-  const saveCart = await prismaClient.cart.create({
-    data: {
-      product_id: +product.productID,
-      amount: +product.amount,
-      user_id: user.id,
-    },
-  });
+	async getAll(queryParam: QueryParameterTypes) {
+		const cart = await prismaClient.cart.findMany({});
+		const totalCount = await prismaClient.cart.count({});
 
-  const cartDTO = new CartDTO({
-    amount: saveCart.amount,
-    productID: saveCart.product_id,
-    id: saveCart.id,
-  });
+		return { cart, totalCount };
+	}
 
-  return cartDTO;
+	async saveCart(inputData: CartGetDTO) {
+		const { customerID, product } = inputData;
+
+		const saveCart = await prismaClient.cart.create({
+			data: {
+				productsId: +product.productID,
+				amount: +product.amount,
+				customersId: customerID,
+			},
+		});
+
+		const cartDTO = new CartDTO({
+			amount: saveCart.amount,
+			productID: saveCart.productsId,
+			id: saveCart.id,
+		});
+		return cartDTO;
+	}
+
+	async updateCart({ product, customerID }: CartGetDTO) {
+		const updateCart = await prismaClient.cart.update({
+			where: {
+				id: +product.id,
+				productsId: +product.productID,
+				customersId: customerID,
+			},
+			data: { amount: +product.amount },
+		});
+
+		return new CartDTO({
+			id: updateCart.id,
+			amount: updateCart.amount,
+			productID: updateCart.productsId,
+		});
+	}
+
+	async removeCart(id: number | number[]) {
+		return await this.mainService.delete('Cart', id);
+	}
+
+	async init(customerID: number) {
+		const cart = await prismaClient.cart.findMany({
+			where: { customersId: customerID },
+		});
+
+		const cartDTO: CartModel[] = [];
+
+		cart.map((product) =>
+			cartDTO.push({
+				id: product.id,
+				amount: product.amount,
+				productID: product.productsId,
+			})
+		);
+
+		return cartDTO;
+	}
 }
-export async function updateCart({ product, userToken }: CartGetDTO) {
-  const user = await usersService.findUserByToken(userToken);
 
-  const updateCart = await prismaClient.cart.update({
-    where: {
-      id: +product.id,
-      product_id: +product.productID,
-      user_id: user.id,
-    },
-    data: { amount: +product.amount },
-  });
-
-  const cartDTO = new CartDTO({
-    id: updateCart.id,
-    amount: updateCart.amount,
-    productID: updateCart.product_id,
-  });
-
-  return cartDTO;
-}
-export async function removeCart(id: number) {
-  // const user = await usersService.findUserByToken(userToken);
-
-  const deleteProduct = await prismaClient.cart.delete({
-    where: {
-      id: +id,
-    },
-  });
-
-  return deleteProduct;
-}
-
-export async function check(token: string) {
-  const user = await usersService.findUserByToken(token);
-
-  const cart = await prismaClient.cart.findMany({
-    where: { user_id: user.id },
-  });
-
-  const cartDTO: CartModel[] = [];
-
-  cart.map((product) =>
-    cartDTO.push({
-      id: product.id,
-      amount: product.amount,
-      productID: product.product_id,
-    })
-  );
-
-  return cartDTO;
-}
-
-export default {
-  saveCart,
-  check,
-  removeCart,
-  updateCart,
-};
+export default new CartService();

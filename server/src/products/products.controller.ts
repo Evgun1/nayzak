@@ -1,106 +1,85 @@
-import { Context } from "hono";
-import prismaClient from "../prismaClient";
-import { Prisma } from "@prisma/client";
-import productsService from "./products.service";
-import ProductsGetDTO from "./interfaces/ProductsGetInput";
-import ProductGetDTO from "./interfaces/ProductGetInput";
+import { Context } from 'hono';
+import prismaClient from '../prismaClient';
+import { Prisma } from '@prisma/client';
+import productsService from './products.service';
+import ProductsService from './products.service';
+import { ProductsGetDTO } from './interfaces/ProductsGetDTO';
+import getReqBody from '../tools/getReqBody';
+import { QueryParameterTypes } from '../utils/service/service.type';
+import { log } from 'console';
+import { json } from 'stream/consumers';
 
 class ProductsController {
-  async getAll(c: Context) {
-    const inputData = c.req.query() as ProductsGetDTO;
+	async getAll(c: Context) {
+		const inputData = c.req.query() as QueryParameterTypes;
 
-    const { products, productCounts } = await productsService.getAllProducts(
-      inputData
-    );
+		try {
+			const { products, productCounts } =
+				await productsService.getAllProducts(inputData);
+			c.res.headers.append('X-Total-Count', productCounts.toString());
+			return c.json(products);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
-    return c.json({ products, productCounts });
-  }
+	async getAllByParams(c: Context) {
+		const query = c.req.query() as QueryParameterTypes;
+		const params = c.req.param() as {
+			category: string;
+			subcategory: string;
+		};
 
-  async getAllByParams(c: Context) {
-    const { category, subcategory } = c.req.param();
-    const query = c.req.query();
+		const inputData = {
+			...query,
+		} as QueryParameterTypes;
 
-    const inputData = { ...query, category, subcategory } as ProductsGetDTO;
-    const { products, productCounts } = await productsService.getAllProducts(
-      inputData
-    );
-    return c.json({ products, productCounts });
-  }
+		const { products, productCounts } = await productsService.getAllProducts(
+			query,
+			params
+		);
 
-  async getProduct(c: Context) {
-    const { productName } = c.req.param();
+		c.res.headers.append('X-Total-Count', productCounts.toString());
+		return c.json(products);
+	}
 
-    console.log(productName);
+	async getProduct(c: Context) {
+		const params = c.req.param() as { productParam: string };
 
-    const product = await productsService.getProduct(productName);
+		const product = await productsService.getProduct(params);
+		return c.json(product);
+	}
 
-    return c.json(product);
-  }
-  async getMinMaxPrice(c: Context) {
-    let { category, subcategory } = c.req.query();
+	async getMinMaxPrice(c: Context) {
+		const param = c.req.param() as { category: string; subcategory: string };
 
-    let category_id = null;
-    if (category) {
-      const result = await prismaClient.categories.findFirst({
-        where: { title: category[0].toUpperCase() + category.slice(1) },
-        select: { id: true },
-      });
+		const { maxPrice, minPrice } = await productsService.minMaxPrice(param);
 
-      if (result) category_id = result.id;
-    }
+		return c.json({ minPrice, maxPrice });
+	}
 
-    let subcategory_id;
-    if (subcategory) {
-      const result = await prismaClient.subcategories.findMany({
-        where: { title: subcategory[0].toUpperCase() + subcategory.slice(1) },
-        select: { id: true },
-      });
+	async create(c: Context) {
+		const inputData = await c.req.json();
+		const product = await ProductsService.createProduct(inputData);
 
-      result.map((value) => (subcategory_id = value.id));
-    }
+		return c.json(product);
+	}
 
-    const option: Prisma.ProductsFindManyArgs = {
-      select: { price: true, discount: true, mainPrice: true },
-    };
+	async change(c: Context) {
+		const inputData = (await c.req.json()) as ProductsGetDTO;
 
-    if (category_id) {
-      option.where = { category_id };
-    }
-    if (subcategory_id) {
-      option.where = { subcategory_id };
-    }
-    if (category_id && subcategory_id) {
-      option.where = { category_id, subcategory_id };
-    }
+		const product = await ProductsService.updateProduct(inputData);
 
-    const priceList = await prismaClient.products.findMany(option);
+		return c.json(product);
+	}
 
-    const minPrice = Math.min(
-      ...priceList.map((value) => {
-        if (!value.mainPrice) {
-          return value.price;
-        } else {
-          return value.mainPrice;
-        }
-      })
-    );
+	async delete(c: Context) {
+		const productsId = (await getReqBody(c)) as number | number[];
 
-    const maxPrice = Math.max(
-      ...priceList.map((value) => {
-        if (!value.mainPrice) {
-          return value.price;
-        } else {
-          return value.mainPrice;
-        }
-      })
-    );
+		const id = await productsService.deleteProducts(productsId);
 
-    return c.json({ minPrice, maxPrice });
-  }
-
-  async create() {}
-  async change() {}
-  async delete() {}
+		return c.json(id);
+	}
 }
 
 export default new ProductsController();

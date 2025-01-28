@@ -1,21 +1,24 @@
 import dotenv from "dotenv";
 import prismaClient from "../prismaClient";
-import brandsFaker from "./faker/brandsFaker";
 import categoriesFake from "./faker/categoriesFaker";
 import productsFaker from "./faker/prodactsFaker";
-import reviewsFaker from "./faker/reviewsFaker";
 import subcategoriesFaker from "./faker/subcategoriesFaker";
+import customerFaker from "./faker/customerFaker";
+import reviewsFaker from "./faker/reviewsFaker";
+import credentialsFaker from "./faker/credentialsFaker";
 
 dotenv.config();
 
 const start = async () => {
   await prismaClient.$connect();
-  // await brandsFaker();
+
+  await credentialsFaker();
+  await customerFaker();
   await categoriesFake();
   await subcategoriesFaker();
   await productsFaker();
   await reviewsFaker();
+  // await brandsFaker();
   await prismaClient.$disconnect();
 };
-
 start();

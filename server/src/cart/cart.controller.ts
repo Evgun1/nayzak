@@ -1,64 +1,58 @@
-import { Context, Next } from "hono";
-import prismaClient from "../prismaClient";
-import { CartGetDTO, CartProductData } from "./interfaces/CartGetInput";
-import cartService from "./cart.service";
-import { HTTPException } from "hono/http-exception";
-import { BodyData } from "hono/utils/body";
+import { Context, Next } from 'hono';
+import { CartProductData } from './interfaces/CartGetInput';
+import cartService from './cart.service';
+import { QueryParameterTypes } from '../utils/service/service.type';
+import getReqBody from '../tools/getReqBody';
 
 class CartController {
-  // async getAll(c: Context) {
-  //   const cart = await prismaClient.cart.findMany();
-  //   return c.json({ cart });
-  // }
+	async getAll(c: Context) {
+		const queryParams = c.req.query() as QueryParameterTypes;
 
-  async saveCart(c: Context) {
-    const token = c.req.header("authorization");
-    const body = await c.req.json<CartProductData>();
+		const { cart, totalCount } = await cartService.getAll(queryParams);
 
-    if (!token) return;
+		c.res.headers.append('X-Total-Count', totalCount.toString());
+		return c.json(cart);
+	}
 
-    const saveCart = await cartService.saveCart({
-      product: body,
-      userToken: token,
-    });
+	async saveCart(c: Context) {
+		const { customerID }: { customerID: number } = await c.req.json();
+		const body = await c.req.json<CartProductData>();
 
-    console.log(saveCart);
+		const saveCart = await cartService.saveCart({
+			product: body,
+			customerID,
+		});
 
-    return c.json(saveCart);
-  }
+		return c.json(saveCart);
+	}
 
-  async updateCart(c: Context) {
-    const userToken = c.req.header("authorization");
-    const body = await c.req.json<CartProductData>();
+	async updateCart(c: Context) {
+		const { customerID }: { customerID: number } = await c.req.json();
+		const body = await c.req.json<CartProductData>();
 
-    console.log(body, userToken);
+		const saveCart = await cartService.updateCart({
+			product: body,
+			customerID,
+		});
 
-    if (!userToken) return;
+		return c.json(saveCart);
+	}
 
-    const saveCart = await cartService.updateCart({ product: body, userToken });
+	async initCart(c: Context, next: Next) {
+		const { customerID }: { customerID: number } = await c.req.json();
 
-    return c.json(saveCart);
-  }
+		const cart = await cartService.init(customerID);
 
-  async initCart(c: Context, next: Next) {
-    const authorization = c.req.header("authorization");
+		return c.json(cart);
+	}
 
-    if (!authorization) {
-      throw new HTTPException(401, { message: "Not authorized" });
-    }
+	async removeCart(c: Context) {
+		const body = (await getReqBody(c)) as { id: number | number[] };
 
-    const cart = await cartService.check(authorization);
+		const data = await cartService.removeCart(body.id);
 
-    return c.json({ cart });
-  }
-
-  async removeCart(c: Context) {
-    const { id } = await c.req.json();
-
-    await cartService.removeCart(id);
-
-    return c.json({ message: "Remove product" });
-  }
+		return c.json({ message: 'Remove product' });
+	}
 }
 
 export default new CartController();

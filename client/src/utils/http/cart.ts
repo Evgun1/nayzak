@@ -1,55 +1,61 @@
-import { CartItemData } from "@/lib/redux/store/cart/cart";
-import { appFetchDelete, appFetchGet, appFetchPost, appFetchPut } from ".";
-import { CartType } from "@/types/cart";
+import { json } from 'stream/consumers';
+import { CartItemData } from '@/lib/redux/store/cart/cart';
+import { appFetchDelete, appFetchGet, appFetchPost, appFetchPut } from '.';
+import { CartItem } from '@/types/cart.types';
+import { appCookieGet } from './cookie';
 
-export const appCartInitPost = async (userToken: string) => {
-  const pathname = "cart/init";
+export const appCartInitPost = async (customerID: number) => {
+	const pathname = 'cart/init';
 
-  const cart = await appFetchPost<{ cart: CartType[] }>({
-    pathname,
-    authorization: userToken,
-  });
+	const token = appCookieGet('user-token');
 
-  if (!cart) return;
+	const { response } = await appFetchPost<CartItem[]>({
+		pathname,
+		sendData: { customerID },
+	});
 
-  return cart.cart;
+	if (!response) return;
+
+	return response;
 };
 
 type AppCartPost = {
-  product: CartItemData;
-  userToken: string;
+	product: CartItemData;
+	customerID: number;
 };
-export const appCartPost = async ({ product, userToken }: AppCartPost) => {
-  const pathname = "cart";
+export const appCartPost = async ({ product, customerID }: AppCartPost) => {
+	const pathname = 'cart';
 
-  const cart = await appFetchPost<CartType>({
-    pathname,
-    sendData: JSON.stringify(product),
-    authorization: userToken,
-  });
+	const { productID, amount } = product;
 
-  return cart;
-};
+	const { response } = await appFetchPost<CartItem>({
+		pathname,
+		sendData: { productID, amount, customerID },
+	});
 
-export const appCartPut = async (product: CartItemData, userToken?: string) => {
-  const pathname = "cart";
-
-  const cart = await appFetchPut<CartType>({
-    pathname,
-    authorization: userToken,
-    putData: JSON.stringify(product),
-  });
-
-  return cart;
+	return response;
 };
 
-export const appCartDelete = async (id: number) => {
-  const pathname = "cart";
+export const appCartPut = async (product: CartItemData, customerID: number) => {
+	const pathname = 'cart';
 
-  const result = await appFetchDelete({
-    pathname,
-    deleteData: JSON.stringify({ id }),
-  });
+	const { amount, productID, id } = product;
 
-  return result;
+	const { response } = await appFetchPut<CartItem>({
+		pathname,
+		putData: { id, amount, productID, customerID },
+	});
+
+	return response;
+};
+
+export const appCartDelete = async (id: number | number[]) => {
+	const pathname = 'cart';
+
+	const result = await appFetchDelete({
+		pathname,
+		deleteData: { id: id },
+	});
+
+	return result;
 };

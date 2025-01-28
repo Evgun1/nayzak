@@ -1,12 +1,15 @@
 import dotenv from "dotenv";
 import prismaClient from "../prismaClient";
+import { Prisma } from "@prisma/client";
+
 dotenv.config();
 
 async function start() {
   await prismaClient.$connect();
-  await prismaClient.$queryRawUnsafe(
-    'DROP TABLE "Brands", "Cart", "Categories", "Orders", "Products", "Reviews", "Subcategories", "Users", "Wishlist"'
-  );
+
+  for (const key in Prisma.ModelName) {
+    await prismaClient.$queryRawUnsafe(`DROP TABLE "${key}" cascade `);
+  }
 
   await prismaClient.$disconnect();
 }

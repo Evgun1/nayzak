@@ -1,4 +1,4 @@
-"use clinet";
+"use client";
 
 import { useState } from "react";
 import { ZodEffects, ZodObject, ZodRawShape } from "zod";
@@ -19,8 +19,6 @@ const appEffectsValidation = <T extends ZodRawShape>({
 
   for (const key in object) {
     // if (!Object.keys(effectsSchema._def.schema.shape).includes(key)) continue;
-
-    console.log(effectsSchema._def.schema instanceof ZodObject);
 
     newObject[key] = object[key];
     const result = effectsSchema._def.schema.shape[key].safeParse(object[key]);

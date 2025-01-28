@@ -1,35 +1,44 @@
-import { Context } from "hono";
-import wishilstService from "./wishilst.service";
-import { HTTPException } from "hono/http-exception";
-import { WishlistInputDTO } from "./interface/WishlistGetIntut";
+import { Context } from 'hono';
+import wishlistService from './wishlist.service';
+import { WishlistInputDTO } from './interface/WishlistGetIntut';
+import getReqBody from '../tools/getReqBody';
+import { QueryParameterTypes } from '../utils/service/service.type';
 
-class WishlistControler {
-  async initWishlists(c: Context) {
-    const userToken = c.req.header("Authorization");
+class WishlistController {
+	async getAll(c: Context) {
+		const queryParam = c.req.query() as QueryParameterTypes;
 
-    if (!userToken) throw new HTTPException(400, { message: "Not token" });
+		const { wishlist, totalCount } = await wishlistService.getAll(queryParam);
 
-    const wishlists = await wishilstService.initWishlists(userToken);
+		c.res.headers.append('X-Total-Count', totalCount.toString());
+		return c.json(wishlist);
+	}
 
-    return c.json({ wishlists });
-  }
+	async initWishlists(c: Context) {
+		const body = await getReqBody<{ customerId: number }>(c);
 
-  async saveWishlists(c: Context) {
-    const inputData = await c.req.json<WishlistInputDTO>();
+		if (!body) return;
 
-    const saveWishlists = await wishilstService.saveWishlist(inputData);
+		const wishlists = await wishlistService.initWishlists(body.customerId);
 
-    return c.json(saveWishlists);
-  }
+		return c.json(wishlists);
+	}
 
-  async removeWishlists(c: Context) {
-    const { id } = await c.req.json();
+	async saveWishlists(c: Context) {
+		const inputData = await c.req.json<WishlistInputDTO>();
 
-    console.log(id);
+		const saveWishlists = await wishlistService.saveWishlist(inputData);
 
-    await wishilstService.deleteWishlist(id);
-    return c.json({ message: "Product remove" });
-  }
+		return c.json(saveWishlists);
+	}
+
+	async removeWishlists(c: Context) {
+		const body = (await getReqBody(c)) as { wishlistId: number };
+
+		const id = await wishlistService.removeWishlist(body.wishlistId);
+
+		return c.json(id);
+	}
 }
 
-export default new WishlistControler();
+export default new WishlistController();
