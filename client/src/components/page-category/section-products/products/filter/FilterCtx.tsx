@@ -29,7 +29,7 @@ export const FilterProvider: FC<{
 	children: ReactNode;
 }> = ({ children }) => {
 	const [limit, setLimit] = useState<number>(0);
-	const [isActive, setIsActive] = useState<boolean>(true);
+	const [isActive, setIsActive] = useState<boolean>(false);
 	const [productsArray, setProductsArray] = useState<ProductItem[]>([]);
 	const [count, setCount] = useState<number>(0);
 	const [totalCount, setTotalCount] = useState<number>(0);

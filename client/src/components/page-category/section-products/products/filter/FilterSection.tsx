@@ -29,7 +29,7 @@ export default function FilterSection({
 
 	return (
 		<div className={classes.filter}>
-			<div className={classes['filter-item']}>
+			{/* <div className={classes['filter-item']}>
 				<div
 					className={`${TextClassList.SEMIBOLD_14}  ${classes['filter-item__title']}`}
 					onClick={btnClickHandler}
@@ -59,7 +59,7 @@ export default function FilterSection({
 							))}
 					</ul>
 				)}
-			</div>
+			</div> */}
 			<div className={classes['filter-item']}>
 				<div
 					className={`${TextClassList.SEMIBOLD_14} ${classes['filter-item__title']}`}

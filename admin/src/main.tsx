@@ -5,9 +5,9 @@ import App from "./App.tsx";
 import StoreProvider from "./StoreProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  <StoreProvider>
-    <StrictMode>
-      <App />
-    </StrictMode>
-  </StoreProvider>,
+	<StoreProvider>
+		<StrictMode>
+			<App />
+		</StrictMode>
+	</StoreProvider>,
 );

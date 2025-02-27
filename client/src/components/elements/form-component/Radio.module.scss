@@ -1,6 +1,7 @@
 .radio {
 	display: flex;
 	gap: 10px;
+	cursor: pointer;
 
 	&__input[type='radio'] {
 		position: relative;

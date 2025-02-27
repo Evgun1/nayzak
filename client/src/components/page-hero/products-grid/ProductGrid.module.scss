@@ -1,9 +1,13 @@
-.wrapper {
-  &__title {
+.product-grid {
+    &__product {
+        text-align: center;
+    }
+}
+
+.product-grid-header {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 52px;
     gap: 12px;
-  }
 }

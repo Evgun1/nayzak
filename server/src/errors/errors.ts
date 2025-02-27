@@ -12,11 +12,10 @@ import { HTTPException } from 'hono/http-exception';
 
 export default function errors(err: Error, c: Context) {
 	if (err instanceof HTTPException) {
+		console.log(err.getResponse());
+
 		return err.getResponse();
-		// c.res.
-		// c.status(err.status);
 		// return c.text(err.message);
-		// c.res.statusText = err.message
 
 		// return c.json({ message: err.message }, err.status);
 	}

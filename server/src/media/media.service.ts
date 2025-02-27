@@ -103,13 +103,6 @@ class MediaService {
 	}
 
 	async getOne(mediaId: string) {
-
-
-
-
-
-
-        
 		return prismaClient.media.findFirst({ where: { id: +mediaId } });
 	}
 

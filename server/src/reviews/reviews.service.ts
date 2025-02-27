@@ -38,6 +38,7 @@ class ReviewsService {
 
 	async getAllReviewsByProduct(productName: string) {
 		const reviews = await prismaClient.reviews.findMany({
+			orderBy: { createdAt: 'desc' },
 			where: { Products: { title: productName } },
 		});
 		const reviewsCount = await prismaClient.reviews.count({
@@ -48,9 +49,25 @@ class ReviewsService {
 	}
 
 	async getAllProductReviews(productsId: string) {
-		return prismaClient.reviews.findMany({
+		const reviews = await prismaClient.reviews.findMany({
 			where: { productsId: +productsId },
 		});
+
+		return reviews;
+	}
+
+	async uploadReviews(review: UploadReviewsItem) {
+		if (!review) return;
+		const reviews = await prismaClient.reviews.create({
+			data: {
+				customersId: +review.customersId,
+				productsId: +review.productsId,
+				rating: +review.rating,
+				text: review.text,
+			},
+		});
+
+		return reviews;
 	}
 
 	async ratingAvg(queryParams: QueryParameterTypes, filter: {}) {
@@ -63,7 +80,7 @@ class ReviewsService {
 				orderBy: { _avg: { rating: queryParams.sort } },
 			});
 
-			return avgRating 
+			return avgRating;
 		}
 	}
 }

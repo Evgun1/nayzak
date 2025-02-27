@@ -14,17 +14,6 @@ export default function Sidebar() {
 	const { isActive, setIsActive } = useContext(FilterContext);
 	const btnHiddenFilter: MouseEventHandler = (event) => setIsActive(!isActive);
 
-	const [categories, setCategories] = useState();
-	// useEffect(() => {
-	//   fetch("http://localhost:3030/categories", { cache: "no-cache" })
-	//     .then((res) => {
-	//       return res.json();
-	//     })
-	//     .then((data) => {
-	//       return setCategories(data.categories);
-	//     });
-	// }, []);
-
 	return (
 		<div
 			className={`${classes.wrapper} ${
@@ -41,7 +30,7 @@ export default function Sidebar() {
 				></button>
 			</div>
 			<div className={classes.wrapper__item}>
-				<FilterSection searParams={urlSearchParams} objectArray={categories} />
+				<FilterSection searParams={urlSearchParams} />
 			</div>
 		</div>
 	);

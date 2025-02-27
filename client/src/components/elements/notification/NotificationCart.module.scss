@@ -1,0 +1,15 @@
+.cart {
+	display: grid;
+	grid-template-columns: max-content 1fr max-content;
+	gap: 12px;
+	align-items: center;
+
+	&__icon {
+		background: green;
+		border-radius: 100%;
+		color: white;
+		padding: 2px;
+		width: 20px;
+		height: 20px;
+	}
+}

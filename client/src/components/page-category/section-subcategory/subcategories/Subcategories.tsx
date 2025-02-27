@@ -32,8 +32,9 @@ const SubcategoriesItem: FC<SubcategoriesGridProps> = ({ slug }) => {
 					<div key={index} className={classes['subcategories--item']}>
 						<LinkCustom
 							styleSettings={{
-								color: 'DARK',
+								color: 'LIGHT',
 								roundness: 'ROUNDED',
+								fill: 'SOLID',
 								size: 'MEDIUM',
 								type: 'DEFAULT',
 							}}

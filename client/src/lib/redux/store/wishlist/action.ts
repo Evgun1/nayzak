@@ -69,7 +69,6 @@ export function saveWishlist({ productID }: WishlistItemData) {
 
 export function removeWishlist(productID: number) {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
-
 		const wishlistID = getState()
 			.wishlist.productsArray.filter(
 				(product) => product.productID === productID

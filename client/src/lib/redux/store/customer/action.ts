@@ -8,10 +8,13 @@ import {
 } from '@/utils/http/customer';
 import { customerAction, CustomerItem } from './customer';
 import { CredentialsDTO } from '../auth/credentials.type';
+import { notificationAction } from '../notification/notification';
+import NotificationCustomer from '@/components/elements/notification/NotificationCustomer';
+import PopupNotification from '@/components/popup-notifications/PopupNotifications';
 
 export const initCustomer = () => {
 	return async (dispatch: AppDispatch) => {
-		const token = appCookieGet('user-token');
+		const token = await appCookieGet('user-token');
 		if (!token) return;
 
 		try {
@@ -33,10 +36,9 @@ export const writeCustomerAction = (customerForm: FormData) => {
 
 		const formData = new FormData();
 
-		const objectForm = Object.fromEntries(customerForm);
+		const objectForm = Object.fromEntries(customerForm.entries());
 
 		for (const key in objectForm) {
-
 			if (key === 'email') {
 				if (objectForm[key] !== userData.email) {
 					console.log(true);
@@ -48,7 +50,7 @@ export const writeCustomerAction = (customerForm: FormData) => {
 		}
 
 		if (userData.id) {
-			formData.set('credentialsID', userData.id.toString());
+			formData.set('credentialsId', userData.id.toString());
 		}
 
 		try {
@@ -60,6 +62,14 @@ export const writeCustomerAction = (customerForm: FormData) => {
 			const res = await appCustomersPut(formData);
 
 			dispatch(customerAction.setCustomer(res));
+			dispatch(
+				notificationAction.toggle(
+					PopupNotification({
+						icon: 'CHECK',
+						text: 'Data updated successfully',
+					})
+				)
+			);
 		} catch (error) {
 			console.log(error);
 		}

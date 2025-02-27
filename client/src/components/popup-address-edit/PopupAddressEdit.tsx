@@ -9,7 +9,7 @@ import { CustomerItem } from '@/lib/redux/store/customer/customer';
 import { useAppSelector } from '@/lib/redux/redux';
 import { validation } from '@/utils/validator/validator';
 import { ButtonClassList } from '@/types/buttonClassList.enum';
-import React, { FC } from 'react';
+import React, { FC, FormEvent } from 'react';
 
 const schemaAddAddress: Array<ZodObject<any> | ZodEffects<any>> = [];
 schemaAddAddress.push(z.object(validation.addresses));
@@ -27,17 +27,16 @@ const PopupAddressEdit: FC<PopupAddressEditProps> = ({
 }) => {
 	const currentAddresses = useAppSelector((state) => state.address.address);
 
-	const submitHandler = (event: { data: { address: string } }) => {
-		setStateAddressId(+event.data.address);
+	const submitHandler = (
+		value: { data: { address: string } },
+		event: FormEvent<HTMLFormElement>
+	) => {
+		setStateAddressId(+value.data.address);
 	};
 
 	return (
 		<PopupPreview title={'Edit address'}>
-			<Form
-				schema={[]}
-				classe={classes['address-edit']}
-				submitHandler={submitHandler}
-			>
+			<Form classe={classes['address-edit']} submitHandler={submitHandler}>
 				{currentAddresses.map((data, i) => (
 					<Form.Radio
 						key={i}

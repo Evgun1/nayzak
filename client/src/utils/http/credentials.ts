@@ -1,4 +1,3 @@
-import { appJwtDecode } from '@/utils/jwt/jwt';
 import { appFetchGet, appFetchPost, appFetchPut, AppPostFetch } from '.';
 import { CredentialsDTO } from '@/lib/redux/store/auth/credentials.type';
 

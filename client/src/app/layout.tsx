@@ -7,6 +7,7 @@ import Footer from '../components/footer/Footer';
 import Popup from '../components/elements/popup/popup';
 import Header from '@/components/header/Header';
 import InitData from '@/components/elements/initData';
+import Notification from '@/lib/ui/notification/Notification';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,8 +28,10 @@ export default function RootLayout({
 					<div id="root">
 						<div id="popup"></div>
 						<div id="overlay"></div>
+						<div id="notification-container"></div>
 						<InitData />
 						<Popup />
+						<Notification />
 						<Header />
 						<main>{children}</main>
 						<Footer />

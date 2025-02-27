@@ -1,48 +1,48 @@
 .wrapper {
-  margin-bottom: 12px;
-  padding: 16px 0;
+	margin-bottom: 12px;
+	padding: 16px 0;
 
-  &__toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+	&__toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 
-    &-filter {
-      display: flex;
-      align-items: center;
-      gap: 32px;
+		&-filter {
+			display: flex;
+			align-items: center;
+			gap: 32px;
 
-      &_item {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        background: none;
-        border: none;
-        cursor: pointer;
-      }
-    }
-  }
+			&_item {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				background: none;
+				border: none;
+				cursor: pointer;
+			}
+		}
+	}
 
-  &__filter_button {
-    display: flex;
-    gap: 16px;
-  }
+	&__filter_button {
+		display: flex;
+		gap: 16px;
+	}
 }
 
 .selector {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &__link {
-    display: block;
-    border: 1px solid var(--black-200);
-    width: 46px;
-    height: 40px;
-    padding: 8px 11px;
-    .icon-selector {
-      color: var(--black-400);
-    }
-  }
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	&__link {
+		display: block;
+		border: 1px solid var(--black-200);
+		width: 46px;
+		height: 40px;
+		padding: 8px 11px;
+		.icon-selector {
+			color: var(--black-400);
+		}
+	}
 }
 
 // .selector_action {
@@ -53,19 +53,19 @@
 // }
 
 .active {
-  background: var(--black-100);
-  .icon-selector {
-    color: var(--black-900);
-  }
+	background: var(--black-100);
+	.icon-selector {
+		color: var(--black-900);
+	}
 }
 
 .icon {
-  &-btn {
-    width: 20px;
-    height: 20px;
-  }
-  &-selector {
-    width: 20px;
-    height: 20px;
-  }
+	&-btn {
+		width: 20px;
+		height: 20px;
+	}
+	&-selector {
+		width: 20px;
+		height: 20px;
+	}
 }

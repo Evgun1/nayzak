@@ -16,10 +16,11 @@ for (const key in validationAddresses) {
 }
 
 addressesRoute.get('/', addressesController.getAll);
+addressesRoute.get('/:addressParams', addressesController.getOne);
 addressesRoute.post('/', addressesController.create);
 
 addressesRoute.put(
-	'/:addressesParam',
+	'/',
 	// customValidator('body', schemaAddressesPut),
 	addressesController.update
 );

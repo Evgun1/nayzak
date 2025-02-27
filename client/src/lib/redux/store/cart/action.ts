@@ -7,7 +7,9 @@ import {
 import { AppDispatch, RootState } from '../../store';
 import { cartAction, CartItemData } from './cart';
 import { useCookieGet } from '@/hooks/useCookie';
-import { useEffect, useState } from 'react';
+import { notificationAction } from '../notification/notification';
+import NotificationCart from '@/components/elements/notification/NotificationCart';
+import { appOneProductGet, appProductsGet } from '@/utils/http/products';
 
 export function initCart() {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
@@ -39,6 +41,12 @@ export function updateCart(currentProduct: CartItemData) {
 			});
 
 			if (!saveProduct) return;
+
+			const product = await appOneProductGet(saveProduct.productID);
+			dispatch(
+				notificationAction.toggle(NotificationCart({ product: product }))
+			);
+
 			productsCartArray.push(
 				...[
 					{
@@ -65,6 +73,11 @@ export function updateCart(currentProduct: CartItemData) {
 			);
 
 			if (!updateProduct) return;
+			const product = await appOneProductGet(updateProduct.productID);
+
+			dispatch(
+				notificationAction.toggle(NotificationCart({ product: product }))
+			);
 
 			productsCartArray[productIndex] = {
 				id: updateProduct.id,

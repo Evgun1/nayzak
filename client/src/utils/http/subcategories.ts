@@ -1,4 +1,3 @@
-import { useSearchParams } from 'next/navigation';
 import { appFetchGet } from '.';
 import { SubcategoryItem } from '@/types/subcategories.types';
 

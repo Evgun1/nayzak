@@ -5,7 +5,6 @@ import { useAppDispatch } from '@/lib/redux/redux';
 import { changePasswordAction } from '@/lib/redux/store/auth/action';
 import { TextClassList } from '@/types/textClassList.enum';
 import { schemePassword, validation } from '@/utils/validator/validator';
-import { FormEvent } from 'react';
 import { z, ZodEffects, ZodObject } from 'zod';
 
 import classes from './ChangePassword.module.scss';
@@ -49,7 +48,7 @@ const ChangePassword = () => {
 						name: 'password',
 						type: 'password',
 						autoComplete: 'current-password',
-						required: true,
+						required: false,
 					}}
 					style="contained"
 				/>
@@ -61,7 +60,7 @@ const ChangePassword = () => {
 						name: 'newPassword',
 						type: 'password',
 						autoComplete: 'current-password',
-						required: true,
+						required: false,
 					}}
 					style="contained"
 				/>
@@ -69,11 +68,11 @@ const ChangePassword = () => {
 					label="Repeat new password"
 					inputSettings={{
 						placeholder: 'Repeat new password',
-						id: 'repearPassword',
+						id: 'repeatPassword',
 						name: 'confirmPassword',
 						type: 'password',
 						autoComplete: 'current-password',
-						required: true,
+						required: false,
 					}}
 					style="contained"
 				/>

@@ -46,15 +46,13 @@ export default function CartPreview({
 	return (
 		<div className={`${classes['preview']}`}>
 			<div className={classes['preview__product']}>
-				<Image
-					unoptimized
-					width={0}
-					height={0}
-					layout="responsive"
-					className={classes['preview__product-img']}
-					src="https://placehold.co/652x889"
-					alt=""
-				/>
+				<div className={classes['preview__img-wrapper']}>
+					<img
+						className={classes['preview__img']}
+						src="https://placehold.co/652x889"
+						alt=""
+					/>
+				</div>
 				<div className={classes['preview__info']}>
 					<span className={`${TextClassList.SEMIBOLD_14}`}>{title}</span>
 					<span className={`${TextClassList.REGULAR_12}`}>{description}</span>

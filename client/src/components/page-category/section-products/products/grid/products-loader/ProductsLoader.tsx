@@ -1,30 +1,23 @@
 'use client';
 import classes from './ProductsLoader.module.scss';
-import { FC, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-
+import { FC, useEffect } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
 import Loader from '@/components/elements/loader/Loader';
-import { ProductItem } from '@/types/product.types';
 import { useProductsReducer } from '@/hooks/useProductsReducer';
 import ProductPreview from '@/components/elements/product-preview/ProductPreview';
-import { headers } from 'next/headers';
-import { useAppDispatch } from '@/lib/redux/redux';
-import { popupActions } from '@/lib/redux/store/popup/popup';
-import PopupLoading from '@/components/popup-loading/PopupLoading';
+import { appProductsGet } from '@/utils/http/products';
+import ProductPreviewDefaultClient from '@/components/elements/product-preview/product-preview-default/ProductsPreviewDefaultClient';
+import ProductPreviewList from '@/components/elements/product-preview/product-preview-list/ProductPreviewList';
 
 type ProductsLoaderProps = {
-	products: ProductItem[];
-	totalCount: number;
+	setState: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const ProductsLoader: FC<ProductsLoaderProps> = ({ products, totalCount }) => {
-	const dispatch = useAppDispatch();
-	const [currentProducts, setCurrentProducts] = useState<ProductItem[]>([]);
-	const [loading, setLoading] = useState<boolean>(true);
-
+const ProductsLoader: FC<ProductsLoaderProps> = ({ setState }) => {
 	const searchParams = useSearchParams();
-	const urlSearchParams = new URLSearchParams(searchParams.toString());
-	const { loadMoreProducts } = useProductsReducer();
+	const { state, initData, loadMoreProducts } =
+		useProductsReducer(appProductsGet);
+	const params = useParams();
 
 	const getListType = searchParams.get('list_type');
 
@@ -40,11 +33,23 @@ const ProductsLoader: FC<ProductsLoaderProps> = ({ products, totalCount }) => {
 
 	const getLimit = listTypeLimits.get(getListType) as string;
 
-	urlSearchParams.set('limit', getLimit);
-
 	const btnClickHandler = () => {
-		loadMoreProducts(products.length, +getLimit);
+		loadMoreProducts(state.products.length, +getLimit,  params.slug);
 	};
+
+	useEffect(() => {
+		const urlSearchParams = new URLSearchParams(searchParams.toString());
+		urlSearchParams.set('limit', getLimit);
+
+		initData({
+			params: params.slug as string[],
+			searchParams: urlSearchParams,
+		});
+	}, [initData, searchParams]);
+
+	useEffect(() => {
+		setState(state.totalCount);
+	}, [state]);
 
 	return (
 		<Loader
@@ -53,24 +58,20 @@ const ProductsLoader: FC<ProductsLoaderProps> = ({ products, totalCount }) => {
 					? classes['five_grid']
 					: classes[`${getListType}`]
 			}
-			totalCount={totalCount}
-			count={products?.length}
+			totalCount={state.totalCount}
+			count={state.products?.length}
 			btnClickHandler={btnClickHandler}
 		>
-			{products.map((product, i) => (
+			{state.products.map((product, i) => (
 				<li key={i}>
 					{getListType !== 'list' ? (
-						<ProductPreview
+						<ProductPreviewDefaultClient
 							product={product}
 							style={classes['custom-preview']}
 							rating
-						>
-							<ProductPreview.Default />
-						</ProductPreview>
+						/>
 					) : (
-						<ProductPreview product={product} rating>
-							<ProductPreview.List />
-						</ProductPreview>
+						<ProductPreviewList product={product} rating />
 					)}
 				</li>
 			))}

@@ -92,9 +92,10 @@ class CredentialsService {
 		});
 
 		await customersService.create({
-			credentialsID: createUser.id.toString(),
+			credentialsId: createUser.id.toString(),
 			firstName: '',
 			lastName: '',
+			phone: 0,
 		});
 
 		await mailService.sendActivateMail(

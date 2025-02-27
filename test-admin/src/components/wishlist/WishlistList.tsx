@@ -9,7 +9,7 @@ import {
 	TextField,
 	TextInput,
 	TopToolbar,
-} from "react-admin";
+} from 'react-admin';
 
 export default function WishlistList() {
 	const ListActions = () => (
@@ -22,16 +22,16 @@ export default function WishlistList() {
 	);
 
 	const filters = [
-		<SearchInput key={"search"} name={"search"} source={"title"} alwaysOn />,
-		<TextInput key={"text"} label="Status" source="status" />,
+		<SearchInput key={'search'} name={'search'} source={'title'} alwaysOn />,
+		<TextInput key={'text'} label="Status" source="status" />,
 	];
 
 	return (
 		<List actions={<ListActions />} filters={filters}>
 			<Datagrid>
 				<TextField source="id" />
-				<ReferenceField reference={"customers"} source={"customersId"} />
-				<ReferenceField reference={"products"} source={"productsId"} />
+				<ReferenceField reference={'customers'} source={'customersId'} />
+				<ReferenceField reference={'products'} source={'productsId'} />
 			</Datagrid>
 		</List>
 	);

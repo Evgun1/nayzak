@@ -1,0 +1,9 @@
+.orders {
+	&__empty {
+		text-align: center;
+		padding: 20px 10px;
+		margin-bottom: 20px;
+		border: 1px solid var(--black-400);
+		border-radius: 1em;
+	}
+}

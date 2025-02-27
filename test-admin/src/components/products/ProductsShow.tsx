@@ -9,7 +9,7 @@ import {
 	SimpleShowLayout,
 	TextField,
 	TopToolbar,
-} from "react-admin";
+} from 'react-admin';
 
 export default function ProductsShow() {
 	const ShowActions = () => (
@@ -26,12 +26,12 @@ export default function ProductsShow() {
 				<TextField source="description" />
 				<NumberField
 					source="price"
-					options={{ style: "currency", currency: "USD" }}
+					options={{ style: 'currency', currency: 'USD' }}
 				/>
 				<NumberField source="discount" options={{}} />
 				<NumberField
 					source="mainPrice"
-					options={{ style: "currency", currency: "USD" }}
+					options={{ style: 'currency', currency: 'USD' }}
 				/>
 				<DateField source="createdAt" />
 				<DateField source="updatedAt" />
@@ -39,12 +39,12 @@ export default function ProductsShow() {
 
 				<ReferenceField
 					label="Categories"
-					reference={"categories"}
+					reference={'categories'}
 					source="categoriesId"
 				/>
 				<ReferenceField
 					label="Subcategories"
-					reference={"subcategories"}
+					reference={'subcategories'}
 					source="subcategoriesId"
 				/>
 				<DeleteButton />

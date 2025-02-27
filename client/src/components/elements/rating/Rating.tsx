@@ -23,9 +23,6 @@ export default function Rating(props: RatingProps) {
 				const currentRating = Math.round(
 					rating.reduce((acc, cur) => acc + cur) / rating.length
 				);
-
-				console.log(rating);
-
 				setNewRating(currentRating);
 			}
 			return;

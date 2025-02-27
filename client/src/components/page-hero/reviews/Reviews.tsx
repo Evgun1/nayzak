@@ -1,3 +1,7 @@
-export default function Reviews() {
-  return <div className="container">Reviews Slider</div>;
+'use server';
+
+export default async function Reviews() {
+	console.log('server');
+
+	return <div className="container">Reviews Slider</div>;
 }

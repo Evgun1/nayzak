@@ -16,9 +16,9 @@ class CustomersController {
 	}
 
 	async getOne(c: Context) {
-		const inputData = c.req.param() as { customerId: string };
+		const inputData = c.req.param() as { id: string };
 
-		const customer = await customersService.getOne(inputData.customerId);
+		const customer = await customersService.getOne(inputData.id);
 		return c.json(customer);
 	}
 
@@ -34,7 +34,6 @@ class CustomersController {
 
 	async change(c: Context) {
 		const inputData = await getReqBody<PersonalDataFormDTO>(c);
-
 		if (!inputData) return;
 
 		const customer = await customersService.change(inputData);

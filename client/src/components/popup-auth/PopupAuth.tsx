@@ -2,27 +2,26 @@
 
 import classes from './PopupAuth.module.scss';
 import { useState } from 'react';
-import { useAppDispatch } from '@/lib/redux/redux';
+import { useAppDispatch, useAppSelector } from '@/lib/redux/redux';
 import { loginAction, registrationAction } from '@/lib/redux/store/auth/action';
 import { ButtonCustom } from '@/lib/ui/custom-elements/button-custom/ButtonCustom';
 import Form from '../elements/form-component/FormComponent';
-import {
-	schemeEmail,
-	schemePassword,
-	validation,
-} from '@/utils/validator/validator';
+import { validation } from '@/utils/validator/validator';
 import IconsIdList from '../elements/icons/IconsIdList';
 import { popupActions } from '@/lib/redux/store/popup/popup';
 import { z, ZodEffects, ZodObject } from 'zod';
 import { CredentialsDTO } from '@/lib/redux/store/auth/credentials.type';
 
 const PopupAuth = () => {
+	const errorMessage = useAppSelector((state) => state.auth.errorMessage);
 	const dispatch = useAppDispatch();
 	const [isRegister, setIsRegister] = useState<boolean>(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const submitHandler = (event: { data: CredentialsDTO }) => {
 		if (isRegister) {
+			console.log(event.data);
+
 			dispatch(
 				registrationAction({
 					email: event.data.email,
@@ -73,7 +72,12 @@ const PopupAuth = () => {
 					</ButtonCustom>
 				</div>
 			</div>
-			<Form schema={resSchema} oneMessage submitHandler={submitHandler}>
+			<Form
+				schema={resSchema}
+				oneMessage
+				submitHandler={submitHandler}
+				customError={errorMessage}
+			>
 				<Form.InputDefault
 					style="line"
 					inputSettings={{
@@ -81,7 +85,7 @@ const PopupAuth = () => {
 						name: 'email',
 						type: 'text',
 						placeholder: 'Email',
-						required: true,
+						// required: true,
 						autoComplete: 'email',
 					}}
 				/>
@@ -92,7 +96,7 @@ const PopupAuth = () => {
 						name: 'password',
 						type: showPassword ? 'text' : 'password',
 						placeholder: 'Password',
-						required: true,
+						// required: true,
 						autoComplete: 'current-password',
 					}}
 					buttonSettings={{

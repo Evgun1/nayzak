@@ -32,12 +32,11 @@ class ProductsController {
 
 		const inputData = {
 			...query,
+			...params,
 		} as QueryParameterTypes;
 
-		const { products, productCounts } = await productsService.getAllProducts(
-			query,
-			params
-		);
+		const { products, productCounts } =
+			await productsService.getAllProducts(inputData);
 
 		c.res.headers.append('X-Total-Count', productCounts.toString());
 		return c.json(products);

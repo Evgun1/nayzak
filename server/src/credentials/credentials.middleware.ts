@@ -46,7 +46,8 @@ class UsersMiddleware {
 			where: { email: email },
 		});
 
-		if (!user) throw new HTTPException(401, { message: `Incorrect email` });
+		if (!user)
+			throw new HTTPException(401, { message: 'Incorrect email or password' });
 
 		const isPasswordEquals = await bcrypt.compare(
 			password as string,
@@ -54,7 +55,7 @@ class UsersMiddleware {
 		);
 
 		if (!isPasswordEquals)
-			throw new HTTPException(401, { message: 'Incorrect password' });
+			throw new HTTPException(401, { message: 'Incorrect email or password' });
 
 		await next();
 	}

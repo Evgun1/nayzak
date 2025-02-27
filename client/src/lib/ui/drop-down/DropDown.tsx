@@ -90,7 +90,6 @@ const DropDownComponent: FC<DropDownProps> = ({
 		return () => document.removeEventListener(typeProperty, btnClickHandler);
 	}, [typeProperty]);
 
-
 	return (
 		<div
 			ref={wrapperRef}

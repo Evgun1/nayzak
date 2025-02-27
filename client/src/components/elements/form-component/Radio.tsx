@@ -26,11 +26,12 @@ type RadioProps = {
 	radioSettings: RadioSettingsItem;
 	radioStyle: RadioStyleItem;
 	children?: ReactNode;
+	onClick?: (e: any) => void;
 	value?: string;
 };
 
 const Radio: FC<RadioProps> = (props) => {
-	const { radioSettings, radioStyle, children, value } = props;
+	const { radioSettings, radioStyle, children, value, onClick } = props;
 	const [checked, setChecked] = useState<boolean>(false);
 	const [defaultChecked, setDefaultChecked] = useState<boolean>(true);
 
@@ -44,12 +45,13 @@ const Radio: FC<RadioProps> = (props) => {
 		}
 	}, [value]);
 
-	const ref = useRef() as RefObject<HTMLInputElement>;
-
 	return (
-		<div className={classes.radio}>
+		<label
+			htmlFor={radioSettings.id.toString()}
+			className={classes.radio}
+			onClick={onClick}
+		>
 			<input
-				ref={ref}
 				checked={checked}
 				readOnly
 				type="radio"
@@ -59,8 +61,8 @@ const Radio: FC<RadioProps> = (props) => {
 					classes[Size[radioStyle.size]]
 				} ${classes[Roundness[radioStyle.roundness]]}`}
 			/>
-			{children ?? <></>}
-		</div>
+			<div>{children ?? <></>}</div>
+		</label>
 	);
 };
 

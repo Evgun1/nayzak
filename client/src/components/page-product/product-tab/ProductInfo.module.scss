@@ -1,0 +1,18 @@
+.info {
+	text-align: start;
+	max-width: max-content;
+	display: grid;
+	grid-template-columns: repeat(2, max-content);
+	column-gap: 57px;
+	row-gap: 32px;
+
+	&__list {
+		display: flexbox;
+		grid-template-columns: repeat(2, max-content);
+		column-gap: 57px;
+		row-gap: 32px;
+	}
+	&__item {
+		color: #3e3e59;
+	}
+}

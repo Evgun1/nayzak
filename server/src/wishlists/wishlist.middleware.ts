@@ -1,22 +1,22 @@
-import { Context, Next } from "hono";
-import prismaClient from "../prismaClient";
-import { HTTPException } from "hono/http-exception";
+import { Context, Next } from 'hono';
+import prismaClient from '../prismaClient';
+import { HTTPException } from 'hono/http-exception';
 
 export async function remove(c: Context, next: Next) {
-  const { id } = await c.req.json();
+	const { id } = await c.req.json();
 
-  const wishlist = await prismaClient.wishlist.findFirst({
-    where: { id },
-  });
+	const wishlist = await prismaClient.wishlist.findFirst({
+		where: { id },
+	});
 
-  if (!wishlist)
-    throw new HTTPException(400, {
-      message: `Product not found`,
-    });
+	if (!wishlist)
+		throw new HTTPException(400, {
+			message: `Product not found`,
+		});
 
-  await next();
+	await next();
 }
 
 export default {
-  remove,
+	remove,
 };

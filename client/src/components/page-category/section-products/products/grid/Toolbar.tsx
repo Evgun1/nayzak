@@ -53,7 +53,7 @@ const sortData = [
 ];
 
 type ToolbarProps = {
-	totalCount: number;
+	totalCount?: number;
 };
 
 const Toolbar: FC<ToolbarProps> = ({ totalCount }) => {

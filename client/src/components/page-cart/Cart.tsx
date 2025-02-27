@@ -65,7 +65,8 @@ export default function Cart() {
 								styleSettings={{
 									type: 'DEFAULT',
 									size: 'MEDIUM',
-									color: 'LIGHT',
+									fill: 'SOLID',
+									color: 'DARK',
 									roundness: 'ROUNDED',
 								}}
 							>

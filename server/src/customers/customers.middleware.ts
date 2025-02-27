@@ -7,12 +7,12 @@ import prismaClient from '../prismaClient';
 
 class CustomersMiddleware {
 	async create(c: Context, next: Next) {
-		const { firstName, lastName, displayName, credentialsID } =
+		const { firstName, lastName, phone, credentialsId } =
 			(await c.req.parseBody()) as PersonalDataFormDTO;
 
-		if (!credentialsID) return;
+		if (!credentialsId) return;
 		const customers = await prismaClient.customers.findFirst({
-			where: { credentialsId: parseInt(credentialsID) },
+			where: { credentialsId: parseInt(credentialsId) },
 		});
 
 		if (customers)
@@ -24,7 +24,7 @@ class CustomersMiddleware {
 	}
 
 	async change(c: Context, next: Next) {
-		const { firstName, lastName, id, credentialsID } =
+		const { firstName, lastName, id, credentialsId } =
 			(await c.req.parseBody()) as PersonalDataFormDTO;
 
 		if (!id)

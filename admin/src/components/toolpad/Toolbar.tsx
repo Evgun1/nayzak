@@ -19,4 +19,3 @@ const ToolbarComponent: FC<{ children: ReactNode }> = ({ children }) => {
 export const Toolbar = Object.assign(ToolbarComponent, {
 	Content: Content,
 });
-

@@ -1,0 +1,36 @@
+.form {
+	display: grid;
+	width: 588px;
+	gap: 32px;
+
+	&__input-wrapper {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		align-items: center;
+		gap: 10px;
+	}
+
+	&__rating-wrapper {
+		display: flex;
+		gap: 16px;
+	}
+
+	&__btn-wrapper {
+		display: flex;
+		gap: 2px;
+	}
+
+	&__btn {
+		cursor: pointer;
+		background: none;
+		border: none;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+
+		&-ratings {
+			max-width: 20px;
+			max-height: 20px;
+		}
+	}
+}

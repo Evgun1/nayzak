@@ -12,6 +12,7 @@ import { useAppDispatch } from '@/lib/redux/redux';
 import { popupActions } from '@/lib/redux/store/popup/popup';
 import PopupAddress from '@/components/popup-address/PopupAddress';
 import { deleteAddresses } from '@/lib/redux/store/address/action';
+import { notificationAction } from '@/lib/redux/store/notification/notification';
 
 export default function AddressesPreview({
 	address,
@@ -33,17 +34,30 @@ export default function AddressesPreview({
 			<div className={classes['address__info-container']}>
 				<div className={TextClassList.SEMIBOLD_18}>Billing address</div>
 				<div className={classes.address__info}>
-					<span className={`${TextClassList.REGULAR_18}`}>
-						{address.userName}
-					</span>
-					<span className={`${TextClassList.REGULAR_18}`}>{address.store}</span>
-					<span className={`${TextClassList.REGULAR_18}`}>{address.city}</span>
-					<span className={`${TextClassList.REGULAR_18}`}>
-						{address.street}
-					</span>
-					<span className={`${TextClassList.REGULAR_18}`}>
-						{address.postalCode}
-					</span>
+					<div className={classes['address__item']}>
+						<span>Store</span>-
+						<span className={`${TextClassList.REGULAR_18}`}>
+							{address.store}
+						</span>
+					</div>
+					<div className={classes['address__item']}>
+						<span>City</span>-
+						<span className={`${TextClassList.REGULAR_18}`}>
+							{address.city}
+						</span>
+					</div>
+					<div className={classes['address__item']}>
+						<span>Street</span>-
+						<span className={`${TextClassList.REGULAR_18}`}>
+							{address.street}
+						</span>
+					</div>
+					<div className={classes['address__item']}>
+						<span>Postal code</span>-
+						<span className={`${TextClassList.REGULAR_18}`}>
+							{address.postalCode}
+						</span>
+					</div>
 				</div>
 			</div>
 			<div className={classes['address__button-container']}>

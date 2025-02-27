@@ -1,21 +1,3 @@
-import { CredentialsDTO } from '@/lib/redux/store/auth/credentials.type';
-
-type MethodData = 'PUT' | 'GET' | 'POST' | 'DELETE';
-
-type ContentTypeData = 'application/json' | 'multipart/form-data';
-
-interface BodyData {
-	formData?: FormData;
-	json?: object;
-}
-
-type AppFetch = <T>(
-	pathname: string,
-	searchParams?: URLSearchParams,
-	init?: RequestInit,
-	customError?: React.ReactNode
-) => Promise<T>;
-
 const BASE_URL = 'http://localhost:3030';
 
 type AppFetchProps = {
@@ -39,9 +21,9 @@ const appFetch = async <T>({
 	try {
 		const res = await fetch(url, init);
 
-		if (!res.ok || res.status !== 200) {
+		if (!res.ok) {
 			const text = await res.text();
-			throw new Error(text, {});
+			throw new Error(text);
 		}
 
 		const response = (await res.json()) as T;

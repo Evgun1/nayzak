@@ -41,6 +41,7 @@ class QueryParamHandler {
 			const number = inputData[key].split(',').map((data) => +data);
 
 			const isAllNumbers = number.every((data) => !isNaN(Number(data)));
+
 			if (isAllNumbers) {
 				where[key as keyof T] = {
 					in: number,
@@ -66,9 +67,13 @@ class QueryParamHandler {
 	}
 
 	limit(productGetDTO: LimitType) {
-		const limit = productGetDTO.limit ?? '15';
+		const limit = productGetDTO.limit;
 
-		return parseInt(limit);
+		if (limit) {
+			return parseInt(limit);
+		}
+
+		return undefined;
 	}
 
 	offset(productGetDTO: OffsetType) {

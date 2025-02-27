@@ -1,4 +1,3 @@
-import { json } from 'stream/consumers';
 import { CartItemData } from '@/lib/redux/store/cart/cart';
 import { appFetchDelete, appFetchGet, appFetchPost, appFetchPut } from '.';
 import { CartItem } from '@/types/cart.types';

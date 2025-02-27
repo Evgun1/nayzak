@@ -24,14 +24,19 @@
 		background: var(--black-300);
 	}
 
+	&__img-wrapper {
+		max-width: 77px;
+		max-height: 102px;
+	}
+
+	&__img {
+		object-fit: cover;
+	}
+
 	&__product {
 		max-width: 376px;
 		display: flex;
 		gap: 16px;
-		&-img {
-			max-width: 77px;
-			max-height: 102px;
-		}
 
 		&-amount {
 			border: 1px solid var(--black-300);

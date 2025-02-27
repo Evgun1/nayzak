@@ -23,11 +23,30 @@ class CustomersOptions {
 }
 
 class CustomerServer {
-	private customerOptions = new CustomersOptions();
 	private mainService = new MainService();
 	private queryParams = new QueryParamHandler();
 
+	private supportedMimeTypes: Map<boolean, (data: string) => object> =
+		new Map();
+
+	private setupMimeTypes() {
+		this.supportedMimeTypes.set(false, (data: string) => ({
+			id: data,
+		}));
+		this.supportedMimeTypes.set(true, (data: string) => ({
+			title: data.replaceAll('_', ' '),
+		}));
+	}
+
+	constructor() {
+		this.setupMimeTypes();
+	}
+
 	async getAll(queryParams: QueryParameterTypes) {
+		const where = this.queryParams.filter<Prisma.CustomersWhereInput>(
+			queryParams,
+			Prisma.CustomersScalarFieldEnum
+		);
 		const take = this.queryParams.limit(queryParams);
 		const skip = this.queryParams.offset(queryParams);
 		const orderBy =
@@ -37,6 +56,7 @@ class CustomerServer {
 			);
 
 		const queryOptions: Prisma.CustomersFindManyArgs = {
+			where,
 			take,
 			orderBy,
 			skip,
@@ -48,29 +68,40 @@ class CustomerServer {
 	}
 
 	async getOne(customerId: string) {
-		return prismaClient.customers.findFirst({ where: { id: +customerId } });
+		const customer = await prismaClient.customers.findFirst({
+			where: { id: +customerId },
+		});
+
+		return customer;
 	}
 
-	async create({ firstName, lastName, credentialsID }: CustomerFormDTO) {
+	async create({ firstName, lastName, credentialsId }: CustomerFormDTO) {
 		return prismaClient.customers.create({
 			data: {
 				firstName: firstName as string,
 				lastName: lastName as string,
 				phone: 0,
-				credentialsId: parseInt(credentialsID as string),
+				credentialsId: parseInt(credentialsId as string),
 			},
 		});
 	}
 
-	async change({ firstName, lastName, id, phone }: CustomerFormDTO) {
-		return prismaClient.customers.update({
-			where: { id: parseInt(id as string) },
+	async change(data: CustomerFormDTO) {
+		const { firstName, id, lastName, phone } = data;
+		console.log(data);
+
+		const customer = await prismaClient.customers.update({
+			where: { id: parseInt(id?.toString()) },
 			data: {
 				firstName: firstName,
 				lastName: lastName,
-				phone: +phone,
+				phone: phone ? parseInt(phone.toString()) : 0,
 			},
 		});
+
+		console.log(customer);
+
+		return customer;
 	}
 
 	async init(token: string) {

@@ -3,29 +3,12 @@ import Products from '@/components/page-category/section-products/products/Produ
 import HeaderSubcategory from '@/components/page-category/section-subcategory/header-subcategory/HeaderSubcategory';
 import PopupLoading from '@/components/popup-loading/PopupLoading';
 import dynamic from 'next/dynamic';
+import Subcategories from '@/components/page-category/section-subcategory/subcategories/Subcategories';
+import { PageProps } from '../../../../.next/types/app/layout';
 
-interface paramsData {
-	slug: string[];
-}
+export default async function page(props: PageProps) {
 
-type pageProps = {
-	params: paramsData;
-};
 
-const DynamicSubCategories = dynamic(
-	() =>
-		import(
-			'@/components/page-category/section-subcategory/subcategories/Subcategories'
-		),
-	{ loading: () => <PopupLoading />, ssr: true }
-);
-
-const DynamicProducts = dynamic(
-	() => import(`@/components/page-category/section-products/products/Products`),
-	{ loading: () => <PopupLoading />, ssr: true }
-);
-
-export default async function page(props: pageProps) {
 	if (props.params.slug.length === 1) {
 		return (
 			<section>
@@ -35,15 +18,14 @@ export default async function page(props: pageProps) {
 						props.params.slug[0].slice(1)
 					}
 				/>
-				<DynamicSubCategories slug={props.params.slug[0]} />
+				<Subcategories slug={props.params.slug[0]} />
 			</section>
 		);
 	}
 	return (
 		<section>
 			<HeaderProducts slug={props.params.slug} />
-
-			<DynamicProducts />
+			<Products params={props.params.slug} searchParams={props.searchParams} />
 		</section>
 	);
 }

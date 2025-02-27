@@ -7,10 +7,10 @@ import {
 	SaveButton,
 	TextInput,
 	useNotify,
-} from "react-admin";
-import { FieldValues } from "react-hook-form";
-import { MediaTypes } from "./mediaTypes.ts";
-import { customDataProvider } from "../../providers/simpleRestProvider.ts";
+} from 'react-admin';
+import { FieldValues } from 'react-hook-form';
+import { MediaTypes } from './mediaTypes.ts';
+import { customDataProvider } from '../../providers/simpleRestProvider.ts';
 
 export default function MediaCreate() {
 	const notify = useNotify();
@@ -24,20 +24,20 @@ export default function MediaCreate() {
 		const description: string | undefined = data.description;
 		const file = data.file.rawFile;
 
-		formData.set("file", file);
-		formData.set("fileName", fileName ? fileName : "");
-		formData.set("description", description ? description : "");
+		formData.set('file', file);
+		formData.set('fileName', fileName ? fileName : '');
+		formData.set('description', description ? description : '');
 
 		await customDataProvider
-			.create("media/upload", { data: formData })
-			.catch((error: Error) => notify(error.message, { type: "warning" }));
+			.create('media/upload', { data: formData })
+			.catch((error: Error) => notify(error.message, { type: 'warning' }));
 	};
 
 	return (
 		<Create>
 			<Form onSubmit={submitHandler}>
 				<TextInput source="name" />
-				<ImageInput source={"file"} validate={required()} multiple={false}>
+				<ImageInput source={'file'} validate={required()} multiple={false}>
 					<ImageField source="src" title="Image" />
 				</ImageInput>
 				<TextInput source="description" />

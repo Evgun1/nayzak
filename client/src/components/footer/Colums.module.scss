@@ -1,17 +1,17 @@
 .colums {
-  text-align: left;
-  display: flex;
-  gap: 120px;
+	text-align: left;
+	display: flex;
+	gap: 120px;
 
-  &--title {
-    margin-bottom: 16px;
-  }
+	&--title {
+		margin-bottom: 16px;
+	}
 
-  &--list {
-    display: grid;
-    gap: 12px;
-    &-link {
-      color: #3e3e59;
-    }
-  }
+	&--list {
+		display: grid;
+		gap: 12px;
+		&-link {
+			color: #3e3e59;
+		}
+	}
 }

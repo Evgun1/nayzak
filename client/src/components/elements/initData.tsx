@@ -13,7 +13,6 @@ import { useEffect } from 'react';
 export default function InitData() {
 	const dispatch = useAppDispatch();
 	const customer = useAppSelector((state) => state.customer.customerData);
-
 	const token = appCookieGet('user-token');
 
 	useEffect(() => {

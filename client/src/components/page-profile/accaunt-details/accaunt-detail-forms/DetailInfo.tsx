@@ -4,7 +4,7 @@ import Form from '@/components/elements/form-component/FormComponent';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/redux';
 import { ButtonCustom } from '@/lib/ui/custom-elements/button-custom/ButtonCustom';
 import { validation } from '@/utils/validator/validator';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, RefObject, useEffect, useRef, useState } from 'react';
 import { z, ZodObject } from 'zod';
 
 import classes from './DetailInfo.module.scss';
@@ -19,6 +19,7 @@ schemaDetailInformation.push(
 );
 
 const DetailInfo = () => {
+	const ref = useRef() as RefObject<HTMLDivElement>;
 	const dispatch = useAppDispatch();
 	const customerSelector = useAppSelector(
 		(state) => state.customer.customerData

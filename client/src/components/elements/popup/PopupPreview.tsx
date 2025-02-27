@@ -15,16 +15,17 @@ const PopupPreview: FC<PopupPreviewProps> = ({ children, title }) => {
 	const dispatch = useAppDispatch();
 
 	return (
-		<div className={classes['popup--preview']}>
-			<div className={classes['popup--preview-header']}>
+		<div className={classes['popup__preview']}>
+			<div className={classes['popup__header']}>
 				<h4>{title}</h4>
 				<ButtonCustom
+					className={classes['popup__header-btn']}
 					styleSettings={{
-						color: 'DARK',
+						color: 'LIGHT',
 						type: 'SQUARE',
 						fill: 'SOLID',
 						roundness: 'SHARP',
-						size: 'MEDIUM',
+						size: 'X_LARGE',
 						icon: { left: 'CLOSE' },
 					}}
 					onClick={() => dispatch(popupActions.toggle(null))}

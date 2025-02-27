@@ -1,22 +1,16 @@
 'use client';
 
 import {
-	ReadonlyURLSearchParams,
 	useParams,
 	usePathname,
 	useRouter,
 	useSearchParams,
 } from 'next/navigation';
-// import { useFetchMinMaxPrice, useFetchAllProducts } from "../../../hooks/useFetchProducts";
 import classes from './SliderPrice.module.scss';
 
 import { FC, MouseEventHandler, useEffect, useState } from 'react';
 import { ButtonCustom } from '../custom-elements/button-custom/ButtonCustom';
 import { appMinMaxPriceGet } from '@/utils/http/products';
-
-type ScrollPriceProps = {
-	urlSearchparams: URLSearchParams;
-};
 
 const SliderPrice = () => {
 	const [minPrice, setMinPrice] = useState<number>(0);

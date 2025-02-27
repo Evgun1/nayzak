@@ -15,6 +15,12 @@ class AddressesController {
 		c.res.headers.append('X-Total-Count', addressesCount.toString());
 		return c.json(addresses);
 	}
+	async getOne(c: Context) {
+		const params = c.req.param() as { addressParams: string };
+
+		const address = await addressesService.getOne(params.addressParams);
+		return c.json(address);
+	}
 
 	async create(c: Context) {
 		const body = await getReqBody<AddressInputDTO>(c);

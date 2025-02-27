@@ -1,11 +1,10 @@
 import { RootState } from './../../store';
-import { appCookieGet } from '@/utils/http/cookie';
 import { appOrdersPost, ordersUploadItem } from '@/utils/http/orders';
 import { AppDispatch } from '../../store';
 import { ordersAction } from './orders';
 import { removeCart } from '../cart/action';
-import { useRouter } from 'next/router';
-import { appJwtDecode } from '@/utils/jwt/jwt';
+import { notificationAction } from '../notification/notification';
+import NotificationCheckout from '@/components/elements/notification/NotificationCheckout';
 
 export const initOrders = () => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
@@ -33,10 +32,12 @@ export function uploadOrders(currentOrders: ordersUploadItem) {
 
 			ordersArr.push(...orders);
 			dispatch(ordersAction.uploadOrders(ordersArr));
-			window.localStorage.setItem('order-status-code', '200');
 
 			const productsId = orders.map((val) => val.productsId);
+
 			dispatch(removeCart(productsId as number[]));
+			dispatch(notificationAction.toggle(NotificationCheckout()));
+			window.localStorage.setItem('order-status-code', '200');
 		} catch (error) {
 			console.log(error);
 		}

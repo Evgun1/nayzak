@@ -32,6 +32,7 @@ type SiteButtonProps = {
 	children?: ReactNode;
 	typeProperty?: keyof TypeObject;
 	onClick?: () => void;
+	onSubmit?: () => void;
 };
 
 export const ButtonCustom: FC<SiteButtonProps> = ({
@@ -42,6 +43,7 @@ export const ButtonCustom: FC<SiteButtonProps> = ({
 	id,
 	typeProperty,
 	onClick,
+	onSubmit,
 }) => {
 	let btnColor;
 
@@ -75,6 +77,7 @@ export const ButtonCustom: FC<SiteButtonProps> = ({
 		<button
 			id={id}
 			ref={btnRef}
+			onSubmit={onSubmit}
 			onClick={onClick}
 			className={`${className ?? ''} ${classes.join(' ')}`}
 			type={typeProperty ?? 'button'}

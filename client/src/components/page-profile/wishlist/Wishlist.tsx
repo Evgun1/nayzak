@@ -14,7 +14,7 @@ export default function Wishlist() {
 
 	const products = useFetchProductsById(wishlist);
 
-	console.log(wishlist);
+	console.log(Object.assign(wishlist));
 
 	return (
 		<div className={classes.wishlist}>
@@ -32,7 +32,7 @@ export default function Wishlist() {
 				<div
 					className={`${TextClassList.REGULAR_22} ${classes['wishlist--message']}`}
 				>
-					The cart is empty
+					The wishlist is empty
 				</div>
 			)}
 		</div>

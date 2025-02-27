@@ -1,5 +1,7 @@
-import { ReviewItem } from '@/types/reviews.types';
-import { appFetchGet } from '.';
+import { ReviewItem, ReviewItemPost } from '@/types/reviews.types';
+import { appFetchGet, appFetchPost } from '.';
+
+
 
 export const appReviewsGet = async (id: number) => {
 	const pathname = `reviews/${id}`;
@@ -11,7 +13,7 @@ export const appReviewsGet = async (id: number) => {
 	return response;
 };
 
-export const appReviewsProductGet = async (params?: string) => {
+export const appReviewsProductGet = async (params: string) => {
 	const pathname = `reviews/product-reviews/${params
 		?.toString()
 		.replaceAll('_', ' ')}`;
@@ -20,7 +22,12 @@ export const appReviewsProductGet = async (params?: string) => {
 		pathname,
 	});
 
-
-
 	return { reviewsData: response, totalReviews: totalCount };
+};
+
+export const appReviewsPost = async (sendData: ReviewItemPost) => {
+	const pathname = 'reviews';
+
+	const { response } = await appFetchPost<ReviewItem>({ pathname, sendData });
+	return response;
 };

@@ -1,5 +1,22 @@
-import { appFetchPost, appFetchPut } from '.';
-import { CustomerItem } from '@/lib/redux/store/customer/customer';
+import { CustomerItem } from '@/types/customer.types';
+import { appFetchGet, appFetchPost, appFetchPut } from '.';
+
+export const appCustomersGet = async (searchParams?: URLSearchParams) => {
+	const pathname = `customers`;
+	const { response } = await appFetchGet<CustomerItem[]>({
+		pathname,
+		searchParams,
+	});
+
+	return response;
+};
+
+export const appCustomersOneGet = async (customersId: string) => {
+	const pathname = `customers/${customersId}`;
+	const { response } = await appFetchGet<CustomerItem>({ pathname });
+
+	return response;
+};
 
 export const appCustomersPost = async (formData: FormData) => {
 	const pathname = 'customers';
@@ -14,6 +31,8 @@ export const appCustomersPost = async (formData: FormData) => {
 
 export const appCustomersPut = async (formData: FormData) => {
 	const pathname = 'customers/update';
+
+	console.log(formData);
 
 	const { response } = await appFetchPut<CustomerItem>({
 		pathname,

@@ -4,10 +4,10 @@ import { log } from "util";
 
 type MethodData = "PUT" | "GET" | "POST" | "DELETE";
 
-type ContentTypeData = "application/json" | "multipart/form-data";
+type ContentTypeData = "application/json" | "multipart/from-data";
 
 interface BodyData {
-	formData?: FormData;
+	fromData?: fromData;
 	json?: object;
 }
 
@@ -78,7 +78,7 @@ export const appFetchGet = async <T>({
 type AppPostFetch = {
 	pathname: string;
 	authorization?: string;
-	sendData?: FormData | string;
+	sendData?: fromData | string;
 };
 export const appFetchPost = async <T>({
 	pathname,
@@ -100,7 +100,7 @@ export const appFetchPost = async <T>({
 
 type AppPutFetch = {
 	pathname: string;
-	putData?: FormData | string;
+	putData?: fromData | string;
 	authorization?: string;
 };
 export const appFetchPut = async <T>({
@@ -124,7 +124,7 @@ export const appFetchPut = async <T>({
 
 type AppDeleteFetch = {
 	pathname: string;
-	deleteData: FormData | string;
+	deleteData: fromData | string;
 };
 export const appFetchDelete = async <T>({
 	pathname,

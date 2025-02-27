@@ -7,6 +7,8 @@ import products from './store/product/products';
 import customer from './store/customer/customer';
 import address from './store/address/address';
 import orders from './store/orders/orders';
+import notification from './store/notification/notification';
+import reviews from './store/review/review';
 const store = configureStore({
 	reducer: {
 		popup,
@@ -17,6 +19,8 @@ const store = configureStore({
 		customer,
 		address,
 		orders,
+		notification,
+		reviews,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({ serializableCheck: false }),

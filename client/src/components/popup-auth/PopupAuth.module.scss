@@ -1,40 +1,40 @@
 .auth {
-  position: absolute;
-  padding: 32px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  max-width: 652px;
-  width: 100%;
-  // min-height: 656px;
-  z-index: 4;
+	position: absolute;
+	padding: 32px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: white;
+	max-width: 652px;
+	width: 100%;
+	// min-height: 656px;
+	z-index: 4;
 
-  &--title {
-    margin-bottom: 32px;
+	&--title {
+		margin-bottom: 32px;
 
-    &-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 24px;
-    }
-  }
+		&-header {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 24px;
+		}
+	}
 
-  &--form {
-    display: grid;
-    gap: 32px;
+	&--form {
+		display: grid;
+		gap: 32px;
 
-    &-input {
-      position: relative;
-      display: block;
-      padding: 13px 5px;
-      border: none;
-      border-bottom: 1px solid var(--black-300);
-      background: none;
+		&-input {
+			position: relative;
+			display: block;
+			padding: 13px 5px;
+			border: none;
+			border-bottom: 1px solid var(--black-300);
+			background: none;
 
-      &:focus-visible {
-        outline: none;
-      }
-    }
-  }
+			&:focus-visible {
+				outline: none;
+			}
+		}
+	}
 }

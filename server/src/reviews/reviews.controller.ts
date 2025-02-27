@@ -1,6 +1,8 @@
 import { Context } from 'hono';
 import ReviewsService from './reviews.service';
 import { QueryParameterTypes } from '../utils/service/service.type';
+import getReqBody from '../tools/getReqBody';
+import reviewsService from './reviews.service';
 
 class ReviewsController {
 	async getAll(c: Context) {
@@ -26,6 +28,14 @@ class ReviewsController {
 		const { productId } = c.req.param() as { productId: string };
 
 		const reviews = await ReviewsService.getAllProductReviews(productId);
+
+		return c.json(reviews);
+	}
+
+	async uploadReviews(c: Context) {
+		const body = (await getReqBody(c)) as UploadReviewsItem;
+
+		const reviews = await reviewsService.uploadReviews(body);
 
 		return c.json(reviews);
 	}

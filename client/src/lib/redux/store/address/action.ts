@@ -7,7 +7,9 @@ import {
 import { AppDispatch, RootState } from '../../store';
 import { addressAction, AddressData } from './address';
 import { writeCustomerAction } from '../customer/action';
-
+import { popupActions } from '../popup/popup';
+import { notificationAction } from '../notification/notification';
+import PopupNotification from '@/components/popup-notifications/PopupNotifications';
 
 export const initAddress = () => {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
@@ -28,10 +30,7 @@ export const initAddress = () => {
 	};
 };
 
-type UploadAddressProps = AddressData & {
-	firstName?: string;
-	lastName?: string;
-};
+type UploadAddressProps = AddressData;
 
 export const uploadAddress = (inputData: UploadAddressProps) => {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
@@ -39,57 +38,61 @@ export const uploadAddress = (inputData: UploadAddressProps) => {
 		if (!customerId) return;
 
 		const addressesArray = [...getState().address.address];
-		if (inputData.firstName && inputData.lastName) {
-			const customerFormData = new FormData();
-			customerFormData.set('firstName', inputData.firstName);
-			customerFormData.set('lastName', inputData.lastName);
-			dispatch(writeCustomerAction(customerFormData));
-		}
 
 		const formData = new FormData();
 
 		const addressesIndex = addressesArray.findIndex(
-			({ id }) => id === inputData.id
+			({ id }) => parseInt(`${id}`) === parseInt(`${inputData.id}`)
 		);
 
-		if (addressesIndex === -1) {
-			for (const key in inputData) {
-				const typeKey = key as keyof UploadAddressProps;
-
-				if (!inputData[typeKey]) continue;
-
-				const customerFormData = new FormData();
-				if (typeKey.includes('firstName') && typeKey.includes('lastName')) {
-					customerFormData.set(typeKey, inputData[typeKey].toString());
-					dispatch(writeCustomerAction(customerFormData));
+		try {
+			if (addressesIndex === -1) {
+				for (const key in inputData) {
+					const typeKey = key as keyof UploadAddressProps;
+					if (!inputData[typeKey]) continue;
+					formData.set(typeKey, inputData[typeKey].toString());
 				}
+				formData.set('customersId', customerId.toString());
 
-				formData.set(typeKey, inputData[typeKey].toString());
-			}
-			formData.set('customersId', customerId.toString());
+				const address = await appAddressesPost({
+					sendData: formData,
+				});
 
-			const address = await appAddressesPost({
-				sendData: formData,
-			});
-
-			addressesArray.push(address);
-		} else {
-			if (inputData.id) {
+				addressesArray.push(address);
+				dispatch(
+					notificationAction.toggle(
+						PopupNotification({
+							icon: 'CHECK',
+							text: 'The address has been set successfully.',
+						})
+					)
+				);
+			} else {
 				const address = await appAddressesPut({
-					id: +inputData.id,
 					sendData: {
 						city: inputData.city,
 						postalCode: +inputData.postalCode,
 						street: inputData.street,
-						id: +inputData.id,
+						id: parseInt(`${inputData.id}`),
 					},
 				});
 
-				addressesArray.push(address);
+				addressesArray[addressesIndex] = address;
+				dispatch(
+					notificationAction.toggle(
+						PopupNotification({
+							icon: 'CHECK',
+							text: 'The address has been successfully changed.',
+						})
+					)
+				);
 			}
-		}
 
-		dispatch(addressAction.uploadAddress({ address: addressesArray }));
+			dispatch(addressAction.uploadAddress({ address: addressesArray }));
+			dispatch(popupActions.toggle(null));
+		} catch (error) {
+			console.log(error);
+		}
 	};
 };
 

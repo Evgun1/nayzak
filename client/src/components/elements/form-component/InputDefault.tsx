@@ -1,6 +1,14 @@
 'use client';
 
-import { ChangeEvent, FC, RefObject, useEffect, useRef, useState } from 'react';
+import {
+	ChangeEvent,
+	FC,
+	Ref,
+	RefObject,
+	useEffect,
+	useRef,
+	useState,
+} from 'react';
 import DisplayIcon from '../icons/displayIcon';
 import IconsIdList from '../icons/IconsIdList';
 import classes from './InputDefault.module.scss';
@@ -30,7 +38,7 @@ interface InputDefaultProps extends InputType {
 const InputDefault: FC<InputDefaultProps> = ({
 	style,
 	buttonSettings,
-	inputSettings,
+	inputSettings = { disabled: false },
 	label,
 	customClasses,
 	error,
@@ -89,33 +97,34 @@ const InputDefault: FC<InputDefaultProps> = ({
 
 	return (
 		<div
-			className={`${classes['input--container']} ${
-				customClasses ? customClasses : ''
+			className={`${classes['input']} ${customClasses ? customClasses : ''} ${
+				inputSettings.disabled && classes['input--disabled']
 			}`}
 		>
-			{label ? (
-				<span className={TextClassList.SEMIBOLD_16}>{label}</span>
-			) : (
-				<></>
-			)}
+			{label && <span className={TextClassList.SEMIBOLD_16}>{label}</span>}
 			<div
 				ref={inputContainerRef}
 				id="input-container"
 				className={
 					style === 'contained'
-						? classes['input--container-contained']
-						: classes['input--container-line']
+						? `${classes['input__contained']} 
+						${inputSettings.disabled && classes['input__contained--disabled']}`
+						: `${classes['input__line']} 
+						${inputSettings.disabled && classes['input__line--disabled']}
+						`
 				}
 			>
-				{buttonSettings?.left ? (
+				{buttonSettings?.left && (
 					<button
 						type={buttonSettings?.left?.type}
-						className={classes['input--container-btn']}
+						className={`${classes['input__btn']} ${
+							inputSettings.disabled && classes['input__btn--disabled']
+						}`}
 						onClick={buttonSettings.left.onClick}
 					>
 						{buttonSettings.left.icon ? (
 							<DisplayIcon
-								className={classes['input--btn-icon']}
+								className={classes['input__btn-icon']}
 								iconName={buttonSettings.left.icon}
 							/>
 						) : (
@@ -124,14 +133,14 @@ const InputDefault: FC<InputDefaultProps> = ({
 							</span>
 						)}
 					</button>
-				) : (
-					<></>
 				)}
 				<input
 					ref={inputRef}
 					id={inputSettings?.id}
 					name={inputSettings?.name}
-					className={classes['input--container-input']}
+					className={`${classes['input__item']} ${
+						inputSettings.disabled && classes['input__item--disabled']
+					}`}
 					placeholder={inputSettings?.placeholder}
 					type={inputSettings?.type}
 					onFocus={handleFocus}
@@ -141,15 +150,17 @@ const InputDefault: FC<InputDefaultProps> = ({
 					onChange={changeHandler}
 					value={displayMessage}
 				/>
-				{buttonSettings?.right ? (
+				{buttonSettings?.right && (
 					<button
 						type={buttonSettings?.right?.type}
-						className={classes['input--container-btn']}
+						className={`${classes['input__btn']} ${
+							inputSettings.disabled && classes['input__btn--disabled']
+						}`}
 						onClick={buttonSettings.right.onClick}
 					>
 						{buttonSettings.right.icon ? (
 							<DisplayIcon
-								className={classes['input--btn-icon']}
+								className={classes['input__btn-icon']}
 								iconName={buttonSettings.right.icon}
 							/>
 						) : (
@@ -158,21 +169,20 @@ const InputDefault: FC<InputDefaultProps> = ({
 							</span>
 						)}
 					</button>
-				) : (
-					<></>
 				)}
 			</div>
 
-			{error && error.length ? (
-				<div className={classes['input--container-error']}>
+			{error && error.length > 0 && (
+				<div className={classes['input__error-container']}>
 					{error.map((val, i) => (
-						<span key={i} className={TextClassList.REGULAR_12}>
+						<span
+							key={i}
+							className={`${TextClassList.REGULAR_12} ${classes['input__error']}`}
+						>
 							{val}
 						</span>
 					))}
 				</div>
-			) : (
-				<></>
 			)}
 		</div>
 	);

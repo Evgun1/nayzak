@@ -5,41 +5,11 @@ import Form from '../elements/form-component/FormComponent';
 import classes from './PopupAddress.module.scss';
 import PopupPreview from '../elements/popup/PopupPreview';
 import { ButtonCustom } from '@/lib/ui/custom-elements/button-custom/ButtonCustom';
-import { FormEvent, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/redux';
 import { uploadAddress } from '@/lib/redux/store/address/action';
 import { AddressData } from '@/lib/redux/store/address/address';
 import { CustomerItem } from '@/lib/redux/store/customer/customer';
-import { AddressItem } from '@/types/addresses.types';
-import { schemaName, validation } from '@/utils/validator/validator';
-
-const schemaAddAddress: Array<ZodObject<any> | ZodEffects<any>> = [];
-schemaAddAddress.push(z.object(validation.addresses));
-
-// const schemaAddAddress = z.object({
-// 	city: z.string().refine((val) => val.length >= 5, {
-// 		message: 'City less than five words',
-// 	}),
-
-// 	street: z.string().refine((val) => val.length >= 5, {
-// 		message: 'Street less than five words',
-// 	}),
-
-// 	postalCode: z.coerce
-// 		.string()
-// 		.refine(
-// 			(val) => {
-// 				const num = Number(val);
-// 				return !isNaN(num) && num > 0;
-// 			},
-// 			{
-// 				message: 'The value must be a positive number',
-// 			}
-// 		)
-// 		.refine((val) => val.length >= 6, {
-// 			message: 'Postal Code less than six words',
-// 		}),
-// });
+import { validation } from '@/utils/validator/validator';
 
 type SubmitHandlerProps = AddressData & CustomerItem;
 
@@ -47,22 +17,33 @@ export default function PopupAddress({ data }: { data?: AddressData }) {
 	const dispatch = useAppDispatch();
 	const customer = useAppSelector((state) => state.customer.customerData);
 
-	if (!customer?.firstName && customer?.lastName)
+	const schemaAddAddress: Array<ZodObject<any> | ZodEffects<any>> = [
+		z.object(validation.addresses),
+	];
+
+	if (!customer?.firstName && !customer?.lastName)
 		schemaAddAddress.push(z.object(validation.customer));
 
 	const submitHandler = (event: { data: SubmitHandlerProps }) => {
-		dispatch(uploadAddress(data ?? event.data));
+		const eventData = event.data;
+
+		console.log(eventData);
+
+		dispatch(uploadAddress(eventData));
 	};
 
 	return (
 		<PopupPreview title={!data ? 'Add address' : 'Edit address'}>
 			<Form
 				submitHandler={submitHandler}
+				oneMessage
 				classe={classes['popup--address-form']}
 				schema={schemaAddAddress}
 			>
+				<input type="hidden" value={data?.id} name="id" />
+
 				<div className={classes['address--form-inputs']}>
-					{!customer?.firstName && !customer?.lastName && (
+					{/* {!customer?.firstName && !customer?.lastName && (
 						<>
 							<Form.InputDefault
 								style={'contained'}
@@ -83,7 +64,7 @@ export default function PopupAddress({ data }: { data?: AddressData }) {
 								}}
 							/>
 						</>
-					)}
+					)} */}
 					<Form.InputDefault
 						style={'contained'}
 						inputSettings={{

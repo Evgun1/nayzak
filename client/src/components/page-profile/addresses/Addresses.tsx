@@ -5,13 +5,13 @@ import classes from './Addresses.module.scss';
 import AddressesPreview from './AddressesPreview';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/redux';
 import { popupActions } from '@/lib/redux/store/popup/popup';
-import { uiAction } from '@/lib/redux/store/ui/ui-sllice';
 import PopupAddress from '@/components/popup-address/PopupAddress';
-import PopupAddressEdit from '@/components/popup-address-edit/PopupAddressEdit';
+import { notificationAction } from '@/lib/redux/store/notification/notification';
+import NotificationCart from '@/components/elements/notification/NotificationCart';
 
 export type AddressType = {
 	id?: number;
-	userName: string;
+	// userName: string;
 	store: string;
 	city: string;
 	street: string;
@@ -32,7 +32,7 @@ export default function Addresses() {
 	for (const element of address) {
 		addresses.push({
 			id: element.id,
-			userName: `${customer?.firstName} ${customer?.lastName}`,
+			// userName: `${customer?.firstName} ${customer?.lastName}`,
 			city: element.city,
 			postalCode: element.postalCode,
 			street: element.street,

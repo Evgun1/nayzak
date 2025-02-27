@@ -2,7 +2,14 @@
 
 import React, { FormEvent, ReactElement, ReactNode, useState } from 'react';
 import InputTextArea from './InputTextArea';
-import { boolean, date, ZodEffects, ZodObject, ZodRawShape } from 'zod';
+import {
+	boolean,
+	date,
+	isValid,
+	ZodEffects,
+	ZodObject,
+	ZodRawShape,
+} from 'zod';
 
 import InputDefault from './InputDefault';
 
@@ -11,6 +18,11 @@ import { InputType } from './InputType';
 import appObjectValidation from '../../../utils/validator/appObjectValidation';
 import appEffectsValidation from '../../../utils/validator/appEffectsValidation';
 import Radio from './Radio';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { log } from 'console';
+import internal from 'stream';
+import appSchemaHandler from '@/utils/validator/appSchemaHandler';
+import InputHidden from './InputHidden';
 
 type FormComponentProps<T extends ZodRawShape> = {
 	children: ReactNode;
@@ -20,14 +32,16 @@ type FormComponentProps<T extends ZodRawShape> = {
 		data: { data: any },
 		event: FormEvent<HTMLFormElement>
 	) => void;
+	customError?: string | null;
 	classe?: string;
 };
 
 const FormComponent = <T extends ZodRawShape>({
 	children,
-	schema,
+	schema = [],
 	oneMessage = false,
 	submitHandler,
+	customError,
 	classe,
 }: FormComponentProps<T>) => {
 	const [errorMessages, setErrorMessages] = useState<Record<string, string[]>>(
@@ -35,91 +49,68 @@ const FormComponent = <T extends ZodRawShape>({
 	);
 	const [radioValue, setRadioValue] = useState<string>();
 
-	const schemaHandler = ({ formData }: { formData: FormData }) => {
-		const objectForm = Object.fromEntries(formData.entries());
-		let hasErrors = false;
+	// const schemaHandler = ({
+	// 	formData,
+	// 	schema,
+	// }: {
+	// 	formData: FormData;
+	// 	schema: Array<ZodObject<T> | ZodEffects<ZodObject<T>>>;
+	// }) => {
+	// 	const objectForm = Object.fromEntries(formData.entries());
+	// 	let hasErrors = false;
 
-		if (schema)
-			schema.forEach((schema) => {
-				if (schema instanceof ZodObject) {
-					const error = appObjectValidation({
-						objectSchema: schema,
-						object: objectForm,
-					});
+	// 	const error = schema.reduce((acc, cur) => {
+	// 		if (cur instanceof ZodObject) {
+	// 			const error = appObjectValidation({
+	// 				objectSchema: cur,
+	// 				object: objectForm,
+	// 			});
 
-					if (Object.keys(error).length > 0) {
-						setErrorMessages(error);
-						hasErrors = true;
-						return;
-					}
-					setErrorMessages({});
-				}
+	// 			if (Object.keys(error).length > 0) {
+	// 				acc = { ...acc, ...error };
+	// 				hasErrors = true;
+	// 				return acc;
+	// 			}
+	// 			return acc;
+	// 		}
 
-				if (schema instanceof ZodEffects) {
-					const error = appEffectsValidation({
-						effectsSchema: schema,
-						object: objectForm,
-					});
+	// 		if (cur instanceof ZodEffects) {
+	// 			const error = appEffectsValidation({
+	// 				effectsSchema: cur,
+	// 				object: objectForm,
+	// 			});
 
-					if (Object.keys(error).length > 0) {
-						setErrorMessages(error);
-						hasErrors = true;
-						return;
-					}
+	// 			if (Object.keys(error).length > 0) {
+	// 				acc = { ...acc, ...error };
+	// 				hasErrors = true;
+	// 				return acc;
+	// 			}
+	// 			return acc;
+	// 		}
 
-					setErrorMessages({});
-				}
-			});
+	// 		return acc;
+	// 	}, {});
 
-		return hasErrors;
-	};
+	// 	setErrorMessages(error);
+	// 	return hasErrors;
+	// };
 
 	const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		const formData = new FormData(event.currentTarget);
 
-		// const objectForm = Object.fromEntries(formData.entries());
-		// let hasErrors = false;
+		// const hasErrors = schemaHandler({ formData, schema: schema ?? [] });
 
-		// if (schema)
-		// 	schema.forEach((schema) => {
-		// 		if (schema instanceof ZodObject) {
-		// 			const error = appObjectValidation({
-		// 				objectSchema: schema,
-		// 				object: objectForm,
-		// 			});
+		const { error, hasErrors } = appSchemaHandler({
+			formData,
+			schema: schema ?? [],
+		});
 
-		// 			if (Object.keys(error).length > 0) {
-		// 				setErrorMessages(error);
-		// 				hasErrors = true;
-		// 				return;
-		// 			}
-		// 			setErrorMessages({});
-		// 		}
-
-		// 		if (schema instanceof ZodEffects) {
-		// 			const error = appEffectsValidation({
-		// 				effectsSchema: schema,
-		// 				object: objectForm,
-		// 			});
-
-		// 			if (Object.keys(error).length > 0) {
-		// 				setErrorMessages(error);
-		// 				hasErrors = true;
-		// 				return;
-		// 			}
-
-		// 			setErrorMessages({});
-		// 		}
-		// 	});
-
-		const hasErrors = schemaHandler({ formData });
+		setErrorMessages(error);
 
 		if (!hasErrors && submitHandler) {
 			const elements = event.currentTarget.elements;
-
-			const inputTarget = event.target as HTMLInputElement;
 
 			const object = new Object() as { [key: string]: any };
 			Array.from(elements).map((data) => {
@@ -160,52 +151,67 @@ const FormComponent = <T extends ZodRawShape>({
 
 		if (Object.keys(errorMessages).length > 0) {
 			const formData = new FormData(event.currentTarget);
-
-			schemaHandler({ formData });
+			const { error } = appSchemaHandler({ formData, schema: schema ?? [] });
+			setErrorMessages(error);
 		}
 	};
 
 	const formRecursion = (children: ReactNode) => {
 		return React.Children.map(children, (child): ReactNode => {
-			if (React.isValidElement(child)) {
+			if (!React.isValidElement(child)) return child;
+
+			if (typeof child.type === 'function') {
 				if (
 					child.type === InputDefault ||
 					child.type === InputTextArea ||
-					child.type === Radio
+					child.type === InputHidden
 				) {
 					const inputChild = child as ReactElement<InputType>;
 
 					const name = inputChild.props.inputSettings?.name;
-
 					let error: string[] | undefined;
 
 					if (oneMessage) {
 						error = errorMessages[name]
 							? [errorMessages[name]?.[0]]
 							: undefined;
-					}
-					if (!oneMessage) {
+					} else {
 						error = errorMessages[name] ? errorMessages[name] : undefined;
 					}
 
-					if (inputChild.type === Radio) {
-						const inputRadioChild = child as ReactElement<{ value: string }>;
-						return React.cloneElement(inputRadioChild, { value: radioValue });
+					if (customError) {
+						error = [customError];
 					}
 
 					return React.cloneElement(inputChild, { error });
+				} else if (child.type === Radio) {
+					const inputRadioChild = child as ReactElement<{
+						value: string;
+						onClick: () => void;
+					}>;
+
+					return React.cloneElement(inputRadioChild, {
+						value: radioValue,
+					});
 				} else {
-					const childWithChildren = child as ReactElement<{
+					const childTypeFunction = child.type as Function;
+					const clonedElement = childTypeFunction(child.props) as ReactElement<{
 						children: ReactNode;
 					}>;
 
-					return React.cloneElement(childWithChildren, {
-						children: formRecursion(childWithChildren.props.children),
+					return React.cloneElement(clonedElement, {
+						children: formRecursion(clonedElement.props.children),
 					});
 				}
-			}
+			} else {
+				const childWithChildren = child as ReactElement<{
+					children: ReactNode;
+				}>;
 
-			return child;
+				return React.cloneElement(childWithChildren, {
+					children: formRecursion(childWithChildren.props.children),
+				});
+			}
 		});
 	};
 
@@ -223,6 +229,7 @@ const FormComponent = <T extends ZodRawShape>({
 const Form = Object.assign(FormComponent, {
 	InputDefault: InputDefault,
 	InputTextArea: InputTextArea,
+	InputHidden: InputHidden,
 	Radio: Radio,
 	// InputPhone: InputPhone,
 });

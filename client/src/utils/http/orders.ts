@@ -11,7 +11,7 @@ export const appOrdersAllGet = async () => {
 
 export interface ordersUploadItem {
 	addressesId: number;
-	cartId: number[];
+	cartId: number[] | number;
 	credentialsId: number;
 	customersId: number;
 }

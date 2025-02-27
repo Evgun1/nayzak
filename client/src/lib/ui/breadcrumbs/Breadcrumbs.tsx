@@ -6,16 +6,8 @@ import classes from './Breadcrumbs.module.scss';
 
 import { CSSProperties, useEffect, useState } from 'react';
 import { TextClassList } from '@/types/textClassList.enum';
-import IconsIdList from '@/components/elements/icons/IconsIdList';
 import { ButtonClassList } from '@/types/buttonClassList.enum';
 import { ProductItem } from '@/types/product.types';
-import { appCategoriesOneGet } from '@/utils/http/categories';
-import {
-	appSubcategoriesGet,
-	appSubcategoriesOneGet,
-} from '@/utils/http/subcategories';
-import { useRouter } from 'next/router';
-import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
 import LinkCustom from '../custom-elements/link-custom/LinkCustom';
 import getBreadcrumbsData from './getBreadcrumbsData';
 
@@ -28,7 +20,6 @@ type BreadcrumbsProductProps = {
 	product?: ProductItem;
 	style?: CSSProperties;
 };
-const newPath: { path?: string; slug?: string }[] = [];
 
 export default function Breadcrumbs(props: BreadcrumbsProductProps) {
 	const pathname = usePathname();
@@ -37,7 +28,7 @@ export default function Breadcrumbs(props: BreadcrumbsProductProps) {
 		useState<BreadcrumbsPathItems[]>();
 	const { style, product } = props;
 
-	const http = window.location.origin;
+	const http = typeof window !== 'undefined' ? window.location.origin : '';
 
 	useEffect(() => {
 		(async () => {

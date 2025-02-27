@@ -1,4 +1,3 @@
-import { number, string } from 'zod';
 import prismaClient from '../prismaClient';
 import { QueryParameterTypes } from '../utils/service/service.type';
 import { MainService } from '../utils/service/main.service';
@@ -15,6 +14,22 @@ class AddressesService {
 	private mainService = new MainService();
 	private queryParams = new QueryParamHandler();
 	private options = new AddressesOptions();
+
+	private supportedMimeTypes: Map<boolean, (data: string) => object> =
+		new Map();
+
+	private setupMimeTypes() {
+		this.supportedMimeTypes.set(false, (data: string) => ({
+			id: data,
+		}));
+		this.supportedMimeTypes.set(true, (data: string) => ({
+			title: data.replaceAll('_', ' '),
+		}));
+	}
+
+	constructor() {
+		this.setupMimeTypes();
+	}
 
 	async getAll(queryParams: QueryParameterTypes) {
 		const take = this.queryParams.limit(queryParams);
@@ -44,9 +59,30 @@ class AddressesService {
 		return { addresses, addressesCount };
 	}
 
+	async getOne(addressParams: string) {
+		const addressData = this.supportedMimeTypes.get(
+			isNaN(Number(addressParams))
+		);
+		if (!addressData) return;
+
+		const inputData = addressData(addressParams) as QueryParameterTypes;
+
+		const where = this.queryParams.filter<Prisma.AddressesWhereInput>(
+			inputData,
+			Prisma.AddressesScalarFieldEnum
+		);
+
+		const option: Prisma.AddressesFindFirstArgs = {
+			where,
+		};
+
+		const address = await prismaClient.addresses.findFirst(option);
+
+		return address;
+	}
+
 	async create(inputData: AddressInputDTO) {
 		const data: Record<string, any> = {};
-
 
 		for (const key in inputData) {
 			const typeKey = key as keyof AddressInputDTO;
