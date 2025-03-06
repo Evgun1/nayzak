@@ -41,12 +41,12 @@ export default async function ProductsGrid({
     });
 
     return (
-        <div className={classes["products--grid"]}>
+        <div className={classes["products-grid"]}>
             <Toolbar totalCount={productCounts} />
 
             <ProductsLoader
                 rating
-                className={classes["products--grid-product"]}
+                className={classes["products-grid__loader"]}
                 listType={getListType}
                 limit={getLimit ? +getLimit : 15}
                 searchParams={searchParams}

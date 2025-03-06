@@ -1,237 +1,195 @@
-'use client';
+"use client";
 
-import React, { FormEvent, ReactElement, ReactNode, useState } from 'react';
-import InputTextArea from './InputTextArea';
+import React, { FormEvent, ReactElement, ReactNode, useState } from "react";
+import InputTextArea from "./InputTextArea";
 import {
-	boolean,
-	date,
-	isValid,
-	ZodEffects,
-	ZodObject,
-	ZodRawShape,
-} from 'zod';
+    boolean,
+    date,
+    isValid,
+    ZodEffects,
+    ZodObject,
+    ZodRawShape,
+} from "zod";
 
-import InputDefault from './InputDefault';
+import InputDefault from "./InputDefault";
 
-import classes from './FormComponent.module.scss';
-import { InputType } from './InputType';
-import appObjectValidation from '../../../utils/validator/appObjectValidation';
-import appEffectsValidation from '../../../utils/validator/appEffectsValidation';
-import Radio from './Radio';
-import { renderToStaticMarkup } from 'react-dom/server';
-import { log } from 'console';
-import internal from 'stream';
-import appSchemaHandler from '@/utils/validator/appSchemaHandler';
-import InputHidden from './InputHidden';
+import classes from "./FormComponent.module.scss";
+import { InputType } from "./InputType";
+import appObjectValidation from "../../../utils/validator/appObjectValidation";
+import appEffectsValidation from "../../../utils/validator/appEffectsValidation";
+import Radio from "./Radio";
+import { renderToStaticMarkup } from "react-dom/server";
+import { log } from "console";
+import internal from "stream";
+import appSchemaHandler from "@/utils/validator/appSchemaHandler";
+import InputHidden from "./InputHidden";
 
 type FormComponentProps<T extends ZodRawShape> = {
-	children: ReactNode;
-	oneMessage?: boolean;
-	schema?: Array<ZodObject<T> | ZodEffects<ZodObject<T>>>;
-	submitHandler?: (
-		data: { data: any },
-		event: FormEvent<HTMLFormElement>
-	) => void;
-	customError?: string | null;
-	classe?: string;
+    children: ReactNode;
+    oneMessage?: boolean;
+    schema?: Array<ZodObject<T> | ZodEffects<ZodObject<T>>>;
+    submitHandler?: (
+        data: { data: any },
+        event: FormEvent<HTMLFormElement>
+    ) => void;
+    customError?: string | null;
+    classe?: string;
 };
 
 const FormComponent = <T extends ZodRawShape>({
-	children,
-	schema = [],
-	oneMessage = false,
-	submitHandler,
-	customError,
-	classe,
+    children,
+    schema = [],
+    oneMessage = false,
+    submitHandler,
+    customError,
+    classe,
 }: FormComponentProps<T>) => {
-	const [errorMessages, setErrorMessages] = useState<Record<string, string[]>>(
-		{}
-	);
-	const [radioValue, setRadioValue] = useState<string>();
+    const [errorMessages, setErrorMessages] = useState<
+        Record<string, string[]>
+    >({});
+    const [radioValue, setRadioValue] = useState<string>();
 
-	// const schemaHandler = ({
-	// 	formData,
-	// 	schema,
-	// }: {
-	// 	formData: FormData;
-	// 	schema: Array<ZodObject<T> | ZodEffects<ZodObject<T>>>;
-	// }) => {
-	// 	const objectForm = Object.fromEntries(formData.entries());
-	// 	let hasErrors = false;
+    const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-	// 	const error = schema.reduce((acc, cur) => {
-	// 		if (cur instanceof ZodObject) {
-	// 			const error = appObjectValidation({
-	// 				objectSchema: cur,
-	// 				object: objectForm,
-	// 			});
+        const formData = new FormData(event.currentTarget);
 
-	// 			if (Object.keys(error).length > 0) {
-	// 				acc = { ...acc, ...error };
-	// 				hasErrors = true;
-	// 				return acc;
-	// 			}
-	// 			return acc;
-	// 		}
+        const { error, hasErrors } = appSchemaHandler({
+            formData,
+            schema: schema ?? [],
+        });
 
-	// 		if (cur instanceof ZodEffects) {
-	// 			const error = appEffectsValidation({
-	// 				effectsSchema: cur,
-	// 				object: objectForm,
-	// 			});
+        setErrorMessages(error);
 
-	// 			if (Object.keys(error).length > 0) {
-	// 				acc = { ...acc, ...error };
-	// 				hasErrors = true;
-	// 				return acc;
-	// 			}
-	// 			return acc;
-	// 		}
+        if (!hasErrors && submitHandler) {
+            const elements = event.currentTarget.elements;
 
-	// 		return acc;
-	// 	}, {});
+            const object = new Object() as { [key: string]: any };
+            Array.from(elements).map((data) => {
+                const inputElement = data as HTMLInputElement;
 
-	// 	setErrorMessages(error);
-	// 	return hasErrors;
-	// };
+                const inputName = inputElement.name;
+                const inputValue = inputElement.value;
 
-	const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
+                if (inputValue) {
+                    object[inputName] = inputValue;
+                }
+                delete object[""];
+            });
 
-		const formData = new FormData(event.currentTarget);
+            submitHandler({ data: object }, event);
+        }
+    };
 
-		// const hasErrors = schemaHandler({ formData, schema: schema ?? [] });
+    const onChangeHandler = (event: FormEvent<HTMLFormElement>) => {
+        const target = event.target as HTMLInputElement;
 
-		const { error, hasErrors } = appSchemaHandler({
-			formData,
-			schema: schema ?? [],
-		});
+        if (target.type === "radio") {
+            Array.from(event.currentTarget).map((data) => {
+                const input = data as HTMLInputElement;
+                if (input !== target) {
+                    input.value = "";
+                    input.checked = false;
+                } else {
+                    input.value = target.id;
+                    input.checked = true;
+                    setRadioValue(target.value);
+                }
+            });
 
-		setErrorMessages(error);
+            onSubmitHandler(event);
+        }
 
-		if (!hasErrors && submitHandler) {
-			const elements = event.currentTarget.elements;
+        if (Object.keys(errorMessages).length > 0) {
+            const formData = new FormData(event.currentTarget);
+            const { error } = appSchemaHandler({
+                formData,
+                schema: schema ?? [],
+            });
+            setErrorMessages(error);
+        }
+    };
 
-			const object = new Object() as { [key: string]: any };
-			Array.from(elements).map((data) => {
-				const inputElement = data as HTMLInputElement;
+    const formRecursion = (children: ReactNode) => {
+        return React.Children.map(children, (child): ReactNode => {
+            if (!React.isValidElement(child)) return child;
 
-				const inputName = inputElement.name;
-				const inputValue = inputElement.value;
+            if (typeof child.type === "function") {
+                if (
+                    child.type === InputDefault ||
+                    child.type === InputTextArea ||
+                    child.type === InputHidden
+                ) {
+                    const inputChild = child as ReactElement<InputType>;
 
-				if (inputValue) {
-					object[inputName] = inputValue;
-				}
-				delete object[''];
-			});
+                    const name = inputChild.props.inputSettings?.name;
+                    let error: string[] | undefined;
 
-			submitHandler({ data: object }, event);
-		}
-	};
+                    if (oneMessage) {
+                        error = errorMessages[name]
+                            ? [errorMessages[name]?.[0]]
+                            : undefined;
+                    } else {
+                        error = errorMessages[name]
+                            ? errorMessages[name]
+                            : undefined;
+                    }
 
-	const onChangeHandler = (event: FormEvent<HTMLFormElement>) => {
-		const target = event.target as HTMLInputElement;
+                    if (customError) {
+                        error = [customError];
+                    }
 
-		if (target.type === 'radio') {
-			Array.from(event.currentTarget).map((data) => {
-				const input = data as HTMLInputElement;
+                    return React.cloneElement(inputChild, { error });
+                } else if (child.type === Radio) {
+                    const inputRadioChild = child as ReactElement<{
+                        value: string;
+                        onClick: () => void;
+                    }>;
 
-				if (input !== target) {
-					input.value = '';
-					input.checked = false;
-				} else {
-					input.value = target.id;
-					input.checked = true;
-					setRadioValue(target.value);
-				}
-			});
+                    return React.cloneElement(inputRadioChild, {
+                        value: radioValue,
+                    });
+                } else {
+                    const childTypeFunction = child.type as Function;
+                    const clonedElement = childTypeFunction(
+                        child.props
+                    ) as ReactElement<{
+                        children: ReactNode;
+                    }>;
 
-			onSubmitHandler(event);
-		}
+                    return React.cloneElement(clonedElement, {
+                        children: formRecursion(clonedElement.props.children),
+                    });
+                }
+            } else {
+                const childWithChildren = child as ReactElement<{
+                    children: ReactNode;
+                }>;
 
-		if (Object.keys(errorMessages).length > 0) {
-			const formData = new FormData(event.currentTarget);
-			const { error } = appSchemaHandler({ formData, schema: schema ?? [] });
-			setErrorMessages(error);
-		}
-	};
+                return React.cloneElement(childWithChildren, {
+                    children: formRecursion(childWithChildren.props.children),
+                });
+            }
+        });
+    };
 
-	const formRecursion = (children: ReactNode) => {
-		return React.Children.map(children, (child): ReactNode => {
-			if (!React.isValidElement(child)) return child;
-
-			if (typeof child.type === 'function') {
-				if (
-					child.type === InputDefault ||
-					child.type === InputTextArea ||
-					child.type === InputHidden
-				) {
-					const inputChild = child as ReactElement<InputType>;
-
-					const name = inputChild.props.inputSettings?.name;
-					let error: string[] | undefined;
-
-					if (oneMessage) {
-						error = errorMessages[name]
-							? [errorMessages[name]?.[0]]
-							: undefined;
-					} else {
-						error = errorMessages[name] ? errorMessages[name] : undefined;
-					}
-
-					if (customError) {
-						error = [customError];
-					}
-
-					return React.cloneElement(inputChild, { error });
-				} else if (child.type === Radio) {
-					const inputRadioChild = child as ReactElement<{
-						value: string;
-						onClick: () => void;
-					}>;
-
-					return React.cloneElement(inputRadioChild, {
-						value: radioValue,
-					});
-				} else {
-					const childTypeFunction = child.type as Function;
-					const clonedElement = childTypeFunction(child.props) as ReactElement<{
-						children: ReactNode;
-					}>;
-
-					return React.cloneElement(clonedElement, {
-						children: formRecursion(clonedElement.props.children),
-					});
-				}
-			} else {
-				const childWithChildren = child as ReactElement<{
-					children: ReactNode;
-				}>;
-
-				return React.cloneElement(childWithChildren, {
-					children: formRecursion(childWithChildren.props.children),
-				});
-			}
-		});
-	};
-
-	return (
-		<form
-			className={`${classes['form']} ${classe ? classe : ''}`}
-			onChange={onChangeHandler}
-			onSubmit={onSubmitHandler}
-		>
-			{formRecursion(children)}
-		</form>
-	);
+    return (
+        <form
+            className={`${classes["form"]} ${classe ? classe : ""}`}
+            onChange={onChangeHandler}
+            onSubmit={onSubmitHandler}
+        >
+            {formRecursion(children)}
+        </form>
+    );
 };
 
 const Form = Object.assign(FormComponent, {
-	InputDefault: InputDefault,
-	InputTextArea: InputTextArea,
-	InputHidden: InputHidden,
-	Radio: Radio,
-	// InputPhone: InputPhone,
+    InputDefault: InputDefault,
+    InputTextArea: InputTextArea,
+    InputHidden: InputHidden,
+    Radio: Radio,
+    // InputPhone: InputPhone,
 });
 
 export default Form;

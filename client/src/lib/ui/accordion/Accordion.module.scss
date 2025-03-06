@@ -33,7 +33,7 @@
 .accordion__body {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s linear;
+    transition: max-height 0.2s linear, padding 0.2s linear;
 
     &--visible {
         max-height: auto;

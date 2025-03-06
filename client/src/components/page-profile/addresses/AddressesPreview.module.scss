@@ -1,47 +1,48 @@
 .address {
-	display: flex;
-	justify-content: space-between;
-	padding: 32px;
-	border: 1px solid var(--black-300);
+    display: flex;
+    justify-content: space-between;
+    padding: 32px;
+    border: 1px solid var(--black-300);
 
-	&__info-container {
-		display: grid;
-		gap: 10px;
-	}
+    &__info-wrap {
+        display: grid;
+        gap: 10px;
+    }
 
-	&__info {
-		display: grid;
-	}
-	&__item {
-		display: flex;
-		gap: 10px;
-		align-items: center;
-	}
+    &__info {
+        display: grid;
 
-	&__button-container {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-	}
+        &-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+    }
 
-	// &__header {
-	//   display: flex;
-	//   align-items: center;
-	//   justify-content: space-between;
-	//   margin-bottom: 10px;
+    &__button-wrap {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
-	//   &-btn {
-	//     display: flex;
-	//     align-items: center;
-	//     gap: 4px;
-	//     background: none;
-	//     border: none;
-	//     cursor: pointer;
-	//   }
-	// }
+    // &__header {
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: space-between;
+    //   margin-bottom: 10px;
+
+    //   &-btn {
+    //     display: flex;
+    //     align-items: center;
+    //     gap: 4px;
+    //     background: none;
+    //     border: none;
+    //     cursor: pointer;
+    //   }
+    // }
 }
 
 .icon {
-	width: 20px;
-	height: 20px;
+    width: 20px;
+    height: 20px;
 }

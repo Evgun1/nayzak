@@ -1,17 +1,11 @@
-.popup {
-	&--address {
-		&-form {
-			width: 700px;
-		}
-	}
-}
+.popup-address {
+    &__form {
+        width: 700px;
+    }
 
-.address {
-	&--form {
-		&-inputs {
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			gap: 10px;
-		}
-	}
+    &__input-wrap {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
 }

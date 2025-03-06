@@ -24,6 +24,7 @@ class AddressesController {
 
 	async create(c: Context) {
 		const body = await getReqBody<AddressInputDTO>(c);
+console.log(body);
 
 		if (!body) return;
 

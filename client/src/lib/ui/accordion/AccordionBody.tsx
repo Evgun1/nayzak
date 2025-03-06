@@ -3,12 +3,13 @@ import classes from "./Accordion.module.scss";
 
 interface AccordionBodyProps {
     children: ReactNode;
+    className?: string;
 }
 
-const AccordionBody: FC<AccordionBodyProps> = ({ children }) => {
+const AccordionBody: FC<AccordionBodyProps> = ({ children, className }) => {
     return (
-        <div id='accordion-body' className={classes["accordion__body"]}>
-            {children}
+        <div id='accordion-body' className={`${classes["accordion__body"]}`}>
+            <div className={className ? className : ""}>{children}</div>
         </div>
     );
 };

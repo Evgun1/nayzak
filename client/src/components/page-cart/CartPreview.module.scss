@@ -1,74 +1,79 @@
-.preview {
-	display: grid;
-	align-items: center;
-	grid-template-columns: 3fr repeat(3, 1fr);
-	text-align: center;
+.cart-preview {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 3fr repeat(3, 1fr);
+    max-height: 150px;
+    text-align: center;
 
-	:first-child,
-	:nth-child(2) {
-		text-align: start;
-	}
-	:last-child {
-		text-align: end;
-	}
+    :first-child,
+    :nth-child(2) {
+        text-align: start;
+    }
+    :last-child {
+        text-align: end;
+    }
 
-	padding: 24px 0;
-	position: relative;
-	&::before {
-		position: absolute;
-		content: '';
-		width: 100%;
-		height: 1px;
-		left: 0;
-		bottom: 0;
-		background: var(--black-300);
-	}
+    padding: 24px 0;
+    position: relative;
+    &::before {
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 1px;
+        left: 0;
+        bottom: 0;
+        background: var(--black-300);
+    }
 
-	&__img-wrapper {
-		max-width: 77px;
-		max-height: 102px;
-	}
+    &__img-wrapper {
+        display: block;
+        max-width: 77px;
+        max-height: 102px;
+    }
 
-	&__img {
-		object-fit: cover;
-	}
+    &__img {
+        aspect-ratio: 3/4;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-	&__product {
-		max-width: 376px;
-		display: flex;
-		gap: 16px;
+    &__product {
+        max-width: 376px;
+        display: flex;
+        gap: 16px;
 
-		&-amount {
-			border: 1px solid var(--black-300);
-			max-width: max-content;
-			gap: 13px;
-			padding: 6px 8px;
-			display: flex;
-			align-items: center;
-		}
-	}
+        &-amount {
+            border: 1px solid var(--black-300);
+            max-width: max-content;
+            gap: 13px;
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+        }
+    }
 
-	&__info {
-		max-width: 376px;
-		display: grid;
-		gap: 8px;
-	}
+    &__info {
+        max-width: 376px;
+        display: grid;
+        gap: 8px;
+    }
 
-	&__amount {
-		display: inline-flex;
-		align-items: center;
-		padding: 8px;
-		gap: 8px;
-		border-radius: 8px;
-		border: 1px solid var(--black-300);
-		max-width: max-content;
-		&-btn {
-			width: 16px;
-			height: 16px;
-			svg {
-				width: 16px;
-				height: 16px;
-			}
-		}
-	}
+    &__amount {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px;
+        gap: 8px;
+        border-radius: 8px;
+        border: 1px solid var(--black-300);
+        max-width: max-content;
+        &-btn {
+            width: 16px;
+            height: 16px;
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
 }

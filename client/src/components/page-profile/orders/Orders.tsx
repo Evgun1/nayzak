@@ -10,7 +10,7 @@ export default function Orders() {
 
     if (!ordersSelector || ordersSelector.length === 0) {
         <div
-            className={`${TextClassList.REGULAR_22} ${classes["orders__empty"]}`}
+            className={`${TextClassList.REGULAR_22} ${classes["orders__message"]}`}
         >
             The orders is empty
         </div>;

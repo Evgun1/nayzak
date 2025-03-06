@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import Orders from "./orders/Orders";
-import AccountDetails from "./accaunt-details/AccountDetails";
+import AccountDetails from "./account-details/AccountDetails";
 import classes from "./Profile.module.scss";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { useAppDispatch } from "@/lib/redux/redux";
@@ -49,29 +49,35 @@ export default function Profile() {
     };
 
     useEffect(() => {
-        if (!useCookieGet("user-token")) {
-            redirect("/");
-        }
-    }, [useCookieGet("user-token")]);
+        (async () => {
+            const userToken = await useCookieGet("user-token");
+            if (!userToken) {
+                redirect("/");
+            }
+        })();
+        return;
+    });
 
     return (
-        <div className={classes.profile}>
-            <h3>My account</h3>
-            <div className={classes["profile__dashboard"]}>
-                <div className={classes["profile__dashboard-menu"]}>
+        <div className={classes["profile"]}>
+            <h3 className={classes["profile__header"]}>My account</h3>
+            <div className={classes["profile__content"]}>
+                <div className={classes["profile-navigation"]}>
                     <img
-                        className={classes["profile__menu-image"]}
+                        className={classes["profile-navigation__image"]}
                         src='https://placehold.co/400'
                         alt='avatar'
                     />
 
-                    <ul className={classes["profile__menu-list"]}>
+                    <ul className={classes["profile-navigation__list"]}>
                         {MENU &&
                             MENU.length > 0 &&
                             MENU.map((data, index) => (
                                 <li
                                     key={index}
-                                    className={classes["profile__menu-item"]}
+                                    className={
+                                        classes["profile-navigation__list-item"]
+                                    }
                                 >
                                     <ButtonCustom
                                         styleSettings={{
@@ -82,22 +88,30 @@ export default function Profile() {
                                         onClick={() => setTabAction(index)}
                                         className={`${
                                             index === tabAction
-                                                ? classes["profile__btn-action"]
-                                                : classes["profile__btn"]
+                                                ? classes[
+                                                      "profile-navigation__button--action"
+                                                  ]
+                                                : classes[
+                                                      "profile-navigation__button"
+                                                  ]
                                         }`}
                                     >
                                         {data.label}
                                     </ButtonCustom>
                                 </li>
                             ))}
-                        <li className={classes["profile__menu-item"]}>
+                        <li
+                            className={classes["profile-navigation__list-item"]}
+                        >
                             <ButtonCustom
                                 styleSettings={{
                                     type: "TEXT",
                                     color: "DARK",
                                     size: "MEDIUM",
                                 }}
-                                className={classes["profile__btn"]}
+                                className={
+                                    classes["profile-navigation__button"]
+                                }
                                 onClick={btnLogOutHandler}
                             >
                                 Logout
@@ -105,12 +119,14 @@ export default function Profile() {
                         </li>
                     </ul>
                 </div>
-                <div>
-                    {MENU.map((menuItem, index) => (
+                <div className={classes["profile-content"]}>
+                    {MENU[tabAction].content()}
+
+                    {/* {MENU.map((menuItem, index) => (
                         <div key={index}>
                             {index === tabAction ? menuItem.content() : <></>}
                         </div>
-                    ))}
+                    ))} */}
                 </div>
             </div>
         </div>

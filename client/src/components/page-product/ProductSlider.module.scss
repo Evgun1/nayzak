@@ -1,6 +1,25 @@
-.product-swiper {
-	max-width: 570px;
-}
-.img {
-	width: 100%;
+.product-slider {
+    max-width: 570px;
+
+    &__img-main,
+    &__img-group {
+        aspect-ratio: 3/4 auto;
+    }
+
+    &__img-main {
+        max-width: 570px;
+        max-height: 760px;
+        margin-bottom: 20px;
+    }
+
+    &__img-group {
+        margin-right: 19px !important;
+        max-width: 128px;
+        max-height: 170px;
+    }
+    &__img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
 }

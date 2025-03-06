@@ -4,7 +4,7 @@
 	grid-template-columns: repeat(2, 1fr);
 	gap: 32px;
 
-	&--item {
+	&__item {
 		position: relative;
 		background: url('https://placehold.co/400') no-repeat center;
 		background-size: cover;

@@ -1,15 +1,6 @@
 "use client";
 
-import React, {
-    FC,
-    ReactElement,
-    ReactNode,
-    RefObject,
-    use,
-    useEffect,
-    useId,
-    useRef,
-} from "react";
+import React, { FC, ReactElement, ReactNode, useEffect, useId } from "react";
 import AccordionBody from "./AccordionBody";
 import AccordionHeader from "./AccordionHeader";
 import classes from "./Accordion.module.scss";
@@ -28,74 +19,69 @@ const AccordionComponent: FC<AccordionProps> = ({ children, className }) => {
 
         if (!target) return;
 
-        const accordion = target.closest(
+        const accordionTarget = target.closest(
             `#${accordionId}`
         ) as HTMLDivElement | null;
-        const accordionHeader = target.closest(
+        const accordionHeaderTarget = target.closest(
             "#accordion-header"
-        ) as HTMLDivElement;
-
-        for (const queryElement of document.querySelectorAll(
+        ) as HTMLDivElement | null;
+        const accordionQuerySelector = document.querySelector(
             `#${accordionId}`
-        )) {
-            if (accordion === queryElement) {
-                if (!accordionHeader) return;
+        ) as HTMLElement | null;
 
-                accordionHeader.classList.toggle(
+        if (!accordionQuerySelector) return;
+
+        for (const element of accordionQuerySelector.children) {
+            const accordionBody = element.closest(
+                `#accordion-body`
+            ) as HTMLDivElement | null;
+            const accordionHeader = element.closest(
+                `#accordion-header`
+            ) as HTMLElement | null;
+
+            if (accordionTarget === element.parentNode) {
+                if (!accordionHeaderTarget) return;
+
+                accordionHeader?.classList.toggle(
                     classes["accordion__header--active"]
                 );
-                for (const element of queryElement.children) {
-                    const accordionBody = element.closest(
-                        `#accordion-body`
-                    ) as HTMLDivElement | null;
-                    if (accordionBody) {
-                        const scrollHeight = accordionBody.scrollHeight;
-                        accordionBody.classList.toggle(
-                            classes["accordion__body--visible"]
-                        );
 
-                        if (
-                            accordionBody.classList.contains(
-                                classes["accordion__body--visible"]
-                            )
-                        ) {
-                            accordionBody.style.maxHeight = scrollHeight + "px";
-                        } else {
-                            accordionBody.style.maxHeight = "0px";
-                        }
+                if (accordionBody) {
+                    const scrollHeight = accordionBody.scrollHeight;
+                    accordionBody.classList.toggle(
+                        classes["accordion__body--visible"]
+                    );
+                    if (
+                        accordionBody.classList.contains(
+                            classes["accordion__body--visible"]
+                        )
+                    ) {
+                        accordionBody.style.maxHeight = scrollHeight + "px";
+                    } else {
+                        accordionBody.style.maxHeight = "0px";
                     }
                 }
             } else {
-                for (const element of queryElement.children) {
-                    const accordionHeader = element.closest(
-                        "#accordion-header"
-                    ) as HTMLDivElement | null;
-                    const accordionBody = element.closest(
-                        "#accordion-body"
-                    ) as HTMLDivElement | null;
+                if (
+                    accordionHeader?.classList.contains(
+                        classes["accordion__header--active"]
+                    )
+                )
+                    accordionHeader?.classList.remove(
+                        classes["accordion__header--active"]
+                    );
 
-                    if (accordionHeader)
-                        if (
-                            accordionHeader.classList.contains(
-                                classes["accordion__header--active"]
-                            )
-                        )
-                            accordionHeader.classList.remove(
-                                classes["accordion__header--active"]
-                            );
-
-                    if (accordionBody)
-                        if (
-                            accordionBody.classList.contains(
-                                classes["accordion__body--visible"]
-                            )
-                        ) {
-                            accordionBody.classList.remove(
-                                classes["accordion__body--visible"]
-                            );
-
-                            accordionBody.style.maxHeight = "0px";
-                        }
+                if (
+                    accordionBody?.classList.contains(
+                        classes["accordion__body--visible"]
+                    )
+                ) {
+                    accordionBody?.classList.remove(
+                        classes["accordion__body--visible"]
+                    );
+                    if (accordionBody) {
+                        accordionBody.style.maxHeight = "0px";
+                    }
                 }
             }
         }
@@ -128,7 +114,7 @@ const AccordionComponent: FC<AccordionProps> = ({ children, className }) => {
         document.addEventListener("click", eventListenerHandler);
         return () =>
             document.removeEventListener("click", eventListenerHandler);
-    }, []);
+    });
 
     return (
         <div id={accordionId} className={className && className}>

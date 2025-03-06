@@ -1,4 +1,4 @@
-import HeaderProducts from '@/components/page-category/section-products/header-productsct/HeaderProducts';
+import HeaderProducts from '@/components/page-category/section-products/header-products/HeaderProducts';
 import Products from '@/components/page-category/section-products/products/Products';
 import HeaderSubcategory from '@/components/page-category/section-subcategory/header-subcategory/HeaderSubcategory';
 import PopupLoading from '@/components/popup-loading/PopupLoading';

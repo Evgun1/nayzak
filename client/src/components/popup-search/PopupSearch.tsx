@@ -18,6 +18,7 @@ import Form from "../elements/form-component/FormComponent";
 const PopupSearch = () => {
     const dispatch = useAppDispatch();
     const [productsArray, setProductsArray] = useState<ProductItem[]>([]);
+    const [message, setMessage] = useState<string>();
     const [count, setCount] = useState<number>(0);
     const [totalCount, setTotalCount] = useState<number>();
     const searchParams = useSearchParams();
@@ -31,6 +32,14 @@ const PopupSearch = () => {
         const { products, productCounts } = await appProductsGet({
             searchParams: urlSearchParams,
         });
+
+        !productCounts || products.length === 0
+            ? setMessage(
+                  `Product not found with this value: "${urlSearchParams.get(
+                      "search"
+                  )}"`
+              )
+            : setMessage(undefined);
 
         setProductsArray(products);
         setCount(count + products.length);
@@ -49,7 +58,7 @@ const PopupSearch = () => {
     }
 
     const btnClickHandler = () => {
-        const urlSearchParams = new URLSearchParams(searchParams.toString());
+        const urlSearchParams = new URLSearchParams();
         urlSearchParams.append("limit", limit.toString());
         urlSearchParams.append("offset", count.toString());
         updateData(urlSearchParams);
@@ -85,8 +94,10 @@ const PopupSearch = () => {
                     </form>
                 </div>
 
-                <FilterProvider>
-                    <div className={classes.wrapper__searchResult}>
+                {/* <FilterProvider> */}
+
+                <div className={classes.wrapper__searchResult}>
+                    {!message ? (
                         <ProductList
                             style={classes["grid-search"]}
                             btnClickHandler={btnClickHandler}
@@ -94,8 +105,11 @@ const PopupSearch = () => {
                             count={count}
                             totalCount={totalCount ?? 0}
                         />
-                    </div>
-                </FilterProvider>
+                    ) : (
+                        <>{message}</>
+                    )}
+                </div>
+                {/* </FilterProvider> */}
             </div>
         </div>
     );

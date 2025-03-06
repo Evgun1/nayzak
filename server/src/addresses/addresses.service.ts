@@ -38,6 +38,7 @@ class AddressesService {
 			queryParams,
 			Prisma.AddressesScalarFieldEnum
 		);
+		
 		const orderBy =
 			this.queryParams.orderBy<Prisma.AddressesOrderByWithRelationInput>(
 				queryParams,

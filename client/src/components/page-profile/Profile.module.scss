@@ -2,37 +2,49 @@
     max-width: 1108px;
     width: 100%;
     margin: 0 auto;
-    h3 {
+
+    &__header {
         text-align: center;
+        padding: 52px 0;
     }
 
-    &__dashboard {
-        display: grid;
-        grid-template-columns: max(196px) 1fr;
+    &__content {
+        display: flex;
         gap: 32px;
         padding: 52px 0 250px;
     }
+}
 
-    &__menu {
-        &-list {
-            display: grid;
-            gap: 16px;
-        }
+.profile-navigation {
+    width: 100%;
+    max-width: 196px;
+
+    &__image {
+        border-radius: 100%;
+        display: block;
+        aspect-ratio: 1/1 auto;
+        object-fit: cover;
+        max-width: 82px;
+        max-height: 82px;
+        margin-bottom: 32px;
+    }
+
+    &__list {
+        display: grid;
+        gap: 16px;
         &-item {
             position: relative;
             padding-bottom: 8px;
         }
     }
 
-    &__btn {
-        color: var(--black-600);
-        display: inline-flex;
-        width: 100%;
+    &__button {
+        color: var(--black-600) !important;
+        display: inline-flex !important;
+        width: 100% !important;
 
-        &-action {
-            color: var(--black-900);
-            display: inline-flex;
-
+        &--action {
+            color: var(--black-900) !important;
             width: 100%;
             &::before {
                 position: absolute;
@@ -41,18 +53,12 @@
                 height: 1px;
                 bottom: 0;
                 left: 0;
-                background: var(--black-900);
+                background: var(--black-900) !important;
             }
         }
     }
 }
 
-.profile__menu-image {
-    border-radius: 100%;
-    display: block;
-    aspect-ratio: 1/1 auto;
-    object-fit: cover;
-    max-width: 82px;
-    max-height: 82px;
-    margin-bottom: 32px;
+.profile-content {
+    width: 100%;
 }

@@ -17,21 +17,25 @@ const ProductsSwiper = async () => {
     });
 
     return (
-        <div className={`container  ${classes.wrapper}`}>
-            <SwiperComponent
-                label='Latest Arrivals'
-                children={
-                    <>
-                        {products.map((product) => (
-                            <ProductPreviewDefault
-                                showIcon
-                                className={classes["wrapper__product"]}
-                                product={product}
-                            />
-                        ))}
-                    </>
-                }
-            />
+        <div className='container'>
+            <div className={classes["product-swiper"]}>
+                <SwiperComponent
+                    label='Latest Arrivals'
+                    children={
+                        <>
+                            {products.map((product) => (
+                                <ProductPreviewDefault
+                                    showIcon
+                                    className={
+                                        classes["product-swiper__product"]
+                                    }
+                                    product={product}
+                                />
+                            ))}
+                        </>
+                    }
+                />
+            </div>
         </div>
     );
 };

@@ -1,25 +1,29 @@
-import DisplayIcon from '@/components/elements/icons/displayIcon';
-import IconsIdList from '@/components/elements/icons/IconsIdList';
+"use server";
 
-import classes from './Header.module.scss';
-import Actions from './Actions';
+import DisplayIcon from "@/components/elements/icons/displayIcon";
+import IconsIdList from "@/components/elements/icons/IconsIdList";
 
-import Navigation from './Navigation';
-import Link from 'next/link';
+import classes from "./Header.module.scss";
+import Actions from "./Actions";
 
-const Header = () => {
-	return (
-		<header className={`container ${classes.navigation}`}>
-			<Link href={'/'} className={classes['navigation--logo']}>
-				<DisplayIcon
-					className={classes['navigation--logo-icon']}
-					iconName={IconsIdList.LOGOTYPE}
-				/>
-			</Link>
-			<Navigation />
-			<Actions />
-		</header>
-	);
+import Navigation from "./Navigation";
+import Link from "next/link";
+
+const Header = async () => {
+    return (
+        <header className={"container"}>
+            <div className={classes.header}>
+                <Link href={"/"} className={classes["header__logo"]}>
+                    <DisplayIcon
+                        className={classes["header__icon"]}
+                        iconName={IconsIdList.LOGOTYPE}
+                    />
+                </Link>
+                <Navigation />
+                <Actions />
+            </div>
+        </header>
+    );
 };
 
 export default Header;

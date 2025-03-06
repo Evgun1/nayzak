@@ -1,0 +1,45 @@
+.tooltip {
+    &__label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__full-value {
+        position: absolute;
+        display: none;
+
+        &--visible {
+            top: 5%;
+            overflow: visible;
+            display: block;
+            padding: 5px;
+            color: black;
+            background: var(--black-300);
+            border: 2px solid var(--black-500);
+            border-radius: 5px;
+            z-index: 1;
+
+            &::before,
+            &::after {
+                content: "";
+                border: solid transparent;
+                position: absolute;
+                left: 5em;
+                bottom: -18px;
+                transform: rotate(180deg);
+            }
+
+            &::after {
+                border-bottom-color: var(--black-300);
+                border-width: 10px;
+                margin-left: -2px;
+            }
+            &::before {
+                border-bottom-color: var(--black-500);
+                border-width: 8px;
+                margin-left: 0px;
+            }
+        }
+    }
+}

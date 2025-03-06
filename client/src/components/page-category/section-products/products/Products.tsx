@@ -15,7 +15,7 @@ export default async function Products({
 }) {
 	return (
 		<FilterProvider>
-			<div className={`container ${classes.wrapper}`}>
+			<div className={`container ${classes.products}`}>
 				<Sidebar />
 				<ProductsGrid params={params} searchParams={searchParams} />
 			</div>

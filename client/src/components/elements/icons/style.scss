@@ -1,8 +1,11 @@
 .star {
-	color: var(--black-400);
+    // fill: rgb(150, 98, 98);
+    color: var(--black-400);
+    fill: white;
 }
 
 .star_active {
-	color: #fd7e14;
-	// background-color: #fd7e14;
+    color: #fd7e14;
+    fill: #fd7e14;
+    // background-color: #fd7e14;
 }

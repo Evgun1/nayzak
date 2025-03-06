@@ -98,8 +98,6 @@ export const useProductsReducer = <T extends { [key: string]: any }, P>(
             requestParams.set("offset", offset.toString());
             requestParams.set("limit", limit.toString());
 
-            console.log(requestParams.toString(), params);
-
             const result = await loaderFn({
                 searchParams: requestParams,
                 params,

@@ -1,39 +1,39 @@
 .breadcrumbs {
-	display: flex;
-	justify-content: center;
-	gap: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
 
-	&__item {
-		display: flex;
-		gap: 4px;
-		align-items: center;
-		&:last-child {
-			.icon {
-				display: none;
-			}
-			cursor: default;
-		}
-	}
+    &__item {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        &:last-child {
+            .icon {
+                display: none;
+            }
+            cursor: default;
+        }
+    }
 
-	&__link {
-		// text-decoration: none;
-		color: var(--black-600);
-		position: relative;
+    &__link {
+        // text-decoration: none;
+        color: var(--black-600) !important;
+        position: relative;
 
-		svg {
-			width: 12px;
-			height: 12px;
-			transform: rotate(270deg);
-		}
+        svg {
+            width: 12px;
+            height: 12px;
+            transform: rotate(270deg);
+        }
 
-		&--active {
-			color: var(--black-800);
-		}
-	}
+        &--active {
+            color: var(--black-800) !important;
+        }
+    }
 }
 
 .icon {
-	width: 12px;
-	height: 12px;
-	transform: rotate(270deg);
+    width: 12px;
+    height: 12px;
+    transform: rotate(270deg);
 }

@@ -1,6 +1,6 @@
 import { Context } from 'hono';
 import wishlistService from './wishlist.service';
-import { WishlistInputDTO } from './interface/WishlistGetIntut';
+import { WishlistInputDTO } from './interface/WishlistGetInput';
 import getReqBody from '../tools/getReqBody';
 import { QueryParameterTypes } from '../utils/service/service.type';
 

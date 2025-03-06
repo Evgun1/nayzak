@@ -41,11 +41,9 @@ const Product = async ({
         },
     ];
 
-    console.log(productData);
-
     return (
-        <div className={`container ${classes["product"]}`}>
-            <div className={classes["product__content"]}>
+        <>
+            <div className={`${classes["product"]}`}>
                 <ProductSlider />
                 <div className={classes["product__loop"]}>
                     <div className={classes["product__loop-header"]}>
@@ -72,7 +70,7 @@ const Product = async ({
                             </div>
                         </div>
                         <div
-                            className={`${classes["loop__header-price"]} ${TextClassList.SEMIBOLD_26}`}
+                            className={`${classes["product__loop-price"]} ${TextClassList.SEMIBOLD_26}`}
                         >
                             <Price
                                 discount={productData.discount}
@@ -88,10 +86,8 @@ const Product = async ({
                 </div>
             </div>
 
-            <div className={classes["product__tabs"]}>
-                <ProductsTabs data={arr} />
-            </div>
-        </div>
+            <ProductsTabs data={arr} />
+        </>
     );
 };
 

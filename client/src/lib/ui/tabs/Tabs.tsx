@@ -8,7 +8,6 @@ type TabProps = {
 };
 export default function Tabs({ children }: { children: ReactNode }) {
 	const label: string[] = [];
-	console.log([children], Array.isArray(children));
 
 	const childrenArray = [children];
 
