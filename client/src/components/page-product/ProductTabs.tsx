@@ -12,7 +12,7 @@ export interface ProductsTabsItem {
 type ProductsTabsProps = { data: ProductsTabsItem[] };
 
 const ProductsTabs: FC<ProductsTabsProps> = ({ data }) => {
-    const [tabAction, setTabAction] = useState<number>(0);
+    const [tabAction, setTabAction] = useState<number>(2);
 
     return (
         <div className={classes["product-tabs"]}>

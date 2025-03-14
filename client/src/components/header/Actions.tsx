@@ -11,19 +11,23 @@ import PopupError from "../popup-error/PopupError";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { appCookieGet } from "@/utils/http/cookie";
 import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
+import { FC } from "react";
 
-export default function Actions() {
+const Actions: FC = () => {
     const dispatch = useAppDispatch();
     const cartAmount = useAppSelector((selector) => selector.cart.totalAmount);
     const userData = useAppSelector((selector) => selector.auth.credentials);
 
     const token = appCookieGet("user-token");
 
-    const btnAuthHandler = () => {
-        dispatch(popupActions.toggle(<PopupAuth />));
-    };
-    const btnSearchHandler = () =>
-        dispatch(popupActions.toggle(<PopupSearch />));
+    function btnAuthHandler() {
+        return dispatch(popupActions.toggle(<PopupAuth />));
+    }
+
+    function btnSearchHandler() {
+        return dispatch(popupActions.toggle(<PopupSearch />));
+    }
+
     const btnClickCart = () => {
         dispatch(
             popupActions.toggle(
@@ -37,12 +41,6 @@ export default function Actions() {
             dispatch(popupActions.toggle(null));
         }, 500);
     }
-
-    // useEffect(() => {
-    //   dispatch(checkAuth());
-    //   dispatch(initWishlist());
-    //   dispatch(initCart());
-    // }, [dispatch, token]);
 
     return (
         <div className={classes["header-actions"]}>
@@ -76,18 +74,22 @@ export default function Actions() {
                 styleSettings={{
                     roundness: "ROUNDED",
                     color: "DARK",
-                    icon: { left: "CART" },
+                    icon: { left: "BAG" },
                     type: "TEXT",
                     size: "LARGE",
                 }}
-                className={classes["header-actions__button"]}
+                className={`${classes["header-actions__button"]} ${classes["header-actions__bag"]}`}
             >
                 {cartAmount !== 0 && (
-                    <span className={classes["header-actions__amount"]}>
+                    <span
+                        className={classes["header-actions__bag-amount"]}
+                    >
                         {cartAmount}
                     </span>
                 )}
             </LinkCustom>
         </div>
     );
-}
+};
+
+export default Actions;

@@ -4,6 +4,7 @@ import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./WishlistPreview.module.scss";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { removeWishlist } from "@/lib/redux/store/wishlist/action";
+import Image from "next/image";
 
 type WishlistItemProps = {
     id: number;
@@ -28,10 +29,12 @@ export default function WishlistPreview({
         <div className={classes["wishlist-preview"]}>
             <div className={classes["wishlist-preview__info-wrap"]}>
                 <div className={classes["wishlist-preview__image-wrap"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
                         className={classes["wishlist-preview__image"]}
                         src='https://placehold.co/652x889'
-                        alt=''
+                        alt={title}
                     />
                 </div>
                 <div className={classes["wishlist-preview__info"]}>

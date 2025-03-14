@@ -19,14 +19,18 @@
     width: 100%;
     max-width: 196px;
 
-    &__image {
-        border-radius: 100%;
-        display: block;
-        aspect-ratio: 1/1 auto;
-        object-fit: cover;
+    &__image-wrap {
+        position: relative;
         max-width: 82px;
         max-height: 82px;
+        aspect-ratio: 1/1 auto;
+        border-radius: 100%;
         margin-bottom: 32px;
+        overflow: hidden;
+    }
+
+    &__image {
+        object-fit: cover;
     }
 
     &__list {

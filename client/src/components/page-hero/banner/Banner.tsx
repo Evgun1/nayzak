@@ -1,16 +1,19 @@
+"use server";
 import Image from "next/image";
 import classes from "./Banner.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
+import dynamic from "next/dynamic";
 
-const Banner = () => {
-
-
+const Banner = async () => {
     return (
         <div className={classes.banner}>
             <div className={classes["banner__img-wrapper"]}>
-                <img
+                <Image
+                    loading='eager'
                     className={classes["banner__img"]}
+                    objectFit='cover'
+                    fill
                     src='https://placehold.co/800'
                     alt='banner'
                 />

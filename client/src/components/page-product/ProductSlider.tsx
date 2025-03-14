@@ -11,6 +11,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
 import classes from "./ProductSlider.module.scss";
+import Image from "next/image";
 
 export default function ProductSlider() {
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
@@ -32,25 +33,37 @@ export default function ProductSlider() {
                 modules={[FreeMode, Thumbs]}
             >
                 <SwiperSlide className={classes["product-slider__img-main"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
+                        alt='product'
                         className={classes["product-slider__img"]}
                         src='https://placehold.co/761'
                     />
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-main"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
+                        alt='product'
                         className={classes["product-slider__img"]}
                         src='https://placehold.co/762'
                     />
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-main"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
+                        alt='product'
                         className={classes["product-slider__img"]}
                         src='https://placehold.co/763'
                     />
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-main"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
+                        alt='product'
                         className={classes["product-slider__img"]}
                         src='https://placehold.co/764'
                     />
@@ -67,25 +80,37 @@ export default function ProductSlider() {
                 className='mySwiper'
             >
                 <SwiperSlide className={classes["product-slider__img-group"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
+                        alt='product'
                         className={classes["product-slider__img"]}
                         src='https://placehold.co/761'
                     />
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-group"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
+                        alt='product'
                         className={classes["product-slider__img"]}
                         src='https://placehold.co/762'
                     />
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-group"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
+                        alt='product'
                         className={classes["product-slider__img"]}
                         src='https://placehold.co/763'
                     />
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-group"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
+                        alt='product'
                         className={classes["product-slider__img"]}
                         src='https://placehold.co/764'
                     />

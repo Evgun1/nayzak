@@ -115,51 +115,53 @@ const FormComponent = <T extends ZodRawShape>({
             if (!React.isValidElement(child)) return child;
 
             if (typeof child.type === "function") {
-                if (
-                    child.type === InputDefault ||
-                    child.type === InputTextArea ||
-                    child.type === InputHidden
-                ) {
-                    const inputChild = child as ReactElement<InputType>;
+                switch (child.type) {
+                    case InputDefault:
+                    case InputTextArea:
+                    case InputHidden:
+                        const inputChild = child as ReactElement<InputType>;
 
-                    const name = inputChild.props.inputSettings?.name;
-                    let error: string[] | undefined;
+                        const name = inputChild.props.inputSettings?.name;
+                        let error: string[] | undefined;
 
-                    if (oneMessage) {
-                        error = errorMessages[name]
-                            ? [errorMessages[name]?.[0]]
-                            : undefined;
-                    } else {
-                        error = errorMessages[name]
-                            ? errorMessages[name]
-                            : undefined;
-                    }
+                        if (oneMessage) {
+                            error = errorMessages[name]
+                                ? [errorMessages[name]?.[0]]
+                                : undefined;
+                        } else {
+                            error = errorMessages[name]
+                                ? errorMessages[name]
+                                : undefined;
+                        }
 
-                    if (customError) {
-                        error = [customError];
-                    }
+                        if (customError) {
+                            error = [customError];
+                        }
 
-                    return React.cloneElement(inputChild, { error });
-                } else if (child.type === Radio) {
-                    const inputRadioChild = child as ReactElement<{
-                        value: string;
-                        onClick: () => void;
-                    }>;
+                        return React.cloneElement(inputChild, { error });
 
-                    return React.cloneElement(inputRadioChild, {
-                        value: radioValue,
-                    });
-                } else {
-                    const childTypeFunction = child.type as Function;
-                    const clonedElement = childTypeFunction(
-                        child.props
-                    ) as ReactElement<{
-                        children: ReactNode;
-                    }>;
+                    case Radio:
+                        const inputRadioChild = child as ReactElement<{
+                            value: string;
+                            onClick: () => void;
+                        }>;
 
-                    return React.cloneElement(clonedElement, {
-                        children: formRecursion(clonedElement.props.children),
-                    });
+                        return React.cloneElement(inputRadioChild, {
+                            value: radioValue,
+                        });
+                    default:
+                        const childTypeFunction = child.type as Function;
+                        const clonedElement = childTypeFunction(
+                            child.props
+                        ) as ReactElement<{
+                            children: ReactNode;
+                        }>;
+
+                        return React.cloneElement(clonedElement, {
+                            children: formRecursion(
+                                clonedElement.props.children
+                            ),
+                        });
                 }
             } else {
                 const childWithChildren = child as ReactElement<{

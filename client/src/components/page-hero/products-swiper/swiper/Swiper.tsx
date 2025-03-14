@@ -9,7 +9,14 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import DisplayIcon from "@/components/elements/icons/displayIcon";
 import IconsIdList from "@/components/elements/icons/IconsIdList";
-import { FC, ReactElement, ReactNode, useEffect, useState } from "react";
+import {
+    FC,
+    ReactElement,
+    ReactNode,
+    Suspense,
+    useEffect,
+    useState,
+} from "react";
 import { appProductsGet } from "@/utils/http/products";
 import { useSearchParams } from "next/navigation";
 import ProductPreview from "@/components/elements/product-preview/ProductPreview";
@@ -22,26 +29,7 @@ type SwiperComponentProps = {
 };
 
 const SwiperComponent: FC<SwiperComponentProps> = ({ children, label }) => {
-    const [productsData, setProductsData] = useState<ProductItem[]>();
-
     const childrenArr = children as ReactElement[];
-
-    const searchParams = useSearchParams();
-
-    useEffect(() => {
-        (async () => {
-            const urlSearchParams = new URLSearchParams({
-                limit: "8",
-                sortBy: "createdAt",
-                sort: "DESC",
-            });
-
-            const { products } = await appProductsGet({
-                searchParams: urlSearchParams,
-            });
-            setProductsData(products);
-        })();
-    }, [searchParams]);
 
     return (
         <Swiper
@@ -61,6 +49,7 @@ const SwiperComponent: FC<SwiperComponentProps> = ({ children, label }) => {
         >
             <div className={classes["swiper-custom__header"]}>
                 <h5>{label}</h5>
+
                 <div className={classes["swiper-custom__controls"]}>
                     <button
                         className={` ${classes["swiper-custom__button"]} swiper-custom__button-prev`}
@@ -71,7 +60,7 @@ const SwiperComponent: FC<SwiperComponentProps> = ({ children, label }) => {
                         className={`${classes["swiper-custom__pagination"]} swiper-custom__pagination`}
                     ></ul>
                     <button
-                        className={` ${classes["swiper-custom__button"]} swiper-custom__button-next`}
+                        className={`${classes["swiper-custom__button"]} swiper-custom__button-next`}
                     >
                         <DisplayIcon iconName={IconsIdList.ARROW_RIGHT} />
                     </button>
@@ -79,7 +68,12 @@ const SwiperComponent: FC<SwiperComponentProps> = ({ children, label }) => {
             </div>
 
             {childrenArr.map((child, i) => (
-                <SwiperSlide key={i}>{child}</SwiperSlide>
+                <SwiperSlide
+                    className={classes["swiper-custom__slider"]}
+                    key={i}
+                >
+                    {child}
+                </SwiperSlide>
             ))}
         </Swiper>
     );

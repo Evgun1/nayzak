@@ -8,6 +8,7 @@ import { ButtonClassList } from "@/types/buttonClassList.enum";
 import { TextClassList } from "@/types/textClassList.enum";
 import { FC } from "react";
 import { ProductPreviewTypes } from "../ProductPreview.types";
+import Image from "next/image";
 
 const ProductPreviewDefault: FC<ProductPreviewTypes> = async (props) => {
     const { rating, className, stylePrice, product, showIcon = false } = props;
@@ -33,7 +34,10 @@ const ProductPreviewDefault: FC<ProductPreviewTypes> = async (props) => {
                     </div>
                 )}
 
-                <img
+                <Image
+                    loading='lazy'
+                    fill
+                    objectFit='cover'
                     className={classes["preview__img"]}
                     src={
                         product.img

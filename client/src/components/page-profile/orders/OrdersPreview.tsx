@@ -13,6 +13,7 @@ import { AddressItem } from "@/types/addresses.types";
 import { appCustomersOneGet } from "@/utils/http/customer";
 import { CustomerItem } from "@/types/customer.types";
 import Accordion from "@/lib/ui/accordion/Accordion";
+import Image from "next/image";
 
 export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
     const { order } = props;
@@ -100,10 +101,12 @@ export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
                                     classes["orders-preview__image-wrap"]
                                 }
                             >
-                                <img
+                                <Image
+                                    loading='lazy'
+                                    fill
                                     className={classes["orders-preview__image"]}
                                     src='https:placehold.co/400'
-                                    alt=''
+                                    alt={product?.title ?? "#"}
                                 />
                             </div>
                             <div

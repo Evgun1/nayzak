@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import { FC, useEffect, useState } from "react";
 
@@ -12,19 +12,8 @@ type SubcategoriesGridProps = {
     slug: string;
 };
 
-const SubcategoriesItem: FC<SubcategoriesGridProps> = ({ slug }) => {
-    const pathname = usePathname();
-    const [subcategories, setSubcategories] = useState<SubcategoryItem[]>();
-
-    useEffect(() => {
-        (async () => {
-            const currentSubcategories = await appSubcategoryByCategoryGet(
-                slug
-            );
-
-            setSubcategories(currentSubcategories);
-        })();
-    }, [slug]);
+const SubcategoriesItem: FC<SubcategoriesGridProps> = async ({ slug }) => {
+    const subcategories = await appSubcategoryByCategoryGet(slug);
 
     return (
         <div className='container'>
@@ -45,7 +34,7 @@ const SubcategoriesItem: FC<SubcategoriesGridProps> = ({ slug }) => {
                                     type: "DEFAULT",
                                 }}
                                 href={{
-                                    endpoint: `${pathname}/${title.toLowerCase()}`,
+                                    endpoint: `${slug}/${title.toLowerCase()}`,
                                 }}
                                 className={classes["subcategories__item-btn"]}
                             >

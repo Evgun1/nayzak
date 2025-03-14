@@ -3,6 +3,7 @@
 import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./Feature.module.scss";
 import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
+import Image from "next/image";
 
 export default async function Feature() {
     return (
@@ -41,17 +42,21 @@ export default async function Feature() {
                 </div>
                 <div className={classes["feature__image-wrap"]}>
                     <div className={classes["feature__image-back"]}>
-                        <img
+                        <Image
+                            loading='lazy'
+                            fill
                             className={classes["feature__image"]}
                             src='https://placehold.co/800'
-                            alt=''
+                            alt='#'
                         />
                     </div>
                     <div className={classes["feature__image-front"]}>
-                        <img
+                        <Image
+                            loading='lazy'
+                            fill
                             className={classes["feature__image"]}
                             src='https://placehold.co/800'
-                            alt=''
+                            alt='#'
                         />
                     </div>
                 </div>

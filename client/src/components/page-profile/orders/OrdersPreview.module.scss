@@ -33,13 +33,15 @@
     }
 
     &__image-wrap {
+        position: relative;
         max-width: 80px;
-        aspect-ratio: 1/1;
+        width: 100%;;
+        aspect-ratio: 1/1 auto;
     }
 
     &__image {
-        width: 100%;
-        object-fit: cover;
+        // width: 100%;
+        object-fit: cover !important;
     }
 
     &__product {
@@ -53,7 +55,7 @@
         border-radius: 0;
         padding: 10px;
     }
-    
+
     &__address,
     &__customer {
         border-radius: 0;

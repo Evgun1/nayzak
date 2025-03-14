@@ -2,6 +2,7 @@ import classes from "./Categories.module.scss";
 import Link from "next/link";
 import { appCategoriesGet } from "@/utils/http/categories";
 import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
+import Image from "next/image";
 
 const CategoryGrid = async () => {
     const categoriesData = await appCategoriesGet();
@@ -18,12 +19,15 @@ const CategoryGrid = async () => {
                             <div
                                 className={classes["categories-grid__content"]}
                             >
-                                <img
+                                <Image
+                                    objectFit='cover'
+                                    loading='lazy'
+                                    fill
                                     className={
                                         classes["categories-grid__image"]
                                     }
                                     src='https://placehold.co/400'
-                                    alt=''
+                                    alt={category.title}
                                 />
 
                                 <LinkCustom

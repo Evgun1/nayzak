@@ -48,10 +48,12 @@ export default function CartPreview({
         <div className={`${classes["cart-preview"]}`}>
             <div className={classes["cart-preview__product"]}>
                 <div className={classes["cart-preview__img-wrapper"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
                         className={classes["cart-preview__img"]}
                         src='https://placehold.co/600'
-                        alt=''
+                        alt='product'
                     />
                 </div>
                 <div className={classes["cart-preview__info"]}>

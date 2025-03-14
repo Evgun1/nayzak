@@ -11,6 +11,7 @@ import { ProductPreviewTypes } from "../ProductPreview.types";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 import Price from "../../price/Price";
 import Rating from "../../rating/Rating";
+import Image from "next/image";
 
 const ProductPreviewList = (props: ProductPreviewTypes) => {
     const { rating, stylePrice, product } = props;
@@ -34,7 +35,9 @@ const ProductPreviewList = (props: ProductPreviewTypes) => {
         <div className={classes["preview"]}>
             <Link href={`product/${product.title}`}>
                 <div className={classes["preview__img-wrapper"]}>
-                    <img
+                    <Image
+                        loading='lazy'
+                        fill
                         className={classes["preview__img"]}
                         src={
                             product.img

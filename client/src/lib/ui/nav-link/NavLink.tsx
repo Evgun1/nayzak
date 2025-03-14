@@ -5,18 +5,20 @@ import classes from "./NavLink.module.scss";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import LinkCustom, {
+    HrefObject,
     StyleSettingsObject,
 } from "../custom-elements/link-custom/LinkCustom";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 
-interface HrefObject {
-    endpoint?: string;
-    queryParams?: { [key: string]: string };
-}
+// interface HrefObject {
+//     endpoint?: string;
+//     queryParams?: { [key: string]: string };
+// }
 
 type NavLinkProps = {
     href: HrefObject;
     classesName?: string;
+    id?: string;
     children: ReactNode;
     customStyleActive?: string;
     styleSettings: StyleSettingsObject;
@@ -28,6 +30,7 @@ export default function NavLink({
     styleSettings,
     classesName,
     customStyleActive,
+    id,
 }: NavLinkProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
@@ -81,6 +84,7 @@ export default function NavLink({
 
     return (
         <LinkCustom
+            id={id}
             className={`${classesName ? classesName : ""} ${
                 active
                     ? (customStyleActive ?? classes.action) || classes.link

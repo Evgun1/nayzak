@@ -7,6 +7,7 @@ import { ButtonClassList } from "@/types/buttonClassList.enum";
 import { TextClassList } from "@/types/textClassList.enum";
 import { FC } from "react";
 import { ProductPreviewTypes } from "../ProductPreview.types";
+import Image from "next/image";
 
 const ProductPreviewDefaultClient: FC<ProductPreviewTypes> = (props) => {
     const { rating, className, stylePrice, product } = props;
@@ -17,7 +18,9 @@ const ProductPreviewDefaultClient: FC<ProductPreviewTypes> = (props) => {
             href={`/product/${product.title.replaceAll(" ", "_")}`}
         >
             <div className={classes["preview__img-wrapper"]}>
-                <img
+                <Image
+                    loading='lazy'
+                    fill
                     className={classes["preview__img"]}
                     src={
                         product.img

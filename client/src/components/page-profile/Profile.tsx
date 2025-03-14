@@ -12,6 +12,7 @@ import Wishlist from "./wishlist/Wishlist";
 import { logOutActive } from "@/lib/redux/store/auth/action";
 import { useCookieGet } from "@/hooks/useCookie";
 import Addresses from "./addresses/Addresses";
+import Image from "next/image";
 
 type PageContentType = {
     label: string;
@@ -63,11 +64,15 @@ export default function Profile() {
             <h3 className={classes["profile__header"]}>My account</h3>
             <div className={classes["profile__content"]}>
                 <div className={classes["profile-navigation"]}>
-                    <img
-                        className={classes["profile-navigation__image"]}
-                        src='https://placehold.co/400'
-                        alt='avatar'
-                    />
+                    <div className={classes["profile-navigation__image-wrap"]}>
+                        <Image
+                            loading='lazy'
+                            fill
+                            className={classes["profile-navigation__image"]}
+                            src='https://placehold.co/400'
+                            alt='avatar'
+                        />
+                    </div>
 
                     <ul className={classes["profile-navigation__list"]}>
                         {MENU &&

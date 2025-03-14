@@ -1,6 +1,6 @@
 "use server";
 
-import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs";
+import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs.copy";
 import ProductSlider from "./ProductSlider";
 import Price from "../elements/price/Price";
 import ProductActions from "./ProductActions";
@@ -10,47 +10,69 @@ import { ReviewItem } from "@/types/reviews.types";
 import { ProductItem } from "@/types/product.types";
 
 import classes from "./Product.module.scss";
-import Reviews from "./product-tab/product-reviws/ProductReviews";
+import Reviews from "./product-tab/product-reviews/ProductReviews";
 import ProductsTabs, { ProductsTabsItem } from "./ProductTabs";
 import ProductDescription from "./product-tab/ProductDescription";
 import ProductInfo from "./product-tab/ProductInfo";
+import dynamic from "next/dynamic";
 
 const Product = async ({
-    totalReviews,
+    reviewsData,
     productData,
-    reviewsArray,
 }: {
-    totalReviews: number;
-    reviewsArray: ReviewItem[];
-    productData: ProductItem;
+    reviewsData: {
+        totalReviews: number;
+        reviewsArray: ReviewItem[];
+    };
+    productData: ProductItem & { category: string; subcategory: string };
 }) => {
+    const ProductDescriptionDynamic = dynamic(
+        () => import("./product-tab/ProductDescription")
+    );
+    const ProductInfoDynamic = dynamic(
+        () => import("./product-tab/ProductInfo")
+    );
+    const ProductReviewsDynamic = dynamic(
+        () => import("./product-tab/product-reviews/ProductReviews")
+    );
+
     const arr: ProductsTabsItem[] = [
         {
             label: "Description",
-            children: <ProductDescription productData={productData} />,
+            children: <ProductDescriptionDynamic productData={productData} />,
         },
         {
             label: "Additional Info",
-            children: <ProductInfo />,
+            children: <ProductInfoDynamic />,
         },
         {
             label: "Reviews",
             children: (
-                <Reviews totalReviews={totalReviews} reviews={reviewsArray} />
+                <ProductReviewsDynamic
+                    totalReviews={reviewsData.totalReviews}
+                    reviews={reviewsData.reviewsArray}
+                />
             ),
         },
     ];
 
     return (
-        <>
+        <div>
             <div className={`${classes["product"]}`}>
                 <ProductSlider />
                 <div className={classes["product__loop"]}>
                     <div className={classes["product__loop-header"]}>
                         <div className={classes["product__info"]}>
                             <Breadcrumbs
-                                product={productData}
-                                style={{ justifyContent: "flex-start" }}
+                                path='category'
+                                value={[
+                                    productData.category,
+                                    productData.subcategory,
+                                    productData.title,
+                                ]}
+
+                                // product={productData}
+                                // style={{ justifyContent: "flex-start" }}
                             />
                             <h5>{productData.title}</h5>
                             <p className={TextClassList.REGULAR_14}>
@@ -65,7 +87,7 @@ const Product = async ({
                                     }
                                 />
                                 <span className={TextClassList.REGULAR_12}>
-                                    {totalReviews} Reviews
+                                    {reviewsData.totalReviews} Reviews
                                 </span>
                             </div>
                         </div>
@@ -85,9 +107,8 @@ const Product = async ({
                     />
                 </div>
             </div>
-
             <ProductsTabs data={arr} />
-        </>
+        </div>
     );
 };
 

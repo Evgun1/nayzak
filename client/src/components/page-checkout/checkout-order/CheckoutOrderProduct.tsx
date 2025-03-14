@@ -4,15 +4,18 @@ import { ProductItem } from "@/types/product.types";
 import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./CheckoutOrderProduct.module.scss";
 import Tooltip from "@/lib/ui/tooltip/Tooltip";
+import Image from "next/image";
 
 const CheckoutOrderProduct = ({ product }: { product: ProductItem }) => {
     return (
         <div className={classes["product"]}>
             <div className={classes["product__img"]}>
-                <img
+                <Image
+                    loading='lazy'
+                    fill
                     className={classes["product__img-img"]}
                     src='https://placehold.co/652x889'
-                    alt=''
+                    alt='product'
                 />
             </div>
             <div className={classes["product__info"]}>

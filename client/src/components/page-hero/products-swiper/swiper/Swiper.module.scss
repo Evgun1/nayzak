@@ -66,10 +66,15 @@
         }
     }
     &__pagination {
-        margin: 0 12px;
+        margin: 0 12px !important;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 5px;
+    }
+    &__slider {
+        margin-right: 32px !important;
+        max-width: 310px;
+        max-height: 479px;
     }
 }

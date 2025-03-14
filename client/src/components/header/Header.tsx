@@ -6,10 +6,11 @@ import IconsIdList from "@/components/elements/icons/IconsIdList";
 import classes from "./Header.module.scss";
 import Actions from "./Actions";
 
-import Navigation from "./Navigation";
+import Navigation from "./navigation/Navigation";
 import Link from "next/link";
+import { FC } from "react";
 
-const Header = async () => {
+const Header: FC = async () => {
     return (
         <header className={"container"}>
             <div className={classes.header}>
