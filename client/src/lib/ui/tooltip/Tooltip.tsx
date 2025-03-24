@@ -8,17 +8,14 @@ type HoverTooltipProps = {
 };
 
 const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
-    const id = useId().replaceAll(":", "");
-    const tooltipId = `tooltip__${id}`;
-
     let timer: ReturnType<typeof setTimeout>;
+
+    const ref = useRef() as RefObject<HTMLDivElement>;
 
     const eventListenerHandler = (e: Event) => {
         const mouseEvent = e as MouseEvent;
-        const currentTarget = mouseEvent.currentTarget as HTMLElement | null;
+        const hoverTooltipWrap = e.currentTarget as HTMLElement;
 
-        if (!currentTarget) return;
-        const hoverTooltipWrap = currentTarget.closest(`#${tooltipId}`);
         if (!hoverTooltipWrap) return;
 
         for (const element of hoverTooltipWrap.children) {
@@ -51,8 +48,20 @@ const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
         }
     };
 
+    // useEffect(() => {
+    //     const element = document.getElementById(tooltipId);
+    //     if (!element) return;
+
+    //     element.addEventListener("mouseenter", eventListenerHandler);
+    //     element.addEventListener("mouseleave", eventListenerHandler);
+    //     return () => {
+    //         element.removeEventListener("mouseenter", eventListenerHandler);
+    //         element.removeEventListener("mouseleave", eventListenerHandler);
+    //     };
+    // }, []);
     useEffect(() => {
-        const element = document.getElementById(tooltipId);
+        const element = ref.current;
+
         if (!element) return;
 
         element.addEventListener("mouseenter", eventListenerHandler);
@@ -65,7 +74,7 @@ const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
 
     return (
         <div
-            id={tooltipId}
+            ref={ref}
             className={`${TextClassList.REGULAR_12} ${classes["tooltip__label"]}`}
         >
             {value}

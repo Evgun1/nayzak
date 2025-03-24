@@ -6,6 +6,7 @@ import NavbarItem from "./NavbarItem";
 import childrenRecursion from "@/utils/ChildrenRecursionT";
 
 import classes from "./Navbar.module.scss";
+import { ToggleContentProvider } from "@/components/elements/context/ToggleContentContext";
 type NavbarProps = {
     children: ReactElement[];
 };

@@ -19,6 +19,7 @@ export const appProductsGet = async ({
     }
 
     const { response, totalCount } = await appFetchGet<ProductItem[]>({
+        tag: "products",
         searchParams,
         pathname,
     });
@@ -40,6 +41,7 @@ export const appProductsByParamsGet = async ({
     }`;
 
     const { response, totalCount } = await appFetchGet<ProductItem[]>({
+        tag: "products",
         pathname,
         searchParams,
     });
@@ -51,6 +53,7 @@ export const appOneProductGet = async (productsID: number | string) => {
     const pathname = `products/${productsID}`;
 
     const { response, totalCount } = await appFetchGet<ProductItem>({
+        tag: "products",
         pathname,
     });
 
@@ -69,6 +72,7 @@ export const appMinMaxPriceGet = async (
         minPrice: number;
         maxPrice: number;
     }>({
+        tag: "products",
         pathname,
         searchParams,
     });

@@ -34,7 +34,9 @@ export default function ProductSlider() {
             >
                 <SwiperSlide className={classes["product-slider__img-main"]}>
                     <Image
-                        loading='lazy'
+                        sizes='width: 100%;'
+                        // objectFit='cover'
+                        priority
                         fill
                         alt='product'
                         className={classes["product-slider__img"]}
@@ -43,7 +45,9 @@ export default function ProductSlider() {
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-main"]}>
                     <Image
-                        loading='lazy'
+                        sizes='width: 100%;'
+                        // objectFit='cover'
+                        priority
                         fill
                         alt='product'
                         className={classes["product-slider__img"]}
@@ -52,7 +56,9 @@ export default function ProductSlider() {
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-main"]}>
                     <Image
-                        loading='lazy'
+                        sizes='width: 100%;'
+                        // objectFit='cover'
+                        priority
                         fill
                         alt='product'
                         className={classes["product-slider__img"]}
@@ -61,7 +67,9 @@ export default function ProductSlider() {
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-main"]}>
                     <Image
-                        loading='lazy'
+                        sizes='width: 100%;'
+                        priority
+                        // objectFit='cover'
                         fill
                         alt='product'
                         className={classes["product-slider__img"]}
@@ -81,7 +89,9 @@ export default function ProductSlider() {
             >
                 <SwiperSlide className={classes["product-slider__img-group"]}>
                     <Image
-                        loading='lazy'
+                        sizes='width: 100%;'
+                        // objectFit='cover'
+                        priority
                         fill
                         alt='product'
                         className={classes["product-slider__img"]}
@@ -90,7 +100,9 @@ export default function ProductSlider() {
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-group"]}>
                     <Image
-                        loading='lazy'
+                        sizes='width: 100%;'
+                        // objectFit='cover'
+                        priority
                         fill
                         alt='product'
                         className={classes["product-slider__img"]}
@@ -99,7 +111,9 @@ export default function ProductSlider() {
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-group"]}>
                     <Image
-                        loading='lazy'
+                        sizes='width: 100%;'
+                        // objectFit='cover'
+                        priority
                         fill
                         alt='product'
                         className={classes["product-slider__img"]}
@@ -108,7 +122,9 @@ export default function ProductSlider() {
                 </SwiperSlide>
                 <SwiperSlide className={classes["product-slider__img-group"]}>
                     <Image
-                        loading='lazy'
+                        sizes='width: 100%;'
+                        // objectFit='cover'
+                        priority
                         fill
                         alt='product'
                         className={classes["product-slider__img"]}

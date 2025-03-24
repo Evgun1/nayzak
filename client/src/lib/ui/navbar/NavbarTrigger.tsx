@@ -1,9 +1,13 @@
+"use client";
+
 import React, {
     FC,
     ReactElement,
     ReactNode,
+    RefObject,
     useEffect,
     useLayoutEffect,
+    useRef,
     useState,
 } from "react";
 import classes from "./Navbar.module.scss";
@@ -11,6 +15,7 @@ import LinkCustom, {
     HrefObject,
 } from "../custom-elements/link-custom/LinkCustom";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs.copy";
+import { useNavbar } from "./NavbarContext";
 
 type NavbarTriggerProps = {
     children: ReactNode;
@@ -22,7 +27,9 @@ type NavbarTriggerHiddenProps = {
 } & NavbarTriggerProps;
 
 const NavbarTrigger: FC<NavbarTriggerProps> = (props) => {
-    const { children, contentId, href } = props as NavbarTriggerHiddenProps;
+    const { navbarId } = useNavbar();
+
+    const { children, href } = props as NavbarTriggerHiddenProps;
 
     let timer: NodeJS.Timeout;
 
@@ -68,7 +75,7 @@ const NavbarTrigger: FC<NavbarTriggerProps> = (props) => {
             }
         }
 
-        const element = document.getElementById(contentId);
+        const element = document.getElementById(navbarId);
         if (!element) return;
 
         element.addEventListener("mouseenter", eventListenerHandler);

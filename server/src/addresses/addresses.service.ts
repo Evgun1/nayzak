@@ -1,132 +1,137 @@
-import prismaClient from '../prismaClient';
-import { QueryParameterTypes } from '../utils/service/service.type';
-import { MainService } from '../utils/service/main.service';
-import { Addresses, Prisma } from '@prisma/client';
-import { QueryParamHandler } from '../utils/query-params/QueryParams.service';
-import { AddressInputDTO } from './addresses.types';
-import { AddressesDTO } from './addresses.dto';
+import prismaClient from "../prismaClient";
+import { QueryParameterTypes } from "../utils/service/service.type";
+import { MainService } from "../utils/service/main.service";
+import { Addresses, Prisma } from "@prisma/client";
+import { QueryParamHandler } from "../utils/query-params/QueryParams.service";
+import { AddressInputDTO } from "./addresses.types";
+import { AddressesDTO } from "./addresses.dto";
+import clearCache from "../utils/clear-cache/ClearCache";
 
 class AddressesOptions {
-	getAll() {}
+    getAll() {}
 }
 
 class AddressesService {
-	private mainService = new MainService();
-	private queryParams = new QueryParamHandler();
-	private options = new AddressesOptions();
+    private mainService = new MainService();
+    private queryParams = new QueryParamHandler();
+    private options = new AddressesOptions();
 
-	private supportedMimeTypes: Map<boolean, (data: string) => object> =
-		new Map();
+    private supportedMimeTypes: Map<boolean, (data: string) => object> =
+        new Map();
 
-	private setupMimeTypes() {
-		this.supportedMimeTypes.set(false, (data: string) => ({
-			id: data,
-		}));
-		this.supportedMimeTypes.set(true, (data: string) => ({
-			title: data.replaceAll('_', ' '),
-		}));
-	}
+    private setupMimeTypes() {
+        this.supportedMimeTypes.set(false, (data: string) => ({
+            id: data,
+        }));
+        this.supportedMimeTypes.set(true, (data: string) => ({
+            title: data.replaceAll("_", " "),
+        }));
+    }
 
-	constructor() {
-		this.setupMimeTypes();
-	}
+    constructor() {
+        this.setupMimeTypes();
+    }
 
-	async getAll(queryParams: QueryParameterTypes) {
-		const take = this.queryParams.limit(queryParams);
-		const skip = this.queryParams.offset(queryParams);
-		const where = this.queryParams.filter<Prisma.AddressesWhereInput>(
-			queryParams,
-			Prisma.AddressesScalarFieldEnum
-		);
-		
-		const orderBy =
-			this.queryParams.orderBy<Prisma.AddressesOrderByWithRelationInput>(
-				queryParams,
-				Prisma.AddressesScalarFieldEnum
-			);
+    async getAll(queryParams: QueryParameterTypes) {
+        const take = this.queryParams.limit(queryParams);
+        const skip = this.queryParams.offset(queryParams);
+        const where = this.queryParams.filter<Prisma.AddressesWhereInput>(
+            queryParams,
+            Prisma.AddressesScalarFieldEnum
+        );
 
-		const option: Prisma.AddressesFindManyArgs = {
-			take,
-			skip,
-			where,
-			orderBy,
-		};
+        const orderBy =
+            this.queryParams.orderBy<Prisma.AddressesOrderByWithRelationInput>(
+                queryParams,
+                Prisma.AddressesScalarFieldEnum
+            );
 
-		const addresses = await prismaClient.addresses.findMany(option);
-		const addressesCount = await prismaClient.addresses.count({
-			where: option.where,
-		});
+        const option: Prisma.AddressesFindManyArgs = {
+            take,
+            skip,
+            where,
+            orderBy,
+        };
 
-		return { addresses, addressesCount };
-	}
+        const addresses = await prismaClient.addresses.findMany(option);
+        const addressesCount = await prismaClient.addresses.count({
+            where: option.where,
+        });
 
-	async getOne(addressParams: string) {
-		const addressData = this.supportedMimeTypes.get(
-			isNaN(Number(addressParams))
-		);
-		if (!addressData) return;
+        return { addresses, addressesCount };
+    }
 
-		const inputData = addressData(addressParams) as QueryParameterTypes;
+    async getOne(addressParams: string) {
+        const addressData = this.supportedMimeTypes.get(
+            isNaN(Number(addressParams))
+        );
+        if (!addressData) return;
 
-		const where = this.queryParams.filter<Prisma.AddressesWhereInput>(
-			inputData,
-			Prisma.AddressesScalarFieldEnum
-		);
+        const inputData = addressData(addressParams) as QueryParameterTypes;
 
-		const option: Prisma.AddressesFindFirstArgs = {
-			where,
-		};
+        const where = this.queryParams.filter<Prisma.AddressesWhereInput>(
+            inputData,
+            Prisma.AddressesScalarFieldEnum
+        );
 
-		const address = await prismaClient.addresses.findFirst(option);
+        const option: Prisma.AddressesFindFirstArgs = {
+            where,
+        };
 
-		return address;
-	}
+        const address = await prismaClient.addresses.findFirst(option);
 
-	async create(inputData: AddressInputDTO) {
-		const data: Record<string, any> = {};
+        return address;
+    }
 
-		for (const key in inputData) {
-			const typeKey = key as keyof AddressInputDTO;
-			const typeValue = inputData[typeKey];
+    async create(inputData: AddressInputDTO) {
+        const data: Record<string, any> = {};
 
-			if (!isNaN(Number(typeValue))) {
-				data[typeKey] = parseInt(typeValue.toString());
-				continue;
-			}
+        for (const key in inputData) {
+            const typeKey = key as keyof AddressInputDTO;
+            const typeValue = inputData[typeKey];
 
-			data[typeKey] = typeValue;
-		}
+            if (!isNaN(Number(typeValue))) {
+                data[typeKey] = parseInt(typeValue.toString());
+                continue;
+            }
 
-		const address = await prismaClient.addresses.create({
-			data: data as AddressInputDTO,
-		});
+            data[typeKey] = typeValue;
+        }
 
-		const addressesDTO = new AddressesDTO(address);
+        const address = await prismaClient.addresses.create({
+            data: data as AddressInputDTO,
+        });
 
-		return addressesDTO;
-	}
+        const addressesDTO = new AddressesDTO(address);
 
-	async update(inputData: AddressInputDTO) {
-		const where: Prisma.AddressesWhereUniqueInput = { id: inputData.id };
-		const data: Prisma.AddressesUpdateInput = inputData;
+        await clearCache("addresses");
+        return addressesDTO;
+    }
 
-		const option: Prisma.AddressesUpdateArgs = {
-			where,
-			data,
-		};
+    async update(inputData: AddressInputDTO) {
+        const where: Prisma.AddressesWhereUniqueInput = { id: inputData.id };
+        const data: Prisma.AddressesUpdateInput = inputData;
 
-		const addresses = await prismaClient.addresses.update(option);
-		const addressesDTO = new AddressesDTO(addresses);
+        const option: Prisma.AddressesUpdateArgs = {
+            where,
+            data,
+        };
 
-		return addressesDTO;
-	}
+        const addresses = await prismaClient.addresses.update(option);
+        const addressesDTO = new AddressesDTO(addresses);
 
-	async delete(addressesId: number | number[]) {
-		return await this.mainService.delete<Prisma.AddressesScalarFieldEnum>(
-			'Addresses',
-			addressesId
-		);
-	}
+        await clearCache("addresses");
+        return addressesDTO;
+    }
+
+    async delete(addressesId: number | number[]) {
+        await clearCache("addresses");
+
+        return await this.mainService.delete<Prisma.AddressesScalarFieldEnum>(
+            "Addresses",
+            addressesId
+        );
+    }
 }
 
 export default new AddressesService();

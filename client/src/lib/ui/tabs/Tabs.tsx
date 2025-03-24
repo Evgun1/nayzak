@@ -1,19 +1,34 @@
-'use client';
-import React, { ReactElement, ReactNode, useState } from 'react';
-import TabsTab from './TabsTab';
+// "use client";
 
-type TabProps = {
-	label: string;
-	children: ReactNode;
+import TabsHeader from "./TabsHeader";
+import { TabsProvider, useTabs } from "./TabsContext";
+import { ReactNode } from "react";
+import TabsBody from "./TabsBody";
+import TabsToggle from "./TabsToggle";
+
+import classes from "./Tabs.module.scss";
+
+type TabsProps = {
+    children: ReactNode;
+    isVertical?: boolean;
 };
-export default function Tabs({ children }: { children: ReactNode }) {
-	const label: string[] = [];
 
-	const childrenArray = [children];
-
-	return <div>{childrenArray}</div>;
+function Tabs({ children, isVertical }: TabsProps) {
+    return (
+        <TabsProvider isVertical={isVertical}>
+            <div
+                className={`${classes["tabs"]} ${
+                    isVertical ? classes["tabs--vertical"] : ""
+                }`}
+            >
+                {children}
+            </div>
+        </TabsProvider>
+    );
 }
 
-Tabs.Tab = function Tab({ children }: { children: ReactNode; label: string }) {
-	return <div>{children}</div>;
-};
+export default Object.assign(Tabs, {
+    Header: TabsHeader,
+    Body: TabsBody,
+    Toggle: TabsToggle,
+});

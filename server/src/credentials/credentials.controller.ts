@@ -1,85 +1,92 @@
-import { Context, Next } from 'hono';
-import { CredentialsChangeGetDTO, UserGetDTO } from './interface/UserGetInput';
-import getReqBody from '../tools/getReqBody';
-import credentialsService from './credentials.service';
-import { QueryParameterTypes } from '../utils/service/service.type';
+import { Context, Next } from "hono";
+import { CredentialsChangeGetDTO, UserGetDTO } from "./interface/UserGetInput";
+import getReqBody from "../tools/getReqBody";
+import credentialsService from "./credentials.service";
+import { QueryParameterTypes } from "../utils/service/service.type";
+import clearCache from "../utils/clear-cache/ClearCache";
 
 class CredentialsController {
-	async getAll(c: Context) {
-		const queryParams = c.req.query() as QueryParameterTypes;
+    async getAll(c: Context) {
+        const queryParams = c.req.query() as QueryParameterTypes;
 
-		const { credentials, count } = await credentialsService.getAll(queryParams);
+        const { credentials, count } =
+            await credentialsService.getAll(queryParams);
 
-		c.res.headers.append('X-Total-Count', count.toString());
-		return c.json(credentials);
-	}
+        c.res.headers.append("X-Total-Count", count.toString());
+        return c.json(credentials);
+    }
 
-	async getOne(c: Context) {
-		const { credentialsId } = c.req.param() as { credentialsId: string };
+    async getOne(c: Context) {
+        const { credentialsId } = c.req.param() as { credentialsId: string };
 
-		const result = await credentialsService.getOne(+credentialsId);
+        const result = await credentialsService.getOne(+credentialsId);
 
-		return c.json(result);
-	}
+        return c.json(result);
+    }
 
-	async registration(c: Context) {
-		// const token = c.req.header("authorization");
-		const data = (await getReqBody(c)) as UserGetDTO;
+    async registration(c: Context) {
+        // const token = c.req.header("authorization");
+        const data = (await getReqBody(c)) as UserGetDTO;
 
-		try {
-			const credentials = await credentialsService.registration(data);
-			return c.json(credentials);
-		} catch (e) {
-			console.log(e);
-		}
-	}
+        try {
+            const credentials = await credentialsService.registration(data);
+            return c.json(credentials);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
-	async login(c: Context) {
-		const data = (await getReqBody(c)) as UserGetDTO;
-		const userToken = await credentialsService.login(data);
+    async login(c: Context) {
+        const data = (await getReqBody(c)) as UserGetDTO;
+        const userToken = await credentialsService.login(data);
 
-		return c.json(userToken);
-	}
+        return c.json(userToken);
+    }
 
-	async active(c: Context) {
-		const { link } = c.req.param();
-		await credentialsService.activate(link);
+    async active(c: Context) {
+        const { link } = c.req.param();
+        await credentialsService.activate(link);
 
-		return c.redirect(`${process.env.CLIENT_URL}`);
-	}
+        return c.redirect(`${process.env.CLIENT_URL}`);
+    }
 
-	async check(c: Context) {
-		const authorization = c.req.header('Authorization');
+    async check(c: Context) {
+        const authorization = c.req.header("Authorization");
 
-		const newToken = await credentialsService.init(authorization as string);
+        const newToken = await credentialsService.init(authorization as string);
 
-		return c.json(newToken);
-	}
+        return c.json(newToken);
+    }
 
-	async changePassword(c: Context, next: Next) {
-		const token = c.req.header('authorization');
+    async changePassword(c: Context, next: Next) {
+        const token = c.req.header("authorization");
 
-		await credentialsService.changePassword(token as string);
+        await credentialsService.changePassword(token as string);
 
-		return c.json({ message: 'Password successfully changed' });
-	}
+        return c.json({ message: "Password successfully changed" });
+    }
 
-	async change(c: Context) {
-		const data = (await getReqBody(c)) as CredentialsChangeGetDTO;
-		const { credentialsId } = c.req.param() as { credentialsId: string };
+    async change(c: Context) {
+        const data = (await getReqBody(c)) as CredentialsChangeGetDTO;
+        const { credentialsId } = c.req.param() as { credentialsId: string };
 
-		const credentials = await credentialsService.change(data, credentialsId);
+        const credentials = await credentialsService.change(
+            data,
+            credentialsId
+        );
 
-		return c.json(credentials);
-	}
+		
+        await clearCache("customers");
+        return c.json(credentials);
+    }
 
-	async delete(c: Context) {
-		const credentialId = (await getReqBody(c)) as number | number[];
+    async delete(c: Context) {
+        const credentialId = (await getReqBody(c)) as number | number[];
 
-		const id = await credentialsService.delete(credentialId);
+        const id = await credentialsService.delete(credentialId);
 
-		return c.json(id);
-	}
+        return c.json(id);
+    }
 }
 
 export default new CredentialsController();

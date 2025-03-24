@@ -4,6 +4,7 @@ import { appFetchGet, appFetchPost, appFetchPut } from ".";
 export const appCustomersGet = async (searchParams?: URLSearchParams) => {
     const pathname = `customers`;
     const { response } = await appFetchGet<CustomerItem[]>({
+        tag: "customers",
         pathname,
         searchParams,
     });
@@ -13,7 +14,10 @@ export const appCustomersGet = async (searchParams?: URLSearchParams) => {
 
 export const appCustomersOneGet = async (customersId: string) => {
     const pathname = `customers/${customersId}`;
-    const { response } = await appFetchGet<CustomerItem>({ pathname });
+    const { response } = await appFetchGet<CustomerItem>({
+        tag: "customers",
+        pathname,
+    });
 
     return response;
 };

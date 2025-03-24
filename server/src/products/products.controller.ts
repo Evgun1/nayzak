@@ -8,6 +8,7 @@ import getReqBody from "../tools/getReqBody";
 import { QueryParameterTypes } from "../utils/service/service.type";
 import { log } from "console";
 import { json } from "stream/consumers";
+import clearCache from "../utils/clear-cache/ClearCache";
 
 class ProductsController {
     async getAll(c: Context) {
@@ -64,8 +65,10 @@ class ProductsController {
 
     async create(c: Context) {
         const inputData = await c.req.json();
+
         const product = await ProductsService.createProduct(inputData);
 
+        await clearCache("products");
         return c.json(product);
     }
 
@@ -74,6 +77,7 @@ class ProductsController {
 
         const product = await ProductsService.updateProduct(inputData);
 
+        await clearCache("products");
         return c.json(product);
     }
 
@@ -82,6 +86,7 @@ class ProductsController {
 
         const id = await productsService.deleteProducts(productsId);
 
+        await clearCache("products");
         return c.json(id);
     }
 }

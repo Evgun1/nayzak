@@ -67,6 +67,7 @@ export default async function Breadcrumbs(props: BreadcrumbsProductProps) {
                             </LinkCustom>
                         ) : (
                             <span
+                                key={index}
                                 className={`${
                                     TextClassList.REGULAR_12 &&
                                     ButtonClassList.BUTTON_X_SMALL

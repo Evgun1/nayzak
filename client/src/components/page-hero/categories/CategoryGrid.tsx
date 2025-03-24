@@ -20,9 +20,9 @@ const CategoryGrid = async () => {
                                 className={classes["categories-grid__content"]}
                             >
                                 <Image
-                                    objectFit='cover'
                                     loading='lazy'
                                     fill
+                                    sizes='width:100%; height:100%;'
                                     className={
                                         classes["categories-grid__image"]
                                     }

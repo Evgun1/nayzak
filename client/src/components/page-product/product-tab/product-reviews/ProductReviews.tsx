@@ -31,7 +31,7 @@ const Reviews = async ({
                             {totalReviews} total Reviews
                         </span>
                     </div>
-                    <ProductReviewsAction />
+                    <ProductReviewsAction reviews={reviews} />
                 </div>
             </div>
             {reviews.length > 0 && (

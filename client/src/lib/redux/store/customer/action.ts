@@ -11,6 +11,10 @@ import { CredentialsDTO } from "../auth/credentials.type";
 import { notificationAction } from "../notification/notification";
 import NotificationCustomer from "@/components/elements/notification/NotificationCustomer";
 import PopupNotification from "@/components/popup-notifications/PopupNotifications";
+import { initAddress } from "../address/action";
+import { initWishlist } from "../wishlist/action";
+import { initCart } from "../cart/action";
+import { initOrders } from "../orders/action";
 
 export const initCustomer = () => {
     return async (dispatch: AppDispatch) => {
@@ -21,6 +25,11 @@ export const initCustomer = () => {
             const res = await appCustomersInitPost(token);
 
             dispatch(customerAction.setCustomer(res));
+
+            dispatch(initAddress());
+            dispatch(initWishlist());
+            dispatch(initCart());
+            dispatch(initOrders());
         } catch (error) {
             console.log(error);
         }

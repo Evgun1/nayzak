@@ -20,7 +20,7 @@ interface NavigationItem {
 type AppNavigation = NavigationItem[];
 
 const NavigationActionDynamic = dynamic(() => import("./NavigationAction"), {
-    ssr: true,
+    // ssr: true,
 });
 
 const Navigation: FC = async () => {
@@ -48,6 +48,7 @@ const Navigation: FC = async () => {
 
         const subCategories = await appSubcategoriesGet(urlSearchParams);
         const subCategoriesForDisplay = [];
+
         for (const subcategory of subCategories) {
             urlSearchParams.set("subcategory", subcategory.title);
 

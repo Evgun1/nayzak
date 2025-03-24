@@ -30,7 +30,7 @@ const CartBody: FC = () => {
         }
     }, [products]);
 
-    if (!cart && (!products || products.length === 0)) {
+    if ((!cart || cart.length === 0) && (!products || products.length === 0)) {
         return (
             <div
                 className={`${TextClassList.REGULAR_22} ${classes["cart__message"]}`}

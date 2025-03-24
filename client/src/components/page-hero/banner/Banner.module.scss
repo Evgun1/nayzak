@@ -9,10 +9,11 @@
         max-width: 736px;
         max-height: 700px;
         width: 100%;
+        height: 100%;
         aspect-ratio: 1.01/1 auto;
     }
     &__img {
-        object-fit: cover !important;
+        object-fit: cover;
     }
 
     &__content {

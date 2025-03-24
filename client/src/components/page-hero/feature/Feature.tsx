@@ -43,6 +43,7 @@ export default async function Feature() {
                 <div className={classes["feature__image-wrap"]}>
                     <div className={classes["feature__image-back"]}>
                         <Image
+                            sizes='width:100%; height:100%;'
                             loading='lazy'
                             fill
                             className={classes["feature__image"]}
@@ -52,6 +53,7 @@ export default async function Feature() {
                     </div>
                     <div className={classes["feature__image-front"]}>
                         <Image
+                            sizes='width:100%; height:100%;'
                             loading='lazy'
                             fill
                             className={classes["feature__image"]}

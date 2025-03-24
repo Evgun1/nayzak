@@ -50,34 +50,6 @@ const NavigationAction: React.FC<NavigationActionProps> = ({
                 </Navbar.Content>
             ))}
         </Navbar>
-        // <>
-        //     {navigationData.map((category, i) => (
-        //         <DropDown key={i}>
-        //             <DropDown.Trigger
-        //                 elementType='link'
-        //                 href={{ endpoint: `category/${category.url}` }}
-        //                 typeProperty='mouseenter'
-        //                 children={category.label}
-        //             />
-
-        //             <DropDown.Body>
-        //                 {category.children &&
-        //                     category.children.length &&
-        //                     category.children.map((subcategory, i) => (
-        //                         <DropDown.Item
-        //                             key={i}
-        //                             elementType='link'
-        //                             href={{
-        //                                 endpoint: `/category/${category.url}/${subcategory.url}`,
-        //                             }}
-        //                         >
-        //                             {subcategory.label}
-        //                         </DropDown.Item>
-        //                     ))}
-        //             </DropDown.Body>
-        //         </DropDown>
-        //     ))}
-        // </>
     );
 };
 

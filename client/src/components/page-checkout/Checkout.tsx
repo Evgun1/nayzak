@@ -16,8 +16,7 @@ import { validation } from "@/utils/validator/validator";
 
 const schemaCustomersArr: Array<ZodObject<any>> = [];
 schemaCustomersArr.push(z.object({ ...validation.customer }));
-
-export default function Checkout() {
+const Checkout = () => {
     const route = useRouter();
     const cart = useAppSelector((state) => state.cart.productsArray);
     const dispatch = useAppDispatch();
@@ -34,8 +33,6 @@ export default function Checkout() {
     ) => {
         const objectValue = value.data;
         const ordersItem = {} as ordersUploadItem;
-
-        const t = event.currentTarget as HTMLFormElement;
 
         const customerFormData = new FormData();
         for (const key in objectValue) {
@@ -69,22 +66,26 @@ export default function Checkout() {
             }
         }
 
-        dispatch(uploadOrders(ordersItem));
-        dispatch(writeCustomerAction(customerFormData));
-        // route.push('/');
+        try {
+            dispatch(uploadOrders(ordersItem));
+            dispatch(writeCustomerAction(customerFormData));
+
+            route.push("/");
+        } catch (error) {}
     };
 
     useEffect(() => {
         if (cart.length === 0) redirect("/");
-    }, []);
+    }, [cart]);
 
-    if (typeof window === undefined) return;
-    if (window.localStorage.getItem("order-status-code") === "200") {
-        route.push("/", { scroll: true });
-        setTimeout(() => {
-            window.localStorage.removeItem("order-status-code");
-        }, 100);
-    }
+    // if (typeof window !== undefined) {
+    //     if (window.localStorage.getItem("order-status-code") === "200") {
+    //         route.push("/", { scroll: true });
+    //         setTimeout(() => {
+    //             window.localStorage.removeItem("order-status-code");
+    //         }, 100);
+    //     }
+    // }
 
     return (
         <div className={`container ${classes.checkout}`}>
@@ -111,4 +112,6 @@ export default function Checkout() {
             </Form>
         </div>
     );
-}
+};
+
+export default Checkout;

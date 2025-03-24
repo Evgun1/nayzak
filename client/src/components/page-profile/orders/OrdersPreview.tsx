@@ -3,7 +3,7 @@
 import { OrdersItem } from "@/types/orders.types";
 import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./OrdersPreview.module.scss";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ButtonCustom from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
 import { ProductItem } from "@/types/product.types";
@@ -14,9 +14,15 @@ import { appCustomersOneGet } from "@/utils/http/customer";
 import { CustomerItem } from "@/types/customer.types";
 import Accordion from "@/lib/ui/accordion/Accordion";
 import Image from "next/image";
+import { useAppSelector } from "@/lib/redux/redux";
 
 export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
     const { order } = props;
+
+    const customerState = useAppSelector(
+        (state) => state.customer.customerData
+    );
+    const addressesState = useAppSelector((state) => state.address.address);
 
     const [product, setProduct] = useState<ProductItem>();
     const [address, setAddress] = useState<AddressItem>();
@@ -33,26 +39,22 @@ export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
         (order.status?.charAt(0).toLocaleUpperCase() as string) +
         (order.status?.slice(1) as string);
 
-    useEffect(() => {
-        (async () => {
-            if (!order.productsId) return;
-            const productFetch = await appOneProductGet(order.productsId);
+    const getData = useCallback(async () => {
+        if (!order.productsId) return;
+        const productFetch = await appOneProductGet(order.productsId);
 
-            if (!order.addressesId) return;
-            const addressFetch = await appAddressesOneGet({
-                addressesParams: order.addressesId,
-            });
+        const addresses = addressesState.find(
+            (address) => address.id === order.addressesId
+        );
+        if (!addresses) return;
 
-            if (!order.customersId) return;
-            const customerFetch = await appCustomersOneGet(
-                order.customersId.toString()
-            );
-
-            setCustomer(customerFetch);
-            setAddress(addressFetch);
-            setProduct(productFetch);
-        })();
+        setAddress(addresses as AddressItem);
+        setProduct(productFetch);
     }, [order]);
+
+    useEffect(() => {
+        getData();
+    }, []);
 
     return (
         <Accordion className={classes["orders-preview"]}>
@@ -135,11 +137,11 @@ export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
                         <div
                             className={classes["orders-preview__customer-name"]}
                         >
-                            <span>{customer?.firstName}</span>
-                            <span>{customer?.lastName}</span>
+                            <span>{customerState?.firstName}</span>
+                            <span>{customerState?.lastName}</span>
                         </div>
                         <span>Phone</span>
-                        <span>{customer?.phone}</span>
+                        <span>{customerState?.phone}</span>
                     </div>
                 </div>
             </Accordion.Body>

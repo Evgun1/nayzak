@@ -8,24 +8,26 @@ import { initCustomer } from "@/lib/redux/store/customer/action";
 import { initOrders } from "@/lib/redux/store/orders/action";
 import { initWishlist } from "@/lib/redux/store/wishlist/action";
 import { appCookieGet } from "@/utils/http/cookie";
-import { useEffect } from "react";
+import { retry } from "@reduxjs/toolkit/query";
+import { useEffect, useLayoutEffect } from "react";
 
-export default function InitData() {
+const InitData = () => {
     const dispatch = useAppDispatch();
-    const customer = useAppSelector((state) => state.customer.customerData);
-    const token = appCookieGet("user-token");
-
+    const init = async () => {
+        const token = await appCookieGet("user-token");
+        new Promise<void>((resolve) => {
+            if (token) {
+                resolve(dispatch(initAuth()));
+            }
+        });
+    };
     useEffect(() => {
-        dispatch(initAuth());
-        dispatch(initCustomer());
-    }, [dispatch, token]);
+        (async () => {
+            await Promise.all([init()]);
+        })();
+    }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(initAddress());
-        dispatch(initWishlist());
-        dispatch(initCart());
-        dispatch(initOrders());
-    }, [dispatch, customer]);
+    return null;
+};
 
-    return <></>;
-}
+export default InitData;

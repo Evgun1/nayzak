@@ -46,6 +46,7 @@ const ProductsLoader: FC<ProductsLoaderProps> = async ({
                         if (searchParams["list_type"] === "list") {
                             return (
                                 <ProductPreviewList
+                                    key={i}
                                     rating={rating}
                                     product={product}
                                 />
@@ -53,6 +54,7 @@ const ProductsLoader: FC<ProductsLoaderProps> = async ({
                         }
                         return (
                             <ProductPreviewDefault
+                                key={i}
                                 className={className}
                                 product={product}
                                 rating={rating}

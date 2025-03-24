@@ -22,26 +22,5 @@ export default async function page(props: PageProps) {
         </section>
     );
 
-    // if (props.params.slug.length === 1) {
-    //     return (
-    //         <section>
-    //             <HeaderSubcategory
-    //                 title={
-    //                     props.params.slug[0][0].toUpperCase() +
-    //                     props.params.slug[0].slice(1)
-    //                 }
-    //             />
-    //             <Subcategories slug={props.params.slug[0]} />
-    //         </section>
-    //     );
-    // }
-    // return (
-    //     <section>
-    //         <HeaderProducts slug={props.params.slug} />
-    //         <Products
-    //             params={props.params.slug}
-    //             searchParams={props.searchParams}
-    //         />
-    //     </section>
-    // );
+ 
 }

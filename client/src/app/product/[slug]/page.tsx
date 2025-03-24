@@ -7,10 +7,11 @@ import { ReviewItem } from "@/types/reviews.types";
 import Product from "@/components/page-product/Product";
 import { appCategoriesOneGet } from "@/utils/http/categories";
 import { appSubcategoriesOneGet } from "@/utils/http/subcategories";
+import ClientComponent from "@/components/ClientComponent";
 
 export default async function page(props: { params: { slug: string } }) {
     const urlSearchParams = new URLSearchParams();
-    const product = await appOneProductGet(props.params.slug);
+    // const product = await appOneProductGet(props.params.slug);
 
     const productData = async () => {
         const product = await appOneProductGet(props.params.slug);
@@ -50,12 +51,15 @@ export default async function page(props: { params: { slug: string } }) {
         return { reviewsArray: reviews, totalReviews };
     };
 
+    console.log(await reviews());
+
     return (
         <div className='wrapper'>
             <Product
                 productData={await productData()}
                 reviewsData={await reviews()}
             />
+
             {/* {product ? (
 				<>
 					<ProductLoop

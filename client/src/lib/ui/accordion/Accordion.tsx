@@ -1,6 +1,13 @@
 "use client";
 
-import React, { FC, ReactElement, ReactNode, useEffect, useId } from "react";
+import React, {
+    FC,
+    ReactElement,
+    ReactNode,
+    useEffect,
+    useId,
+    useLayoutEffect,
+} from "react";
 import AccordionBody from "./AccordionBody";
 import AccordionHeader from "./AccordionHeader";
 import classes from "./Accordion.module.scss";
@@ -110,7 +117,7 @@ const AccordionComponent: FC<AccordionProps> = ({ children, className }) => {
         });
     };
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         document.addEventListener("click", eventListenerHandler);
         return () =>
             document.removeEventListener("click", eventListenerHandler);

@@ -9,11 +9,12 @@ import Image from "next/image";
 const CheckoutOrderProduct = ({ product }: { product: ProductItem }) => {
     return (
         <div className={classes["product"]}>
-            <div className={classes["product__img"]}>
+            <div className={classes["product__img-wrap"]}>
                 <Image
                     loading='lazy'
                     fill
-                    className={classes["product__img-img"]}
+                    sizes='width: 100%;'
+                    className={classes["product__img"]}
                     src='https://placehold.co/652x889'
                     alt='product'
                 />

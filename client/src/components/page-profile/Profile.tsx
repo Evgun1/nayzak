@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import Orders from "./orders/Orders";
 import AccountDetails from "./account-details/AccountDetails";
 import classes from "./Profile.module.scss";
@@ -13,28 +13,71 @@ import { logOutActive } from "@/lib/redux/store/auth/action";
 import { useCookieGet } from "@/hooks/useCookie";
 import Addresses from "./addresses/Addresses";
 import Image from "next/image";
+import Tabs from "@/lib/ui/tabs/Tabs";
+import dynamic from "next/dynamic";
+import loading from "@/app/loading";
+import { initAddress } from "@/lib/redux/store/address/action";
+import { initWishlist } from "@/lib/redux/store/wishlist/action";
+import { initCart } from "@/lib/redux/store/cart/action";
+import { initOrders } from "@/lib/redux/store/orders/action";
 
 type PageContentType = {
     label: string;
-    content: () => ReactNode;
+    content: ReactNode;
 };
+
+const AccountDetailsDynamic = dynamic(
+    () => import("./account-details/AccountDetails"),
+    {
+        ssr: false,
+        loading: () => (
+            <div className={classes["loading"]}>
+                <div className={classes["loading__spinner"]}></div>
+            </div>
+        ),
+    }
+);
+const AddressDynamic = dynamic(() => import("./addresses/Addresses"), {
+    ssr: false,
+    loading: () => (
+        <div className={classes["loading"]}>
+            <div className={classes["loading__spinner"]}></div>
+        </div>
+    ),
+});
+const WishlistDynamic = dynamic(() => import("./wishlist/Wishlist"), {
+    ssr: false,
+    loading: () => (
+        <div className={classes["loading"]}>
+            <div className={classes["loading__spinner"]}></div>
+        </div>
+    ),
+});
+const OrdersDynamic = dynamic(() => import("./orders/Orders"), {
+    ssr: false,
+    loading: () => (
+        <div className={classes["loading"]}>
+            <div className={classes["loading__spinner"]}></div>
+        </div>
+    ),
+});
 
 const MENU: PageContentType[] = [
     {
         label: "Account details",
-        content: () => <AccountDetails />,
+        content: <AccountDetailsDynamic />,
     },
     {
         label: "Addresses",
-        content: () => <Addresses />,
+        content: <AddressDynamic />,
     },
     {
         label: "Wishlist",
-        content: () => <Wishlist />,
+        content: <WishlistDynamic />,
     },
     {
         label: "Orders",
-        content: () => <Orders />,
+        content: <OrdersDynamic />,
     },
 ];
 
@@ -56,83 +99,51 @@ export default function Profile() {
                 redirect("/");
             }
         })();
-        return;
-    });
+    }, []);
 
     return (
         <div className={classes["profile"]}>
             <h3 className={classes["profile__header"]}>My account</h3>
             <div className={classes["profile__content"]}>
-                <div className={classes["profile-navigation"]}>
-                    <div className={classes["profile-navigation__image-wrap"]}>
-                        <Image
-                            loading='lazy'
-                            fill
-                            className={classes["profile-navigation__image"]}
-                            src='https://placehold.co/400'
-                            alt='avatar'
-                        />
-                    </div>
-
-                    <ul className={classes["profile-navigation__list"]}>
-                        {MENU &&
-                            MENU.length > 0 &&
-                            MENU.map((data, index) => (
-                                <li
-                                    key={index}
-                                    className={
-                                        classes["profile-navigation__list-item"]
-                                    }
-                                >
-                                    <ButtonCustom
-                                        styleSettings={{
-                                            type: "TEXT",
-                                            color: "DARK",
-                                            size: "MEDIUM",
-                                        }}
-                                        onClick={() => setTabAction(index)}
-                                        className={`${
-                                            index === tabAction
-                                                ? classes[
-                                                      "profile-navigation__button--action"
-                                                  ]
-                                                : classes[
-                                                      "profile-navigation__button"
-                                                  ]
-                                        }`}
-                                    >
-                                        {data.label}
-                                    </ButtonCustom>
-                                </li>
-                            ))}
-                        <li
-                            className={classes["profile-navigation__list-item"]}
+                <Tabs isVertical>
+                    <Tabs.Header className={classes["profile__tabs-header"]}>
+                        <div
+                            className={
+                                classes["profile-navigation__image-wrap"]
+                            }
                         >
-                            <ButtonCustom
-                                styleSettings={{
-                                    type: "TEXT",
-                                    color: "DARK",
-                                    size: "MEDIUM",
-                                }}
-                                className={
-                                    classes["profile-navigation__button"]
-                                }
-                                onClick={btnLogOutHandler}
-                            >
-                                Logout
-                            </ButtonCustom>
-                        </li>
-                    </ul>
-                </div>
-                <div className={classes["profile-content"]}>
-                    {MENU[tabAction].content()}
-
-                    {/* {MENU.map((menuItem, index) => (
-                        <div key={index}>
-                            {index === tabAction ? menuItem.content() : <></>}
+                            <Image
+                                loading='lazy'
+                                fill
+                                className={classes["profile-navigation__image"]}
+                                src='https://placehold.co/400'
+                                alt='avatar'
+                            />
                         </div>
-                    ))} */}
-                </div>
+                        {MENU.map((val, i) => (
+                            <Tabs.Toggle key={i} index={i} label={val.label} />
+                        ))}
+                        <ButtonCustom
+                            styleSettings={{
+                                type: "TEXT",
+                                color: "DARK",
+                                size: "MEDIUM",
+                            }}
+                            className={classes["profile-navigation__button"]}
+                            onClick={btnLogOutHandler}
+                        >
+                            Logout
+                        </ButtonCustom>
+                    </Tabs.Header>
+
+                    <Tabs.Body>
+                        {MENU.map((val, i) => (
+                            <React.Fragment key={i}>
+                                {val.content}
+                            </React.Fragment>
+                        ))}
+                    </Tabs.Body>
+                </Tabs>
             </div>
         </div>
     );

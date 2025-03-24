@@ -1,3 +1,5 @@
+import Tabs from "@/lib/ui/tabs/Tabs";
+
 const BASE_URL = "http://localhost:3030";
 
 type AppFetchProps = {
@@ -7,16 +9,50 @@ type AppFetchProps = {
     customError?: React.ReactNode;
 };
 
+interface TagsItem {
+    addresses: "addresses";
+    brands: "brands";
+    cart: "cart";
+    credentials: "credentials";
+    customers: "customers";
+    media: "media";
+    orders: "orders";
+    products: "products";
+    reviews: "reviews";
+    subcategories: "subcategories";
+    wishlists: "wishlists";
+    categories: "categories";
+}
+
+export const tags: TagsItem = {
+    addresses: "addresses",
+    brands: "brands",
+    cart: "cart",
+    credentials: "credentials",
+    customers: "customers",
+    media: "media",
+    orders: "orders",
+    products: "products",
+    reviews: "reviews",
+    subcategories: "subcategories",
+    wishlists: "wishlists",
+    categories: "categories",
+};
+
 const appFetch = async <T>({
     pathname,
     init,
     searchParams,
 }: AppFetchProps): Promise<{ response: T; totalCount: number }> => {
+    "use cache";
+
     const url = `${BASE_URL}/${pathname}${
         searchParams ? `?${searchParams}` : ""
     }`;
 
-    init.cache = "no-cache";
+    // init.cache = "no-cache";
+    // init.next = { tags: tags };
+    // init.next = { revalidate: 10 };
 
     try {
         const res = await fetch(url, init);
@@ -37,18 +73,21 @@ const appFetch = async <T>({
 };
 
 type AppGetFetch = {
+    tag: keyof TagsItem;
     pathname: string;
     searchParams?: URLSearchParams;
     authorization?: string;
 };
 
 export const appFetchGet = async <T>({
+    tag,
     pathname,
     authorization,
     searchParams,
 }: AppGetFetch) => {
     const init: RequestInit = {};
     init.method = "GET";
+    init.next = { tags: [tag] };
 
     if (authorization) {
         init.headers = { Authorization: `Bearer Token ${authorization}` };

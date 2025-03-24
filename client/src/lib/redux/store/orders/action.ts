@@ -37,6 +37,7 @@ export function uploadOrders(currentOrders: ordersUploadItem) {
 
 			dispatch(removeCart(productsId as number[]));
 			dispatch(notificationAction.toggle(NotificationCheckout()));
+			
 			window.localStorage.setItem('order-status-code', '200');
 		} catch (error) {
 			console.log(error);

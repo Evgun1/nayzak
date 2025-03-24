@@ -12,9 +12,9 @@ import { ProductItem } from "@/types/product.types";
 import classes from "./Product.module.scss";
 import Reviews from "./product-tab/product-reviews/ProductReviews";
 import ProductsTabs, { ProductsTabsItem } from "./ProductTabs";
-import ProductDescription from "./product-tab/ProductDescription";
-import ProductInfo from "./product-tab/ProductInfo";
 import dynamic from "next/dynamic";
+import React, { Fragment } from "react";
+import Tabs from "@/lib/ui/tabs/Tabs";
 
 const Product = async ({
     reviewsData,
@@ -35,6 +35,15 @@ const Product = async ({
     const ProductReviewsDynamic = dynamic(
         () => import("./product-tab/product-reviews/ProductReviews")
     );
+
+    const ProductSliderDynamic = dynamic(() => import("./ProductSlider"), {
+        ssr: false,
+        loading: () => (
+            <div className={classes["loading"]}>
+                <div className={classes["loading__spinner"]}></div>
+            </div>
+        ),
+    });
 
     const arr: ProductsTabsItem[] = [
         {
@@ -59,7 +68,7 @@ const Product = async ({
     return (
         <div>
             <div className={`${classes["product"]}`}>
-                <ProductSlider />
+                <ProductSliderDynamic />
                 <div className={classes["product__loop"]}>
                     <div className={classes["product__loop-header"]}>
                         <div className={classes["product__info"]}>
@@ -107,7 +116,21 @@ const Product = async ({
                     />
                 </div>
             </div>
-            <ProductsTabs data={arr} />
+
+            <Tabs>
+                <Tabs.Header>
+                    {arr.map((val, i) => (
+                        <Tabs.Toggle key={i} index={i} label={val.label} />
+                    ))}
+                </Tabs.Header>
+                <Tabs.Body>
+                    {arr.map((val, i) => (
+                        <Fragment key={i}>{val.children}</Fragment>
+                    ))}
+                </Tabs.Body>
+            </Tabs>
+
+            {/* <ProductsTabs data={arr} /> */}
         </div>
     );
 };

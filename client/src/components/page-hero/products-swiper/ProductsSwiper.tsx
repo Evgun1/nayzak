@@ -20,15 +20,17 @@ const ProductsSwiper = async () => {
 
     const SwiperComponentDynamic = dynamic(() => import("./swiper/Swiper"), {
         ssr: true,
+        loading: () => <div>Loading...</div>,
     });
 
     const productsArr: ReactElement[] = [];
 
     productsArr.push(
-        ...products.map((product) => (
+        ...products.map((product, i) => (
             <ProductPreviewDefault
+                key={i}
                 showIcon
-                className={classes["product-swiper__product"]}
+                className={classes["products-swiper__product"]}
                 product={product}
             />
         ))
@@ -36,7 +38,7 @@ const ProductsSwiper = async () => {
 
     return (
         <div className='container'>
-            <div className={classes["product-swiper"]}>
+            <div className={classes["products-swiper"]}>
                 <SwiperComponentDynamic
                     label='Latest Arrivals'
                     children={productsArr}

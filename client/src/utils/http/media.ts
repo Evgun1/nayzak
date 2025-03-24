@@ -1,28 +1,30 @@
-import { MediaItem } from '@/types/media.types';
-import { appFetchGet } from '.';
+import { MediaItem } from "@/types/media.types";
+import { appFetchGet } from ".";
 
 type AppMediaGetAllProps = {
-	searchParams?: URLSearchParams;
+    searchParams?: URLSearchParams;
 };
 
 export const appMediaAllGet = async (props: AppMediaGetAllProps) => {
-	const { searchParams } = props;
-	const pathname = 'media';
+    const { searchParams } = props;
+    const pathname = "media";
 
-	const { response, totalCount } = await appFetchGet<MediaItem[]>({
-		pathname,
-		searchParams,
-	});
+    const { response, totalCount } = await appFetchGet<MediaItem[]>({
+        tag: "media",
+        pathname,
+        searchParams,
+    });
 
-	return { response, totalCount };
+    return { response, totalCount };
 };
 
 export const appMediaOneGet = async (mediaId: number | string) => {
-	const pathname = `media/${mediaId}`;
+    const pathname = `media/${mediaId}`;
 
-	const { response, totalCount } = await appFetchGet<MediaItem>({
-		pathname,
-	});
+    const { response, totalCount } = await appFetchGet<MediaItem>({
+        tag: "media",
+        pathname,
+    });
 
-	return response;
+    return response;
 };

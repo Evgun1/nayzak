@@ -1,72 +1,75 @@
-import { AddressItem } from '@/types/addresses.types';
-import { appFetchDelete, appFetchGet, appFetchPost, appFetchPut } from '.';
-import { AddressData } from '@/lib/redux/store/address/address';
+import { AddressItem } from "@/types/addresses.types";
+import { appFetchDelete, appFetchGet, appFetchPost, appFetchPut } from ".";
+import { AddressData } from "@/lib/redux/store/address/address";
 
-let pathname = 'addresses';
+let pathname = "addresses";
 
 type AppAddressesAllGetProps = {
-	searchParams: URLSearchParams;
+    searchParams: URLSearchParams;
 };
 export const appAddressesAllGet = async (props: AppAddressesAllGetProps) => {
-	const { searchParams } = props;
+    const { searchParams } = props;
 
-	const { response, totalCount } = await appFetchGet<AddressItem[]>({
-		pathname,
-		searchParams,
-	});
-	return { response, totalCount };
+    const { response, totalCount } = await appFetchGet<AddressItem[]>({
+        tag: "addresses",
+        pathname,
+        searchParams,
+    });
+
+    return { response, totalCount };
 };
 
 type appAddressesOneGetProps = {
-	addressesParams: number;
+    addressesParams: number;
 };
 export const appAddressesOneGet = async (props: appAddressesOneGetProps) => {
-	const { addressesParams } = props;
+    const { addressesParams } = props;
 
-	const { response } = await appFetchGet<AddressItem>({
-		pathname: `${pathname}/${addressesParams}`,
-	});
-	return response;
+    const { response } = await appFetchGet<AddressItem>({
+        tag: "addresses",
+        pathname: `${pathname}/${addressesParams}`,
+    });
+    return response;
 };
 
 type AppAddressesPostProps = {
-	sendData: AddressData | FormData;
+    sendData: AddressData | FormData;
 };
 export const appAddressesPost = async (props: AppAddressesPostProps) => {
-	const { sendData } = props;
+    const { sendData } = props;
 
-	const { response, totalCount } = await appFetchPost<AddressItem>({
-		pathname,
-		sendData: sendData,
-	});
+    const { response, totalCount } = await appFetchPost<AddressItem>({
+        pathname,
+        sendData: sendData,
+    });
 
-	return response;
+    return response;
 };
 
 type AppAddressesPutProps = {
-	sendData: (AddressData & { id: number }) | FormData;
+    sendData: (AddressData & { id: number }) | FormData;
 };
 export const appAddressesPut = async (props: AppAddressesPutProps) => {
-	const { sendData } = props;
+    const { sendData } = props;
 
-	const { response, totalCount } = await appFetchPut<AddressItem>({
-		pathname,
-		putData: sendData,
-	});
+    const { response, totalCount } = await appFetchPut<AddressItem>({
+        pathname,
+        putData: sendData,
+    });
 
-	return response;
+    return response;
 };
 
 type AppAddressesDelete = {
-	deleteData: { addressId: number | number[] } | FormData;
+    deleteData: { addressId: number | number[] } | FormData;
 };
 export const appAddressesDelete = async (props: AppAddressesDelete) => {
-	const { deleteData } = props;
+    const { deleteData } = props;
 
-	const { response } = await appFetchDelete<AddressItem>({
-		pathname,
-		deleteData,
-	});
+    const { response } = await appFetchDelete<AddressItem>({
+        pathname,
+        deleteData,
+    });
 
-	return response;
+    return response;
 };

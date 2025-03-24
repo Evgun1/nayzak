@@ -10,10 +10,11 @@ const Banner = async () => {
         <div className={classes.banner}>
             <div className={classes["banner__img-wrapper"]}>
                 <Image
-                    loading='eager'
                     className={classes["banner__img"]}
-                    objectFit='cover'
+                    priority
                     fill
+                    
+                    sizes={"height: 100%"}
                     src='https://placehold.co/800'
                     alt='banner'
                 />

@@ -37,6 +37,7 @@ const ProductPreviewList = (props: ProductPreviewTypes) => {
                 <div className={classes["preview__img-wrapper"]}>
                     <Image
                         loading='lazy'
+                        sizes=''
                         fill
                         className={classes["preview__img"]}
                         src={

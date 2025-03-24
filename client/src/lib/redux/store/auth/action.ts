@@ -131,6 +131,8 @@ export function initAuth() {
             const user = appJwtDecode<CredentialsStateItem>(token);
 
             dispatch(authAction.setCredentials(user));
+
+            dispatch(initCustomer());
         } catch (error) {
             console.log(error);
         }

@@ -7,16 +7,23 @@
     border-radius: 6px;
 
     &__double {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        // display: flex;
+        // flex-wrap: wrap;
         gap: 32px;
         justify-content: space-between;
     }
     &__input {
+        height: max-content;
         width: 100%;
-        flex: 1;
+        // flex: 1;
+
+
         &-phone {
-            flex: 0 0 100%;
+            // flex: 0 0 100%;
+
+            grid-column: 1 / -1;
         }
     }
 

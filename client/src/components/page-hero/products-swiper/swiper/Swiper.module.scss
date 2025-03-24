@@ -1,6 +1,8 @@
 .swiper-custom {
-    display: flex;
-    flex-direction: column-reverse;
+    .swiper-custom__wrap {
+        display: flex;
+        flex-direction: column-reverse;
+    }
 
     &__bullet {
         position: relative;
@@ -65,16 +67,17 @@
             height: 24px;
         }
     }
-    &__pagination {
-        margin: 0 12px !important;
+    .swiper-custom__pagination {
+        margin: 0 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 5px;
     }
-    &__slider {
-        margin-right: 32px !important;
-        max-width: 310px;
+
+    .swiper-custom__slider {
+        margin-right: 34px !important;
+        max-width: 310px !important;
         max-height: 479px;
     }
 }

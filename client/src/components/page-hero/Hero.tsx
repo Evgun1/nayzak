@@ -7,6 +7,7 @@ import ProductGrid from "./products-grid/ProductGrid";
 import Reviews from "./reviews/Reviews";
 import classes from "./Hero.module.scss";
 import ProductsSwiper from "./products-swiper/ProductsSwiper";
+import React from "react";
 
 const Hero = ({ searchParams }: { searchParams: Record<string, any> }) => {
     const SECTIONS = [
@@ -68,8 +69,8 @@ const Hero = ({ searchParams }: { searchParams: Record<string, any> }) => {
         },
     ];
 
-    return SECTIONS.map((data) => {
-        return data.content;
+    return SECTIONS.map((data, i) => {
+        return <React.Fragment key={i}>{data.content}</React.Fragment>;
     });
 };
 

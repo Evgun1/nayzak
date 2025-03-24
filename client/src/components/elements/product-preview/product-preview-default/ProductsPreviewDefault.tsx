@@ -37,7 +37,7 @@ const ProductPreviewDefault: FC<ProductPreviewTypes> = async (props) => {
                 <Image
                     loading='lazy'
                     fill
-                    objectFit='cover'
+                    sizes='width:100%; height:100%;'
                     className={classes["preview__img"]}
                     src={
                         product.img
