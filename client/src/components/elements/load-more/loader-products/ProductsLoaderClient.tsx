@@ -3,7 +3,7 @@
 import classes from "./ProductsLoader.module.scss";
 
 import React, { FC, ReactElement, ReactNode, useEffect, useState } from "react";
-import Loader from "@/components/elements/loader/Loader";
+import LoadMore from "@/components/elements/load-more/LoadMore";
 import { useProductsReducer } from "@/hooks/useProductsReducer";
 import { appProductsGet } from "@/utils/http/products";
 import { useSearchParams } from "next/navigation";
@@ -61,7 +61,7 @@ const ProductsLoaderClient = ({
     };
 
     return (
-        <Loader
+        <LoadMore
             style={`${classes["grid"]} ${
                 listType
                     ? classes[listType]
@@ -91,7 +91,7 @@ const ProductsLoaderClient = ({
                     )}
                 </li>
             ))}
-        </Loader>
+        </LoadMore>
     );
 };
 

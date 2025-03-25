@@ -1,9 +1,9 @@
-"use client";
+"use server";
 
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import classes from "./ProductGrid.module.scss";
 
-import { ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import { CategoryItem } from "@/types/categories.types";
 import { SubcategoryItem } from "@/types/subcategories.types";
 import { useSearchParams } from "next/navigation";
@@ -12,59 +12,53 @@ import { appSubcategoriesGet } from "@/utils/http/subcategories";
 import { appProductsGet } from "@/utils/http/products";
 import Select from "@/lib/ui/select/Select";
 
-const ProductGridHeader = () => {
-    const searchParams = useSearchParams();
-    const [categories, setCategories] = useState<CategoryItem[]>([]);
-    const [subcategories, setSubcategories] = useState<
-        { subcategory: SubcategoryItem; active: boolean }[]
-    >([]);
+type ProductGridHeaderProps = {
+    searchParams: Record<string, any>;
+};
 
-    useEffect(() => {
-        (async () => {
-            const urlSearchParams = new URLSearchParams(
-                searchParams.toString()
-            );
+const ProductGridHeader: FC<ProductGridHeaderProps> = async ({
+    searchParams,
+}) => {
+    const urlSearchParams = new URLSearchParams();
 
-            const categories = await appCategoriesGet();
+    for (const [key, value] of Object.entries(searchParams)) {
+        urlSearchParams.set(key, value);
+    }
 
-            setCategories(categories);
+    const categories = await appCategoriesGet();
 
-            const subcategories = await appSubcategoriesGet(urlSearchParams);
+    const subcategories = await appSubcategoriesGet(urlSearchParams);
 
-            const subCategoriesForDisplay: Array<{
-                subcategory: SubcategoryItem;
-                active: boolean;
-            }> = [];
+    const subcategoriesForDisplay: Array<{
+        subcategory: SubcategoryItem;
+        active: boolean;
+    }> = [];
 
-            for await (const subcategory of subcategories) {
-                const insUrlSearchParams = new URLSearchParams({
-                    subcategory: subcategory.title,
-                });
+    for await (const subcategory of subcategories) {
+        const insUrlSearchParams = new URLSearchParams({
+            subcategory: subcategory.title,
+        });
 
-                if (searchParams.has("category")) {
-                    insUrlSearchParams.set(
-                        "category",
-                        searchParams.get("category") as string
-                    );
-                }
+        if (searchParams.category) {
+            insUrlSearchParams.set("category", searchParams.category as string);
+        }
 
-                const { productCounts, products } = await appProductsGet({
-                    searchParams: insUrlSearchParams,
-                });
+        const { productCounts } = await appProductsGet({
+            searchParams: insUrlSearchParams,
+        });
 
-                if (productCounts > 0) {
-                    subCategoriesForDisplay.push({
-                        subcategory: subcategory,
-                        active: productCounts > 0 ? true : false,
-                    });
-                }
-            }
-            setSubcategories(subCategoriesForDisplay);
-        })();
-    }, [searchParams]);
+        if (productCounts > 0) {
+            subcategoriesForDisplay.push({
+                subcategory: subcategory,
+                active: productCounts > 0 ? true : false,
+            });
+        }
+    }
+
+    console.log(categories);
 
     return (
-        <div className={classes["product-grid-header"]}>
+        <div className={classes["product-grid__header"]}>
             <div className={ButtonClassList.BUTTON_X_LARGE}>
                 You’re browsing
             </div>
@@ -106,9 +100,9 @@ const ProductGridHeader = () => {
                     roundness: "SHARP",
                 }}
             >
-                {subcategories &&
-                    subcategories.length > 0 &&
-                    subcategories.map((subcategory, index) => (
+                {subcategoriesForDisplay &&
+                    subcategoriesForDisplay.length > 0 &&
+                    subcategoriesForDisplay.map((subcategory, index) => (
                         <Select.OptionLink
                             acton={subcategory.active}
                             key={index}

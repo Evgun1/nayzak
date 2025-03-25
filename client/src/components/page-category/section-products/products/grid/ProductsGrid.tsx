@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { appProductsGet } from "@/utils/http/products";
 import dynamic from "next/dynamic";
-import ProductsLoader from "@/components/elements/loader/loader-products/ProductsLoader";
+import ProductsLoader from "@/components/elements/load-more/loader-products/ProductsLoader";
 import { headers } from "next/headers";
 
 export default async function ProductsGrid({

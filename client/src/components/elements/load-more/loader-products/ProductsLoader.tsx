@@ -4,7 +4,7 @@ import { appProductsGet } from "@/utils/http/products";
 import ProductPreviewDefault from "@/components/elements/product-preview/product-preview-default/ProductsPreviewDefault";
 import ProductsLoaderClient, {
     ListType,
-} from "@/components/elements/loader/loader-products/ProductsLoaderClient";
+} from "@/components/elements/load-more/loader-products/ProductsLoaderClient";
 import { FC } from "react";
 import ProductPreviewList from "../../product-preview/product-preview-list/ProductPreviewList";
 

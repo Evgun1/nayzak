@@ -1,3 +1,23 @@
 .section {
-  padding: 52px 0;
+    padding: 52px 0;
+}
+
+.not-found-page {
+    padding: 100px 0;
+    // height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: grid;
+    gap: 20px;
+
+    &__link {
+        margin: 0 auto;
+        width: max-content;
+        display: block;
+        text-decoration: none;
+        color: var(--black-600);
+        &:hover {
+            color: var(--black-900);
+        }
+    }
 }

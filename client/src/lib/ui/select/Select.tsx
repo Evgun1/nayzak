@@ -1,3 +1,5 @@
+"use client";
+
 import React, {
     FC,
     MouseEvent,
@@ -31,14 +33,25 @@ type SelectComponentProps = {
 const SelectComponent: FC<SelectComponentProps> = (props) => {
     const { styleSetting, children, label, trackByQuery = false } = props;
     const [currentChildren, setCurrentChildren] = useState<ReactNode>();
-    const [optionalChildren, setOptionalChildren] = useState<ReactNode>();
-    const [optionalLabel, setOptionalLabel] = useState<string | ReactNode>();
+    const [optionalLabel, setOptionalLabel] = useState<string | ReactNode>(
+        label
+    );
+
     const generateId = useId().replaceAll(":", "");
     const childrenRef = useRef() as RefObject<HTMLDivElement>;
 
     const searchParams = useSearchParams();
+    const queryParams = searchParams.toString().split("&");
 
-    const eventListenerHandler = (event: Event) => {
+    const queryParamsObj = queryParams.reduce(
+        (acc: { [key: string]: string }, el) => {
+            const [key, val] = el.split("=");
+            return (acc[key] = val), acc;
+        },
+        {}
+    );
+
+    function eventListenerHandler(event: Event) {
         const target = event.target as HTMLElement;
         const childrenCurrent = childrenRef.current;
         if (!target || !childrenCurrent) return;
@@ -56,92 +69,54 @@ const SelectComponent: FC<SelectComponentProps> = (props) => {
         } else {
             childrenClassList.add(classes["select__options--visible"]);
         }
-    };
+    }
 
-    const clickHandler = (event: string | undefined) => {
-        if (!event) return;
-
-        const currentChildrenArray = childrenRecursion(
-            children
-        ) as Array<ReactNode>;
-        const currentChildren = currentChildrenArray.splice(+event, 1);
-
-        const labelByChildren = getLabelByChildrenRecursion(
-            currentChildren
-        )?.pop() as string;
-
-        setOptionalLabel(labelByChildren);
-        setOptionalChildren(currentChildrenArray);
-    };
-
-    const getLabelByChildrenRecursion = (children: ReactNode) => {
-        return React.Children.map(children, (child): ReactNode => {
-            if (!React.isValidElement(child)) return child;
-
-            if (typeof child.props.children === "string") {
-                return child.props.children;
-            } else return getLabelByChildrenRecursion(child.props.children);
-        });
-    };
-
-    const childrenRecursion = (children: ReactNode, label?: string) => {
+    function childrenRecursion(children: ReactNode, label?: string) {
         return React.Children.map(children, (child, i): ReactNode => {
             if (!React.isValidElement(child)) return child;
 
-            if (child.type === OptionLink) {
-                const childrenElement = child as ReactElement<{
-                    href: HrefObject;
-                }>;
-                const childrenQueryParams = childrenElement.props.href
-                    .queryParams as Record<string, string>;
-                const queryParams = searchParams.toString().split("&");
-                const currentQueryParam = {} as Record<string, string>;
+            console.log(child);
 
-                queryParams.forEach((data) => {
-                    const [key, value] = data.split("=");
+            // if (child.type === OptionLink) {
+            //     const childrenElement = child as ReactElement<{
+            //         href: HrefObject;
+            //     }>;
 
-                    currentQueryParam[key] = value?.toLowerCase();
-                });
+            //     const childrenQueryParams = childrenElement.props.href
+            //         .queryParams as Record<string, string>;
 
-                if (
-                    !Object.entries(childrenQueryParams).every(
-                        ([key, value]) =>
-                            currentQueryParam[key] === value.toLowerCase()
-                    )
-                ) {
-                    const childWithChildren = child as ReactElement<{
-                        href: HrefObject;
-                        id: string;
-                        onClick: (event: string | undefined) => void;
-                    }>;
+            //     if (
+            //         !Object.entries(childrenQueryParams).every(
+            //             ([key, value]) =>
+            //                 queryParamsObj[key] === value.toLowerCase()
+            //         )
+            //     ) {
+            //         const childWithChildren = child as ReactElement<{
+            //             href: HrefObject;
+            //             id: string;
+            //             onClick: (event: string | undefined) => void;
+            //         }>;
 
-                    Object.keys(
-                        childWithChildren.props.href.queryParams as object
-                    ).every((acc) => {
-                        if (!Object.keys(currentQueryParam).includes(acc)) {
-                            setOptionalLabel(label);
-                        }
-                    });
+            //         Object.keys(childrenQueryParams).every((acc) => {
+            //             if (!Object.keys(queryParamsObj).includes(acc)) {
+            //                 setOptionalLabel(label);
+            //             }
+            //         });
 
-                    return React.cloneElement(childWithChildren, {
-                        onClick: clickHandler,
-                    });
-                }
+            //         return React.cloneElement(childWithChildren, {});
+            //     }
 
-                setOptionalLabel(child.props.children);
-            } else {
-                const childWithChildren = child as ReactElement<{
-                    id: string;
-                    onClick: (event: string | undefined) => void;
-                }>;
+            //     setOptionalLabel(child.props.children);
+            // } else {
+            //     const childWithChildren = child as ReactElement<{
+            //         id: string;
+            //         onClick: (event: string | undefined) => void;
+            //     }>;
 
-                return React.cloneElement(childWithChildren, {
-                    id: child.key?.toString(),
-                    onClick: clickHandler,
-                });
-            }
+            //     return React.cloneElement(childWithChildren);
+            // }
         });
-    };
+    }
 
     useEffect(() => {
         const childRecursion = childrenRecursion(
@@ -161,10 +136,10 @@ const SelectComponent: FC<SelectComponentProps> = (props) => {
     return (
         <div id={generateId} className={classes["select"]}>
             <ButtonCustom styleSettings={styleSetting}>
-                {optionalLabel ?? label}
+                {optionalLabel}
             </ButtonCustom>
             <div className={classes["select__options"]} ref={childrenRef}>
-                {optionalChildren ?? currentChildren}
+                {currentChildren}
             </div>
         </div>
     );

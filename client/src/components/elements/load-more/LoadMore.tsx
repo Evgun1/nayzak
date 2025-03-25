@@ -12,7 +12,7 @@ type LoaderProps = {
     btnClickHandler?: () => void;
 };
 
-const Loader: FC<LoaderProps> = ({
+const LoadMore: FC<LoaderProps> = ({
     totalCount,
     children,
     btnClickHandler,
@@ -52,4 +52,4 @@ const Loader: FC<LoaderProps> = ({
     );
 };
 
-export default Loader;
+export default LoadMore;
