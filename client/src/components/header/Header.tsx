@@ -9,6 +9,11 @@ import Actions from "./Actions";
 import Link from "next/link";
 import { FC } from "react";
 import Navigation from "./navigation/Navigation";
+import dynamic from "next/dynamic";
+
+const NavigationDynamic = dynamic(() => import("./navigation/Navigation"), {
+    ssr: true,
+});
 
 const Header: FC = async () => {
     return (
@@ -20,7 +25,7 @@ const Header: FC = async () => {
                         iconName={IconsIdList.LOGOTYPE}
                     />
                 </Link>
-                <Navigation />
+                <NavigationDynamic />
                 <Actions />
             </div>
         </header>

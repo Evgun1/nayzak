@@ -134,14 +134,12 @@ const SelectComponent: FC<SelectComponentProps> = (props) => {
 
     return (
         <div id={generateId} className={classes["select"]}>
-            <Suspense fallback={<div>Loading...</div>}>
-                <ButtonCustom styleSettings={styleSetting}>
-                    {optionalLabel}
-                </ButtonCustom>
-                <div className={classes["select__options"]} ref={childrenRef}>
-                    {currentChildren}
-                </div>
-            </Suspense>
+            <ButtonCustom styleSettings={styleSetting}>
+                {optionalLabel}
+            </ButtonCustom>
+            <div className={classes["select__options"]} ref={childrenRef}>
+                {currentChildren}
+            </div>
         </div>
     );
 };

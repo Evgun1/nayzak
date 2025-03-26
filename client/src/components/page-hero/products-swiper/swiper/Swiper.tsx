@@ -13,9 +13,7 @@ import {
     FC,
     ReactElement,
     ReactNode,
-    Suspense,
-    useEffect,
-    useState,
+   
 } from "react";
 import { appProductsGet } from "@/utils/http/products";
 import { useSearchParams } from "next/navigation";

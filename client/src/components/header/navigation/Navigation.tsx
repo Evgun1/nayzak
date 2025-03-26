@@ -10,6 +10,7 @@ import { appSubcategoriesGet } from "@/utils/http/subcategories";
 import { appProductsGet } from "@/utils/http/products";
 import dynamic from "next/dynamic";
 import Loading from "@/app/loading";
+import NavigationAction from "./NavigationAction";
 interface NavigationItem {
     label: string;
     url: string;
@@ -18,10 +19,6 @@ interface NavigationItem {
 }
 
 type AppNavigation = NavigationItem[];
-
-const NavigationActionDynamic = dynamic(() => import("./NavigationAction"), {
-    // ssr: true,
-});
 
 const Navigation: FC = async () => {
     const navigation: AppNavigation = [];
@@ -75,7 +72,7 @@ const Navigation: FC = async () => {
 
     return (
         <nav className={classes["header-navigation"]}>
-            <NavigationActionDynamic navigationData={navigation} />
+            <NavigationAction navigationData={navigation} />
         </nav>
     );
 };

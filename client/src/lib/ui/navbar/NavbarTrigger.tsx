@@ -2,14 +2,11 @@
 
 import React, {
     FC,
-    ReactElement,
+   
     ReactNode,
-    RefObject,
-    Suspense,
-    useEffect,
+   
     useLayoutEffect,
-    useRef,
-    useState,
+    
 } from "react";
 import classes from "./Navbar.module.scss";
 import LinkCustom, {

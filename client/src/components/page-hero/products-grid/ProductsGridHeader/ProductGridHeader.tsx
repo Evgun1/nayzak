@@ -3,7 +3,7 @@
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import classes from "../ProductGrid.module.scss";
 
-import { ReactNode, Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CategoryItem } from "@/types/categories.types";
 import { SubcategoryItem } from "@/types/subcategories.types";
 import { useSearchParams } from "next/navigation";

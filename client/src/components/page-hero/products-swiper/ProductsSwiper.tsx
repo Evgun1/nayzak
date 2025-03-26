@@ -5,7 +5,7 @@ import classes from "./ProductsSwiper.module.scss";
 
 import { appProductsGet } from "@/utils/http/products";
 import SwiperComponent from "./swiper/Swiper";
-import { ReactElement, Suspense } from "react";
+import { ReactElement } from "react";
 import dynamic from "next/dynamic";
 
 const ProductsSwiper = async () => {

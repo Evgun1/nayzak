@@ -14,5 +14,8 @@ const nextConfig = {
     },
 };
 
+// export default withBundleAnalyzer(nextConfig);
+//
+
 export default nextConfig;
 // https://placehold.co/800
