@@ -12,8 +12,9 @@ import classes from "./Navbar.module.scss";
 import childrenRecursion from "@/utils/ChildrenRecursionT";
 import NavbarBody from "./NavbarBody";
 import NavbarItem from "./NavbarItem";
+``;
 import NavbarTrigger from "./NavbarTrigger";
-import { NavbarProvider } from "./NavbarContext";
+import { NavbarProvider, useNavbar } from "./NavbarContext";
 
 type NavbarContentProps = {
     children: ReactNode;
@@ -24,17 +25,16 @@ const NavbarContent: FC<NavbarContentProps> = (props) => {
     const generateId = useId().replaceAll(":", "");
     const navbarContentId = `navbar-content__${generateId}`;
 
-    // const currChildren = childrenRecursion({
-    //     children,
-    //     childType: NavbarTrigger,
-    // });
+    const { addNavbarId } = useNavbar();
+
+    useEffect(() => {
+        addNavbarId(navbarContentId);
+    }, [addNavbarId, navbarContentId]);
 
     return (
-        <NavbarProvider navbarId={navbarContentId}>
-            <div id={navbarContentId} className={classes["navbar__content"]}>
-                {children}
-            </div>
-        </NavbarProvider>
+        <div id={navbarContentId} className={classes["navbar__content"]}>
+            {children}
+        </div>
     );
 };
 

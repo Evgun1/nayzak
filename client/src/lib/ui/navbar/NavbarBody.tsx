@@ -1,5 +1,6 @@
 import { FC, ReactNode } from "react";
 import classes from "./Navbar.module.scss";
+import { NavbarProvider } from "./NavbarContext";
 
 type NavbarBodyProps = {
     children: ReactNode;

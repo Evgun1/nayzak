@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC, ReactElement, ReactNode } from "react";
 import NavbarContent from "./NavbarContent";
 import NavbarTrigger from "./NavbarTrigger";
@@ -6,20 +8,24 @@ import NavbarItem from "./NavbarItem";
 import childrenRecursion from "@/utils/ChildrenRecursionT";
 
 import classes from "./Navbar.module.scss";
-import { ToggleContentProvider } from "@/components/elements/context/ToggleContentContext";
+import { NavbarProvider } from "./NavbarContext";
 type NavbarProps = {
-    children: ReactElement[];
+    children: ReactNode;
 };
 
 const NavbarComponent: FC<NavbarProps> = (props) => {
     const { children } = props;
 
-    const contentChildren = childrenRecursion({
-        children,
-        childType: NavbarContent,
-    });
+    // const contentChildren = childrenRecursion({
+    //     children,
+    //     childType: NavbarContent,
+    // });
 
-    return <div className={classes["navbar"]}>{contentChildren}</div>;
+    return (
+        <div className={classes["navbar"]}>
+            <NavbarProvider>{children}</NavbarProvider>
+        </div>
+    );
 };
 
 const Navbar = Object.assign(NavbarComponent, {

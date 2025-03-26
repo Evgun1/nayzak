@@ -6,6 +6,7 @@ import React, {
     ReactElement,
     ReactNode,
     RefObject,
+    Suspense,
     useEffect,
     useId,
     useLayoutEffect,
@@ -75,46 +76,44 @@ const SelectComponent: FC<SelectComponentProps> = (props) => {
         return React.Children.map(children, (child, i): ReactNode => {
             if (!React.isValidElement(child)) return child;
 
-            console.log(child);
+            if (child.type === OptionLink) {
+                const childrenElement = child as ReactElement<{
+                    href: HrefObject;
+                }>;
 
-            // if (child.type === OptionLink) {
-            //     const childrenElement = child as ReactElement<{
-            //         href: HrefObject;
-            //     }>;
+                const childrenQueryParams = childrenElement.props.href
+                    .queryParams as Record<string, string>;
 
-            //     const childrenQueryParams = childrenElement.props.href
-            //         .queryParams as Record<string, string>;
+                if (
+                    !Object.entries(childrenQueryParams).every(
+                        ([key, value]) =>
+                            queryParamsObj[key] === value.toLowerCase()
+                    )
+                ) {
+                    const childWithChildren = child as ReactElement<{
+                        href: HrefObject;
+                        id: string;
+                        onClick: (event: string | undefined) => void;
+                    }>;
 
-            //     if (
-            //         !Object.entries(childrenQueryParams).every(
-            //             ([key, value]) =>
-            //                 queryParamsObj[key] === value.toLowerCase()
-            //         )
-            //     ) {
-            //         const childWithChildren = child as ReactElement<{
-            //             href: HrefObject;
-            //             id: string;
-            //             onClick: (event: string | undefined) => void;
-            //         }>;
+                    Object.keys(childrenQueryParams).every((acc) => {
+                        if (!Object.keys(queryParamsObj).includes(acc)) {
+                            setOptionalLabel(label);
+                        }
+                    });
 
-            //         Object.keys(childrenQueryParams).every((acc) => {
-            //             if (!Object.keys(queryParamsObj).includes(acc)) {
-            //                 setOptionalLabel(label);
-            //             }
-            //         });
+                    return React.cloneElement(childWithChildren, {});
+                }
 
-            //         return React.cloneElement(childWithChildren, {});
-            //     }
+                setOptionalLabel(child.props.children);
+            } else {
+                const childWithChildren = child as ReactElement<{
+                    id: string;
+                    onClick: (event: string | undefined) => void;
+                }>;
 
-            //     setOptionalLabel(child.props.children);
-            // } else {
-            //     const childWithChildren = child as ReactElement<{
-            //         id: string;
-            //         onClick: (event: string | undefined) => void;
-            //     }>;
-
-            //     return React.cloneElement(childWithChildren);
-            // }
+                return React.cloneElement(childWithChildren);
+            }
         });
     }
 
@@ -135,12 +134,14 @@ const SelectComponent: FC<SelectComponentProps> = (props) => {
 
     return (
         <div id={generateId} className={classes["select"]}>
-            <ButtonCustom styleSettings={styleSetting}>
-                {optionalLabel}
-            </ButtonCustom>
-            <div className={classes["select__options"]} ref={childrenRef}>
-                {currentChildren}
-            </div>
+            <Suspense fallback={<div>Loading...</div>}>
+                <ButtonCustom styleSettings={styleSetting}>
+                    {optionalLabel}
+                </ButtonCustom>
+                <div className={classes["select__options"]} ref={childrenRef}>
+                    {currentChildren}
+                </div>
+            </Suspense>
         </div>
     );
 };

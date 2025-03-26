@@ -19,9 +19,12 @@ interface NavigationItem {
 
 type AppNavigation = NavigationItem[];
 
-const NavigationActionDynamic = dynamic(() => import("./NavigationAction"), {
-    // ssr: true,
-});
+const NavigationActionDynamic = dynamic(
+    () => import("./NavigationNavbar"),
+    {
+        ssr: true,
+    }
+);
 
 const Navigation: FC = async () => {
     const navigation: AppNavigation = [];
@@ -37,45 +40,9 @@ const Navigation: FC = async () => {
 
     const categories = await appCategoriesGet();
 
-    for await (const category of categories) {
-        const navItem: NavigationItem = buildNavItem({
-            data: category,
-        });
-
-        const urlSearchParams = new URLSearchParams({
-            category: category.title,
-        });
-
-        const subCategories = await appSubcategoriesGet(urlSearchParams);
-        const subCategoriesForDisplay = [];
-
-        for (const subcategory of subCategories) {
-            urlSearchParams.set("subcategory", subcategory.title);
-
-            const { productCounts } = await appProductsGet({
-                searchParams: urlSearchParams,
-            });
-
-            subCategoriesForDisplay.push({
-                active: productCounts > 0,
-                data: subcategory,
-            });
-        }
-
-        if (subCategoriesForDisplay && subCategoriesForDisplay.length) {
-            navItem.children = subCategoriesForDisplay.map(buildNavItem);
-        }
-
-        navigation.push(navItem);
-    }
-
-    if (!navigation || navigation.length === 0) {
-        return "";
-    }
-
     return (
         <nav className={classes["header-navigation"]}>
-            <NavigationActionDynamic navigationData={navigation} />
+            <NavigationActionDynamic navigationData={categories} />
         </nav>
     );
 };

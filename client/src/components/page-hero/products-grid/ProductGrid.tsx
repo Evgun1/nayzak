@@ -1,34 +1,31 @@
 "use server";
 
-import dynamic from "next/dynamic";
+import ProductsLoader from "@/components/elements/load-more/loader-products/ProductsLoader";
 import classes from "./ProductGrid.module.scss";
 
-import ProductGridHeader from "./ProductGridHeader";
-import ProductsLoader from "@/components/elements/load-more/loader-products/ProductsLoader";
+import ProductGridHeader from "./ProductsGridHeader/ProductGridHeader";
+import dynamic from "next/dynamic";
+
+const ProductGridHeaderDynamic = dynamic(() => import("./ProductsGridHeader/ProductGridHeader"), {
+    ssr: false,
+    loading: () => (
+        <div className={classes["product-grid__header"]}>
+            <div className={classes["loading"]}>
+                <div className={classes["loading__spinner"]}></div>
+            </div>
+        </div>
+    ),
+});
 
 export default async function ProductGrid({
     searchParams,
 }: {
     searchParams: Record<string, any>;
 }) {
-    const ProductGridHeaderDynamic = dynamic(
-        () => import("./ProductGridHeader"),
-        {
-            ssr: false,
-            loading: () => (
-                <div className={classes["product-grid__header"]}>
-                    <div className={classes["loading"]}>
-                        <span className={classes["loading__spinner"]}></span>
-                    </div>
-                </div>
-            ),
-        }
-    );
-
     return (
         <div className='container'>
             <div className={classes["product-grid"]}>
-                <ProductGridHeaderDynamic searchParams={searchParams} />
+                <ProductGridHeader />
                 <ProductsLoader
                     className={classes["product-grid__product"]}
                     listType='four_grid'

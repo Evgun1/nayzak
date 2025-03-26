@@ -5,6 +5,7 @@ import React, {
     ReactElement,
     ReactNode,
     RefObject,
+    Suspense,
     useEffect,
     useLayoutEffect,
     useRef,
@@ -33,59 +34,61 @@ const NavbarTrigger: FC<NavbarTriggerProps> = (props) => {
 
     let timer: NodeJS.Timeout;
 
-    useLayoutEffect(() => {
-        function eventListenerHandler(event: Event) {
-            const currentTarget = event.currentTarget as HTMLDivElement;
-            if (!currentTarget) return;
+    function eventListenerHandler(event: Event) {
+        const currentTarget = event.currentTarget as HTMLDivElement;
+        if (!currentTarget) return;
 
-            const body = currentTarget.querySelector(
-                `#${"navbar-body"}`
-            ) as HTMLElement | null;
-            const trigger = currentTarget.querySelector(
-                `#${"navbar-trigger"}`
-            ) as HTMLElement | null;
+        const body = currentTarget.querySelector(
+            `#${"navbar-body"}`
+        ) as HTMLElement | null;
+        const trigger = currentTarget.querySelector(
+            `#${"navbar-trigger"}`
+        ) as HTMLElement | null;
 
-            const bodyClassList = body?.classList;
-            const triggerClassList = trigger?.classList;
+        const bodyClassList = body?.classList;
+        const triggerClassList = trigger?.classList;
 
-            switch (event.type) {
-                case "mouseenter":
-                    timer = setTimeout(() => {
-                        bodyClassList?.add(classes["navbar__body--visible"]);
-                        triggerClassList?.add(
-                            classes["navbar__trigger--visible"]
-                        );
-                    }, 300);
-                    break;
+        switch (event.type) {
+            case "mouseenter":
+                timer = setTimeout(() => {
+                    bodyClassList?.add(classes["navbar__body--visible"]);
+                    triggerClassList?.add(classes["navbar__trigger--visible"]);
+                }, 300);
+                break;
 
-                default:
-                    if (
-                        bodyClassList?.contains(
-                            classes["navbar__body--visible"]
-                        )
-                    ) {
-                        triggerClassList?.remove(
-                            classes["navbar__trigger--visible"]
-                        );
+            default:
+                if (bodyClassList?.contains(classes["navbar__body--visible"])) {
+                    triggerClassList?.remove(
+                        classes["navbar__trigger--visible"]
+                    );
 
-                        bodyClassList?.remove(classes["navbar__body--visible"]);
-                    }
-                    clearTimeout(timer);
-                    break;
-            }
+                    bodyClassList?.remove(classes["navbar__body--visible"]);
+                }
+                clearTimeout(timer);
+                break;
         }
+    }
 
-        const element = document.getElementById(navbarId);
-        if (!element) return;
+    useLayoutEffect(() => {
+        const cleanupHandler = navbarId.map((id) => {
+            const element = document.getElementById(id);
+            if (!element) return;
 
-        element.addEventListener("mouseenter", eventListenerHandler);
-        element.addEventListener("mouseleave", eventListenerHandler);
+            element.addEventListener("mouseenter", eventListenerHandler);
+            element.addEventListener("mouseleave", eventListenerHandler);
+
+            return () => {
+                element.removeEventListener("mouseenter", eventListenerHandler);
+                element.removeEventListener("mouseleave", eventListenerHandler);
+            };
+        });
 
         return () => {
-            element.removeEventListener("mouseenter", eventListenerHandler);
-            element.removeEventListener("mouseleave", eventListenerHandler);
+            cleanupHandler.forEach((cleanup) => {
+                cleanup && cleanup();
+            });
         };
-    }, []);
+    }, [navbarId]);
 
     return (
         <LinkCustom

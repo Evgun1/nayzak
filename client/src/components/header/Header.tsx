@@ -6,9 +6,9 @@ import IconsIdList from "@/components/elements/icons/IconsIdList";
 import classes from "./Header.module.scss";
 import Actions from "./Actions";
 
-import Navigation from "./navigation/Navigation";
 import Link from "next/link";
 import { FC } from "react";
+import Navigation from "./navigation/Navigation";
 
 const Header: FC = async () => {
     return (

@@ -1,17 +1,35 @@
-import { createContext, FC, ReactNode, useContext } from "react";
+import {
+    createContext,
+    FC,
+    ReactNode,
+    useCallback,
+    useContext,
+    useState,
+} from "react";
 
 type NavbarContextProps = {
-    navbarId: string;
+    addNavbarId: (navbarId: string) => void;
+    navbarId: string[];
 };
 
 const NavbarContext = createContext<NavbarContextProps | undefined>(undefined);
 
-export const NavbarProvider: FC<{ children: ReactNode; navbarId: string }> = ({
-    children,
-    navbarId,
-}) => {
+export const NavbarProvider: FC<{ children: ReactNode }> = ({ children }) => {
+    const [id, setId] = useState<string[]>([]);
+
+    const addNavbarId = useCallback(
+        (navbarId: string) => {
+            if (id.includes(navbarId)) {
+                return;
+            }
+
+            setId((prev) => [...prev, navbarId]);
+        },
+        [id]
+    );
+
     return (
-        <NavbarContext.Provider value={{ navbarId }}>
+        <NavbarContext.Provider value={{ navbarId: id, addNavbarId }}>
             {children}
         </NavbarContext.Provider>
     );
