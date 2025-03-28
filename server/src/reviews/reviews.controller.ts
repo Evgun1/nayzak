@@ -3,7 +3,7 @@ import ReviewsService from "./reviews.service";
 import { QueryParameterTypes } from "../utils/service/service.type";
 import getReqBody from "../tools/getReqBody";
 import reviewsService from "./reviews.service";
-import clearCache from "../utils/clear-cache/ClearCache";
+import clearCache from "../utils/clear-cache/clearCache";
 
 class ReviewsController {
     async getAll(c: Context) {

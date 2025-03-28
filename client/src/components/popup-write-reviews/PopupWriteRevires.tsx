@@ -22,6 +22,7 @@ import { useParams, useRouter } from "next/navigation";
 import { appOneProductGet } from "@/utils/http/products";
 import { appReviewsPost } from "@/utils/http/reviews";
 import { popupActions } from "@/lib/redux/store/popup/popup";
+import { revalidatePath } from "next/cache";
 
 const schema: Array<ZodObject<any>> = [];
 
@@ -81,6 +82,7 @@ const PopupWriteReview = () => {
 
             dispatch(popupActions.toggle(null));
             route.refresh();
+            revalidatePath("/product/");
         } catch (error) {}
     };
 

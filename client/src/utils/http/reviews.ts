@@ -19,7 +19,6 @@ export const appReviewsProductGet = async (params: string) => {
 
     const { totalCount, response } = await appFetchGet<ReviewItem[]>({
         tag: "reviews",
-
         pathname,
     });
 
