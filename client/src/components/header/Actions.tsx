@@ -81,9 +81,7 @@ const Actions: FC = () => {
                 className={`${classes["header-actions__button"]} ${classes["header-actions__bag"]}`}
             >
                 {cartAmount !== 0 && (
-                    <span
-                        className={classes["header-actions__bag-amount"]}
-                    >
+                    <span className={classes["header-actions__bag-amount"]}>
                         {cartAmount}
                     </span>
                 )}

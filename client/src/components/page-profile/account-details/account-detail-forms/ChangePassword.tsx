@@ -1,6 +1,6 @@
 "use client";
 
-import Form from "@/components/elements/form-component/FormComponent";
+import Form from "@/lib/ui/form/Form";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { changePasswordAction } from "@/lib/redux/store/auth/action";
 import { TextClassList } from "@/types/textClassList.enum";
@@ -38,7 +38,7 @@ const ChangePassword = () => {
         <Form
             schema={schemaConfirmPassword}
             submitHandler={changePasswordHandler}
-            classe={classes["account-details-password"]}
+            className={classes["account-details-password"]}
         >
             <div className={`${TextClassList.SEMIBOLD_18}`}>
                 Password change

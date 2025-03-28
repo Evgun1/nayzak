@@ -51,8 +51,6 @@ export default async function page(props: { params: { slug: string } }) {
         return { reviewsArray: reviews, totalReviews };
     };
 
-    console.log(await reviews());
-
     return (
         <div className='wrapper'>
             <Product

@@ -61,7 +61,6 @@ class MediaController {
 
     async getMediaToLocalHost(c: Context) {
         // const t = await mediaService.getMedialToLocalHost();
-        console.log(true);
         return c.json({ message: "" });
     }
 }

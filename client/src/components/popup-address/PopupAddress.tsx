@@ -1,7 +1,7 @@
 "use client";
 
 import { z, ZodEffects, ZodObject } from "zod";
-import Form from "../elements/form-component/FormComponent";
+import Form from "../../lib/ui/form/Form";
 import classes from "./PopupAddress.module.scss";
 import PopupPreview from "../elements/popup/PopupPreview";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
@@ -40,7 +40,7 @@ export default function PopupAddress({ data }: { data?: AddressType }) {
             <Form
                 submitHandler={submitHandler}
                 oneMessage
-                classe={classes["popup-address__form"]}
+                className={classes["popup-address__form"]}
                 schema={schemaAddAddress}
             >
                 <input type='hidden' value={data?.id} name='id' />

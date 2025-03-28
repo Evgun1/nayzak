@@ -76,30 +76,6 @@ const Notification = () => {
             notificationContainer
         );
     }
-
-    // return (
-    //     <>
-    //         {notificationContent &&
-    //             notificationContainer &&
-    //             createPortal(
-    //                 <div
-    //                     onMouseLeave={(e) =>
-    //                         showNotification(e.target as HTMLElement)
-    //                     }
-    //                     onMouseEnter={(e) =>
-    //                         clearTimeout(
-    //                             hiddenNotification(e.target as HTMLElement)
-    //                         )
-    //                     }
-    //                     id='notification'
-    //                     className={classes["notification"]}
-    //                 >
-    //                     {notificationContent}
-    //                 </div>,
-    //                 notificationContainer
-    //             )}
-    //     </>
-    // );
 };
 
 export default Notification;

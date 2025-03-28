@@ -3,7 +3,7 @@ import categoriesService from "./categories.service";
 import getReqBody from "../tools/getReqBody";
 import { CategoriesGetParam, CategoryGetDTO } from "./categories.type";
 import { QueryParameterTypes } from "../utils/service/service.type";
-import clearCache from "../utils/clear-cache/ClearCache";
+import clearCache from "../utils/clear-cache/clearCache";
 
 class CategoriesController {
     async getAll(c: Context) {
@@ -25,6 +25,9 @@ class CategoriesController {
 
     async create(c: Context) {
         const body = (await getReqBody(c)) as CategoryGetDTO;
+
+        console.log(body);
+
         const category = await categoriesService.create(body);
 
         await clearCache("categories");

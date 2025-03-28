@@ -9,8 +9,8 @@ import {
     useRef,
     useState,
 } from "react";
-import DisplayIcon from "../icons/displayIcon";
-import IconsIdList from "../icons/IconsIdList";
+import DisplayIcon from "../../../components/elements/icons/displayIcon";
+import IconsIdList from "../../../components/elements/icons/IconsIdList";
 import classes from "./InputDefault.module.scss";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import { InputType } from "./InputType";
@@ -38,7 +38,7 @@ interface InputDefaultProps extends InputType {
 const InputDefault: FC<InputDefaultProps> = ({
     style,
     buttonSettings,
-    inputSettings = { disabled: false },
+    inputSettings,
     label,
     customClasses,
     error,
@@ -46,7 +46,9 @@ const InputDefault: FC<InputDefaultProps> = ({
     const inputContainerRef = useRef(null) as RefObject<HTMLDivElement>;
     const inputRef = useRef() as RefObject<HTMLInputElement>;
 
-    const [displayMessage, setDisplayMessage] = useState<any>("");
+    const [displayMessage, setDisplayMessage] = useState<any>(
+        inputSettings.defaultValue ?? ""
+    );
 
     const handleFocus = () => {
         if (!inputContainerRef.current) return;
@@ -58,11 +60,11 @@ const InputDefault: FC<InputDefaultProps> = ({
         inputContainerRef.current.classList.remove(classes["input--focus"]);
     };
 
-    useEffect(() => {
-        if (inputSettings.defaultValue) {
-            setDisplayMessage(inputSettings.defaultValue);
-        }
-    }, [inputSettings.defaultValue]);
+    // useEffect(() => {
+    //     if (inputSettings.defaultValue) {
+    //         setDisplayMessage(inputSettings.defaultValue);
+    //     }
+    // }, [inputSettings.defaultValue]);
 
     useEffect(() => {
         if (error !== undefined) {

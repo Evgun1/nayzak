@@ -2,29 +2,17 @@
 
 import React, { FormEvent, ReactElement, ReactNode, useState } from "react";
 import InputTextArea from "./InputTextArea";
-import {
-    boolean,
-    date,
-    isValid,
-    ZodEffects,
-    ZodObject,
-    ZodRawShape,
-} from "zod";
+import { ZodEffects, ZodObject, ZodRawShape } from "zod";
 
 import InputDefault from "./InputDefault";
 
-import classes from "./FormComponent.module.scss";
+import classes from "./Form.module.scss";
 import { InputType } from "./InputType";
-import appObjectValidation from "../../../utils/validator/appObjectValidation";
-import appEffectsValidation from "../../../utils/validator/appEffectsValidation";
 import Radio from "./Radio";
-import { renderToStaticMarkup } from "react-dom/server";
-import { log } from "console";
-import internal from "stream";
 import appSchemaHandler from "@/utils/validator/appSchemaHandler";
 import InputHidden from "./InputHidden";
 
-type FormComponentProps<T extends ZodRawShape> = {
+type FormProps<T extends ZodRawShape> = {
     children: ReactNode;
     oneMessage?: boolean;
     schema?: Array<ZodObject<T> | ZodEffects<ZodObject<T>>>;
@@ -33,17 +21,17 @@ type FormComponentProps<T extends ZodRawShape> = {
         event: FormEvent<HTMLFormElement>
     ) => void;
     customError?: string | null;
-    classe?: string;
+    className?: string;
 };
 
-const FormComponent = <T extends ZodRawShape>({
+const Form = <T extends ZodRawShape>({
     children,
     schema = [],
     oneMessage = false,
     submitHandler,
     customError,
-    classe,
-}: FormComponentProps<T>) => {
+    className,
+}: FormProps<T>) => {
     const [errorMessages, setErrorMessages] = useState<
         Record<string, string[]>
     >({});
@@ -177,7 +165,7 @@ const FormComponent = <T extends ZodRawShape>({
 
     return (
         <form
-            className={`${classes["form"]} ${classe ? classe : ""}`}
+            className={`${classes["form"]} ${className ? className : ""}`}
             onChange={onChangeHandler}
             onSubmit={onSubmitHandler}
         >
@@ -186,12 +174,10 @@ const FormComponent = <T extends ZodRawShape>({
     );
 };
 
-const Form = Object.assign(FormComponent, {
+export default Object.assign(Form, {
     InputDefault: InputDefault,
     InputTextArea: InputTextArea,
     InputHidden: InputHidden,
     Radio: Radio,
     // InputPhone: InputPhone,
 });
-
-export default Form;

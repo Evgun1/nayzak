@@ -1,4 +1,4 @@
-import Form from "@/components/elements/form-component/FormComponent";
+import Form from "@/lib/ui/form/Form";
 import classes from "./CheckoutFormPreview.module.scss";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";

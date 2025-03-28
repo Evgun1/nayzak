@@ -3,7 +3,7 @@ import {
 	HTMLInputTypeAttribute,
 	TextareaHTMLAttributes,
 } from 'react';
-import IconsIdList from '../icons/IconsIdList';
+import IconsIdList from '../../../components/elements/icons/IconsIdList';
 
 interface ButtonItem {
 	icon?: IconsIdList;

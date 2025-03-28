@@ -51,6 +51,10 @@ const PreviewReview = async (props: PreviewReviewProps) => {
             >
                 {review.text}
             </p>
+            <br />
+            <div>
+                <script>console.log("hello")</script>
+            </div>
         </div>
     );
 };

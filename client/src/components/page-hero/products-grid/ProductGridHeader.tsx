@@ -1,9 +1,9 @@
 "use client";
 
 import { ButtonClassList } from "@/types/buttonClassList.enum";
-import classes from "../ProductGrid.module.scss";
+import classes from "./ProductGrid.module.scss";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CategoryItem } from "@/types/categories.types";
 import { SubcategoryItem } from "@/types/subcategories.types";
 import { useSearchParams } from "next/navigation";
@@ -15,53 +15,42 @@ import Select from "@/lib/ui/select/Select";
 const ProductGridHeader = () => {
     const searchParams = useSearchParams();
     const [categories, setCategories] = useState<CategoryItem[]>([]);
-    const [subcategories, setSubcategories] = useState<
-        { subcategory: SubcategoryItem; active: boolean }[]
-    >([]);
+    const [subcategories, setSubcategories] = useState<SubcategoryItem[]>([]);
+
+    const fetchData = useCallback(async () => {
+        const urlSearchParams = new URLSearchParams(searchParams.toString());
+
+        const [categoriesFetch, subcategoriesFetch] = await Promise.all([
+            appCategoriesGet(),
+            appSubcategoriesGet(
+                urlSearchParams.has("category") ? urlSearchParams : undefined
+            ),
+        ]);
+
+        setCategories(categoriesFetch);
+        setSubcategories(subcategoriesFetch);
+
+        if (
+            !urlSearchParams.has("category") &&
+            !urlSearchParams.has("subcategory")
+        ) {
+            return;
+        }
+
+        const productsCount = await Promise.all([
+            appProductsGet({
+                searchParams: urlSearchParams,
+            }).then((res) => res.productCounts),
+        ]).then((res) => res[0]);
+
+        if (productsCount > 0) {
+            setSubcategories(subcategoriesFetch);
+        }
+    }, [searchParams.toString()]);
 
     useEffect(() => {
-        (async () => {
-            const urlSearchParams = new URLSearchParams(
-                searchParams.toString()
-            );
-
-            const categories = await appCategoriesGet();
-
-            setCategories(categories);
-
-            const subcategories = await appSubcategoriesGet(urlSearchParams);
-
-            const subCategoriesForDisplay: Array<{
-                subcategory: SubcategoryItem;
-                active: boolean;
-            }> = [];
-
-            for await (const subcategory of subcategories) {
-                const insUrlSearchParams = new URLSearchParams({
-                    subcategory: subcategory.title,
-                });
-
-                if (searchParams.has("category")) {
-                    insUrlSearchParams.set(
-                        "category",
-                        searchParams.get("category") as string
-                    );
-                }
-
-                const { productCounts, products } = await appProductsGet({
-                    searchParams: insUrlSearchParams,
-                });
-
-                if (productCounts > 0) {
-                    subCategoriesForDisplay.push({
-                        subcategory: subcategory,
-                        active: productCounts > 0 ? true : false,
-                    });
-                }
-            }
-            setSubcategories(subCategoriesForDisplay);
-        })();
-    }, [searchParams]);
+        fetchData();
+    }, [fetchData]);
 
     return (
         <div className={classes["product-grid__header"]}>
@@ -110,15 +99,15 @@ const ProductGridHeader = () => {
                     subcategories.length > 0 &&
                     subcategories.map((subcategory, index) => (
                         <Select.OptionLink
-                            acton={subcategory.active}
+                            // acton={subcategory.active}
                             key={index}
                             href={{
                                 queryParams: {
-                                    subcategory: subcategory.subcategory.title,
+                                    subcategory: subcategory.title,
                                 },
                             }}
                         >
-                            {subcategory.subcategory.title}
+                            {subcategory.title}
                         </Select.OptionLink>
                     ))}
             </Select>

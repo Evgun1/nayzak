@@ -88,7 +88,6 @@ class CustomerServer {
 
     async change(data: CustomerFormDTO) {
         const { firstName, id, lastName, phone } = data;
-        console.log(data);
 
         const customer = await prismaClient.customers.update({
             where: { id: parseInt(id?.toString()) },
@@ -98,8 +97,6 @@ class CustomerServer {
                 phone: phone ? parseInt(phone.toString()) : 0,
             },
         });
-
-        console.log(customer);
 
         return customer;
     }

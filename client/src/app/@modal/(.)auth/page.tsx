@@ -1,22 +1,22 @@
 "use client";
 
-import classes from "./PopupAuth.module.scss";
-import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 import { loginAction, registrationAction } from "@/lib/redux/store/auth/action";
-import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
-import Form from "../../lib/ui/form/Form";
 import { validation } from "@/utils/validator/validator";
-import IconsIdList from "../elements/icons/IconsIdList";
-import { popupActions } from "@/lib/redux/store/popup/popup";
+import { useState } from "react";
 import { z, ZodEffects, ZodObject } from "zod";
+import classes from "./PopupAuth.module.scss";
+import ButtonCustom from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
+import { popupActions } from "@/lib/redux/store/popup/popup";
+import Form from "@/lib/ui/form/Form";
+import IconsIdList from "@/components/elements/icons/IconsIdList";
 import { CredentialsDTO } from "@/lib/redux/store/auth/credentials.type";
+import { useRouter } from "next/navigation";
 
-const PopupAuth = () => {
+export default function AuthModal() {
     const errorMessage = useAppSelector((state) => state.auth.errorMessage);
+    const route = useRouter();
 
-
-    
     const dispatch = useAppDispatch();
     const [isRegister, setIsRegister] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -59,7 +59,11 @@ const PopupAuth = () => {
                             size: "MEDIUM",
                             icon: { left: "CLOSE" },
                         }}
-                        onClick={() => dispatch(popupActions.toggle(null))}
+                        onClick={() => {
+                            // route.push("/");
+                            route.back();
+                            // route.refresh();
+                        }}
                     />
                 </div>
                 <div>
@@ -126,6 +130,4 @@ const PopupAuth = () => {
             </Form>
         </div>
     );
-};
-
-export default PopupAuth;
+}

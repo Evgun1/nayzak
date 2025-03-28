@@ -5,7 +5,7 @@ import CheckoutForms from "./checkout-forms/CheckoutForms";
 import CheckoutOrder from "./checkout-order/CheckoutOrder";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 import { FormEvent, useEffect, useState } from "react";
-import Form from "../elements/form-component/FormComponent";
+import Form from "../../lib/ui/form/Form";
 import ButtonCustom from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { ordersUploadItem } from "@/utils/http/orders";
 import { uploadOrders } from "@/lib/redux/store/orders/action";
@@ -15,7 +15,9 @@ import { z, ZodObject } from "zod";
 import { validation } from "@/utils/validator/validator";
 
 const schemaCustomersArr: Array<ZodObject<any>> = [];
+
 schemaCustomersArr.push(z.object({ ...validation.customer }));
+
 const Checkout = () => {
     const route = useRouter();
     const cart = useAppSelector((state) => state.cart.productsArray);
@@ -93,7 +95,7 @@ const Checkout = () => {
             <Form
                 schema={schemaCustomersArr}
                 submitHandler={submitHandler}
-                classe={classes["checkout__form"]}
+                className={classes["checkout__form"]}
             >
                 <CheckoutForms />
                 <CheckoutOrder />

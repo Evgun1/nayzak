@@ -48,13 +48,6 @@ export const writeCustomerAction = (customerForm: FormData) => {
         const objectForm = Object.fromEntries(customerForm.entries());
 
         for (const key in objectForm) {
-            // if (key === 'email') {
-            // 	if (objectForm[key] !== userData.email) {
-            // 		console.log(true);
-            // 	}
-            // 	continue;
-            // }
-
             formData.set(key, objectForm[key]);
         }
 

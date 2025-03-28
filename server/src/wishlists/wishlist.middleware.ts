@@ -10,16 +10,12 @@ class WishlistMiddleware {
         if (body) {
             const { currentProduct, customerID } = body;
 
-            console.log(body);
-
             const wishlist = await prismaClient.wishlist.findFirst({
                 where: {
                     customersId: customerID,
                     productsId: currentProduct.productID,
                 },
             });
-
-            console.log(wishlist);
 
             if (wishlist) {
                 throw new HTTPException(400, {

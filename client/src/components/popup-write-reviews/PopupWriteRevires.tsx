@@ -7,7 +7,7 @@ import React, {
     useEffect,
     useState,
 } from "react";
-import Form from "../elements/form-component/FormComponent";
+import Form from "../../lib/ui/form/Form";
 import PopupPreview from "../elements/popup/PopupPreview";
 import classes from "./PopupWriteReview.module.scss";
 import DisplayIcon from "../elements/icons/displayIcon";
@@ -123,7 +123,7 @@ const PopupWriteReview = () => {
     return (
         <PopupPreview title='Leave a review'>
             <Form
-                classe={classes.form}
+                className={classes.form}
                 schema={schema}
                 oneMessage
                 submitHandler={submitHandler}

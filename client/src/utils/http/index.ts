@@ -1,4 +1,5 @@
-import Tabs from "@/lib/ui/tabs/Tabs";
+import { revalidatePath } from "next/cache";
+import purgeCachedInterval from "../purgeCachedInterval";
 
 const BASE_URL = "http://localhost:3030";
 
@@ -44,15 +45,11 @@ const appFetch = async <T>({
     init,
     searchParams,
 }: AppFetchProps): Promise<{ response: T; totalCount: number }> => {
-    "use cache";
-
     const url = `${BASE_URL}/${pathname}${
         searchParams ? `?${searchParams}` : ""
     }`;
 
-    // init.cache = "no-cache";
-    // init.next = { tags: tags };
-    // init.next = { revalidate: 10 };
+    init.next = { revalidate: 1800 };
 
     try {
         const res = await fetch(url, init);

@@ -40,7 +40,7 @@ const NavigationAction: React.FC<NavigationActionProps> = ({
                                 <Navbar.Item
                                     key={i}
                                     href={{
-                                        endpoint: `category/${category.url.toLowerCase()}/${subcategory.url.toLowerCase()}`,
+                                        endpoint: `/category/${category.url.toLowerCase()}/${subcategory.url.toLowerCase()}`,
                                     }}
                                 >
                                     {subcategory.label}

@@ -1,6 +1,6 @@
 "use client";
 
-import Form from "@/components/elements/form-component/FormComponent";
+import Form from "@/lib/ui/form/Form";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { validation } from "@/utils/validator/validator";
@@ -44,7 +44,7 @@ const DetailInfo = () => {
         <Form
             schema={schemaDetailInformation}
             submitHandler={dataInformationHandler}
-            classe={classes["account-details-customer"]}
+            className={classes["account-details-customer"]}
         >
             <div className={classes["account-details-customer__input-wrap"]}>
                 <Form.InputDefault

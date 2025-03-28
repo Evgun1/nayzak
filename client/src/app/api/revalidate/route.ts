@@ -2,7 +2,8 @@ import { json } from "stream/consumers";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { tags } from "@/utils/http";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import purgeCachedInterval from "@/utils/purgeCachedInterval";
 
 export async function POST(req: Request, res: NextApiResponse) {
     const secretKey = process.env.CACHE_SECRET_KEY;
@@ -37,10 +38,9 @@ export async function POST(req: Request, res: NextApiResponse) {
         );
     }
 
-    // console.log(tag);
-
     try {
         revalidateTag(tag);
+        revalidatePath("/");
         return NextResponse.json({
             message: `Cache revalidated for ${tag}`,
         });

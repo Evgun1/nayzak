@@ -1,7 +1,7 @@
 "use client";
 
 import { z, ZodEffects, ZodObject } from "zod";
-import Form from "../elements/form-component/FormComponent";
+import Form from "../../lib/ui/form/Form";
 import classes from "./PopupAddressRadio.module.scss";
 import PopupPreview from "../elements/popup/PopupPreview";
 import { AddressData } from "@/lib/redux/store/address/address";
@@ -37,7 +37,7 @@ const PopupAddressRadio: FC<PopupAddressEditProps> = ({
     return (
         <PopupPreview title={"Edit address"}>
             <Form
-                classe={classes["popup-address-radio"]}
+                className={classes["popup-address-radio"]}
                 submitHandler={submitHandler}
             >
                 {currentAddresses.map((data, i) => (

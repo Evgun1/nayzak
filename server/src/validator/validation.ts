@@ -114,15 +114,9 @@ export default function validation() {
                 .refine((val) => /[A-Z]/.test(val), {
                     message: "Title must contain one capital letter",
                 })
-                .refine(
-                    (val) => {
-                        console.log(val.includes(`/[0-9]/`));
-                        return !val.trim().includes(`/[0-9]/`);
-                    },
-                    {
-                        message: "Title cannot contain numbers",
-                    }
-                )
+                // .refine((val) => !val.trim().includes(`/[0-9]/`), {
+                //     message: "Title cannot contain numbers",
+                // })
                 .refine(
                     (val) => !/[`!@#$%^&*+\-=\[\]{};':"\\|,.<>\/?~]/.test(val),
                     {
