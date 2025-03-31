@@ -9,7 +9,12 @@ import admin from "firebase-admin";
 // const bucket = admin.storage().bucket();
 //
 // export default bucket;
-
+/**
+ *
+ * TODO
+ *remove API key from code and use from .env
+ *
+ */
 const firebaseConfig = {
   apiKey: "AIzaSyCCMena_pvGh-8c76aLShlzKa_sf3F3kIs",
   authDomain: "shopez-53fe0.firebaseapp.com",

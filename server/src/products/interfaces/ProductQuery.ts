@@ -1,4 +1,4 @@
-export interface ProductsGetQuery {
+export interface ProductQuery {
   id?: number;
   page?: string;
   limit?: string;

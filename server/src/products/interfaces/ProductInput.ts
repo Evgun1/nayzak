@@ -1,6 +1,6 @@
 import { $Enums } from '@prisma/client';
 
-export interface ProductsGetDTO {
+export interface ProductInput {
 	id: number;
 	title: string;
 	description: string;
@@ -9,6 +9,5 @@ export interface ProductsGetDTO {
 	status: $Enums.ProductsStatus;
 	categoriesId: number;
 	subcategoriesId: number;
-	// brandsId: number;
 	mediaId: number;
 }

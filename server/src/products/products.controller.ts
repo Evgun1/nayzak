@@ -1,13 +1,9 @@
 import { Context } from 'hono';
-import prismaClient from '../prismaClient';
-import { Prisma } from '@prisma/client';
 import productsService from './products.service';
 import ProductsService from './products.service';
-import { ProductsGetDTO } from './interfaces/ProductsGetDTO';
+import { ProductInput } from './interfaces/ProductInput';
 import getReqBody from '../tools/getReqBody';
 import { QueryParameterTypes } from '../utils/service/service.type';
-import { log } from 'console';
-import { json } from 'stream/consumers';
 
 class ProductsController {
 	async getAll(c: Context) {
@@ -66,7 +62,7 @@ class ProductsController {
 	}
 
 	async change(c: Context) {
-		const inputData = (await c.req.json()) as ProductsGetDTO;
+		const inputData = (await c.req.json()) as ProductInput;
 
 		const product = await ProductsService.updateProduct(inputData);
 
