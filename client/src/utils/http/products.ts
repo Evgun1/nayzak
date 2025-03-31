@@ -1,10 +1,13 @@
 import { ProductItem } from "@/types/product.types";
 import { appFetchGet } from ".";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 type AppProductsGetProps = {
     searchParams?: URLSearchParams;
     params?: string[] | string;
 };
+
+const tag = "products";
 
 export const appProductsGet = async ({
     params,
@@ -19,7 +22,7 @@ export const appProductsGet = async ({
     }
 
     const { response, totalCount } = await appFetchGet<ProductItem[]>({
-        tag: "products",
+        tag,
         searchParams,
         pathname,
     });
@@ -41,7 +44,7 @@ export const appProductsByParamsGet = async ({
     }`;
 
     const { response, totalCount } = await appFetchGet<ProductItem[]>({
-        tag: "products",
+        tag,
         pathname,
         searchParams,
     });
@@ -53,7 +56,7 @@ export const appOneProductGet = async (productsID: number | string) => {
     const pathname = `products/${productsID}`;
 
     const { response, totalCount } = await appFetchGet<ProductItem>({
-        tag: "products",
+        tag,
         pathname,
     });
 
@@ -72,7 +75,7 @@ export const appMinMaxPriceGet = async (
         minPrice: number;
         maxPrice: number;
     }>({
-        tag: "products",
+        tag,
         pathname,
         searchParams,
     });

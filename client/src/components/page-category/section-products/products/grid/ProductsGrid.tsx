@@ -3,12 +3,12 @@
 import Toolbar from "./Toolbar";
 
 import classes from "./ProductsGrid.module.scss";
-import { useProductsReducer } from "@/hooks/useProductsReducer";
+import { useLoadMoreReducer } from "@/hooks/useProductsReducer";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { appProductsGet } from "@/utils/http/products";
 import dynamic from "next/dynamic";
-import ProductsLoader from "@/components/elements/load-more/loader-products/ProductsLoader";
+import ProductsLoaderServer from "@/components/elements/load-more/loader-products/ProductsLoaderServer";
 import { headers } from "next/headers";
 
 export default async function ProductsGrid({
@@ -44,7 +44,7 @@ export default async function ProductsGrid({
         <div className={classes["products-grid"]}>
             <Toolbar totalCount={productCounts} />
 
-            <ProductsLoader
+            <ProductsLoaderServer
                 rating
                 className={classes["products-grid__loader"]}
                 listType={getListType}

@@ -9,7 +9,7 @@ const purgeCachedInterval = (sec: number) => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            revalidatePath("/");
+            route.prefetch("/");
         }, sec * 1000);
 
         return () => clearInterval(interval);

@@ -1,4 +1,3 @@
-"use server";
 import Link from "next/link";
 import Price from "../../price/Price";
 
@@ -10,13 +9,13 @@ import { FC } from "react";
 import { ProductPreviewTypes } from "../ProductPreview.types";
 import Image from "next/image";
 
-const ProductPreviewDefault: FC<ProductPreviewTypes> = async (props) => {
+const ProductPreviewDefault: FC<ProductPreviewTypes> = (props) => {
     const { rating, className, stylePrice, product, showIcon = false } = props;
 
     function hasMonthPassed(startDate: any) {
         const now = new Date();
         const oneMonthLater = new Date(startDate);
-        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1); // Добавляем 1 месяц
+        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
 
         return now >= oneMonthLater;
     }

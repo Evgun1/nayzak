@@ -5,12 +5,14 @@ type AppMediaGetAllProps = {
     searchParams?: URLSearchParams;
 };
 
+const tag = "media";
+
 export const appMediaAllGet = async (props: AppMediaGetAllProps) => {
     const { searchParams } = props;
     const pathname = "media";
 
     const { response, totalCount } = await appFetchGet<MediaItem[]>({
-        tag: "media",
+        tag,
         pathname,
         searchParams,
     });
@@ -22,7 +24,7 @@ export const appMediaOneGet = async (mediaId: number | string) => {
     const pathname = `media/${mediaId}`;
 
     const { response, totalCount } = await appFetchGet<MediaItem>({
-        tag: "media",
+        tag,
         pathname,
     });
 

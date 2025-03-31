@@ -21,7 +21,7 @@ type ProductsAction = {
 };
 
 interface ProductsState {
-    products: ProductItem[];
+    data: ProductItem[];
     totalCount: number;
     isLoading: boolean;
     // loaderFn: () => Promise<unknown> | null;
@@ -41,7 +41,7 @@ const productsReducer: Reducer<ProductsState, ProductsAction> = (
         case ProductsActionType.LOAD_MORE:
             const newState: ProductsState = {
                 ...action.payload,
-                products: state.products.concat(action.payload?.products ?? []),
+                data: state.data.concat(action.payload?.data ?? []),
             };
             return newState;
         case ProductsActionType.END_LOAD:
@@ -51,11 +51,11 @@ const productsReducer: Reducer<ProductsState, ProductsAction> = (
     }
 };
 
-export const useProductsReducer = <T extends { [key: string]: any }, P>(
+export const useLoadMoreReducer = <T extends { [key: string]: any }, P>(
     loaderFn: FetchType<T, P>
 ) => {
     const [state, dispatch] = useReducer(productsReducer, {
-        products: [],
+        data: [],
         totalCount: 0,
         isLoading: false,
     });
@@ -76,7 +76,7 @@ export const useProductsReducer = <T extends { [key: string]: any }, P>(
                 dispatch({
                     type: ProductsActionType.INIT,
                     payload: {
-                        products: result[arrayKey],
+                        data: result[arrayKey],
                         totalCount: result[countKey],
                         isLoading: false,
                     },
@@ -86,7 +86,7 @@ export const useProductsReducer = <T extends { [key: string]: any }, P>(
         [loaderFn]
     );
 
-    const loadMoreProducts = async (
+    const loadMore = async (
         offset: number,
         limit: number = 8,
         params?: string | string[]
@@ -105,7 +105,7 @@ export const useProductsReducer = <T extends { [key: string]: any }, P>(
 
             const payload: ProductsState = {
                 isLoading: false,
-                products: result.products,
+                data: result.products,
                 totalCount: result.productCounts,
             };
 
@@ -116,5 +116,5 @@ export const useProductsReducer = <T extends { [key: string]: any }, P>(
         }
     };
 
-    return { state, loadMoreProducts, initData };
+    return { state, loadMore, initData };
 };

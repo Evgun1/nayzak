@@ -2,13 +2,13 @@
 
 import classes from "./ProductsLoader.module.scss";
 
-import React, { FC, ReactElement, ReactNode, useEffect, useState } from "react";
+import React, { ReactElement, ReactNode, useCallback, useEffect } from "react";
 import LoadMore from "@/components/elements/load-more/LoadMore";
-import { useProductsReducer } from "@/hooks/useProductsReducer";
+import { useLoadMoreReducer } from "@/hooks/useProductsReducer";
 import { appProductsGet } from "@/utils/http/products";
 import { useSearchParams } from "next/navigation";
-import ProductPreviewDefaultClient from "@/components/elements/product-preview/product-preview-default/ProductsPreviewDefaultClient";
 import ProductPreviewList from "@/components/elements/product-preview/product-preview-list/ProductPreviewList";
+import ProductPreviewDefault from "../../product-preview/product-preview-default/ProductsPreviewDefault";
 
 export interface ListType {
     five_grid: string;
@@ -28,16 +28,19 @@ const ProductsLoaderClient = ({
 }: {
     rating?: boolean;
     listType?: keyof ListType;
-    children: ReactNode;
-    totalCount: number;
+    children?: ReactNode;
+    totalCount?: number;
     className?: string;
     params?: string | string[];
 }) => {
     const searchParams = useSearchParams();
     const childrenArr = children as ReactElement[];
 
-    const { state, loadMoreProducts, initData } =
-        useProductsReducer(appProductsGet);
+    const {
+        state,
+        loadMore: loadMoreProducts,
+        initData,
+    } = useLoadMoreReducer(appProductsGet);
 
     const listTypeLimits = new Map([
         ["default", "15"],
@@ -57,33 +60,54 @@ const ProductsLoaderClient = ({
         : (listTypeLimits.get(listType) as string);
 
     const btnClickHandler = () => {
-        loadMoreProducts(state.products.length + +getLimit, +getLimit, params);
+        loadMoreProducts(+getLimit, +getLimit);
     };
+
+    const initDataHandler = useCallback(() => {
+        const urlSearchParams = new URLSearchParams(searchParams.toString());
+
+        if (children) {
+            urlSearchParams.set("limit", "0");
+            initData({ searchParams: urlSearchParams });
+            return;
+        }
+        urlSearchParams.set(
+            "offset",
+            `${state.data.length + parseInt(getLimit)}`
+        );
+        urlSearchParams.set("limit", getLimit.toString());
+        initData({ searchParams: urlSearchParams });
+    }, [children, searchParams]);
+
+    useEffect(() => {
+        initDataHandler();
+    }, [initDataHandler]);
 
     return (
         <LoadMore
-            style={`${classes["grid"]} ${
+            className={`${classes["grid"]} ${
                 listType
                     ? classes[listType]
                     : getListType
                     ? classes[getListType]
                     : ""
             }`}
-            totalCount={totalCount}
+            totalCount={totalCount ? totalCount : state.totalCount}
             btnClickHandler={btnClickHandler}
         >
-            {childrenArr.map((child, i) => (
-                <li key={i} className={classes["grid-li"]}>
-                    {child}
-                </li>
-            ))}
+            {childrenArr &&
+                childrenArr.map((child, i) => (
+                    <li key={i} className={classes["grid-li"]}>
+                        {child}
+                    </li>
+                ))}
 
-            {state.products.map((product, i) => (
+            {state.data.map((product, i) => (
                 <li key={i} className={classes["grid-li"]}>
                     {getListType === "list" ? (
                         <ProductPreviewList product={product} rating={rating} />
                     ) : (
-                        <ProductPreviewDefaultClient
+                        <ProductPreviewDefault
                             className={className}
                             rating={rating}
                             product={product}

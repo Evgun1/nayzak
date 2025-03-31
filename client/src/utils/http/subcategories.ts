@@ -1,11 +1,13 @@
 import { appFetchGet } from ".";
 import { SubcategoryItem } from "@/types/subcategories.types";
 
+const tag = "subcategories";
+
 export const appSubcategoriesGet = async (searchParams?: URLSearchParams) => {
     const pathname = "subcategories";
 
     const { response } = await appFetchGet<SubcategoryItem[]>({
-        tag: "subcategories",
+        tag,
 
         pathname,
         searchParams,
@@ -20,7 +22,7 @@ export const appSubcategoriesOneGet = async (
     const pathname = `subcategories/${subcategoriesId}`;
 
     const { response } = await appFetchGet<SubcategoryItem>({
-        tag: "subcategories",
+        tag,
 
         pathname,
     });
@@ -34,7 +36,7 @@ export const appSubcategoryByCategoryGet = async (params: string) => {
     }`;
 
     const { response } = await appFetchGet<SubcategoryItem[]>({
-        tag: "subcategories",
+        tag,
 
         pathname,
     });

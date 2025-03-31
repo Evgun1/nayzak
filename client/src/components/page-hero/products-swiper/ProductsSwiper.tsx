@@ -20,7 +20,11 @@ const ProductsSwiper = async () => {
 
     const SwiperComponentDynamic = dynamic(() => import("./swiper/Swiper"), {
         ssr: true,
-        loading: () => <div>Loading...</div>,
+        loading: () => (
+            <div className={classes["loading"]}>
+                <div className={classes["loading__spinner"]}></div>
+            </div>
+        ),
     });
 
     const productsArr: ReactElement[] = [];

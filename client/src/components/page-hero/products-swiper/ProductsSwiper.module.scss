@@ -3,3 +3,31 @@
         text-align: start;
     }
 }
+
+.loading {
+    position: relative;
+    max-height: 479px;
+    height: 100vh;
+    background: var(--black-300);
+    &__spinner {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        border: 16px solid white;
+        border-radius: 50%;
+        border-top: 16px solid var(--black-700);
+        width: 120px;
+        height: 120px;
+        animation: spin 2s backwards infinite;
+
+        @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+    }
+}

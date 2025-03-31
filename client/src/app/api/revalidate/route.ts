@@ -1,9 +1,9 @@
+"use server";
 import { json } from "stream/consumers";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { tags } from "@/utils/http";
 import { revalidatePath, revalidateTag } from "next/cache";
-import purgeCachedInterval from "@/utils/purgeCachedInterval";
 import { headers } from "next/headers";
 
 export async function POST(req: Request, res: NextApiResponse) {
@@ -46,12 +46,6 @@ export async function POST(req: Request, res: NextApiResponse) {
         return NextResponse.json({
             message: `Cache revalidated for ${tag}`,
         });
-        // await fetch("http://localhost:3000/", {
-        //     method: "PURGE",
-        //     headers: {
-        //         "x-next-cache-tag": tag,
-        //     },
-        // });
     } catch (error) {
         return NextResponse.json(
             { message: "Error revalidating", error },

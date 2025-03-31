@@ -1,25 +1,18 @@
 "use client";
 
-import { ProductItem } from "@/types/product.types";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import DisplayIcon from "@/components/elements/icons/displayIcon";
-import IconsIdList from "@/components/elements/icons/IconsIdList";
-import {
-    FC,
-    ReactElement,
-    ReactNode,
-   
-} from "react";
-import { appProductsGet } from "@/utils/http/products";
-import { useSearchParams } from "next/navigation";
-import ProductPreview from "@/components/elements/product-preview/ProductPreview";
+import React, { FC, ReactElement, ReactNode, Suspense } from "react";
 
 import classes from "./Swiper.module.scss";
+import SwiperHeader from "./SwiperHeader";
+import dynamic from "next/dynamic";
+import DisplayIcon from "@/components/elements/icons/displayIcon";
+import IconsIdList from "@/components/elements/icons/IconsIdList";
 
 type SwiperComponentProps = {
     label: string;

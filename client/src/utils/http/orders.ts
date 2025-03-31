@@ -3,9 +3,11 @@ import { appFetchGet, appFetchPost } from ".";
 
 const pathname = "orders";
 
+const tag = "orders";
+
 export const appOrdersAllGet = async () => {
     const { response, totalCount } = await appFetchGet<OrdersItem>({
-        tag: "orders",
+        tag,
         pathname,
     });
 
@@ -33,6 +35,7 @@ export const appOrdersPost = async (ordersData: AppOrdersPostProps) => {
     >()
         .set("upload", async (data: ordersUploadItem) => {
             const { response } = await appFetchPost<OrdersItem[]>({
+                tag,
                 pathname,
                 sendData: data,
             });
@@ -42,6 +45,7 @@ export const appOrdersPost = async (ordersData: AppOrdersPostProps) => {
 
         .set("init", async (data: ordersInitItem) => {
             const { response } = await appFetchPost<OrdersItem[]>({
+                tag,
                 pathname: `${pathname}/init`,
                 sendData: { customerId: data.customerId },
             });

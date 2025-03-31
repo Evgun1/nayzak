@@ -1,10 +1,12 @@
 import { CustomerItem } from "@/types/customer.types";
 import { appFetchGet, appFetchPost, appFetchPut } from ".";
 
+const tag = "customers";
+
 export const appCustomersGet = async (searchParams?: URLSearchParams) => {
     const pathname = `customers`;
     const { response } = await appFetchGet<CustomerItem[]>({
-        tag: "customers",
+        tag,
         pathname,
         searchParams,
     });
@@ -15,7 +17,7 @@ export const appCustomersGet = async (searchParams?: URLSearchParams) => {
 export const appCustomersOneGet = async (customersId: string) => {
     const pathname = `customers/${customersId}`;
     const { response } = await appFetchGet<CustomerItem>({
-        tag: "customers",
+        tag,
         pathname,
     });
 
@@ -26,6 +28,7 @@ export const appCustomersPost = async (formData: FormData) => {
     const pathname = "customers";
 
     const { response, totalCount } = await appFetchPost<CustomerItem>({
+        tag,
         pathname,
         sendData: formData,
     });
@@ -37,6 +40,7 @@ export const appCustomersPut = async (formData: FormData) => {
     const pathname = "customers/update";
 
     const { response } = await appFetchPut<CustomerItem>({
+        tag,
         pathname,
         putData: formData,
     });
@@ -48,6 +52,7 @@ export const appCustomersInitPost = async (token: string) => {
     const pathname = "customers/init";
 
     const { response } = await appFetchPost<CustomerItem>({
+        tag,
         pathname,
         authorization: token,
     });

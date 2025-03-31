@@ -5,8 +5,7 @@ import { FC } from "react";
 import classes from "./productList.module.scss";
 import "./style.scss";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
-import ProductPreview from "../product-preview/ProductPreview";
-import ProductPreviewDefaultClient from "../product-preview/product-preview-default/ProductsPreviewDefaultClient";
+import ProductPreviewDefault from "../product-preview/product-preview-default/ProductsPreviewDefault";
 
 type ProductListProps = {
     productsArray: ProductItem[];
@@ -36,7 +35,7 @@ const ProductList: FC<ProductListProps> = ({
                     productsArray.length > 0 &&
                     productsArray.map((product, index) => (
                         <li key={index}>
-                            <ProductPreviewDefaultClient
+                            <ProductPreviewDefault
                                 rating={rating}
                                 product={product}
                                 className={stylePreview}

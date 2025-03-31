@@ -2,13 +2,13 @@
 
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { FC, ReactElement, ReactNode, useEffect, useState } from "react";
-import classes from "./productList.module.scss";
+import classes from "./LoadMore.module.scss";
 
 type LoaderProps = {
     children: ReactNode;
     totalCount: number;
 
-    style?: any;
+    className?: any;
     btnClickHandler?: () => void;
 };
 
@@ -16,7 +16,7 @@ const LoadMore: FC<LoaderProps> = ({
     totalCount,
     children,
     btnClickHandler,
-    style,
+    className,
 }) => {
     if (!children) return;
     const [length, setLength] = useState<number>(0);
@@ -25,15 +25,25 @@ const LoadMore: FC<LoaderProps> = ({
 
     useEffect(() => {
         const length = childrenArr
-            .map((child, i) => child.length)
-            .reduce((a, b) => a + b, 0);
+            .map((child, i) => {
+                if (child) {
+                    return child.length;
+                }
+
+                return 0;
+            })
+            .reduce((a, b) => {
+                return a + b;
+            }, 0);
 
         setLength(length);
     }, [children]);
 
     return (
         <div>
-            <ul className={`${style} ${classes.grid}`}>{children}</ul>
+            <ul className={`${className} ${classes["load-more"]}`}>
+                {children}
+            </ul>
             {totalCount > length && (
                 <ButtonCustom
                     onClick={btnClickHandler}

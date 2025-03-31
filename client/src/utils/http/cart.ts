@@ -3,12 +3,15 @@ import { appFetchDelete, appFetchGet, appFetchPost, appFetchPut } from ".";
 import { CartItem } from "@/types/cart.types";
 import { appCookieGet } from "./cookie";
 
+const tag = "cart";
+
 export const appCartInitPost = async (customerID: number) => {
     const pathname = "cart/init";
 
     const token = appCookieGet("user-token");
 
     const { response } = await appFetchPost<CartItem[]>({
+        tag,
         pathname,
         sendData: { customerID },
     });
@@ -28,6 +31,7 @@ export const appCartPost = async ({ product, customerID }: AppCartPost) => {
     const { productID, amount } = product;
 
     const { response } = await appFetchPost<CartItem>({
+        tag,
         pathname,
         sendData: { productID, amount, customerID },
     });
@@ -41,6 +45,7 @@ export const appCartPut = async (product: CartItemData, customerID: number) => {
     const { amount, productID, id } = product;
 
     const { response } = await appFetchPut<CartItem>({
+        tag,
         pathname,
         putData: { id, amount, productID, customerID },
     });
@@ -52,6 +57,7 @@ export const appCartDelete = async (id: number | number[]) => {
     const pathname = "cart";
 
     const result = await appFetchDelete({
+        tag,
         pathname,
         deleteData: { id: id },
     });

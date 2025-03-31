@@ -7,6 +7,8 @@ type AppUserProps = {
     init?: string;
 };
 
+const tag = "credentials";
+
 export const appCredentialsPost = async (userData: AppUserProps) => {
     const appFetchPostOptions = { pathname: `credentials/` } as AppPostFetch;
 
@@ -62,7 +64,7 @@ export const appCredentialsCheckGet = async (userToken: string) => {
     const pathname = "credentials/check";
 
     return await appFetchGet<string>({
-        tag: "credentials",
+        tag,
         pathname,
         authorization: userToken,
     });
@@ -71,6 +73,7 @@ export const appCredentialsPasswordPut = async (passwordToken: string) => {
     const pathname = "credentials/change-password";
 
     return await appFetchPut<string>({
+        tag,
         pathname,
         authorization: passwordToken,
     });

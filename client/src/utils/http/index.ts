@@ -1,5 +1,5 @@
-import { revalidatePath } from "next/cache";
-import purgeCachedInterval from "../purgeCachedInterval";
+import { json } from "stream/consumers";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 const BASE_URL = "http://localhost:3030";
 
@@ -96,6 +96,7 @@ export const appFetchGet = async <T>({
 };
 
 export type AppPostFetch = {
+    tag: keyof TagsItem;
     pathname: string;
     authorization?: string;
     sendData?: FormData | object;
@@ -128,6 +129,7 @@ export const appFetchPost = async <T>({
 };
 
 type AppPutFetch = {
+    tag: keyof TagsItem;
     pathname: string;
     putData?: FormData | object;
     authorization?: string;
@@ -156,6 +158,7 @@ export const appFetchPut = async <T>({
 };
 
 type AppDeleteFetch = {
+    tag: keyof TagsItem;
     pathname: string;
     deleteData: FormData | object;
 };

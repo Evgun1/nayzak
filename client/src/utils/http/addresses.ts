@@ -3,6 +3,7 @@ import { appFetchDelete, appFetchGet, appFetchPost, appFetchPut } from ".";
 import { AddressData } from "@/lib/redux/store/address/address";
 
 let pathname = "addresses";
+const tag = "addresses";
 
 type AppAddressesAllGetProps = {
     searchParams: URLSearchParams;
@@ -11,7 +12,7 @@ export const appAddressesAllGet = async (props: AppAddressesAllGetProps) => {
     const { searchParams } = props;
 
     const { response, totalCount } = await appFetchGet<AddressItem[]>({
-        tag: "addresses",
+        tag,
         pathname,
         searchParams,
     });
@@ -26,7 +27,7 @@ export const appAddressesOneGet = async (props: appAddressesOneGetProps) => {
     const { addressesParams } = props;
 
     const { response } = await appFetchGet<AddressItem>({
-        tag: "addresses",
+        tag,
         pathname: `${pathname}/${addressesParams}`,
     });
     return response;
@@ -39,6 +40,7 @@ export const appAddressesPost = async (props: AppAddressesPostProps) => {
     const { sendData } = props;
 
     const { response, totalCount } = await appFetchPost<AddressItem>({
+        tag,
         pathname,
         sendData: sendData,
     });
@@ -53,6 +55,7 @@ export const appAddressesPut = async (props: AppAddressesPutProps) => {
     const { sendData } = props;
 
     const { response, totalCount } = await appFetchPut<AddressItem>({
+        tag,
         pathname,
         putData: sendData,
     });
@@ -67,6 +70,7 @@ export const appAddressesDelete = async (props: AppAddressesDelete) => {
     const { deleteData } = props;
 
     const { response } = await appFetchDelete<AddressItem>({
+        tag,
         pathname,
         deleteData,
     });
