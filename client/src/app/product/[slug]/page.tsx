@@ -9,7 +9,7 @@ import { appCategoriesOneGet } from "@/utils/http/categories";
 import { appSubcategoriesOneGet } from "@/utils/http/subcategories";
 import ClientComponent from "@/components/ClientComponent";
 
-export default async function page(props: { params: { slug: string } }) {
+export default async function Page(props: { params: { slug: string } }) {
     const urlSearchParams = new URLSearchParams();
     // const product = await appOneProductGet(props.params.slug);
 
