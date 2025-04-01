@@ -1,5 +1,4 @@
-server/docker/pgadmin
-server/docker/pgadmin
-server/docker/pgadmin
-server/.idea
-server/docker/pgadmin
+**/docker/**
+**/.idea
+**/.vscode
+**/node_modules
