@@ -7,6 +7,7 @@ import React, {
     ReactNode,
     RefObject,
     Suspense,
+    useCallback,
     useEffect,
     useId,
     useLayoutEffect,
@@ -52,70 +53,78 @@ const SelectComponent: FC<SelectComponentProps> = (props) => {
         {}
     );
 
-    function eventListenerHandler(event: Event) {
-        const target = event.target as HTMLElement;
-        const childrenCurrent = childrenRef.current;
-        if (!target || !childrenCurrent) return;
+    const eventListenerHandler = useCallback(
+        (event: Event) => {
+            const target = event.target as HTMLElement;
+            const childrenCurrent = childrenRef.current;
+            if (!target || !childrenCurrent) return;
 
-        const childrenClassList = childrenCurrent.classList;
-        const targetClassList = target.closest(`#${generateId}`)?.classList;
+            const childrenClassList = childrenCurrent.classList;
+            const targetClassList = target.closest(`#${generateId}`)?.classList;
 
-        if (!targetClassList) {
-            childrenClassList.remove(classes["select__options--visible"]);
-            return;
-        }
+            if (!targetClassList) {
+                childrenClassList.remove(classes["select__options--visible"]);
+                return;
+            }
 
-        if (childrenClassList.contains(classes["select__options--visible"])) {
-            childrenClassList.remove(classes["select__options--visible"]);
-        } else {
-            childrenClassList.add(classes["select__options--visible"]);
-        }
-    }
+            if (
+                childrenClassList.contains(classes["select__options--visible"])
+            ) {
+                childrenClassList.remove(classes["select__options--visible"]);
+            } else {
+                childrenClassList.add(classes["select__options--visible"]);
+            }
+        },
+        [generateId]
+    );
 
-    function childrenRecursion(children: ReactNode, label?: string) {
-        return React.Children.map(children, (child, i): ReactNode => {
-            if (!React.isValidElement(child)) return child;
+    const childrenRecursion = useCallback(
+        (children: ReactNode, label?: string) => {
+            return React.Children.map(children, (child, i): ReactNode => {
+                if (!React.isValidElement(child)) return child;
 
-            if (child.type === OptionLink) {
-                const childrenElement = child as ReactElement<{
-                    href: HrefObject;
-                }>;
-
-                const childrenQueryParams = childrenElement.props.href
-                    .queryParams as Record<string, string>;
-
-                if (
-                    !Object.entries(childrenQueryParams).every(
-                        ([key, value]) =>
-                            queryParamsObj[key] === value.toLowerCase()
-                    )
-                ) {
-                    const childWithChildren = child as ReactElement<{
+                if (child.type === OptionLink) {
+                    const childrenElement = child as ReactElement<{
                         href: HrefObject;
+                    }>;
+
+                    const childrenQueryParams = childrenElement.props.href
+                        .queryParams as Record<string, string>;
+
+                    if (
+                        !Object.entries(childrenQueryParams).every(
+                            ([key, value]) =>
+                                queryParamsObj[key] === value.toLowerCase()
+                        )
+                    ) {
+                        const childWithChildren = child as ReactElement<{
+                            href: HrefObject;
+                            id: string;
+                            onClick: (event: string | undefined) => void;
+                        }>;
+
+                        Object.keys(childrenQueryParams).every((acc) => {
+                            if (!Object.keys(queryParamsObj).includes(acc)) {
+                                setOptionalLabel(label);
+                            }
+                        });
+
+                        return React.cloneElement(childWithChildren, {});
+                    }
+
+                    setOptionalLabel(child.props.children);
+                } else {
+                    const childWithChildren = child as ReactElement<{
                         id: string;
                         onClick: (event: string | undefined) => void;
                     }>;
 
-                    Object.keys(childrenQueryParams).every((acc) => {
-                        if (!Object.keys(queryParamsObj).includes(acc)) {
-                            setOptionalLabel(label);
-                        }
-                    });
-
-                    return React.cloneElement(childWithChildren, {});
+                    return React.cloneElement(childWithChildren);
                 }
-
-                setOptionalLabel(child.props.children);
-            } else {
-                const childWithChildren = child as ReactElement<{
-                    id: string;
-                    onClick: (event: string | undefined) => void;
-                }>;
-
-                return React.cloneElement(childWithChildren);
-            }
-        });
-    }
+            });
+        },
+        [queryParamsObj]
+    );
 
     useEffect(() => {
         const childRecursion = childrenRecursion(
@@ -124,13 +133,13 @@ const SelectComponent: FC<SelectComponentProps> = (props) => {
         ) as Array<ReactElement>;
 
         setCurrentChildren(childRecursion);
-    }, [children]);
+    }, [children, childrenRecursion, label]);
 
     useEffect(() => {
         document.addEventListener("click", eventListenerHandler);
         return () =>
             document.removeEventListener("click", eventListenerHandler);
-    }, []);
+    }, [eventListenerHandler]);
 
     return (
         <div id={generateId} className={classes["select"]}>

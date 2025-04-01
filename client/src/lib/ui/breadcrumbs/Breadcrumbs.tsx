@@ -1,15 +1,11 @@
-"use client";
-
-import { useParams, usePathname } from "next/navigation";
+"use server";
 
 import classes from "./Breadcrumbs.module.scss";
 
-import { CSSProperties, useEffect, useState } from "react";
 import { TextClassList } from "@/types/textClassList.enum";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
-import { ProductItem } from "@/types/product.types";
 import LinkCustom from "../custom-elements/link-custom/LinkCustom";
-import getBreadcrumbsData from "./getBreadcrumbsData";
+import { capitalizeAndSeparateWords } from "@/utils/capitalizeAndSeparateWords";
 
 export interface BreadcrumbsPathItems {
     path?: string;
@@ -17,34 +13,37 @@ export interface BreadcrumbsPathItems {
 }
 
 type BreadcrumbsProductProps = {
-    product?: ProductItem;
-    style?: CSSProperties;
+    value?: string[];
+    path?: string;
 };
 
-export default function Breadcrumbs(props: BreadcrumbsProductProps) {
-    const pathname = usePathname();
-    const slug = useParams().slug;
-    const [pathBreadcrumbs, setPathBreadcrumbs] =
-        useState<BreadcrumbsPathItems[]>();
-    const { style, product } = props;
+export default async function Breadcrumbs(props: BreadcrumbsProductProps) {
+    const { path, value } = props;
 
-    const http = typeof window !== "undefined" ? window.location.origin : "";
+    const breadcrumbsArr = [] as {
+        title: string;
+        path: string;
+    }[];
 
-    useEffect(() => {
-        (async () => {
-            const breadcrumbsData = await getBreadcrumbsData(
-                "category",
-                pathname,
-                slug
-            );
-            setPathBreadcrumbs(breadcrumbsData ?? []);
-        })();
-    }, [pathname, slug]);
+    let http = path ? `/${path}` : "";
+
+    for (const element of value ?? []) {
+        const title = capitalizeAndSeparateWords(element);
+        if (value && value.includes(element)) {
+            http += `/${element.toLowerCase()}`;
+
+            breadcrumbsArr.push({
+                path: http,
+                title,
+            });
+        }
+    }
+    breadcrumbsArr.unshift({ path: "/", title: "Home" });
 
     return (
-        <ul className={classes.breadcrumbs} style={style ? style : undefined}>
-            {pathBreadcrumbs &&
-                pathBreadcrumbs.map((data, index, array) => (
+        <ul className={classes.breadcrumbs}>
+            {breadcrumbsArr &&
+                breadcrumbsArr.map((data, index, array) => (
                     <li className={classes["breadcrumbs__item"]} key={index}>
                         {index + 1 !== array.length ? (
                             <LinkCustom
@@ -55,15 +54,17 @@ export default function Breadcrumbs(props: BreadcrumbsProductProps) {
                                     size: "X_SMALL",
                                     icon: { right: "CHEVRON" },
                                 }}
-                                href={{ endpoint: `${http}/${data.path}` }}
+                                href={{ endpoint: data.path }}
                                 className={`${TextClassList.REGULAR_12} ${classes["breadcrumbs__link"]}`}
                             >
-                                {data.slug?.replace(/\b\w/g, (char) =>
+                                {data.title}
+                                {/* {data.slug?.replace(/\b\w/g, (char) =>
                                     char.toUpperCase()
-                                )}
+                                )} */}
                             </LinkCustom>
                         ) : (
                             <span
+                                key={index}
                                 className={`${
                                     TextClassList.REGULAR_12 &&
                                     ButtonClassList.BUTTON_X_SMALL
@@ -71,9 +72,7 @@ export default function Breadcrumbs(props: BreadcrumbsProductProps) {
                                     classes["breadcrumbs__link--active"]
                                 }`}
                             >
-                                {data.slug?.replace(/\b\w/g, (char) =>
-                                    char.toUpperCase()
-                                )}
+                                {data.title}
                             </span>
                         )}
                     </li>

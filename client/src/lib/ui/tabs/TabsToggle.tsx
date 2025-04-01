@@ -14,9 +14,9 @@ type TabsToggleProps = {
 const TabsToggle: FC<TabsToggleProps> = ({ label, index, className }) => {
     const { activeTab, setActiveTab } = useTabs();
 
-    const clickHandler = useCallback((index: number) => {
+    const clickHandler = (index: number) => {
         setActiveTab(index);
-    }, []);
+    };
 
     return (
         <button

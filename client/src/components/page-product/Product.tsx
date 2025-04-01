@@ -1,6 +1,6 @@
 "use server";
 
-import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs.copy";
+import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs";
 import ProductSlider from "./ProductSlider";
 import Price from "../elements/price/Price";
 import ProductActions from "./ProductActions";

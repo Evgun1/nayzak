@@ -9,8 +9,6 @@ import "swiper/css/pagination";
 import React, { FC, ReactElement, ReactNode, Suspense } from "react";
 
 import classes from "./Swiper.module.scss";
-import SwiperHeader from "./SwiperHeader";
-import dynamic from "next/dynamic";
 import DisplayIcon from "@/components/elements/icons/displayIcon";
 import IconsIdList from "@/components/elements/icons/IconsIdList";
 

@@ -70,10 +70,11 @@
 
 .loading {
     position: relative;
-    aspect-ratio: 2/1 auto;
+    aspect-ratio: 3 / 4 auto;
+    max-width: 570px;
     width: 100%;
     border-radius: 1em;
-    background: var(--black-200);
+    background: var(--black-300);
 
     &__spinner {
         position: absolute;

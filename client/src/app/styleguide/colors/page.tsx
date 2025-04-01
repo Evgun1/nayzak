@@ -1,5 +1,5 @@
-export default ()=>{
-  return(
-    'display site colors'
-  )
-}
+const page = () => {
+    return "display site colors";
+};
+
+export default page;

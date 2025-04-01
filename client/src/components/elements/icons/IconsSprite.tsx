@@ -1256,7 +1256,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.FIVE_COLUMS}
+					id={IconsIdList.FIVE_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
@@ -1273,7 +1273,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.FOUR_COLUMS}
+					id={IconsIdList.FOUR_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
@@ -1290,7 +1290,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.THREE_COLUMS}
+					id={IconsIdList.THREE_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
@@ -1307,7 +1307,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.TWO_COLUMS}
+					id={IconsIdList.TWO_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
@@ -1324,7 +1324,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.LIST_COLUMS}
+					id={IconsIdList.LIST_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"

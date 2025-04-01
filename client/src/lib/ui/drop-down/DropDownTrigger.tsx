@@ -1,5 +1,5 @@
 "use client";
-import { FC, ReactNode, useEffect } from "react";
+import { FC, ReactNode, useCallback, useEffect } from "react";
 import LinkCustom, {
     HrefObject,
 } from "../custom-elements/link-custom/LinkCustom";
@@ -24,45 +24,54 @@ const DropDownTrigger: FC<DropDownTriggerProps> = (props) => {
             dropDownId: string;
         };
 
-    function eventListenerHandler(event: Event) {
-        const target = event.target;
-        const currentTarget = event.currentTarget;
-        if (!target) return;
-        if (!currentTarget) return;
-        const targetHtmlLElement = target as HTMLElement;
-        const currentTargetHtmlElement = currentTarget as HTMLElement;
+    const eventListenerHandler = useCallback(
+        (event: Event) => {
+            const target = event.target;
+            const currentTarget = event.currentTarget;
+            if (!target) return;
+            if (!currentTarget) return;
+            const targetHtmlLElement = target as HTMLElement;
+            const currentTargetHtmlElement = currentTarget as HTMLElement;
 
-        const dropDownBodyTargetEl = targetHtmlLElement.closest(
-            `#${dropDownId}`
-        );
+            const dropDownBodyTargetEl = targetHtmlLElement.closest(
+                `#${dropDownId}`
+            );
 
-        const dropDownBodyCurrentEl = currentTargetHtmlElement.querySelector(
-            `#${dropDownId}`
-        );
+            const dropDownBodyCurrentEl =
+                currentTargetHtmlElement.querySelector(`#${dropDownId}`);
 
-        const targetBody = targetHtmlLElement.querySelector("#drop-down__body");
+            const targetBody =
+                targetHtmlLElement.querySelector("#drop-down__body");
 
-        const bodyClassList = targetBody?.classList;
+            const bodyClassList = targetBody?.classList;
 
-        if (event.type === "click") {
-            if (dropDownBodyCurrentEl === dropDownBodyTargetEl) {
-                const body =
-                    dropDownBodyCurrentEl?.querySelector("#drop-down__body");
-                body?.classList.toggle(classes["drop-down__body--visible"]);
-            } else {
-                const body =
-                    dropDownBodyCurrentEl?.querySelector("#drop-down__body");
+            if (event.type === "click") {
+                if (dropDownBodyCurrentEl === dropDownBodyTargetEl) {
+                    const body =
+                        dropDownBodyCurrentEl?.querySelector(
+                            "#drop-down__body"
+                        );
+                    body?.classList.toggle(classes["drop-down__body--visible"]);
+                } else {
+                    const body =
+                        dropDownBodyCurrentEl?.querySelector(
+                            "#drop-down__body"
+                        );
 
-                if (
-                    body?.classList.contains(
-                        classes["drop-down__body--visible"]
-                    )
-                ) {
-                    body?.classList.remove(classes["drop-down__body--visible"]);
+                    if (
+                        body?.classList.contains(
+                            classes["drop-down__body--visible"]
+                        )
+                    ) {
+                        body?.classList.remove(
+                            classes["drop-down__body--visible"]
+                        );
+                    }
                 }
             }
-        }
-    }
+        },
+        [dropDownId]
+    );
 
     useEffect(() => {
         document.addEventListener("click", eventListenerHandler);
@@ -70,7 +79,7 @@ const DropDownTrigger: FC<DropDownTriggerProps> = (props) => {
         return () => {
             document.removeEventListener("click", eventListenerHandler);
         };
-    }, []);
+    }, [eventListenerHandler]);
 
     return (
         <ButtonCustom

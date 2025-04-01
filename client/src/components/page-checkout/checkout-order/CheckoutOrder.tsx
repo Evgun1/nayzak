@@ -3,7 +3,14 @@ import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 import classes from "./CheckoutOrder.module.scss";
 import useFetchProductsById from "@/hooks/useFetchProductByID";
 import { TextClassList } from "@/types/textClassList.enum";
-import { RefObject, useEffect, useId, useRef, useState } from "react";
+import {
+    RefObject,
+    useCallback,
+    useEffect,
+    useId,
+    useRef,
+    useState,
+} from "react";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import CheckoutOrderProduct from "./CheckoutOrderProduct";
 
@@ -11,29 +18,32 @@ const CheckoutOrder = () => {
     const cart = useAppSelector((state) => state.cart.productsArray);
     const products = useFetchProductsById(cart);
     const [totalPrice, setTotalPrice] = useState<number>();
-
     const orderRef = useRef() as RefObject<HTMLDivElement>;
+
     const generateId = Symbol("order-header");
 
-    const eventListenerHandler = (event: Event) => {
-        const target = event.target as HTMLElement;
-        if (!target) return;
-        const wrapper = target.closest(`#${generateId.description}`);
-        if (!wrapper) return;
+    const eventListenerHandler = useCallback(
+        (event: Event) => {
+            const target = event.target as HTMLElement;
+            if (!target) return;
+            const wrapper = target.closest(`#${generateId.description}`);
+            if (!wrapper) return;
 
-        if (products.length > 3) {
-            if (event.type === "mouseenter") {
-                wrapper.classList.add(
-                    classes["order__products-wrapper--scrollbar"]
-                );
+            if (products.length > 3) {
+                if (event.type === "mouseenter") {
+                    wrapper.classList.add(
+                        classes["order__products-wrapper--scrollbar"]
+                    );
+                }
+                if (event.type === "mouseleave") {
+                    wrapper.classList.remove(
+                        classes["order__products-wrapper--scrollbar"]
+                    );
+                }
             }
-            if (event.type === "mouseleave") {
-                wrapper.classList.remove(
-                    classes["order__products-wrapper--scrollbar"]
-                );
-            }
-        }
-    };
+        },
+        [generateId.description, products]
+    );
 
     useEffect(() => {
         const prices = products.map(
@@ -68,7 +78,7 @@ const CheckoutOrder = () => {
                 );
             };
         }
-    }, [products]);
+    }, [products, eventListenerHandler, generateId.description]);
 
     return (
         <div className={classes["order"]}>

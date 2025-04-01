@@ -1,9 +1,9 @@
 import Products from "@/components/page-category/section-products/products/Products";
 import Subcategories from "@/components/page-category/section-subcategory/subcategories/Subcategories";
-import { PageProps } from "../../../../.next/types/app/layout";
 import HeaderCategories from "@/components/page-category/HeaderCategories";
+import { PageProps } from "../../../../.next/types/app/page";
 
-export default async function page(props: PageProps) {
+export default async function Page(props: PageProps) {
     return (
         <section>
             <HeaderCategories slug={[...props.params.slug]} />

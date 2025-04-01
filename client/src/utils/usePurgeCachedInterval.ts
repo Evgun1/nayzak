@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const purgeCachedInterval = (sec: number) => {
+const usePurgeCachedInterval = (sec: number) => {
     const route = useRouter();
 
     useEffect(() => {
@@ -13,7 +13,7 @@ const purgeCachedInterval = (sec: number) => {
         }, sec * 1000);
 
         return () => clearInterval(interval);
-    }, [route]);
+    }, [route, sec]);
 };
 
-export default purgeCachedInterval;
+export default usePurgeCachedInterval;

@@ -8,7 +8,7 @@ import {
 } from "next/navigation";
 import classes from "./SliderPrice.module.scss";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ButtonCustom } from "../custom-elements/button-custom/ButtonCustom";
 import { appMinMaxPriceGet } from "@/utils/http/products";
 import { TextClassList } from "@/types/textClassList.enum";
@@ -25,26 +25,29 @@ const SliderPrice = () => {
 
     const slug = param.slug;
 
-    const SliderHandler = async (searchParam: URLSearchParams) => {
-        const prices = await appMinMaxPriceGet(searchParam, slug);
-        if (!prices) return;
+    const sliderHandler = useCallback(
+        async (searchParam: URLSearchParams) => {
+            const prices = await appMinMaxPriceGet(searchParam, slug);
+            if (!prices) return;
 
-        const { maxPrice, minPrice } = prices;
+            const { maxPrice, minPrice } = prices;
 
-        setMinPrice(minPrice);
-        setMaxPrice(maxPrice);
+            setMinPrice(minPrice);
+            setMaxPrice(maxPrice);
 
-        const inputMinPrice = searchParam.has("minPrice")
-            ? parseInt(searchParam.get("minPrice") as string)
-            : minPrice;
+            const inputMinPrice = searchParam.has("minPrice")
+                ? parseInt(searchParam.get("minPrice") as string)
+                : minPrice;
 
-        const inputMaxPrice = searchParam.has("maxPrice")
-            ? parseInt(searchParam.get("maxPrice") as string)
-            : maxPrice;
+            const inputMaxPrice = searchParam.has("maxPrice")
+                ? parseInt(searchParam.get("maxPrice") as string)
+                : maxPrice;
 
-        setInputMinPrice(inputMinPrice);
-        setInputMaxPrice(inputMaxPrice);
-    };
+            setInputMinPrice(inputMinPrice);
+            setInputMaxPrice(inputMaxPrice);
+        },
+        [slug]
+    );
 
     const btnClickHandel = () => {
         const urlSearchParams = new URLSearchParams(searchParam.toString());
@@ -59,13 +62,13 @@ const SliderPrice = () => {
 
         router.push(`${pathname}?${urlSearchParams}`);
 
-        SliderHandler(urlSearchParams);
+        sliderHandler(urlSearchParams);
     };
 
     useEffect(() => {
         const urlSearchParams = new URLSearchParams(searchParam.toString());
-        SliderHandler(urlSearchParams);
-    }, [searchParam]);
+        sliderHandler(urlSearchParams);
+    }, [searchParam, sliderHandler]);
 
     return (
         <div className={classes["slider-price"]}>
@@ -76,7 +79,7 @@ const SliderPrice = () => {
             </div>
             <div className={classes["slider-price__range"]}>
                 <div className={classes["slider-price__input-wrap"]}>
-                <div className={classes["slider-price__line"]}></div>
+                    <div className={classes["slider-price__line"]}></div>
                     <input
                         className={classes["slider-price__input"]}
                         type='range'

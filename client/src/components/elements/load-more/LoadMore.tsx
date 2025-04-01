@@ -1,13 +1,12 @@
 "use client";
 
-import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { FC, ReactElement, ReactNode, useEffect, useState } from "react";
+import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import classes from "./LoadMore.module.scss";
 
 type LoaderProps = {
     children: ReactNode;
     totalCount: number;
-
     className?: any;
     btnClickHandler?: () => void;
 };
@@ -18,7 +17,6 @@ const LoadMore: FC<LoaderProps> = ({
     btnClickHandler,
     className,
 }) => {
-    if (!children) return;
     const [length, setLength] = useState<number>(0);
 
     const childrenArr = children as ReactElement[][];
@@ -37,7 +35,9 @@ const LoadMore: FC<LoaderProps> = ({
             }, 0);
 
         setLength(length);
-    }, [children]);
+    }, [childrenArr]);
+
+    if (!children) return;
 
     return (
         <div>

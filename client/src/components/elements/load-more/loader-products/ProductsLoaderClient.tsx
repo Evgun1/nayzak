@@ -77,7 +77,7 @@ const ProductsLoaderClient = ({
         );
         urlSearchParams.set("limit", getLimit.toString());
         initData({ searchParams: urlSearchParams });
-    }, [children, searchParams]);
+    }, [initData, children, searchParams, getLimit, state.data]);
 
     useEffect(() => {
         initDataHandler();

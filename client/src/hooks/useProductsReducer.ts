@@ -35,13 +35,22 @@ const productsReducer: Reducer<ProductsState, ProductsAction> = (
 ) => {
     switch (action.type) {
         case ProductsActionType.INIT:
-            return { ...action.payload };
+            return {
+                ...state,
+                ...action.payload,
+                data: action.payload?.data ?? [],
+            };
         case ProductsActionType.START_LOAD:
             return { ...state, isLoading: true };
         case ProductsActionType.LOAD_MORE:
             const newState: ProductsState = {
-                ...action.payload,
-                data: state.data.concat(action.payload?.data ?? []),
+                isLoading: true,
+                totalCount: action.payload?.totalCount
+                    ? action.payload?.totalCount
+                    : 0,
+                data: state.data.concat(
+                    action.payload?.data ?? ([] as ProductItem[])
+                ),
             };
             return newState;
         case ProductsActionType.END_LOAD:

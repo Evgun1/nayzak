@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import classes from "./HeaderSubcategories.module.scss";
-import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs.copy";
+import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs";
 import { useParams } from "next/navigation";
 
 type HeaderProps = {

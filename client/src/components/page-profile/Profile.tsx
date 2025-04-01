@@ -1,25 +1,16 @@
 "use client";
 
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import Orders from "./orders/Orders";
-import AccountDetails from "./account-details/AccountDetails";
 import classes from "./Profile.module.scss";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { useRouter, redirect } from "next/navigation";
 import { cartAction } from "@/lib/redux/store/cart/cart";
-import Wishlist from "./wishlist/Wishlist";
 import { logOutActive } from "@/lib/redux/store/auth/action";
-import { useCookieGet } from "@/hooks/useCookie";
-import Addresses from "./addresses/Addresses";
 import Image from "next/image";
 import Tabs from "@/lib/ui/tabs/Tabs";
 import dynamic from "next/dynamic";
-import loading from "@/app/loading";
-import { initAddress } from "@/lib/redux/store/address/action";
-import { initWishlist } from "@/lib/redux/store/wishlist/action";
-import { initCart } from "@/lib/redux/store/cart/action";
-import { initOrders } from "@/lib/redux/store/orders/action";
+import { appCookieGet } from "@/utils/http/cookie";
 
 type PageContentType = {
     label: string;
@@ -94,7 +85,7 @@ export default function Profile() {
 
     useEffect(() => {
         (async () => {
-            const userToken = await useCookieGet("user-token");
+            const userToken = await appCookieGet("user-token");
             if (!userToken) {
                 redirect("/");
             }

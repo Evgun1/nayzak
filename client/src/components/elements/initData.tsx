@@ -13,17 +13,13 @@ import { useEffect, useLayoutEffect } from "react";
 
 const InitData = () => {
     const dispatch = useAppDispatch();
-    const init = async () => {
-        const token = await appCookieGet("user-token");
-        new Promise<void>((resolve) => {
-            if (token) {
-                resolve(dispatch(initAuth()));
-            }
-        });
-    };
+
     useEffect(() => {
         (async () => {
-            await Promise.all([init()]);
+            const token = await appCookieGet("user-token");
+            if (token) {
+                dispatch(initAuth());
+            }
         })();
     }, [dispatch]);
 

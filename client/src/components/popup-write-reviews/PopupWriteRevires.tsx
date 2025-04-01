@@ -93,7 +93,7 @@ const PopupWriteReview = () => {
             );
             setProductId(product.id);
         })();
-    }, []);
+    }, [params]);
 
     for (let index = 1; index <= 5; index++) {
         btnRatingArr.push(

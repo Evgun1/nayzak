@@ -4,7 +4,7 @@ import ProductPreviewDefault from "@/components/elements/product-preview/product
 import classes from "./ProductsSwiper.module.scss";
 
 import { appProductsGet } from "@/utils/http/products";
-import SwiperComponent from "./swiper/Swiper";
+
 import { ReactElement } from "react";
 import dynamic from "next/dynamic";
 
@@ -27,26 +27,32 @@ const ProductsSwiper = async () => {
         ),
     });
 
-    const productsArr: ReactElement[] = [];
+    // const productsArr: ReactElement[] = [];
 
-    productsArr.push(
-        ...products.map((product, i) => (
-            <ProductPreviewDefault
-                key={i}
-                showIcon
-                className={classes["products-swiper__product"]}
-                product={product}
-            />
-        ))
-    );
+    // productsArr.push(
+    //     ...products.map((product, i) => (
+    //         <ProductPreviewDefault
+    //             key={i}
+    //             showIcon
+    //             className={classes["products-swiper__product"]}
+    //             product={product}
+    //         />
+    //     ))
+    // );
 
     return (
         <div className='container'>
             <div className={classes["products-swiper"]}>
-                <SwiperComponentDynamic
-                    label='Latest Arrivals'
-                    children={productsArr}
-                />
+                <SwiperComponentDynamic label='Latest Arrivals'>
+                    {products.map((product, i) => (
+                        <ProductPreviewDefault
+                            key={i}
+                            showIcon
+                            className={classes["products-swiper__product"]}
+                            product={product}
+                        />
+                    ))}
+                </SwiperComponentDynamic>
             </div>
         </div>
     );

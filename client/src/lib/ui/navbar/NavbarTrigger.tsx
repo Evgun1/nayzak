@@ -2,17 +2,17 @@
 
 import React, {
     FC,
-   
     ReactNode,
-   
+    useCallback,
     useLayoutEffect,
-    
+    useRef,
+    useState,
 } from "react";
 import classes from "./Navbar.module.scss";
 import LinkCustom, {
     HrefObject,
 } from "../custom-elements/link-custom/LinkCustom";
-import Breadcrumbs from "../breadcrumbs/Breadcrumbs.copy";
+import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { useNavbar } from "./NavbarContext";
 
 type NavbarTriggerProps = {
@@ -26,12 +26,11 @@ type NavbarTriggerHiddenProps = {
 
 const NavbarTrigger: FC<NavbarTriggerProps> = (props) => {
     const { navbarId } = useNavbar();
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     const { children, href } = props as NavbarTriggerHiddenProps;
 
-    let timer: NodeJS.Timeout;
-
-    function eventListenerHandler(event: Event) {
+    const eventListenerHandler = useCallback((event: Event) => {
         const currentTarget = event.currentTarget as HTMLDivElement;
         if (!currentTarget) return;
 
@@ -47,10 +46,11 @@ const NavbarTrigger: FC<NavbarTriggerProps> = (props) => {
 
         switch (event.type) {
             case "mouseenter":
-                timer = setTimeout(() => {
+                timerRef.current = setTimeout(() => {
                     bodyClassList?.add(classes["navbar__body--visible"]);
                     triggerClassList?.add(classes["navbar__trigger--visible"]);
                 }, 300);
+
                 break;
 
             default:
@@ -61,10 +61,13 @@ const NavbarTrigger: FC<NavbarTriggerProps> = (props) => {
 
                     bodyClassList?.remove(classes["navbar__body--visible"]);
                 }
-                clearTimeout(timer);
+
+                if (timerRef.current) {
+                    clearTimeout(timerRef.current);
+                }
                 break;
         }
-    }
+    }, []);
 
     useLayoutEffect(() => {
         const cleanupHandler = navbarId.map((id) => {
@@ -85,7 +88,7 @@ const NavbarTrigger: FC<NavbarTriggerProps> = (props) => {
                 cleanup && cleanup();
             });
         };
-    }, [navbarId]);
+    }, [navbarId, eventListenerHandler]);
 
     return (
         <LinkCustom

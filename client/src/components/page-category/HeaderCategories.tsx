@@ -3,7 +3,7 @@
 import React, { FC } from "react";
 
 import classes from "./HeaderCategories.module.scss";
-import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs.copy";
+import Breadcrumbs from "@/lib/ui/breadcrumbs/Breadcrumbs";
 import { capitalizeAndSeparateWords } from "@/utils/capitalizeAndSeparateWords";
 
 type HeaderCategoriesProps = {

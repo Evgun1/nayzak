@@ -1,5 +1,7 @@
-import PopupLoading from '@/components/popup-loading/PopupLoading';
+import PopupLoading from "@/components/popup-loading/PopupLoading";
 
-export default () => {
-	return <PopupLoading />;
+const Loading = () => {
+    return <PopupLoading />;
 };
+
+export default Loading;

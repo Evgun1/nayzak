@@ -1,6 +1,14 @@
 "use client";
 import { TextClassList } from "@/types/textClassList.enum";
-import { FC, RefObject, useEffect, useId, useRef, useState } from "react";
+import {
+    FC,
+    RefObject,
+    useCallback,
+    useEffect,
+    useId,
+    useRef,
+    useState,
+} from "react";
 import classes from "./Tooltip.module.scss";
 
 type HoverTooltipProps = {
@@ -8,14 +16,11 @@ type HoverTooltipProps = {
 };
 
 const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
-    let timer: ReturnType<typeof setTimeout>;
-
     const ref = useRef() as RefObject<HTMLDivElement>;
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const eventListenerHandler = (e: Event) => {
-        const mouseEvent = e as MouseEvent;
+    const eventListenerHandler = useCallback((e: Event) => {
         const hoverTooltipWrap = e.currentTarget as HTMLElement;
-
         if (!hoverTooltipWrap) return;
 
         for (const element of hoverTooltipWrap.children) {
@@ -25,7 +30,7 @@ const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
 
             switch (e.type) {
                 case "mouseenter":
-                    timer = setTimeout(() => {
+                    timerRef.current = setTimeout(() => {
                         tooltipClassList.add(
                             classes["tooltip__full-value--visible"]
                         );
@@ -33,7 +38,7 @@ const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
                     break;
 
                 default:
-                    clearTimeout(timer);
+                    if (timerRef.current) clearTimeout(timerRef.current);
                     if (
                         tooltipClassList.contains(
                             classes["tooltip__full-value--visible"]
@@ -46,22 +51,10 @@ const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
                     break;
             }
         }
-    };
+    }, []);
 
-    // useEffect(() => {
-    //     const element = document.getElementById(tooltipId);
-    //     if (!element) return;
-
-    //     element.addEventListener("mouseenter", eventListenerHandler);
-    //     element.addEventListener("mouseleave", eventListenerHandler);
-    //     return () => {
-    //         element.removeEventListener("mouseenter", eventListenerHandler);
-    //         element.removeEventListener("mouseleave", eventListenerHandler);
-    //     };
-    // }, []);
     useEffect(() => {
         const element = ref.current;
-
         if (!element) return;
 
         element.addEventListener("mouseenter", eventListenerHandler);
@@ -70,7 +63,7 @@ const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
             element.removeEventListener("mouseenter", eventListenerHandler);
             element.removeEventListener("mouseleave", eventListenerHandler);
         };
-    }, []);
+    }, [eventListenerHandler]);
 
     return (
         <div

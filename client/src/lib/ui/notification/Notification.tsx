@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import classes from "./Notification.module.scss";
 import { notificationAction } from "@/lib/redux/store/notification/notification";
@@ -12,6 +12,19 @@ const Notification = () => {
     const dispatch = useAppDispatch();
     const [notificationContainer, setNotificationContainer] =
         useState<Element>();
+
+    const hiddenNotification = useCallback(
+        (element: HTMLElement | null) => {
+            const timeHide = setTimeout(() => {
+                element?.classList.remove(classes["notification--open"]);
+                setTimeout(() => {
+                    dispatch(notificationAction.toggle(null));
+                }, 300);
+            }, 1500);
+            return timeHide;
+        },
+        [dispatch]
+    );
 
     useEffect(() => {
         const notificationContainer = document.getElementById(
@@ -41,24 +54,13 @@ const Notification = () => {
             clearTimeout(timeoutHidden);
             document.body.classList.remove("notification-is-open");
         };
-    }, [notificationContent]);
-
-    useEffect(() => {});
+    }, [notificationContent, hiddenNotification]);
 
     const showNotification = (element: HTMLElement | null) => {
         const timeShow = setTimeout(() => {
             element?.classList.add(classes["notification--open"]);
         }, 10);
         return timeShow;
-    };
-    const hiddenNotification = (element: HTMLElement | null) => {
-        const timeHide = setTimeout(() => {
-            element?.classList.remove(classes["notification--open"]);
-            setTimeout(() => {
-                dispatch(notificationAction.toggle(null));
-            }, 300);
-        }, 1500);
-        return timeHide;
     };
 
     if (notificationContent && notificationContainer) {

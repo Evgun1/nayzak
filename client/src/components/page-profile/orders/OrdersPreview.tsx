@@ -50,11 +50,11 @@ export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
 
         setAddress(addresses as AddressItem);
         setProduct(productFetch);
-    }, [order]);
+    }, [order, addressesState]);
 
     useEffect(() => {
         getData();
-    }, []);
+    }, [getData]);
 
     return (
         <Accordion className={classes["orders-preview"]}>

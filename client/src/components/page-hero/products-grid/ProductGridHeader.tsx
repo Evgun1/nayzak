@@ -46,7 +46,7 @@ const ProductGridHeader = () => {
         if (productsCount > 0) {
             setSubcategories(subcategoriesFetch);
         }
-    }, [searchParams.toString()]);
+    }, [searchParams]);
 
     useEffect(() => {
         fetchData();

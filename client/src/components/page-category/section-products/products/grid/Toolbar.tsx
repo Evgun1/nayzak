@@ -11,8 +11,9 @@ import DropDown from "@/lib/ui/drop-down/DropDown";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
 import Select from "@/lib/ui/select/Select";
+import ListTypeButton from "./ListTypeButton";
 
-enum TypeList {
+export enum TypeList {
     FIVE = "five_grid",
     FOUR = "four_grid",
     THREE = "three_grid",
@@ -21,11 +22,11 @@ enum TypeList {
 }
 
 const SELECTOR = [
-    { icon: IconsIdList.FIVE_COLUMS, typeList: TypeList.FIVE },
-    { icon: IconsIdList.FOUR_COLUMS, typeList: TypeList.FOUR },
-    { icon: IconsIdList.THREE_COLUMS, typeList: TypeList.THREE },
-    { icon: IconsIdList.TWO_COLUMS, typeList: TypeList.TWO },
-    { icon: IconsIdList.LIST_COLUMS, typeList: TypeList.LIST },
+    { icon: IconsIdList.FIVE_COLUMNS, typeList: TypeList.FIVE },
+    { icon: IconsIdList.FOUR_COLUMNS, typeList: TypeList.FOUR },
+    { icon: IconsIdList.THREE_COLUMNS, typeList: TypeList.THREE },
+    { icon: IconsIdList.TWO_COLUMNS, typeList: TypeList.TWO },
+    { icon: IconsIdList.LIST_COLUMNS, typeList: TypeList.LIST },
 ];
 
 const sortData = [
@@ -101,7 +102,7 @@ const Toolbar: FC<ToolbarProps> = ({ totalCount }) => {
                     <ul className={classes["toolbar__selector"]}>
                         {SELECTOR.map((value, index) => (
                             <li key={index}>
-                                <ListBtn
+                                <ListTypeButton
                                     icon={value.icon}
                                     typeList={value.typeList}
                                 />
@@ -117,39 +118,39 @@ const Toolbar: FC<ToolbarProps> = ({ totalCount }) => {
     );
 };
 
-type ListBtnProps = {
-    icon: IconsIdList;
-    typeList: string;
-};
-const ListBtn: FC<ListBtnProps> = ({ typeList, icon }) => {
-    const [activeBtn, setActiveBtn] = useState<boolean>(false);
-    const searchParams = useSearchParams();
+// type ListBtnProps = {
+//     icon: IconsIdList;
+//     typeList: string;
+// };
+// const ListBtn: FC<ListBtnProps> = ({ typeList, icon }) => {
+//     const [activeBtn, setActiveBtn] = useState<boolean>(false);
+//     const searchParams = useSearchParams();
 
-    useEffect(() => {
-        if (
-            searchParams.has("list_type") &&
-            searchParams.get("list_type") !== null
-        ) {
-            setActiveBtn(searchParams.get("list_type") === typeList);
-        } else {
-            setActiveBtn(TypeList.FIVE === typeList);
-        }
-    }, [searchParams]);
+//     useEffect(() => {
+//         if (
+//             searchParams.has("list_type") &&
+//             searchParams.get("list_type") !== null
+//         ) {
+//             setActiveBtn(searchParams.get("list_type") === typeList);
+//         } else {
+//             setActiveBtn("five_grid" === typeList);
+//         }
+//     }, [searchParams]);
 
-    return (
-        <Link
-            scroll={false}
-            href={`?list_type=${typeList}`}
-            className={`${classes["toolbar__selector-button"]} ${
-                activeBtn ? classes["toolbar__selector-button--action"] : ""
-            }`}
-        >
-            <DisplayIcon
-                className={classes["toolbar__selector-icon"]}
-                iconName={icon}
-            />
-        </Link>
-    );
-};
+//     return (
+//         <Link
+//             scroll={false}
+//             href={`?list_type=${typeList}`}
+//             className={`${classes["toolbar__selector-button"]} ${
+//                 activeBtn ? classes["toolbar__selector-button--action"] : ""
+//             }`}
+//         >
+//             <DisplayIcon
+//                 className={classes["toolbar__selector-icon"]}
+//                 iconName={icon}
+//             />
+//         </Link>
+//     );
+// };
 
 export default Toolbar;

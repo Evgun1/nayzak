@@ -1,5 +1,5 @@
 import Checkout from "@/components/page-checkout/Checkout";
 
-export default async function page() {
+export default async function Page() {
     return <Checkout />;
 }
