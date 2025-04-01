@@ -1,25 +1,24 @@
 .subcategories {
-  padding: 52px 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
+	padding: 52px 0;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 32px;
 
-  &--item {
-    position: relative;
-    background: url("https://placehold.co/400") no-repeat center;
-    background-size: cover;
-    height: 384px;
-    width: 100%;
+	&__item {
+		position: relative;
+		background: url('https://placehold.co/400') no-repeat center;
+		background-size: cover;
+		height: 384px;
+		width: 100%;
 
-    &-btn {
-      // text-decoration: none;
-      left: 50%;
-      bottom: 40px;
-      min-width: 204px;
-      transform: translate(-50%, 0);
-      position: absolute;
-      // background: white;
-    }
-  }
+		&-btn {
+			// text-decoration: none;
+			left: 50%;
+			bottom: 40px;
+			min-width: 204px;
+			transform: translate(-50%, 0);
+			position: absolute;
+			// background: white;
+		}
+	}
 }
-

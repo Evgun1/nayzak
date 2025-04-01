@@ -1,44 +1,57 @@
-'use client';
+"use server";
 
-import Toolbar from './Toolbar';
+import Toolbar from "./Toolbar";
 
-import classes from './ProductsGrid.module.scss';
-import { useProductsReducer } from '@/hooks/useProductsReducer';
-import { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
-import { appProductsGet } from '@/utils/http/products';
-import dynamic from 'next/dynamic';
-import ProductsLoader from './products-loader/ProductsLoader';
+import classes from "./ProductsGrid.module.scss";
+import { useLoadMoreReducer } from "@/hooks/useProductsReducer";
+import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { appProductsGet } from "@/utils/http/products";
+import dynamic from "next/dynamic";
+import ProductsLoaderServer from "@/components/elements/load-more/loader-products/ProductsLoaderServer";
+import { headers } from "next/headers";
 
-const DynamicProductsLoader = dynamic(
-	() => import('./products-loader/ProductsLoader'),
-	{ loading: () => <span>Loading...</span>, ssr: false }
-);
+export default async function ProductsGrid({
+    params,
+    searchParams,
+}: {
+    searchParams: URLSearchParams;
+    params?: string;
+}) {
+    const newSearchParams = searchParams as Record<string, any>;
 
-export default function ProductsGrid() {
-	const { state, initData } = useProductsReducer();
-	const params = useParams();
+    const getListType = newSearchParams["list_type"];
 
-	const [loader, setLoader] = useState<boolean>(true);
-	const slug = params.slug as string[];
+    const listTypeLimits = new Map([
+        ["default", "15"],
+        [null, "15"],
+        ["five_grid", "15"],
+        ["four_grid", "12"],
+        ["three_grid", "9"],
+        ["two_grid", "8"],
+        ["list", "8"],
+    ]);
 
-	const searchParams = useSearchParams();
+    const getLimit = getListType
+        ? listTypeLimits.get(getListType)
+        : listTypeLimits.get("default");
 
-	useEffect(() => {
-		const urlSearchParams = new URLSearchParams(searchParams.toString());
+    const { productCounts } = await appProductsGet({
+        params: params ? params : undefined,
+    });
 
-		initData(appProductsGet, { params: slug, searchParams: urlSearchParams });
-	}, [slug, initData, searchParams]);
+    return (
+        <div className={classes["products-grid"]}>
+            <Toolbar totalCount={productCounts} />
 
-	return (
-		<div className={classes['products--grid']}>
-			<Toolbar totalCount={state.totalCount} />
-			<ProductsLoader products={state.products} totalCount={state.totalCount} />
-
-			{/* <DynamicProductsLoader
-				products={state.products}
-				totalCount={state.totalCount}
-			/> */}
-		</div>
-	);
+            <ProductsLoaderServer
+                rating
+                className={classes["products-grid__loader"]}
+                listType={getListType}
+                limit={getLimit ? +getLimit : 15}
+                searchParams={searchParams}
+                params={params}
+            />
+        </div>
+    );
 }

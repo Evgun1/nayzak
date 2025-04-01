@@ -1,185 +1,161 @@
+"use client";
+
 import React, {
-	FC,
-	MouseEvent,
-	ReactElement,
-	ReactNode,
-	RefObject,
-	useEffect,
-	useId,
-	useRef,
-	useState,
-} from 'react';
+    FC,
+    MouseEvent,
+    ReactElement,
+    ReactNode,
+    RefObject,
+    Suspense,
+    useCallback,
+    useEffect,
+    useId,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from "react";
 import ButtonCustom, {
-	StyleSettingsObject,
-} from '../custom-elements/button-custom/ButtonCustom';
-import SelectOption from './SelectOption';
-import classes from './Select.module.scss';
-import { useSearchParams } from 'next/navigation';
-import OptionLink from './OptionLink';
-import { HrefObject } from '../custom-elements/link-custom/LinkCustom';
-import { current } from '@reduxjs/toolkit';
-import { join } from 'path';
+    StyleSettingsObject,
+} from "../custom-elements/button-custom/ButtonCustom";
+import SelectOption from "./SelectOption";
+import classes from "./Select.module.scss";
+import { useSearchParams } from "next/navigation";
+import OptionLink from "./OptionLink";
+import { HrefObject } from "../custom-elements/link-custom/LinkCustom";
+import { current } from "@reduxjs/toolkit";
+import { join } from "path";
 
 type SelectComponentProps = {
-	trackByQuery?: boolean;
-	styleSetting: StyleSettingsObject;
-	children: ReactNode;
-	label: string | ReactNode;
+    trackByQuery?: boolean;
+    styleSetting: StyleSettingsObject;
+    children: ReactNode;
+    label: string | ReactNode;
 };
 
 const SelectComponent: FC<SelectComponentProps> = (props) => {
-	const { styleSetting, children, label, trackByQuery = false } = props;
-	const [currentChildren, setCurrentChildren] = useState<ReactNode>();
-	const [optionalChildren, setOptionalChildren] = useState<ReactNode>();
-	const [optionalLabel, setOptionalLabel] = useState<string | ReactNode>();
-	const generateId = useId().replaceAll(':', '');
-	const childrenRef = useRef() as RefObject<HTMLDivElement>;
+    const { styleSetting, children, label, trackByQuery = false } = props;
+    const [currentChildren, setCurrentChildren] = useState<ReactNode>();
+    const [optionalLabel, setOptionalLabel] = useState<string | ReactNode>(
+        label
+    );
 
-	const searchParams = useSearchParams();
+    const generateId = useId().replaceAll(":", "");
+    const childrenRef = useRef() as RefObject<HTMLDivElement>;
 
-	const eventListenerHandler = (event: Event) => {
-		const target = event.target as HTMLElement;
-		const childrenCurrent = childrenRef.current;
-		if (!target || !childrenCurrent) return;
+    const searchParams = useSearchParams();
+    const queryParams = searchParams.toString().split("&");
 
-		const childrenClassList = childrenCurrent.classList;
-		const targetClassList = target.closest(`#${generateId}`)?.classList;
+    const queryParamsObj = queryParams.reduce(
+        (acc: { [key: string]: string }, el) => {
+            const [key, val] = el.split("=");
+            return (acc[key] = val), acc;
+        },
+        {}
+    );
 
-		if (!target.closest(`#${generateId}`)) {
-			childrenClassList.remove(classes['select__options--visible']);
-			return;
-		}
+    const eventListenerHandler = useCallback(
+        (event: Event) => {
+            const target = event.target as HTMLElement;
+            const childrenCurrent = childrenRef.current;
+            if (!target || !childrenCurrent) return;
 
-		if (childrenClassList.contains(classes['select__options--visible'])) {
-			childrenClassList.remove(classes['select__options--visible']);
-		} else {
-			childrenClassList.add(classes['select__options--visible']);
-		}
-		
-	};
+            const childrenClassList = childrenCurrent.classList;
+            const targetClassList = target.closest(`#${generateId}`)?.classList;
 
-	const clickHandler = (event: string | undefined) => {
-		if (!event) return;
+            if (!targetClassList) {
+                childrenClassList.remove(classes["select__options--visible"]);
+                return;
+            }
 
-		const currentChildrenArray = childrenRecursion(
-			children
-		) as Array<ReactNode>;
-		const currentChildren = currentChildrenArray.splice(+event, 1);
+            if (
+                childrenClassList.contains(classes["select__options--visible"])
+            ) {
+                childrenClassList.remove(classes["select__options--visible"]);
+            } else {
+                childrenClassList.add(classes["select__options--visible"]);
+            }
+        },
+        [generateId]
+    );
 
-		const labelByChildren = getLabelByChildrenRecursion(
-			currentChildren
-		)?.pop() as string;
+    const childrenRecursion = useCallback(
+        (children: ReactNode, label?: string) => {
+            return React.Children.map(children, (child, i): ReactNode => {
+                if (!React.isValidElement(child)) return child;
 
-		setOptionalLabel(labelByChildren);
-		setOptionalChildren(currentChildrenArray);
-	};
+                if (child.type === OptionLink) {
+                    const childrenElement = child as ReactElement<{
+                        href: HrefObject;
+                    }>;
 
-	const getLabelByChildrenRecursion = (children: ReactNode) => {
-		return React.Children.map(children, (child): ReactNode => {
-			if (!React.isValidElement(child)) return child;
+                    const childrenQueryParams = childrenElement.props.href
+                        .queryParams as Record<string, string>;
 
-			if (typeof child.props.children === 'string') {
-				return child.props.children;
-			} else return getLabelByChildrenRecursion(child.props.children);
-		});
-	};
+                    if (
+                        !Object.entries(childrenQueryParams).every(
+                            ([key, value]) =>
+                                queryParamsObj[key] === value.toLowerCase()
+                        )
+                    ) {
+                        const childWithChildren = child as ReactElement<{
+                            href: HrefObject;
+                            id: string;
+                            onClick: (event: string | undefined) => void;
+                        }>;
 
-	const childrenRecursion = (children: ReactNode, label?: string) => {
-		return React.Children.map(children, (child, i): ReactNode => {
-			if (!React.isValidElement(child)) return child;
+                        Object.keys(childrenQueryParams).every((acc) => {
+                            if (!Object.keys(queryParamsObj).includes(acc)) {
+                                setOptionalLabel(label);
+                            }
+                        });
 
-			if (child.type !== OptionLink) {
-				const childWithChildren = child as ReactElement<{
-					children: ReactNode;
-				}>;
+                        return React.cloneElement(childWithChildren, {});
+                    }
 
-				const reactElement = React.cloneElement(childWithChildren, {
-					children: childrenRecursion(childWithChildren.props.children),
-				});
-				return reactElement;
-			}
+                    setOptionalLabel(child.props.children);
+                } else {
+                    const childWithChildren = child as ReactElement<{
+                        id: string;
+                        onClick: (event: string | undefined) => void;
+                    }>;
 
-			if (child.type === OptionLink) {
-				const childrenElement = child as ReactElement<{ href: HrefObject }>;
-				const childrenQueryParams = childrenElement.props.href
-					.queryParams as Record<string, string>;
-				const queryParams = searchParams.toString().split('&');
-				const currentQueryParam = {} as Record<string, string>;
+                    return React.cloneElement(childWithChildren);
+                }
+            });
+        },
+        [queryParamsObj]
+    );
 
-				queryParams.forEach((data) => {
-					const [key, value] = data.split('=');
+    useEffect(() => {
+        const childRecursion = childrenRecursion(
+            children,
+            label as string
+        ) as Array<ReactElement>;
 
-					currentQueryParam[key] = value?.toLowerCase();
-				});
+        setCurrentChildren(childRecursion);
+    }, [children, childrenRecursion, label]);
 
-				if (
-					!Object.entries(childrenQueryParams).every(
-						([key, value]) => currentQueryParam[key] === value.toLowerCase()
-					)
-				) {
-					const childWithChildren = child as ReactElement<{
-						href: HrefObject;
-						id: string;
-						onClick: (event: string | undefined) => void;
-					}>;
+    useEffect(() => {
+        document.addEventListener("click", eventListenerHandler);
+        return () =>
+            document.removeEventListener("click", eventListenerHandler);
+    }, [eventListenerHandler]);
 
-					Object.keys(childWithChildren.props.href.queryParams as object).every(
-						(acc) => {
-							if (!Object.keys(currentQueryParam).includes(acc)) {
-								setOptionalLabel(label);
-							}
-						}
-					);
-
-					return React.cloneElement(childWithChildren, {
-						onClick: clickHandler,
-					});
-				}
-
-				setOptionalLabel(child.props.children);
-			} else {
-				const childWithChildren = child as ReactElement<{
-					id: string;
-					onClick: (event: string | undefined) => void;
-				}>;
-
-				return React.cloneElement(childWithChildren, {
-					id: child.key?.toString(),
-					onClick: clickHandler,
-				});
-			}
-		});
-	};
-
-	useEffect(() => {
-		const childRecursion = childrenRecursion(
-			children,
-			label as string
-		) as Array<ReactElement>;
-
-		setCurrentChildren(childRecursion);
-	}, [children]);
-
-	useEffect(() => {
-		document.addEventListener('click', eventListenerHandler);
-		return () => document.removeEventListener('click', eventListenerHandler);
-	}, []);
-
-	return (
-		<div id={generateId} className={classes['select']}>
-			<ButtonCustom styleSettings={styleSetting}>
-				{optionalLabel ?? label}
-			</ButtonCustom>
-			<div className={classes['select__options']} ref={childrenRef}>
-				{optionalChildren ?? currentChildren}
-			</div>
-		</div>
-	);
+    return (
+        <div id={generateId} className={classes["select"]}>
+            <ButtonCustom styleSettings={styleSetting}>
+                {optionalLabel}
+            </ButtonCustom>
+            <div className={classes["select__options"]} ref={childrenRef}>
+                {currentChildren}
+            </div>
+        </div>
+    );
 };
 
 const Select = Object.assign(SelectComponent, {
-	OptionLink: OptionLink,
-	Option: SelectOption,
+    OptionLink: OptionLink,
+    Option: SelectOption,
 });
 
 export default Select;

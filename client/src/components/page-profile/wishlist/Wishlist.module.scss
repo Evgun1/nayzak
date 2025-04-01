@@ -1,56 +1,12 @@
 .wishlist {
-  display: grid;
-  gap: 10px;
-  &--content {
-    display: flex;
-    align-items: center;
-    position: relative;
-    gap: 108px;
-    padding-bottom: 24px;
+    display: grid;
+    gap: 10px;
 
-    &::before {
-      position: absolute;
-      content: "";
-      width: 100%;
-      height: 1px;
-      background: var(--black-300);
-      left: 0;
-      bottom: 0;
+    &__message {
+        text-align: center;
+        padding: 20px 10px;
+        margin-bottom: 20px;
+        border: 1px solid var(--black-400);
+        border-radius: 1em;
     }
-
-    &-product {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-  }
-
-  &--product {
-    &-img {
-      max-width: 128px;
-      max-height: 170px;
-    }
-
-    &-info {
-      min-width: min-content;
-    }
-  }
-
-  &--info {
-    &-text {
-      color: var(--black-600);
-    }
-
-    &-btn {
-      color: var(--black-600);
-    }
-
-  }
-  &--message {
-    text-align: center;
-    padding: 20px 10px;
-    margin-bottom: 20px;
-    border: 1px solid var(--black-400);
-    border-radius: 1em;
-  }
 }

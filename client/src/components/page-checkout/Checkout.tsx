@@ -1,119 +1,119 @@
-'use client';
+"use client";
 
-import classes from './Checkout.module.scss';
-import CheckoutForms from './checkout-forms/CheckoutForms';
-import CheckoutOrder from './CheckoutOrder';
-import { useAppDispatch, useAppSelector } from '@/lib/redux/redux';
-import { FormEvent, useEffect, useState } from 'react';
-import Form from '../elements/form-component/FormComponent';
-import ButtonCustom from '@/lib/ui/custom-elements/button-custom/ButtonCustom';
-import { ordersUploadItem } from '@/utils/http/orders';
-import { uploadOrders } from '@/lib/redux/store/orders/action';
-import { useRouter, redirect } from 'next/navigation';
-import { writeCustomerAction } from '@/lib/redux/store/customer/action';
+import classes from "./Checkout.module.scss";
+import CheckoutForms from "./checkout-forms/CheckoutForms";
+import CheckoutOrder from "./checkout-order/CheckoutOrder";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
+import { FormEvent, useEffect, useState } from "react";
+import Form from "../../lib/ui/form/Form";
+import ButtonCustom from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
+import { ordersUploadItem } from "@/utils/http/orders";
+import { uploadOrders } from "@/lib/redux/store/orders/action";
+import { useRouter, redirect, RedirectType } from "next/navigation";
+import { writeCustomerAction } from "@/lib/redux/store/customer/action";
+import { z, ZodObject } from "zod";
+import { validation } from "@/utils/validator/validator";
 
-export default function Checkout() {
-	const [loading, setLoading] = useState<boolean>(true);
-	const route = useRouter();
-	const dispatch = useAppDispatch();
-	const customer = useAppSelector((state) => state.customer.customerData);
-	const address = useAppSelector((state) => state.address.address);
-	const cart = useAppSelector((state) => state.cart.productsArray);
+const schemaCustomersArr: Array<ZodObject<any>> = [];
 
-	useEffect(() => {
-		if (customer && address && cart) {
-			setLoading(false);
-		}
-	}, [customer, address, cart]);
+schemaCustomersArr.push(z.object({ ...validation.customer }));
 
-	const submitHandler = (
-		value: {
-			data: ordersUploadItem & {
-				firstName: string;
-				lastName: string;
-				phone: string;
-			};
-		},
-		event: FormEvent<HTMLFormElement>
-	) => {
-		if (value.data.firstName && value.data.lastName && value.data.phone) {
-			const customerFormData = new FormData();
-			for (const key in value.data) {
-				const typeKey = key as keyof typeof value.data;
+const Checkout = () => {
+    const route = useRouter();
+    const cart = useAppSelector((state) => state.cart.productsArray);
+    const dispatch = useAppDispatch();
 
-				if (!customer) return;
-				if (!Object.keys(customer).includes(typeKey)) return;
-				if (customer[typeKey] !== value.data) {
-					customerFormData.set(key, value.data[typeKey]);
-				}
-			}
-			dispatch(writeCustomerAction(customerFormData));
-		}
+    const submitHandler = (
+        value: {
+            data: ordersUploadItem & {
+                firstName: string;
+                lastName: string;
+                phone: string;
+            };
+        },
+        event: FormEvent
+    ) => {
+        const objectValue = value.data;
+        const ordersItem = {} as ordersUploadItem;
 
-		const currentTarget = event.currentTarget as HTMLFormElement;
-		const inputElements = currentTarget.getElementsByTagName('input');
+        const customerFormData = new FormData();
+        for (const key in objectValue) {
+            const typeKey = key as keyof typeof objectValue;
+            if (
+                typeKey === "firstName" ||
+                typeKey === "lastName" ||
+                typeKey === "phone"
+            ) {
+                if (objectValue[typeKey]) {
+                    customerFormData.set(
+                        typeKey,
+                        objectValue[typeKey].toString()
+                    );
+                }
+            }
 
-		const ordersItem = new Object() as ordersUploadItem;
+            if (typeKey.includes("Id")) {
+                if (objectValue[typeKey].toString().split(",").length > 1) {
+                    const idArr = objectValue[typeKey]
+                        .toString()
+                        .split(",")
+                        .map(Number) as any;
+                    ordersItem[typeKey as keyof ordersUploadItem] = idArr;
+                    continue;
+                }
 
-		for (const element of inputElements) {
-			if (element.name.includes('Id')) {
-				const key = element.name as keyof ordersUploadItem;
+                ordersItem[typeKey as keyof ordersUploadItem] = +objectValue[
+                    typeKey
+                ] as any;
+            }
+        }
 
-				if (element.value.split(',').length > 1) {
-					const idArr = element.value.split(',').map(Number) as any;
-					ordersItem[key] = idArr;
-					continue;
-				}
+        try {
+            dispatch(uploadOrders(ordersItem));
+            dispatch(writeCustomerAction(customerFormData));
 
-				ordersItem[key] = +element.value as any;
-			}
-		}
+            route.push("/");
+        } catch (error) {}
+    };
 
-		dispatch(uploadOrders(ordersItem));
-	};
+    useEffect(() => {
+        if (cart.length === 0) redirect("/");
+    }, [cart]);
 
-	useEffect(() => {
-		if (window.localStorage.getItem('order-status-code') === '200') {
-			setTimeout(() => {
-				route.push('/');
-				window.localStorage.removeItem('order-status-code');
-			}, 100);
-		}
-	}, [window.localStorage.getItem('order-status-code')]);
+    // if (typeof window !== undefined) {
+    //     if (window.localStorage.getItem("order-status-code") === "200") {
+    //         route.push("/", { scroll: true });
+    //         setTimeout(() => {
+    //             window.localStorage.removeItem("order-status-code");
+    //         }, 100);
+    //     }
+    // }
 
-	if (cart.length === 0) {
-		redirect('/');
-	}
+    return (
+        <div className={`container ${classes.checkout}`}>
+            <h3 className={classes["checkout__header"]}>Checkout</h3>
+            <Form
+                schema={schemaCustomersArr}
+                submitHandler={submitHandler}
+                className={classes["checkout__form"]}
+            >
+                <CheckoutForms />
+                <CheckoutOrder />
+                <ButtonCustom
+                    typeProperty='submit'
+                    styleSettings={{
+                        fill: "SOLID",
+                        type: "DEFAULT",
+                        color: "DARK",
+                        size: "MEDIUM",
+                        roundness: "ROUNDED",
+                    }}
+                >
+                    Place order
+                </ButtonCustom>
+            </Form>
+        </div>
+    );
+};
 
-	return (
-		<div className={`container ${classes.checkout}`}>
-			{!loading ? (
-				<>
-					<h3 className={classes['checkout__header']}>Checkout</h3>
-					<Form
-						submitHandler={submitHandler}
-						classe={classes['checkout__wrapper']}
-					>
-						<CheckoutForms />
-						<CheckoutOrder />
-
-						<ButtonCustom
-							typeProperty="submit"
-							styleSettings={{
-								fill: 'SOLID',
-								type: 'DEFAULT',
-								color: 'DARK',
-								size: 'MEDIUM',
-								roundness: 'PILL',
-							}}
-						>
-							Checkout
-						</ButtonCustom>
-					</Form>
-				</>
-			) : (
-				<>Loading...</>
-			)}
-		</div>
-	);
-}
+export default Checkout;

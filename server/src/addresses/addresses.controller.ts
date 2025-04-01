@@ -1,48 +1,54 @@
-import { Context } from 'hono';
-import AddressesService from './addresses.service';
-import { QueryParameterTypes } from '../utils/service/service.type';
-import getReqBody from '../tools/getReqBody';
-import addressesService from './addresses.service';
-import { AddressInputDTO } from './addresses.types';
+import { Context } from "hono";
+import AddressesService from "./addresses.service";
+import { QueryParameterTypes } from "../utils/service/service.type";
+import getReqBody from "../tools/getReqBody";
+import addressesService from "./addresses.service";
+import { AddressInputDTO } from "./addresses.types";
 
 class AddressesController {
-	async getAll(c: Context) {
-		const queryParams = c.req.query() as QueryParameterTypes;
+    async getAll(c: Context) {
+        const queryParams = c.req.query() as QueryParameterTypes;
 
-		const { addresses, addressesCount } =
-			await AddressesService.getAll(queryParams);
+        const { addresses, addressesCount } =
+            await AddressesService.getAll(queryParams);
 
-		c.res.headers.append('X-Total-Count', addressesCount.toString());
-		return c.json(addresses);
-	}
+        c.res.headers.append("X-Total-Count", addressesCount.toString());
+        return c.json(addresses);
+    }
+    async getOne(c: Context) {
+        const params = c.req.param() as { addressParams: string };
 
-	async create(c: Context) {
-		const body = await getReqBody<AddressInputDTO>(c);
+        const address = await addressesService.getOne(params.addressParams);
+        return c.json(address);
+    }
 
-		if (!body) return;
+    async create(c: Context) {
+        const body = await getReqBody<AddressInputDTO>(c);
 
-		const address = await addressesService.create(body);
+        if (!body) return;
 
-		return c.json(address);
-	}
+        const address = await addressesService.create(body);
 
-	async update(c: Context) {
-		const body = await getReqBody<AddressInputDTO>(c);
-		if (!body) return;
+        return c.json(address);
+    }
 
-		const address = await addressesService.update(body);
+    async update(c: Context) {
+        const body = await getReqBody<AddressInputDTO>(c);
+        if (!body) return;
 
-		return c.json(address);
-	}
+        const address = await addressesService.update(body);
 
-	async delete(c: Context) {
-		const body = await getReqBody<{ addressId: number | number[] }>(c);
-		if (!body) return;
+        return c.json(address);
+    }
 
-		const address = await addressesService.delete(body.addressId);
+    async delete(c: Context) {
+        const body = await getReqBody<{ addressId: number | number[] }>(c);
+        if (!body) return;
 
-		return c.json(address);
-	}
+        const address = await addressesService.delete(body.addressId);
+
+        return c.json(address);
+    }
 }
 
 export default new AddressesController();

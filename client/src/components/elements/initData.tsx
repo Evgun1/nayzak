@@ -1,32 +1,29 @@
-'use client';
+"use client";
 
-import { useAppDispatch, useAppSelector } from '@/lib/redux/redux';
-import { initAddress } from '@/lib/redux/store/address/action';
-import { initAuth } from '@/lib/redux/store/auth/action';
-import { initCart } from '@/lib/redux/store/cart/action';
-import { initCustomer } from '@/lib/redux/store/customer/action';
-import { initOrders } from '@/lib/redux/store/orders/action';
-import { initWishlist } from '@/lib/redux/store/wishlist/action';
-import { appCookieGet } from '@/utils/http/cookie';
-import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
+import { initAddress } from "@/lib/redux/store/address/action";
+import { initAuth } from "@/lib/redux/store/auth/action";
+import { initCart } from "@/lib/redux/store/cart/action";
+import { initCustomer } from "@/lib/redux/store/customer/action";
+import { initOrders } from "@/lib/redux/store/orders/action";
+import { initWishlist } from "@/lib/redux/store/wishlist/action";
+import { appCookieGet } from "@/utils/http/cookie";
+import { retry } from "@reduxjs/toolkit/query";
+import { useEffect, useLayoutEffect } from "react";
 
-export default function InitData() {
-	const dispatch = useAppDispatch();
-	const customer = useAppSelector((state) => state.customer.customerData);
+const InitData = () => {
+    const dispatch = useAppDispatch();
 
-	const token = appCookieGet('user-token');
+    useEffect(() => {
+        (async () => {
+            const token = await appCookieGet("user-token");
+            if (token) {
+                dispatch(initAuth());
+            }
+        })();
+    }, [dispatch]);
 
-	useEffect(() => {
-		dispatch(initAuth());
-		dispatch(initCustomer());
-	}, [dispatch, token]);
+    return null;
+};
 
-	useEffect(() => {
-		dispatch(initAddress());
-		dispatch(initWishlist());
-		dispatch(initCart());
-		dispatch(initOrders());
-	}, [dispatch, customer]);
-
-	return <></>;
-}
+export default InitData;

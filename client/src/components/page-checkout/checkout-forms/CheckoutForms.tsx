@@ -1,23 +1,16 @@
-'use client';
-
-import classes from './CheckoutForms.module.scss';
+import classes from "./CheckoutForms.module.scss";
 import {
-	CheckoutFormAddress,
-	CheckoutFormContactInformation,
-} from './CheckoutFormPreview';
-
-const CHECKOUT_FORM_PREVIEW_ARR = [
-	{ preview: () => <CheckoutFormContactInformation /> },
-	{ preview: () => <CheckoutFormAddress /> },
-];
+    CheckoutFormAddress,
+    CheckoutFormContactInformation,
+} from "./CheckoutFormPreview";
 
 const CheckoutForms = () => {
-	return (
-		<div className={classes.forms}>
-			{CHECKOUT_FORM_PREVIEW_ARR &&
-				CHECKOUT_FORM_PREVIEW_ARR.map((data, i) => <data.preview key={i} />)}
-		</div>
-	);
+    return (
+        <div className={classes.forms}>
+            <CheckoutFormContactInformation />
+            <CheckoutFormAddress />
+        </div>
+    );
 };
 
 export default CheckoutForms;

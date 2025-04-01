@@ -1,4 +1,4 @@
-// import { CreateButton, TopToolbar } from "react-admin";
+// import { CreateButton, TopToolbar } form "react-admin";
 //
 // export const ProductsListToolbar = () => {
 //   return (

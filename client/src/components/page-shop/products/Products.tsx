@@ -1,5 +1,3 @@
-
-
 // import classes from "./Products.module.scss";
 // import Toolbar from "./Toolbar";
 // import Sidebar from "./Sidebar";

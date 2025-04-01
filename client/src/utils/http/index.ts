@@ -1,162 +1,185 @@
-import { CredentialsDTO } from '@/lib/redux/store/auth/credentials.type';
+import { json } from "stream/consumers";
+import { revalidatePath, revalidateTag } from "next/cache";
 
-type MethodData = 'PUT' | 'GET' | 'POST' | 'DELETE';
-
-type ContentTypeData = 'application/json' | 'multipart/form-data';
-
-interface BodyData {
-	formData?: FormData;
-	json?: object;
-}
-
-type AppFetch = <T>(
-	pathname: string,
-	searchParams?: URLSearchParams,
-	init?: RequestInit,
-	customError?: React.ReactNode
-) => Promise<T>;
-
-const BASE_URL = 'http://localhost:3030';
+const BASE_URL = "http://localhost:3030";
 
 type AppFetchProps = {
-	pathname: string;
-	searchParams?: URLSearchParams;
-	init: RequestInit;
-	customError?: React.ReactNode;
+    pathname: string;
+    searchParams?: URLSearchParams;
+    init: RequestInit;
+    customError?: React.ReactNode;
+};
+
+interface TagsItem {
+    addresses: "addresses";
+    brands: "brands";
+    cart: "cart";
+    credentials: "credentials";
+    customers: "customers";
+    media: "media";
+    orders: "orders";
+    products: "products";
+    reviews: "reviews";
+    subcategories: "subcategories";
+    wishlists: "wishlists";
+    categories: "categories";
+}
+
+export const tags: TagsItem = {
+    addresses: "addresses",
+    brands: "brands",
+    cart: "cart",
+    credentials: "credentials",
+    customers: "customers",
+    media: "media",
+    orders: "orders",
+    products: "products",
+    reviews: "reviews",
+    subcategories: "subcategories",
+    wishlists: "wishlists",
+    categories: "categories",
 };
 
 const appFetch = async <T>({
-	pathname,
-	init,
-	searchParams,
+    pathname,
+    init,
+    searchParams,
 }: AppFetchProps): Promise<{ response: T; totalCount: number }> => {
-	const url = `${BASE_URL}/${pathname}${
-		searchParams ? `?${searchParams}` : ''
-	}`;
+    const url = `${BASE_URL}/${pathname}${
+        searchParams ? `?${searchParams}` : ""
+    }`;
 
-	init.cache = 'no-cache';
+    init.next = { revalidate: 1800 };
 
-	try {
-		const res = await fetch(url, init);
+    try {
+        const res = await fetch(url, init);
 
-		if (!res.ok || res.status !== 200) {
-			const text = await res.text();
-			throw new Error(text, {});
-		}
+        if (!res.ok) {
+            const text = await res.text();
+            throw new Error(text);
+        }
 
-		const response = (await res.json()) as T;
-		const totalCount = parseInt(
-			(res.headers.get('X-Total-Count') as string) ?? null
-		);
-		return { response, totalCount } as { response: T; totalCount: number };
-	} catch (error) {
-		throw error;
-	}
+        const response = (await res.json()) as T;
+        const totalCount = parseInt(
+            (res.headers.get("X-Total-Count") as string) ?? null
+        );
+        return { response, totalCount } as { response: T; totalCount: number };
+    } catch (error) {
+        throw error;
+    }
 };
 
 type AppGetFetch = {
-	pathname: string;
-	searchParams?: URLSearchParams;
-	authorization?: string;
+    tag: keyof TagsItem;
+    pathname: string;
+    searchParams?: URLSearchParams;
+    authorization?: string;
 };
 
 export const appFetchGet = async <T>({
-	pathname,
-	authorization,
-	searchParams,
+    tag,
+    pathname,
+    authorization,
+    searchParams,
 }: AppGetFetch) => {
-	const init: RequestInit = {};
-	init.method = 'GET';
+    const init: RequestInit = {};
+    init.method = "GET";
+    init.next = { tags: [tag] };
 
-	if (authorization) {
-		init.headers = { Authorization: `Bearer Token ${authorization}` };
-	}
+    if (authorization) {
+        init.headers = { Authorization: `Bearer Token ${authorization}` };
+    }
 
-	const result = await appFetch<T>({ init, pathname, searchParams });
+    const result = await appFetch<T>({ init, pathname, searchParams });
 
-	return result;
+    return result;
 };
 
 export type AppPostFetch = {
-	pathname: string;
-	authorization?: string;
-	sendData?: FormData | object;
+    tag: keyof TagsItem;
+    pathname: string;
+    authorization?: string;
+    sendData?: FormData | object;
 };
 export const appFetchPost = async <T>({
-	pathname,
-	sendData,
-	authorization,
+    pathname,
+    sendData,
+    authorization,
 }: AppPostFetch) => {
-	const init: RequestInit = {};
+    const init: RequestInit = {};
 
-	init.method = 'POST';
+    init.method = "POST";
 
-	if (authorization) {
-		init.headers = { Authorization: authorization };
-	}
+    if (authorization) {
+        init.headers = { Authorization: authorization };
+    }
 
-	if (sendData) {
-		if (!(sendData instanceof FormData)) {
-			init.headers = { 'Content-Type': 'application/json' };
-		}
+    if (sendData) {
+        if (!(sendData instanceof FormData)) {
+            init.headers = { "Content-Type": "application/json" };
+        }
 
-		init.body =
-			sendData instanceof FormData ? sendData : JSON.stringify(sendData);
-	}
+        init.body =
+            sendData instanceof FormData ? sendData : JSON.stringify(sendData);
+    }
 
-	const result = await appFetch<T>({ pathname, init });
+    const result = await appFetch<T>({ pathname, init });
 
-	return result;
+    return result;
 };
 
 type AppPutFetch = {
-	pathname: string;
-	putData?: FormData | object;
-	authorization?: string;
+    tag: keyof TagsItem;
+    pathname: string;
+    putData?: FormData | object;
+    authorization?: string;
 };
 export const appFetchPut = async <T>({
-	pathname,
-	putData,
-	authorization,
+    pathname,
+    putData,
+    authorization,
 }: AppPutFetch) => {
-	const init: RequestInit = {};
-	init.method = 'PUT';
+    const init: RequestInit = {};
+    init.method = "PUT";
 
-	if (authorization) {
-		init.headers = { Authorization: authorization };
-	}
+    if (authorization) {
+        init.headers = { Authorization: authorization };
+    }
 
-	if (!(putData instanceof FormData)) {
-		init.headers = { 'Content-Type': 'application/json' };
-	}
+    if (!(putData instanceof FormData)) {
+        init.headers = { "Content-Type": "application/json" };
+    }
 
-	init.body = putData instanceof FormData ? putData : JSON.stringify(putData);
+    init.body = putData instanceof FormData ? putData : JSON.stringify(putData);
 
-	const result = await appFetch<T>({ pathname, init });
+    const result = await appFetch<T>({ pathname, init });
 
-	return result;
+    return result;
 };
 
 type AppDeleteFetch = {
-	pathname: string;
-	deleteData: FormData | object;
+    tag: keyof TagsItem;
+    pathname: string;
+    deleteData: FormData | object;
 };
 export const appFetchDelete = async <T>({
-	pathname,
-	deleteData,
+    pathname,
+    deleteData,
 }: AppDeleteFetch) => {
-	const init: RequestInit = {};
+    const init: RequestInit = {};
 
-	init.method = 'DELETE';
+    init.method = "DELETE";
 
-	if (!(deleteData instanceof FormData)) {
-		init.headers = { 'Content-Type': 'application/json' };
-	}
+    if (!(deleteData instanceof FormData)) {
+        init.headers = { "Content-Type": "application/json" };
+    }
 
-	init.body =
-		deleteData instanceof FormData ? deleteData : JSON.stringify(deleteData);
+    init.body =
+        deleteData instanceof FormData
+            ? deleteData
+            : JSON.stringify(deleteData);
 
-	const result = await appFetch<T>({ pathname, init });
+    const result = await appFetch<T>({ pathname, init });
 
-	return result;
+    return result;
 };

@@ -1,0 +1,31 @@
+.product-actions {
+    display: grid;
+    &__quantity {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        // display: grid;
+        // grid-template-columns: 20px 1fr 20px;
+        text-align: center;
+        // justify-content: space-between;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        background: var(--black-100);
+    }
+
+    &__button {
+        &-add {
+            margin-bottom: 24px;
+        }
+        &-list {
+            display: flex;
+            gap: 32px;
+        }
+    }
+}
+
+.active {
+    svg {
+        color: red;
+    }
+}

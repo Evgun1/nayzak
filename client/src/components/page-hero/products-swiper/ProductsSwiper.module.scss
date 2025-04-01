@@ -1,109 +1,33 @@
-.wrapper {
-  &__title {
-    text-align: left;
-  }
-}
-
-.card {
-  text-decoration: none;
-  position: relative;
-  background: url("https://placehold.co/400");
-  background-repeat: no-repeat;
-  background-size: 413px, cover;
-  background-position: center top;
-  min-height: 479px;
-  height: 100%;
-
-  &__block {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    text-align: left;
-  }
-}
-
-.swiper {
-  &-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 32px;
-  }
-
-  &-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &-custom {
-    display: flex;
-    flex-direction: column-reverse;
-
-    &--pagination {
-      margin: 0 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
+.products-swiper {
+    &__product {
+        text-align: start;
     }
+}
 
-    &--bullet {
-      position: relative;
-      width: 16px;
-      height: 16px;
-      background: none;
-      border-radius: 100%;
-      &::after {
+.loading {
+    position: relative;
+    max-height: 479px;
+    height: 100vh;
+    background: var(--black-300);
+    &__spinner {
         position: absolute;
-        content: "";
-        background: var(--black-900);
-        border-radius: 100%;
-        width: 6px;
-        height: 6px;
+        transform: translate(-50%, -50%);
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
-      }
+        border: 16px solid white;
+        border-radius: 50%;
+        border-top: 16px solid var(--black-700);
+        width: 120px;
+        height: 120px;
+        animation: spin 2s backwards infinite;
 
-      &-action {
-        position: relative;
-        width: 16px;
-        height: 16px;
-        border: 1px solid var(--black-900);
-        background: none;
-        border-radius: 100%;
-
-        &::after {
-          position: absolute;
-          content: "";
-          background: var(--black-900);
-          border-radius: 100%;
-          width: 6px;
-          height: 6px;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+        @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
         }
-      }
     }
-    &--navigation-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      svg {
-        width: 24px;
-        height: 24px;
-      }
-    }
-  }
-}
-
-.products-carusel--card {
-  text-align: left;
 }

@@ -15,22 +15,22 @@ class MainService {
 		this.supportedMapTypes
 			.set('Number', async (key: string, id: number) => {
 				const sql: { id: number }[] = await prismaClient.$queryRawUnsafe(
-					`SELECT * FROM "${key}" WHERE id=${id}`
+					`SELECT * from "${key}" WHERE id=${id}`
 				);
 
 				await prismaClient.$queryRawUnsafe(
-					`DELETE FROM "${key}" WHERE id=${id}`
+					`DELETE from "${key}" WHERE id=${id}`
 				);
 
 				return sql.pop();
 			})
 			.set('Array', async (key: string, id: number[]) => {
-				const query = `SELECT * FROM "${key}" WHERE id IN (${
+				const query = `SELECT * from "${key}" WHERE id IN (${
 					Prisma.join(id).values
 				})`;
 				const sql: { id: number }[] = await prismaClient.$queryRawUnsafe(query);
 				await prismaClient.$queryRawUnsafe(
-					`DELETE FROM "${key}" WHERE id IN (${Prisma.join(id).values})`
+					`DELETE from "${key}" WHERE id IN (${Prisma.join(id).values})`
 				);
 				return sql;
 			});

@@ -2,7 +2,7 @@ import prismaClient from '../prismaClient';
 import WishlistsGTO, {
 	WishlistsDataGTO as WishlistsDataGTO,
 	WishlistInputDTO,
-} from './interface/WishlistGetIntut';
+} from './interface/WishlistGetInput';
 import { MainService } from '../utils/service/main.service';
 import { QueryParameterTypes } from '../utils/service/service.type';
 import { Prisma } from '@prisma/client';

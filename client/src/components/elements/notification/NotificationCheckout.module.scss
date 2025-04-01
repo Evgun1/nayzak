@@ -1,0 +1,13 @@
+.checkout {
+	display: grid;
+	grid-template-columns: max-content 1fr;
+
+	&__icon {
+		background: green;
+		border-radius: 100%;
+		color: white;
+		padding: 2px;
+		width: 20px;
+		height: 20px;
+	}
+}

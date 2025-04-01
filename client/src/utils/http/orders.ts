@@ -1,54 +1,61 @@
-import { OrdersItem } from '@/types/orders.types';
-import { appFetchGet, appFetchPost } from '.';
+import { OrdersItem } from "@/types/orders.types";
+import { appFetchGet, appFetchPost } from ".";
 
-const pathname = 'orders';
+const pathname = "orders";
+
+const tag = "orders";
 
 export const appOrdersAllGet = async () => {
-	const { response, totalCount } = await appFetchGet<OrdersItem>({ pathname });
+    const { response, totalCount } = await appFetchGet<OrdersItem>({
+        tag,
+        pathname,
+    });
 
-	return { response, totalCount };
+    return { response, totalCount };
 };
 
 export interface ordersUploadItem {
-	addressesId: number;
-	cartId: number[];
-	credentialsId: number;
-	customersId: number;
+    addressesId: number;
+    cartId: number[] | number;
+    credentialsId: number;
+    customersId: number;
 }
 interface ordersInitItem {
-	customerId: number;
+    customerId: number;
 }
 type AppOrdersPostProps = {
-	upload?: ordersUploadItem | FormData;
-	init?: ordersInitItem;
+    upload?: ordersUploadItem | FormData;
+    init?: ordersInitItem;
 };
 
 export const appOrdersPost = async (ordersData: AppOrdersPostProps) => {
-	const orderSuggestMap = new Map<
-		string,
-		(data: any) => Promise<OrdersItem[]>
-	>()
-		.set('upload', async (data: ordersUploadItem) => {
-			const { response } = await appFetchPost<OrdersItem[]>({
-				pathname,
-				sendData: data,
-			});
+    const orderSuggestMap = new Map<
+        string,
+        (data: any) => Promise<OrdersItem[]>
+    >()
+        .set("upload", async (data: ordersUploadItem) => {
+            const { response } = await appFetchPost<OrdersItem[]>({
+                tag,
+                pathname,
+                sendData: data,
+            });
 
-			return response;
-		})
+            return response;
+        })
 
-		.set('init', async (data: ordersInitItem) => {
-			const { response } = await appFetchPost<OrdersItem[]>({
-				pathname: `${pathname}/init`,
-				sendData: { customerId: data.customerId },
-			});
+        .set("init", async (data: ordersInitItem) => {
+            const { response } = await appFetchPost<OrdersItem[]>({
+                tag,
+                pathname: `${pathname}/init`,
+                sendData: { customerId: data.customerId },
+            });
 
-			return response;
-		});
+            return response;
+        });
 
-	for (const [key, value] of orderSuggestMap.entries()) {
-		if (Object.keys(ordersData).includes(key)) {
-			return await value(ordersData[key as keyof typeof ordersData]);
-		}
-	}
+    for (const [key, value] of orderSuggestMap.entries()) {
+        if (Object.keys(ordersData).includes(key)) {
+            return await value(ordersData[key as keyof typeof ordersData]);
+        }
+    }
 };

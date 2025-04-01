@@ -22,7 +22,7 @@ schemaCustomer.set(
 );
 
 customersRouter.get('/', customersController.getAll);
-customersRouter.get('/:customerId', customersController.getOne);
+customersRouter.get('/:id', customersController.getOne);
 
 customersRouter.post(
 	'/',

@@ -1,77 +1,33 @@
-// .wrapper {
-//   display: flex;
-//   gap: 20px;
+.header-actions {
+    display: flex;
+    gap: 20px;
+    max-width: max-content;
 
-//   &__form {
-//     display: flex;
-//     overflow: hidden;
-//     max-width: 255px;
-//     &-input {
-//       flex-grow: 1;
-//     }
-//   }
-
-//   &__button {
-//     max-width: 50px;
-//     height: 28px;
-//     padding: 0;
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     background: none;
-//     border: none;
-//     cursor: pointer;
-//     text-decoration: none;
-//     gap: 2px;
-
-//     svg {
-//       color: var(--black-900);
-//     }
-
-//     div {
-//       display: flex;
-//       align-items: center;
-//       justify-content: center;
-//       width: 20px;
-//       height: 20px;
-//       padding: 5px 6px;
-//       color: white;
-//       background: var(--black-900);
-//       border-radius: 100%;
-//       font-weight: 700;
-//       font-size: 12px;
-//       line-height: 10px;
-//     }
-//   }
-// }
-
-// .icon {
-//   width: 28px;
-//   height: 28px;
-// }
-
-.actions {
-  display: flex;
-  gap: 20px;
-  max-width: max-content;
-  .actions--btn {
-    gap: 2px;
-    &-amount {
-      padding: 0px 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 20px;
-      min-height: 20px;
-      background: var(--black-900);
-      color: white;
-      border-radius: 1em;
-
-      // font-family: Inter;
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 10px;
-      text-align: center;
+    &__button {
+        gap: 2px !important;
     }
-  }
+
+    &__bag {
+        position: relative !important;
+        padding-right: 22px !important;
+
+        &-amount {
+            right: 0;
+            position: absolute;
+            padding: 0px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            min-height: 20px;
+            background: var(--black-900);
+            color: white;
+            border-radius: 1em;
+
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 10px;
+            text-align: center;
+        }
+    }
 }

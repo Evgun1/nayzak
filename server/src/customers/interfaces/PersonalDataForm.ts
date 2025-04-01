@@ -1,6 +1,6 @@
 export default interface PersonalDataFormDTO {
-	id: string;
-	credentialsID: string;
+	id?: string;
+	credentialsId: string;
 	firstName: string;
 	lastName: string;
 	phone: string | number;

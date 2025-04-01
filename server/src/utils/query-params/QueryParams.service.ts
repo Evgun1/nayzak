@@ -1,81 +1,89 @@
-import { number } from 'zod';
-import { Prisma } from '@prisma/client';
+import { number } from "zod";
+import { Prisma } from "@prisma/client";
 import {
-	FilterType,
-	LimitType,
-	OffsetType,
-	QueryParameterTypes,
-	SortTypes,
-} from '../service/service.type';
+    FilterType,
+    LimitType,
+    OffsetType,
+    QueryParameterTypes,
+    SortTypes,
+} from "../service/service.type";
 
 class QueryParamHandler {
-	filter<T>(inputData: QueryParameterTypes, validData: Record<string, string>) {
-		const where: Partial<T> & { OR?: Array<Record<string, any>> } = {};
+    filter<T>(
+        inputData: QueryParameterTypes,
+        enumData: Record<string, string>
+    ) {
+        const where: Partial<T> & { OR?: Array<Record<string, any>> } = {};
 
-		if (inputData.search) {
-			if (Object.keys(validData).includes('title'))
-				where.OR = [
-					{
-						title: {
-							contains: inputData.search.toString(),
-							mode: 'insensitive',
-						},
-					},
-				];
+        if (inputData.search) {
+            if (Object.keys(enumData).includes("title"))
+                where.OR = [
+                    {
+                        title: {
+                            contains: inputData.search.toString(),
+                            mode: "insensitive",
+                        },
+                    },
+                ];
 
-			if (Object.keys(validData).includes('name'))
-				where.OR = [
-					{
-						name: {
-							contains: inputData.search.search.toString(),
-							mode: 'insensitive',
-						},
-					},
-				];
-		}
+            if (Object.keys(enumData).includes("name"))
+                where.OR = [
+                    {
+                        name: {
+                            contains: inputData.search.search.toString(),
+                            mode: "insensitive",
+                        },
+                    },
+                ];
+        }
 
-		for (const key in inputData) {
-			if (!Object.keys(validData).includes(key)) continue;
-			if (inputData[key] === 'undefined' || !inputData[key]) continue;
+        for (const key in inputData) {
+            if (!Object.keys(enumData).includes(key)) continue;
+            if (inputData[key] === "undefined" || !inputData[key]) continue;
 
-			const number = inputData[key].split(',').map((data) => +data);
+            const number = inputData[key].split(",").map((data) => +data);
 
-			const isAllNumbers = number.every((data) => !isNaN(Number(data)));
-			if (isAllNumbers) {
-				where[key as keyof T] = {
-					in: number,
-				} as any;
-				continue;
-			}
+            const isAllNumbers = number.every((data) => !isNaN(Number(data)));
 
-			where[key as keyof T] = inputData[key] as any;
-		}
+            if (isAllNumbers) {
+                where[key as keyof T] = {
+                    in: number,
+                } as any;
+                continue;
+            }
 
-		return where as T;
-	}
+            where[key as keyof T] = inputData[key] as any;
+        }
 
-	orderBy<T>(queryParams: SortTypes, validKey: Record<string, string>) {
-		const { sortBy, sort } = queryParams;
-		const orderBy = {} as T;
+        return where as T;
+    }
 
-		if (sortBy && sort)
-			if (Object.keys(validKey).includes(sortBy))
-				orderBy[sortBy as keyof T] = sort.toString() as any;
+    orderBy<T>(queryParams: SortTypes, enumData: Record<string, string>) {
+        const { sortBy, sort } = queryParams;
+        const orderBy = {} as T;
 
-		return orderBy;
-	}
+        if (sortBy && sort)
+            if (Object.keys(enumData).includes(sortBy))
+                orderBy[sortBy as keyof T] = sort.toString() as any;
 
-	limit(productGetDTO: LimitType) {
-		const limit = productGetDTO.limit ?? '15';
+        return orderBy;
+    }
 
-		return parseInt(limit);
-	}
+    limit(productGetDTO: LimitType) {
+        const limit = productGetDTO.limit;
 
-	offset(productGetDTO: OffsetType) {
-		const offset = productGetDTO.offset ?? '0';
+        if (limit) {
+            return parseInt(limit);
+        }
 
-		return parseInt(offset);
-	}
+        return undefined;
+    }
+
+    offset(productGetDTO: OffsetType) {
+        const offset = productGetDTO.offset ?? "0";
+
+        return parseInt(offset);
+    }
 }
 
 export default new QueryParamHandler();

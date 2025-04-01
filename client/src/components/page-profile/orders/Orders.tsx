@@ -1,39 +1,22 @@
-'use client';
+"use client";
 
-import { useAppSelector } from '@/lib/redux/redux';
-import { OrdersPreview } from './OrdersPreview';
-import { useEffect, useState } from 'react';
-import { OrdersItem } from '@/types/orders.types';
+import { useAppSelector } from "@/lib/redux/redux";
+import { OrdersPreview } from "./OrdersPreview";
+import classes from "./Orders.module.scss";
+import { TextClassList } from "@/types/textClassList.enum";
 
 export default function Orders() {
-	const [orders, setOrders] = useState<Partial<OrdersItem>[]>([]);
-	const [loading, setLoading] = useState<boolean>(true);
-	const ordersSelector = useAppSelector((state) => state.orders.ordersData);
+    const ordersSelector = useAppSelector((state) => state.orders.ordersData);
 
-	useEffect(() => {
-		if (ordersSelector) {
-			setOrders(ordersSelector);
-			setLoading(false);
-		}
-	}, [ordersSelector]);
+    if (!ordersSelector || ordersSelector.length === 0) {
+        <div
+            className={`${TextClassList.REGULAR_22} ${classes["orders__message"]}`}
+        >
+            The orders is empty
+        </div>;
+    }
 
-	return (
-		<div>
-			{!loading ? (
-				<>
-					{orders && orders.length > 0 ? (
-						<ul>
-							{orders.map((order, index) => (
-								<li key={index}>{<OrdersPreview order={order} />}</li>
-							))}
-						</ul>
-					) : (
-						<div> The orders is empty</div>
-					)}
-				</>
-			) : (
-				<>Loading...</>
-			)}
-		</div>
-	);
+    return ordersSelector.map((order, index) => (
+        <OrdersPreview key={index} order={order} />
+    ));
 }

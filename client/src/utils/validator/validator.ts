@@ -78,7 +78,7 @@ export const validation = {
 	},
 
 	customer: {
-		fistName: schemaName,
+		firstName: schemaName,
 		lastName: schemaName,
 		phone: z.coerce
 			.string()
@@ -112,6 +112,19 @@ export const validation = {
 			)
 			.refine((val) => val.length >= 6, {
 				message: 'Postal Code less than six characters',
+			}),
+	},
+
+	writeReview: {
+		rating: z.coerce.string().refine((val) => +val > 0, { message: 'You need to specify a rating' }),
+		review: z
+			.string()
+			.refine((val) => val.length > 1, {
+				message: 'The field should not be empty',
+			})
+			.refine((val) => !/[`@#$%^&*()_+\=\[\]{}|<>\/~]/.test(val), {
+				message:
+					'The review must not contain the following characters: @#$%^&*()_+=[]{}|<>/~',
 			}),
 	},
 };

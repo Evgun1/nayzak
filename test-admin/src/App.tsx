@@ -30,60 +30,60 @@ import CategoriesEdit from './components/categories/CategoriesEdit.tsx';
 import ReviewsList from './components/reviews/ReviewsList.tsx';
 
 export const App = () => (
-    <Admin
-        layout={Layout}
-        dataProvider={customDataProvider}
-        authProvider={resAuthProvider}
-        loginPage={CustomLogin}
-    >
-        <Resource
-            name="products"
-            list={ProductsList}
-            edit={ProductsEdit}
-            create={ProductsCreate}
-            show={ProductsShow}
-        />
-        <Resource
-            name="categories"
-            list={CategoriesList}
-            create={CategoriesCreate}
-            edit={CategoriesEdit}
-            show={CategoriesShow}
-        />
-        <Resource
-            name="subcategories"
-            list={SubcategoriesList}
-            show={SubcategoriesShow}
-        />
-        <Resource
-            name="credentials"
-            list={CredentialsList}
-            show={CredentialsShow}
-            create={CredentialsCreate}
-            edit={CredentialsEdit}
-        />
-        <Resource
-            name="customers"
-            list={CustomersList}
-            show={CustomersShow}
-            // create={CredentialsCreate}
-            edit={CustomersEdit}
-        />
-        <Resource
-            name="media"
-            list={MediaList}
-            create={MediaCreate}
-            show={MediaShow}
-            // edit={CustomersEdit}
-        />
-        <Resource
-            name="addresses"
-            list={AddressesList}
-            // create={MediaCreate}
-            // show={MediaShow}
-            // edit={CustomersEdit}
-        />
-        {/* <Resource
+	<Admin
+		layout={Layout}
+		dataProvider={customDataProvider}
+		authProvider={resAuthProvider}
+		loginPage={CustomLogin}
+	>
+		<Resource
+			name="products"
+			list={ProductsList}
+			edit={ProductsEdit}
+			create={ProductsCreate}
+			show={ProductsShow}
+		/>
+		<Resource
+			name="categories"
+			list={CategoriesList}
+			create={CategoriesCreate}
+			edit={CategoriesEdit}
+			show={CategoriesShow}
+		/>
+		<Resource
+			name="subcategories"
+			list={SubcategoriesList}
+			show={SubcategoriesShow}
+		/>
+		<Resource
+			name="credentials"
+			list={CredentialsList}
+			show={CredentialsShow}
+			create={CredentialsCreate}
+			edit={CredentialsEdit}
+		/>
+		<Resource
+			name="customers"
+			list={CustomersList}
+			show={CustomersShow}
+			// create={CredentialsCreate}
+			edit={CustomersEdit}
+		/>
+		<Resource
+			name="media"
+			list={MediaList}
+			create={MediaCreate}
+			show={MediaShow}
+			// edit={CustomersEdit}
+		/>
+		<Resource
+			name="addresses"
+			list={AddressesList}
+			// create={MediaCreate}
+			// show={MediaShow}
+			// edit={CustomersEdit}
+		/>
+		{/* <Resource
             name="reviews"
             list={ReviewsList}
             // create={MediaCreate}
@@ -91,7 +91,7 @@ export const App = () => (
             // edit={CustomersEdit}
         /> */}
 
-        <Resource name={'cart'} list={CartList} />
-        <Resource name={'wishlists'} list={WishlistList} />
-    </Admin>
+		<Resource name={'cart'} list={CartList} />
+		<Resource name={'wishlists'} list={WishlistList} />
+	</Admin>
 );

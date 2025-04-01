@@ -1,49 +1,62 @@
-import classes from './Categories.module.scss';
-import Link from 'next/link';
-import { appCategoriesGet } from '@/utils/http/categories';
-import LinkCustom from '@/lib/ui/custom-elements/link-custom/LinkCustom';
+import classes from "./Categories.module.scss";
+import Link from "next/link";
+import { appCategoriesGet } from "@/utils/http/categories";
+import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
+import Image from "next/image";
 
 const CategoryGrid = async () => {
-	const categoriesData = await appCategoriesGet();
+    const categoriesData = await appCategoriesGet();
 
-	// const t = new URL(window.history)
+    // const t = new URL(window.history)
 
-	return (
-		<ul className={`container ${classes['categories--grid']}`}>
-			{categoriesData &&
-				categoriesData.length > 0 &&
-				categoriesData.map((category, i) => (
-					<li key={i}>
-						<div className={classes['categories--grid-content']}>
-							<img
-								className={classes['grid--content-img']}
-								src="https://placehold.co/400"
-								alt=""
-							/>
+    return (
+        <div className='container'>
+            <ul className={classes["categories-grid"]}>
+                {categoriesData &&
+                    categoriesData.length > 0 &&
+                    categoriesData.map((category, i) => (
+                        <li key={i}>
+                            <div
+                                className={classes["categories-grid__content"]}
+                            >
+                                <Image
+                                    loading='lazy'
+                                    fill
+                                    sizes='width:100%; height:100%;'
+                                    className={
+                                        classes["categories-grid__image"]
+                                    }
+                                    src='https://placehold.co/400'
+                                    alt={category.title}
+                                />
 
-							<LinkCustom
-								className={classes['grid--content-link']}
-								href={{ endpoint: `/category/${category.title.toLowerCase()}` }}
-								styleSettings={{
-									color: 'DARK',
-									roundness: 'SHARP',
-									size: 'MEDIUM',
-									type: 'DEFAULT',
-								}}
-							>
-								{category.title}
-							</LinkCustom>
-							{/* <Link
+                                <LinkCustom
+                                    className={classes["categories-grid__link"]}
+                                    href={{
+                                        endpoint: `/category/${category.title.toLowerCase()}`,
+                                    }}
+                                    styleSettings={{
+                                        color: "LIGHT",
+                                        fill: "SOLID",
+                                        roundness: "ROUNDED",
+                                        size: "MEDIUM",
+                                        type: "DEFAULT",
+                                    }}
+                                >
+                                    {category.title}
+                                </LinkCustom>
+                                {/* <Link
 								className={` ${classes['grid--content-link']} h7`}
 								href={`/category/${category.title.toLowerCase()}`}
 							>
 								{category.title}
 							</Link> */}
-						</div>
-					</li>
-				))}
-		</ul>
-	);
+                            </div>
+                        </li>
+                    ))}
+            </ul>
+        </div>
+    );
 };
 
 export default CategoryGrid;

@@ -1,279 +1,333 @@
-import { faker } from "@faker-js/faker";
-import { $Enums, Prisma } from "@prisma/client";
+import { $Enums, Prisma, Products } from "@prisma/client";
 import prismaClient from "../prismaClient";
-import { ProductInput } from "./interfaces/ProductInput";
+import { ProductsGetDTO } from "./interfaces/ProductsGetDTO";
 import { MainService } from "../utils/service/main.service";
 import { QueryParameterTypes } from "../utils/service/service.type";
 import { QueryParamHandler } from "../utils/query-params/QueryParams.service";
 import { ReviewsService } from "../reviews/reviews.service";
+import { privateDecrypt } from "crypto";
+import { number, string } from "zod";
 
 class ProductsOptions {
-  private queryParams = new QueryParamHandler();
-  private ratingAvg = new ReviewsService().ratingAvg;
+    private queryParams = new QueryParamHandler();
+    private ratingAvg = new ReviewsService().ratingAvg;
 
-  private supportedMimeTypes: Map<boolean, (data: string) => object> =
-    new Map();
+    private supportedMimeTypes: Map<boolean, (data: string) => object> =
+        new Map();
 
-  private setupMimeTypes() {
-    this.supportedMimeTypes.set(false, (data: string) => ({
-      id: data,
-    }));
-    this.supportedMimeTypes.set(true, (data: string) => ({
-      title: data.replaceAll("_", " "),
-    }));
-  }
-
-  constructor() {
-    this.setupMimeTypes();
-  }
-
-  async optionsGetAll(
-    query: QueryParameterTypes,
-    params?: { category: string; subcategory: string },
-  ) {
-    const filter = this.queryParams.filter<Prisma.ProductsWhereInput>(
-      query,
-      Prisma.ProductsScalarFieldEnum,
-    );
-
-    if (query.minPrice && query.maxPrice)
-      filter.mainPrice = {
-        lte: parseInt(query.maxPrice.toString()),
-        gte: parseInt(query.minPrice.toString()),
-      };
-
-    if (params?.category || query?.category !== "null") {
-      filter.Categories = {
-        title: {
-          equals: params?.category ?? query?.category,
-          mode: "insensitive",
-        },
-      };
+    private setupMimeTypes() {
+        this.supportedMimeTypes.set(false, (data: string) => ({
+            id: data,
+        }));
+        this.supportedMimeTypes.set(true, (data: string) => ({
+            title: data.replaceAll("_", " "),
+        }));
     }
 
-    if (params?.subcategory || query?.subcategory !== "null") {
-      filter.Subcategories = {
-        title: {
-          equals: params?.subcategory ?? query?.subcategory,
-          mode: "insensitive",
-        },
-      };
+    constructor() {
+        this.setupMimeTypes();
     }
 
-    const orderBy =
-      this.queryParams.orderBy<Prisma.ProductsOrderByWithRelationInput>(
-        { sort: query.sort, sortBy: query.sortBy },
-        Prisma.ProductsScalarFieldEnum,
-      );
-    const take = this.queryParams.limit({ limit: query.limit });
-    const skip = this.queryParams.offset({ offset: query.offset });
+    async optionsGetAll(
+        query: QueryParameterTypes,
+        params?: { category: string; subcategory: string }
+    ) {
+        const filter = this.queryParams.filter<Prisma.ProductsWhereInput>(
+            query,
+            Prisma.ProductsScalarFieldEnum
+        );
 
-    const where: Prisma.ProductsWhereInput = {
-      ...filter,
-    };
+        if (query.minPrice && query.maxPrice)
+            filter.mainPrice = {
+                lte: parseInt(query.maxPrice.toString()),
+                gte: parseInt(query.minPrice.toString()),
+            };
 
-    const options: Prisma.ProductsFindManyArgs = {
-      where,
-      orderBy,
-      take,
-      skip,
-    };
+        if (query?.category) {
+            filter.Categories = {
+                title: {
+                    equals: query.category,
+                    mode: "insensitive",
+                },
+            };
+        }
 
-    return options;
-  }
+        if (query?.subcategory) {
+            filter.Subcategories = {
+                title: {
+                    equals: query.subcategory,
+                    mode: "insensitive",
+                },
+            };
+        }
 
-  optionsGetOne(params: { productParam: string }) {
-    const { productParam } = params;
+        const orderBy =
+            this.queryParams.orderBy<Prisma.ProductsOrderByWithRelationInput>(
+                { sort: query.sort, sortBy: query.sortBy },
+                Prisma.ProductsScalarFieldEnum
+            );
+        const take = this.queryParams.limit({ limit: query.limit });
+        const skip = this.queryParams.offset({ offset: query.offset });
 
-    const productData = this.supportedMimeTypes.get(
-      isNaN(Number(productParam)),
-    );
+        const where: Prisma.ProductsWhereInput = {
+            ...filter,
+        };
 
-    if (!productData) return;
+        const options: Prisma.ProductsFindManyArgs = {
+            where,
+            orderBy,
+            take,
+            skip,
+        };
 
-    const inputData = productData(productParam) as QueryParameterTypes;
+        return options;
+    }
 
-    const where = this.queryParams.filter<Prisma.ProductsWhereInput>(
-      inputData,
-      Prisma.ProductsScalarFieldEnum,
-    );
+    optionsGetOne(params: { productParam: string }) {
+        const { productParam } = params;
 
-    const option: Prisma.ProductsFindFirstArgs = {
-      where,
-    };
+        const productData = this.supportedMimeTypes.get(
+            isNaN(Number(productParam))
+        );
 
-    return option;
-  }
+        if (!productData) return;
 
-  optionsUpdate(inputData: ProductInput) {
-    const {
-      id,
-      subcategoriesId,
-      title,
-      description,
-      discount,
-      price,
-      status,
-      categoriesId,
-      mediaId,
-    } = inputData;
+        const inputData = productData(productParam) as QueryParameterTypes;
 
-    const mainPrice = price - (price * discount) / 100;
+        const where = this.queryParams.filter<Prisma.ProductsWhereInput>(
+            inputData,
+            Prisma.ProductsScalarFieldEnum
+        );
 
-    const options: Prisma.ProductsUpdateArgs = {
-      where: { id },
-      data: {
-        title,
-        description,
-        price,
-        status,
-        discount,
-        mainPrice,
-        categoriesId,
-        subcategoriesId,
-        updatedAt: new Date(),
-        mediaId,
-      },
-    };
+        const option: Prisma.ProductsFindFirstArgs = {
+            where,
+        };
 
-    return options;
-  }
+        return option;
+    }
 
-  optionsCreate(inputData: ProductInput) {
-    const {
-      discount,
-      status,
-      description,
-      price,
-      categoriesId,
-      title,
-      subcategoriesId,
-      mediaId,
-    } = inputData;
-    const mainPrice = price - (price * discount) / 100;
+    optionsUpdate(inputData: ProductsGetDTO) {
+        const {
+            id,
+            subcategoriesId,
+            title,
+            description,
+            discount,
+            price,
+            status,
+            categoriesId,
+            mediaId,
+        } = inputData;
 
-    const options: Prisma.ProductsCreateArgs = {
-      data: {
-        title,
-        status,
-        discount,
-        mainPrice,
-        price,
-        createdAt: new Date(),
-        description,
-        categoriesId,
-        subcategoriesId,
-        mediaId,
-      },
-    };
+        const mainPrice = price - (price * discount) / 100;
 
-    return options;
-  }
+        const options: Prisma.ProductsUpdateArgs = {
+            where: { id },
+            data: {
+                title,
+                description,
+                price,
+                status,
+                discount,
+                mainPrice,
+                categoriesId,
+                subcategoriesId,
+                updatedAt: new Date(),
+                mediaId,
+            },
+        };
 
-  optionsMinMaxPrice({
-    category,
-    subcategory,
-  }: {
-    category: string;
-    subcategory: string;
-  }) {
-    const select: Prisma.ProductsSelect = {
-      price: true,
-      discount: true,
-      mainPrice: true,
-    };
+        return options;
+    }
 
-    const where: Prisma.ProductsWhereInput = {
-      Categories: { title: { equals: category, mode: "insensitive" } },
-      Subcategories: {
-        title: { equals: subcategory, mode: "insensitive" },
-      },
-    };
+    optionsCreate(inputData: ProductsGetDTO) {
+        const {
+            discount,
+            status,
+            description,
+            price,
+            categoriesId,
+            title,
+            subcategoriesId,
+            mediaId,
+        } = inputData;
+        const mainPrice = price - (price * discount) / 100;
 
-    const option: Prisma.ProductsFindManyArgs = {
-      select,
-      where,
-    };
+        const options: Prisma.ProductsCreateArgs = {
+            data: {
+                title,
+                status,
+                discount,
+                mainPrice,
+                price,
+                createdAt: new Date(),
+                description,
+                categoriesId,
+                subcategoriesId,
+                mediaId,
+            },
+        };
 
-    return option;
-  }
+        return options;
+    }
+
+    optionsMinMaxPrice({
+        category,
+        subcategory,
+    }: {
+        category: string;
+        subcategory: string;
+    }) {
+        const select: Prisma.ProductsSelect = {
+            price: true,
+            discount: true,
+            mainPrice: true,
+        };
+
+        const where: Prisma.ProductsWhereInput = {
+            Categories: { title: { equals: category, mode: "insensitive" } },
+            Subcategories: {
+                title: { equals: subcategory, mode: "insensitive" },
+            },
+        };
+
+        const option: Prisma.ProductsFindManyArgs = {
+            select,
+            where,
+        };
+
+        return option;
+    }
 }
 
 class ProductsService {
-  private deleteData = new MainService().delete;
-  private productsOptions = new ProductsOptions();
-  private ratingAvg = new ReviewsService().ratingAvg;
+    private deleteData = new MainService().delete;
+    private productsOptions = new ProductsOptions();
+    private ratingAvg = new ReviewsService().ratingAvg;
 
-  async getAllProducts(
-    query: QueryParameterTypes,
-    params?: { category: string; subcategory: string },
-  ) {
-    const options = await this.productsOptions.optionsGetAll(query, params);
+    async getAllProducts(
+        query: QueryParameterTypes,
+        params?: { category: string; subcategory: string }
+    ) {
+        const options = await this.productsOptions.optionsGetAll(query, params);
+        let sqlProducts = `
+		SELECT *
+		FROM (
+			SELECT products.*, reviews."rating", media."img"
+			FROM "Products" AS products
+			INNER JOIN (
+				SELECT "id"
+				FROM "Categories" AS insCategories
+				WHERE insCategories."title" ${query.category !== undefined ? `ILIKE '%${query.category}%'` : "IS NOT NULL"}
+			) AS categories ON categories.id = products."categoriesId"
+			INNER JOIN (
+				SELECT "id"
+				FROM "Subcategories" as insSubcategories
+				WHERE insSubcategories."title" ${query.subcategory !== undefined ? `ILIKE '%${query.subcategory}%'` : "IS NOT NULL"}
+			) AS subcategories ON subcategories."id" = products."subcategoriesId"
+			LEFT JOIN (
+        		SELECT inMedia.*, inMedia.src AS "img"
+        		FROM "Media" AS inMedia
+    		) AS media ON media.id = products."mediaId"
+			LEFT JOIN (
+				SELECT "productsId",  ROUND(AVG("rating")) AS rating
+				FROM "Reviews" as insReviews
+				GROUP BY
+				"productsId"
+			) AS reviews ON reviews."productsId" = products."id"
+			ORDER BY ${query.sortBy === "rating" ? `reviews."rating" DESC NULLS LAST` : " NOT NULL"}
+        	LIMIT (
+                SELECT COUNT(*)
+                FROM "Products"
+				)
+		) 
+		`;
 
-    const products = await prismaClient.products.findMany(options);
+        if (query.search) {
+            sqlProducts += ` WHERE "title" ILIKE '%${query.search}%'`;
+        }
 
-    if (query.sortBy?.includes("rating")) {
-      const rating =
-        (await this.ratingAvg({ ...query, ...params }, options.where ?? {})) ??
-        [];
-      const ratingId = rating?.map((data) => data.productsId);
+        if (query.minPrice && query.maxPrice) {
+            sqlProducts += ` WHERE "mainPrice" BETWEEN ${query.minPrice} AND ${query.maxPrice}`;
+        }
 
-      products.sort((a, b) => {
-        const indexA = ratingId?.indexOf(a.id);
-        const indexB = ratingId?.indexOf(b.id);
+        if (query.id) {
+            sqlProducts += `WHERE id IN (${query.id.toString().replaceAll(",", ", ")})`;
+        }
 
-        if (indexA === -1 && indexB === -1) return 0;
-        if (indexA === -1) return 1;
-        if (indexB === -1) return -1;
+        if (query.sortBy !== "rating" && query.sort) {
+            sqlProducts += ` ORDER BY ${`"${query.sortBy === "price" ? "mainPrice" : query.sortBy}" ${query.sort.toUpperCase()}`}`;
+        }
+        if (query.limit) {
+            sqlProducts += ` LIMIT ${parseInt(query.limit)}`;
+        }
 
-        return indexB - indexA;
-      });
+        if (query.offset) {
+            sqlProducts += ` OFFSET ${parseInt(query.offset)}`;
+        }
+
+        const products =
+            await prismaClient.$queryRawUnsafe<Products[]>(sqlProducts);
+
+        // const products = await prismaClient.products.findMany(options);
+        const productCounts = await prismaClient.products.count({
+            where: options.where,
+        });
+        return { products, productCounts };
     }
 
-    const productCounts = await prismaClient.products.count({
-      where: options.where,
-    });
+    async getProduct(params: { productParam: string }) {
+        const sqlProduct = `
+        SELECT products.*, reviews."rating", media."img"
+        FROM "Products" AS products
+        LEFT JOIN (
+            SELECT "productsId",  ROUND(AVG("rating")) AS rating
+            FROM "Reviews" as insReviews
+            GROUP BY "productsId"
+        ) AS reviews ON reviews."productsId" = products."id"
+        LEFT JOIN (
+            SELECT inMedia.*, inMedia.src AS "img"
+            FROM "Media" AS inMedia
+        ) AS media ON media.id = products."mediaId"
+        WHERE ${!isNaN(Number(params.productParam)) ? `products."id" = ${+params.productParam}` : `products."title" ILIKE '%${params.productParam}%'`}
+        `;
 
-    return {
-      products,
-      productCounts,
-    };
-  }
+        const product =
+            await prismaClient.$queryRawUnsafe<Products[]>(sqlProduct);
 
-  async getProduct(params: { productParam: string }) {
-    const options = this.productsOptions.optionsGetOne(params);
+        // const options = this.productsOptions.optionsGetOne(params);
 
-    const product = await prismaClient.products.findFirst(options);
+        // const product = await prismaClient.products.findFirst(options);
 
-    return product;
-  }
+        return product.pop();
+    }
 
-  async updateProduct(inputData: ProductInput) {
-    const options = this.productsOptions.optionsUpdate(inputData);
+    async updateProduct(inputData: ProductsGetDTO) {
+        const options = this.productsOptions.optionsUpdate(inputData);
 
-    return prismaClient.products.update(options);
-  }
+        return prismaClient.products.update(options);
+    }
 
-  async createProduct(inputData: ProductInput) {
-    const options = this.productsOptions.optionsCreate(inputData);
+    async createProduct(inputData: ProductsGetDTO) {
+        const options = this.productsOptions.optionsCreate(inputData);
 
-    return prismaClient.products.create(options);
-  }
+        return prismaClient.products.create(options);
+    }
 
-  async minMaxPrice(params: { category: string; subcategory: string }) {
-    const options = this.productsOptions.optionsMinMaxPrice(params);
+    async minMaxPrice(params: { category: string; subcategory: string }) {
+        const options = this.productsOptions.optionsMinMaxPrice(params);
 
-    const priceList = await prismaClient.products.findMany(options);
+        const priceList = await prismaClient.products.findMany(options);
 
-    const minPrice = Math.min(...priceList.map((value) => value.mainPrice));
-    const maxPrice = Math.max(...priceList.map((value) => value.mainPrice));
+        const minPrice = Math.min(...priceList.map((value) => value.mainPrice));
+        const maxPrice = Math.max(...priceList.map((value) => value.mainPrice));
 
-    return { minPrice, maxPrice };
-  }
+        return { minPrice, maxPrice };
+    }
 
-  async deleteProducts(productsId: number | number[]) {
-    return await this.deleteData("Products", productsId);
-  }
+    async deleteProducts(productsId: number | number[]) {
+        return await this.deleteData("Products", productsId);
+    }
 }
 
 export default new ProductsService();

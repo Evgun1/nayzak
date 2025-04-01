@@ -1,81 +1,94 @@
-import { Context } from 'hono';
-import productsService from './products.service';
-import ProductsService from './products.service';
-import { ProductInput } from './interfaces/ProductInput';
-import getReqBody from '../tools/getReqBody';
-import { QueryParameterTypes } from '../utils/service/service.type';
+import { Context } from "hono";
+import prismaClient from "../prismaClient";
+import { Prisma } from "@prisma/client";
+import productsService from "./products.service";
+import ProductsService from "./products.service";
+import { ProductsGetDTO } from "./interfaces/ProductsGetDTO";
+import getReqBody from "../tools/getReqBody";
+import { QueryParameterTypes } from "../utils/service/service.type";
+import { log } from "console";
+import { json } from "stream/consumers";
+import clearCache from "../utils/clear-cache/ClearCache";
 
 class ProductsController {
-	async getAll(c: Context) {
-		const inputData = c.req.query() as QueryParameterTypes;
+    async getAll(c: Context) {
+        const inputData = c.req.query() as QueryParameterTypes;
 
-		try {
-			const { products, productCounts } =
-				await productsService.getAllProducts(inputData);
-			c.res.headers.append('X-Total-Count', productCounts.toString());
-			return c.json(products);
-		} catch (error) {
-			console.log(error);
-		}
-	}
+        try {
+            const { products, productCounts } =
+                await productsService.getAllProducts(inputData);
 
-	async getAllByParams(c: Context) {
-		const query = c.req.query() as QueryParameterTypes;
-		const params = c.req.param() as {
-			category: string;
-			subcategory: string;
-		};
+            return c.json(products, 200, {
+                "X-Total-Count": productCounts.toString(),
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-		const inputData = {
-			...query,
-		} as QueryParameterTypes;
+    async getAllByParams(c: Context) {
+        const query = c.req.query() as QueryParameterTypes;
+        const params = c.req.param() as {
+            category: string;
+            subcategory: string;
+        };
 
-		const { products, productCounts } = await productsService.getAllProducts(
-			query,
-			params
-		);
+        const inputData = {
+            ...query,
+            ...params,
+        } as QueryParameterTypes;
 
-		c.res.headers.append('X-Total-Count', productCounts.toString());
-		return c.json(products);
-	}
+        const { products, productCounts } =
+            await productsService.getAllProducts(inputData);
 
-	async getProduct(c: Context) {
-		const params = c.req.param() as { productParam: string };
+        c.res.headers.append("X-Total-Count", productCounts.toString());
+        return c.json(products);
+    }
 
-		const product = await productsService.getProduct(params);
-		return c.json(product);
-	}
+    async getProduct(c: Context) {
+        const params = c.req.param() as { productParam: string };
 
-	async getMinMaxPrice(c: Context) {
-		const param = c.req.param() as { category: string; subcategory: string };
+        const product = await productsService.getProduct(params);
+        return c.json(product);
+    }
 
-		const { maxPrice, minPrice } = await productsService.minMaxPrice(param);
+    async getMinMaxPrice(c: Context) {
+        const param = c.req.param() as {
+            category: string;
+            subcategory: string;
+        };
 
-		return c.json({ minPrice, maxPrice });
-	}
+        const { maxPrice, minPrice } = await productsService.minMaxPrice(param);
 
-	async create(c: Context) {
-		const inputData = await c.req.json();
-		const product = await ProductsService.createProduct(inputData);
+        return c.json({ minPrice, maxPrice });
+    }
 
-		return c.json(product);
-	}
+    async create(c: Context) {
+        const inputData = await c.req.json();
 
-	async change(c: Context) {
-		const inputData = (await c.req.json()) as ProductInput;
+        const product = await ProductsService.createProduct(inputData);
 
-		const product = await ProductsService.updateProduct(inputData);
+        await clearCache("products");
+        return c.json(product);
+    }
 
-		return c.json(product);
-	}
+    async change(c: Context) {
+        const inputData = (await c.req.json()) as ProductsGetDTO;
 
-	async delete(c: Context) {
-		const productsId = (await getReqBody(c)) as number | number[];
+        const product = await ProductsService.updateProduct(inputData);
 
-		const id = await productsService.deleteProducts(productsId);
+        await clearCache("products");
+        return c.json(product);
+    }
 
-		return c.json(id);
-	}
+    async delete(c: Context) {
+        const productsId = (await getReqBody(c)) as number | number[];
+
+        const id = await productsService.deleteProducts(productsId);
+
+        await clearCache("products");
+        return c.json(id);
+    }
 }
 
 export default new ProductsController();

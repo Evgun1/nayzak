@@ -1,35 +1,61 @@
-import { appFetchPost, appFetchPut } from '.';
-import { CustomerItem } from '@/lib/redux/store/customer/customer';
+import { CustomerItem } from "@/types/customer.types";
+import { appFetchGet, appFetchPost, appFetchPut } from ".";
+
+const tag = "customers";
+
+export const appCustomersGet = async (searchParams?: URLSearchParams) => {
+    const pathname = `customers`;
+    const { response } = await appFetchGet<CustomerItem[]>({
+        tag,
+        pathname,
+        searchParams,
+    });
+
+    return response;
+};
+
+export const appCustomersOneGet = async (customersId: string) => {
+    const pathname = `customers/${customersId}`;
+    const { response } = await appFetchGet<CustomerItem>({
+        tag,
+        pathname,
+    });
+
+    return response;
+};
 
 export const appCustomersPost = async (formData: FormData) => {
-	const pathname = 'customers';
+    const pathname = "customers";
 
-	const { response, totalCount } = await appFetchPost<CustomerItem>({
-		pathname,
-		sendData: formData,
-	});
+    const { response, totalCount } = await appFetchPost<CustomerItem>({
+        tag,
+        pathname,
+        sendData: formData,
+    });
 
-	return response;
+    return response;
 };
 
 export const appCustomersPut = async (formData: FormData) => {
-	const pathname = 'customers/update';
+    const pathname = "customers/update";
 
-	const { response } = await appFetchPut<CustomerItem>({
-		pathname,
-		putData: formData,
-	});
+    const { response } = await appFetchPut<CustomerItem>({
+        tag,
+        pathname,
+        putData: formData,
+    });
 
-	return response;
+    return response;
 };
 
 export const appCustomersInitPost = async (token: string) => {
-	const pathname = 'customers/init';
+    const pathname = "customers/init";
 
-	const { response } = await appFetchPost<CustomerItem>({
-		pathname,
-		authorization: token,
-	});
+    const { response } = await appFetchPost<CustomerItem>({
+        tag,
+        pathname,
+        authorization: token,
+    });
 
-	return response;
+    return response;
 };

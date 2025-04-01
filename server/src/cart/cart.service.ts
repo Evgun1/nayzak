@@ -1,78 +1,79 @@
-import prismaClient from '../prismaClient';
-import { CartGetDTO } from './interfaces/CartGetInput';
-import { CartDTO, CartModel } from './cart.dto';
-import { MainService } from '../utils/service/main.service';
-import { QueryParameterTypes } from '../utils/service/service.type';
+import prismaClient from "../prismaClient";
+import { CartGetDTO } from "./interfaces/CartGetInput";
+import { CartDTO, CartModel } from "./cart.dto";
+import { MainService } from "../utils/service/main.service";
+import { QueryParameterTypes } from "../utils/service/service.type";
 
 class CartService {
-	private mainService = new MainService();
-	// private mainService = new MainService();
-	// private queryParam = this.mainService.queryParams;
+    private mainService = new MainService();
+    // private mainService = new MainService();
+    // private queryParam = this.mainService.queryParams;
 
-	async getAll(queryParam: QueryParameterTypes) {
-		const cart = await prismaClient.cart.findMany({});
-		const totalCount = await prismaClient.cart.count({});
+    async getAll(queryParam: QueryParameterTypes) {
+        const cart = await prismaClient.cart.findMany({});
+        const totalCount = await prismaClient.cart.count({});
 
-		return { cart, totalCount };
-	}
+        return { cart, totalCount };
+    }
 
-	async saveCart(inputData: CartGetDTO) {
-		const { customerID, product } = inputData;
+    async saveCart(inputData: CartGetDTO) {
+        const { customerID, product } = inputData;
 
-		const saveCart = await prismaClient.cart.create({
-			data: {
-				productsId: +product.productID,
-				amount: +product.amount,
-				customersId: customerID,
-			},
-		});
+        const saveCart = await prismaClient.cart.create({
+            data: {
+                productsId: +product.productID,
+                amount: +product.amount,
+                customersId: customerID,
+            },
+        });
 
-		const cartDTO = new CartDTO({
-			amount: saveCart.amount,
-			productID: saveCart.productsId,
-			id: saveCart.id,
-		});
-		return cartDTO;
-	}
+        const cartDTO = new CartDTO({
+            amount: saveCart.amount,
+            productID: saveCart.productsId,
+            id: saveCart.id,
+        });
 
-	async updateCart({ product, customerID }: CartGetDTO) {
-		const updateCart = await prismaClient.cart.update({
-			where: {
-				id: +product.id,
-				productsId: +product.productID,
-				customersId: customerID,
-			},
-			data: { amount: +product.amount },
-		});
+        return cartDTO;
+    }
 
-		return new CartDTO({
-			id: updateCart.id,
-			amount: updateCart.amount,
-			productID: updateCart.productsId,
-		});
-	}
+    async updateCart({ product, customerID }: CartGetDTO) {
+        const updateCart = await prismaClient.cart.update({
+            where: {
+                id: +product.id,
+                productsId: +product.productID,
+                customersId: customerID,
+            },
+            data: { amount: +product.amount },
+        });
 
-	async removeCart(id: number | number[]) {
-		return await this.mainService.delete('Cart', id);
-	}
+        return new CartDTO({
+            id: updateCart.id,
+            amount: updateCart.amount,
+            productID: updateCart.productsId,
+        });
+    }
 
-	async init(customerID: number) {
-		const cart = await prismaClient.cart.findMany({
-			where: { customersId: customerID },
-		});
+    async removeCart(id: number | number[]) {
+        return await this.mainService.delete("Cart", id);
+    }
 
-		const cartDTO: CartModel[] = [];
+    async init(customerID: number) {
+        const cart = await prismaClient.cart.findMany({
+            where: { customersId: customerID },
+        });
 
-		cart.map((product) =>
-			cartDTO.push({
-				id: product.id,
-				amount: product.amount,
-				productID: product.productsId,
-			})
-		);
+        const cartDTO: CartModel[] = [];
 
-		return cartDTO;
-	}
+        cart.map((product) =>
+            cartDTO.push({
+                id: product.id,
+                amount: product.amount,
+                productID: product.productsId,
+            })
+        );
+
+        return cartDTO;
+    }
 }
 
 export default new CartService();

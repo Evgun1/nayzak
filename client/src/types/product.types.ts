@@ -11,6 +11,8 @@ export interface ProductItem {
 	categoriesId: number;
 	subcategoriesId: number;
 	mediaId: number;
+	rating?: string;
+	img?: string;
 
 	amount?: number;
 }

@@ -7,11 +7,16 @@ const wishlistRouter = new Hono();
 
 wishlistRouter.get("/", wishlistController.getAll);
 wishlistRouter.use("/init", WishlistController.initWishlists);
-wishlistRouter.post("/", WishlistController.saveWishlists);
+wishlistRouter.post(
+    "/",
+
+    wishlistMiddleware.upload,
+    WishlistController.saveWishlists
+);
 wishlistRouter.delete(
-  "/",
-  wishlistMiddleware.remove,
-  WishlistController.removeWishlists,
+    "/",
+    wishlistMiddleware.remove,
+    WishlistController.removeWishlists
 );
 
 export default wishlistRouter;

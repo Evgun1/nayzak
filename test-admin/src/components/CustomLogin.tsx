@@ -1,6 +1,6 @@
-import { Login, TextInput, PasswordInput, useLogin, Form } from "react-admin";
-import { useNotify } from "react-admin";
-import { FieldValues } from "react-hook-form";
+import { Login, TextInput, PasswordInput, useLogin, Form } from 'react-admin';
+import { useNotify } from 'react-admin';
+import { FieldValues } from 'react-hook-form';
 
 const CustomLogin = () => {
 	const login = useLogin();
@@ -15,7 +15,7 @@ const CustomLogin = () => {
 		try {
 			await login({ email, password });
 		} catch (error) {
-			notify("Invalid email or password", { type: "warning" });
+			notify('Invalid email or password', { type: 'warning' });
 		}
 	};
 
@@ -24,7 +24,7 @@ const CustomLogin = () => {
 			<Form onSubmit={handleLogin}>
 				<TextInput source="email" />
 				<PasswordInput source="password" />
-				<button type={"submit"}>Sing in</button>
+				<button type={'submit'}>Sing in</button>
 			</Form>
 		</Login>
 	);

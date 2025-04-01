@@ -7,20 +7,20 @@ import customValidator from '../validator/customValidator';
 const subcategoriesRoute = new Hono();
 
 const schemaSubcategoriesCreate = new Map()
-    .set('title', validation().subcategories.title)
-    .set('categoriesId', validation().subcategories.categoriesId);
+	.set('title', validation().subcategories.title)
+	.set('categoriesId', validation().subcategories.categoriesId);
 
 subcategoriesRoute.get('/', subcategoriesController.getAll);
 subcategoriesRoute.get('/:subcategoriesParam', subcategoriesController.getOne);
 subcategoriesRoute.get(
-    '/category/:categoryName',
-    subcategoriesController.getSubcategoryByCategory
+	'/category/:categoryName',
+	subcategoriesController.getSubcategoryByCategory
 );
 subcategoriesRoute.post(
-    '/',
-    customValidator('body', schemaSubcategoriesCreate),
-    mainMiddleware.checkAdmin,
-    subcategoriesController.create
+	'/',
+	customValidator('body', schemaSubcategoriesCreate),
+	mainMiddleware.checkAdmin,
+	subcategoriesController.create
 );
 
 export default subcategoriesRoute;

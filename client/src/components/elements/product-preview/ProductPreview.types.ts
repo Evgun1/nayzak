@@ -1,12 +1,11 @@
-import { ProductItem } from '@/types/product.types';
-import { ReviewItem } from '@/types/reviews.types';
+import { ProductItem } from "@/types/product.types";
+import { ReviewItem } from "@/types/reviews.types";
 
 export type ProductPreviewTypes = {
-	product: ProductItem;
-	src: string;
-	reviewsArray: ReviewItem[];
-	href: string;
-	rating?: boolean;
-	style?: string;
-	stylePrice?: string;
+    className?: string;
+    product: ProductItem;
+    showIcon?: boolean;
+    // reviewsArray: ReviewItem[];
+    rating?: boolean;
+    stylePrice?: string;
 };

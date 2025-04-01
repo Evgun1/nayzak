@@ -1,17 +1,12 @@
-.header {
-  display: grid;
-  gap: 12px;
-  align-items: center;
-  background: no-repeat url("../../../../../public/PasteImage.png");
-  background-size: cover;
-  width: 100%;
-  min-height: 400px;
-  height: 100%;
-
-  &__block {
-    display: grid;
-    gap: 12px;
-    margin: auto;
-    max-width: 600px;
-  }
+.subcategory-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    background: no-repeat url("../../../../../public/PasteImage.png");
+    background-size: cover;
+    width: 100%;
+    min-height: 400px;
+    height: 100%;
 }

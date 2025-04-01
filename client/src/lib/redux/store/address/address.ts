@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface AddressData {
-	id?: number;
+	id: number;
 	city: string;
 	street: string;
 	postalCode: number;

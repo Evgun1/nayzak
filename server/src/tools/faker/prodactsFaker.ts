@@ -14,6 +14,11 @@ async function productsFaker() {
 	const resultSubcategories = await prismaClient.subcategories.findMany({
 		select: { id: true, categoriesId: true },
 	});
+
+	const resultCategories = await prismaClient.categories.findMany({
+		select: { id: true },
+	});
+
 	const resultBrands = await prismaClient.brands.findMany({
 		select: { id: true },
 	});
@@ -22,11 +27,11 @@ async function productsFaker() {
 		select: { id: true },
 	});
 
-	const categoriesId = resultSubcategories.map((value) => value.categoriesId);
 	const subcategoriesId = resultSubcategories.map((value) => value.id);
+	const categoriesId = resultCategories.map((value) => value.id);
 	const brandsId = resultBrands.map((value) => value.id);
 
-	for (let index = 1; index <= 100; index++) {
+	for (let index = 1; index <= 300; index++) {
 		const title = faker.commerce.productName();
 		const description = faker.commerce.productDescription();
 

@@ -1,8 +1,9 @@
-import { Context } from 'hono';
-import categoriesService from './categories.service';
-import getReqBody from '../tools/getReqBody';
-import { CategoriesGetParam, CategoryGetDTO } from './categories.type';
-import { QueryParameterTypes } from '../utils/service/service.type';
+import { Context } from "hono";
+import categoriesService from "./categories.service";
+import getReqBody from "../tools/getReqBody";
+import { CategoriesGetParam, CategoryGetDTO } from "./categories.type";
+import { QueryParameterTypes } from "../utils/service/service.type";
+import clearCache from "../utils/clear-cache/clearCache";
 
 class CategoriesController {
     async getAll(c: Context) {
@@ -11,7 +12,7 @@ class CategoriesController {
         const { categories, categoriesCounts } =
             await categoriesService.getAllCategories(inputQuery);
 
-        c.res.headers.append('X-Total-Count', categoriesCounts.toString());
+        c.res.headers.append("X-Total-Count", categoriesCounts.toString());
         return c.json(categories);
     }
 
@@ -24,8 +25,12 @@ class CategoriesController {
 
     async create(c: Context) {
         const body = (await getReqBody(c)) as CategoryGetDTO;
+
+        console.log(body);
+
         const category = await categoriesService.create(body);
 
+        await clearCache("categories");
         return c.json(category);
     }
 
@@ -38,6 +43,7 @@ class CategoriesController {
 
         const category = await categoriesService.change(categoryDTO);
 
+        await clearCache("categories");
         return c.json(category);
     }
 }

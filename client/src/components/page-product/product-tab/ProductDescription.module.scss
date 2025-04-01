@@ -1,0 +1,32 @@
+.description {
+	text-align: start;
+	display: grid;
+	gap: 32px;
+	&__info {
+		&-header {
+			margin-bottom: 24px;
+		}
+	}
+
+	&__list {
+		max-width: max-content;
+
+		&-item {
+			position: relative;
+			padding-left: 21px;
+			&::before {
+				position: absolute;
+				content: '';
+				left: 0;
+				top: 50%;
+				transform: translate(0, -50%);
+				max-width: 5px;
+				width: 100%;
+				max-height: 5px;
+				height: 100%;
+				border-radius: 100%;
+				background: var(--black-900);
+			}
+		}
+	}
+}

@@ -1,156 +1,174 @@
 import {
-	appCartDelete,
-	appCartInitPost,
-	appCartPost,
-	appCartPut,
-} from '@/utils/http/cart';
-import { AppDispatch, RootState } from '../../store';
-import { cartAction, CartItemData } from './cart';
-import { useCookieGet } from '@/hooks/useCookie';
-import { useEffect, useState } from 'react';
+    appCartDelete,
+    appCartInitPost,
+    appCartPost,
+    appCartPut,
+} from "@/utils/http/cart";
+import { AppDispatch, RootState } from "../../store";
+import { cartAction, CartItemData } from "./cart";
+import { useCookieGet } from "@/hooks/useCookie";
+import { notificationAction } from "../notification/notification";
+import NotificationCart from "@/components/elements/notification/NotificationCart";
+import { appOneProductGet, appProductsGet } from "@/utils/http/products";
+import { useState } from "react";
 
 export function initCart() {
-	return async function (dispatch: AppDispatch, getState: () => RootState) {
-		const customerID = getState().customer.customerData?.id;
-		if (!customerID) return;
+    return async function (dispatch: AppDispatch, getState: () => RootState) {
+        const customerID = getState().customer.customerData?.id;
+        if (!customerID) return;
 
-		const cartProducts = await appCartInitPost(customerID);
-		if (!cartProducts) return;
+        const cartProducts = await appCartInitPost(customerID);
+        if (!cartProducts) return;
 
-		dispatch(cartAction.saveCart(cartProducts));
-	};
+        dispatch(cartAction.saveCart(cartProducts));
+    };
 }
 
 export function updateCart(currentProduct: CartItemData) {
-	return async function (dispatch: AppDispatch, getState: () => RootState) {
-		const customerID = getState().customer.customerData?.id;
-		if (!customerID) return;
+    return async function (dispatch: AppDispatch, getState: () => RootState) {
+        const customerID = getState().customer.customerData?.id;
+        if (!customerID) return;
 
-		const productsCartArray = [...getState().cart.productsArray];
+        const productsCartArray = [...getState().cart.productsArray];
 
-		const productIndex = productsCartArray.findIndex(
-			({ productID }) => productID === currentProduct.productID
-		);
+        const productIndex = productsCartArray.findIndex(
+            ({ productID }) => productID === currentProduct.productID
+        );
 
-		if (productIndex === -1) {
-			const saveProduct = await appCartPost({
-				product: currentProduct,
-				customerID,
-			});
+        if (productIndex === -1) {
+            const saveProduct = await appCartPost({
+                product: currentProduct,
+                customerID,
+            });
 
-			if (!saveProduct) return;
-			productsCartArray.push(
-				...[
-					{
-						id: saveProduct.id,
-						productID: saveProduct.productID,
-						amount: saveProduct.amount,
-					},
-				]
-			);
-		} else {
-			currentProduct.amount += productsCartArray[productIndex].amount;
+            if (!saveProduct) return;
 
-			const cartId = productsCartArray
-				.filter((item) => item.productID === currentProduct.productID)
-				.map((data) => data.id);
+            const product = await appOneProductGet(saveProduct.productID);
+            dispatch(
+                notificationAction.toggle(
+                    NotificationCart({ product: product })
+                )
+            );
 
-			const updateProduct = await appCartPut(
-				{
-					amount: currentProduct.amount,
-					productID: currentProduct.productID,
-					id: cartId[0],
-				},
-				customerID
-			);
+            productsCartArray.push(
+                ...[
+                    {
+                        id: saveProduct.id,
+                        productID: saveProduct.productID,
+                        amount: saveProduct.amount,
+                    },
+                ]
+            );
+        } else {
+            currentProduct.amount += productsCartArray[productIndex].amount;
 
-			if (!updateProduct) return;
+            const cartId = productsCartArray
+                .filter((item) => item.productID === currentProduct.productID)
+                .map((data) => data.id);
 
-			productsCartArray[productIndex] = {
-				id: updateProduct.id,
-				productID: updateProduct.productID,
-				amount: updateProduct.amount,
-			};
-		}
+            const updateProduct = await appCartPut(
+                {
+                    amount: currentProduct.amount,
+                    productID: currentProduct.productID,
+                    id: cartId[0],
+                },
+                customerID
+            );
 
-		dispatch(cartAction.saveCart(productsCartArray));
-	};
+            if (!updateProduct) return;
+            const product = await appOneProductGet(updateProduct.productID);
+
+            dispatch(
+                notificationAction.toggle(
+                    NotificationCart({ product: product })
+                )
+            );
+
+            productsCartArray[productIndex] = {
+                id: updateProduct.id,
+                productID: updateProduct.productID,
+                amount: updateProduct.amount,
+            };
+        }
+
+        dispatch(cartAction.saveCart(productsCartArray));
+    };
 }
 
 export function changeAmount(currentProduct: CartItemData) {
-	return async function (dispatch: AppDispatch, getState: () => RootState) {
-		const customerID = getState().customer.customerData?.id;
-		if (!customerID) return;
+    return async function (dispatch: AppDispatch, getState: () => RootState) {
+        const customerID = getState().customer.customerData?.id;
+        if (!customerID) return;
 
-		const productsArray = [...getState().cart.productsArray];
+        const productsArray = [...getState().cart.productsArray];
 
-		const userToken = useCookieGet('user-token');
-		if (!userToken) return;
+        const userToken = useCookieGet("user-token");
+        if (!userToken) return;
 
-		const productIndex = productsArray.findIndex(
-			({ productID }) => productID === currentProduct.productID
-		);
-		if (productIndex === -1) return;
+        const productIndex = productsArray.findIndex(
+            ({ productID }) => productID === currentProduct.productID
+        );
+        if (productIndex === -1) return;
 
-		const cartId = productsArray
-			.filter((item) => item.productID === currentProduct.productID)
-			.map((data) => data.id);
+        const cartId = productsArray
+            .filter((item) => item.productID === currentProduct.productID)
+            .map((data) => data.id);
 
-		const cartProduct = await appCartPut(
-			{
-				amount: currentProduct.amount,
-				productID: currentProduct.productID,
-				id: cartId[0],
-			},
-			customerID
-		);
+        const cartProduct = await appCartPut(
+            {
+                amount: currentProduct.amount,
+                productID: currentProduct.productID,
+                id: cartId[0],
+            },
+            customerID
+        );
 
-		if (!cartProduct) return;
+        if (!cartProduct) return;
 
-		productsArray[productIndex] = {
-			amount: cartProduct.amount,
-			productID: cartProduct.productID,
-			id: cartProduct.id,
-		};
+        productsArray[productIndex] = {
+            amount: cartProduct.amount,
+            productID: cartProduct.productID,
+            id: cartProduct.id,
+        };
 
-		dispatch(cartAction.saveCart(productsArray));
-	};
+        dispatch(cartAction.saveCart(productsArray));
+    };
 }
 
 export function removeCart(productId: number | number[]) {
-	return async function (dispatch: AppDispatch, getState: () => RootState) {
-		const cart = getState().cart.productsArray.map((cart) => cart);
-		const suggestRemoveCartMap = new Map<
-			boolean,
-			(data: any) => Promise<void>
-		>()
-			.set(true, async (data: number[]) => {
-				const cartId = cart
-					.filter((val) => data[cart.indexOf(val)] === val.productID)
-					.map((data) => data.id);
+    return async function (dispatch: AppDispatch, getState: () => RootState) {
+        const cart = getState().cart.productsArray.map((cart) => cart);
+        const suggestRemoveCartMap = new Map<
+            boolean,
+            (data: any) => Promise<void>
+        >()
+            .set(true, async (data: number[]) => {
+                const cartId = cart
+                    .filter((val) => data[cart.indexOf(val)] === val.productID)
+                    .map((data) => data.id);
 
-				await appCartDelete(cartId as number[]);
-				dispatch(cartAction.removeCart(cartId as number[]));
-			})
-			.set(false, async (data: number) => {
-				const id = cart
-					.filter((cart) => cart.productID === productId)
-					.map((product) => product.id)
-					.pop();
-				if (!id) return;
+                await appCartDelete(cartId as number[]);
+                dispatch(cartAction.removeCart(cartId as number[]));
+            })
+            .set(false, async (data: number) => {
+                const id = cart
+                    .filter((cart) => cart.productID === productId)
+                    .map((product) => product.id)
+                    .pop();
+                if (!id) return;
 
-				await appCartDelete(id);
-				dispatch(cartAction.removeCart(id));
-			});
+                await appCartDelete(id);
+                dispatch(cartAction.removeCart(id));
+            });
 
-		try {
-			for (const [key, value] of suggestRemoveCartMap.entries()) {
-				if (key === Array.isArray(productId)) {
-					await value(productId);
-				}
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
+        try {
+            for (const [key, value] of suggestRemoveCartMap.entries()) {
+                if (key === Array.isArray(productId)) {
+                    await value(productId);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 }

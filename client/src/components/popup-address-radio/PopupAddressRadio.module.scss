@@ -1,0 +1,38 @@
+// .popup {
+// 	&--address {
+// 		&-form {
+// 			width: 700px;
+// 		}
+// 	}
+// }
+
+.popup-address-radio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-bottom: 20px;
+}
+
+.address-radio-preview {
+    display: grid;
+    gap: 15px;
+    padding: 10px;
+    border: 1px solid var(--black-300);
+    min-width: 200px;
+
+    &__info {
+        display: flex;
+        gap: 5px;
+        flex-direction: column;
+    }
+}
+
+// .address {
+//   &--form {
+//     &-inputs {
+//       display: grid;
+//       grid-template-columns: repeat(2, 1fr);
+//       gap: 10px;
+//     }
+//   }
+// }

@@ -1,5 +1,6 @@
-.products {
-  &--grid {
+.products-grid {
     width: 100%;
-  }
+    &__loader {
+        text-align: start;
+    }
 }

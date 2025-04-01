@@ -1,11 +1,11 @@
 export interface CartProductData {
-  id: string;
-  productID: string;
-  amount: string;
-  [key: string]: any;
+	id: string;
+	productID: string;
+	amount: string;
+	[key: string]: any;
 }
 
 export interface CartGetDTO {
-  product: CartProductData;
-  customerID: number;
+	product: CartProductData;
+	customerID: number;
 }

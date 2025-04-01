@@ -243,12 +243,15 @@ const IconsSprite: FC = () => {
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
-					fill="none"
+					// fill="none"
+					// fill="currentColor"
+
 					xmlns="http://www.w3.org/2000/svg"
 				>
 					<path
 						d="M12.3245 17.6461L6.15254 20.8911L7.33154 14.0181L2.33154 9.15107L9.23154 8.15107L12.3175 1.89807L15.4035 8.15107L22.3035 9.15107L17.3035 14.0181L18.4825 20.8911L12.3245 17.6461Z"
 						stroke="currentColor"
+
 						strokeWidth="1.5"
 						strokeLinecap="round"
 						strokeLinejoin="round"
@@ -1253,7 +1256,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.FIVE_COLUMS}
+					id={IconsIdList.FIVE_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
@@ -1270,7 +1273,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.FOUR_COLUMS}
+					id={IconsIdList.FOUR_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
@@ -1287,7 +1290,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.THREE_COLUMS}
+					id={IconsIdList.THREE_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
@@ -1304,7 +1307,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.TWO_COLUMS}
+					id={IconsIdList.TWO_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
@@ -1321,7 +1324,7 @@ const IconsSprite: FC = () => {
 			</defs>
 			<defs>
 				<symbol
-					id={IconsIdList.LIST_COLUMS}
+					id={IconsIdList.LIST_COLUMNS}
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"

@@ -1,90 +1,61 @@
-'use client';
+"use server";
 
-import { ProductItem } from '@/types/product.types';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import ProductPreviewDefault from "@/components/elements/product-preview/product-preview-default/ProductsPreviewDefault";
+import classes from "./ProductsSwiper.module.scss";
 
-// import "./SwiperCustom.scss";
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import classes from './ProductsSwiper.module.scss';
-import DisplayIcon from '@/components/elements/icons/displayIcon';
-import IconsIdList from '@/components/elements/icons/IconsIdList';
-import { useEffect, useState } from 'react';
-import { appProductsGet } from '@/utils/http/products';
-import { useSearchParams } from 'next/navigation';
-import ProductPreview from '@/components/elements/product-preview/ProductPreview';
-// import { useFetchAllProducts } from "@/hooks/fetchProducts";
+import { appProductsGet } from "@/utils/http/products";
 
-const ProductsSwiper = () => {
-	const [productsData, setProductsData] = useState<ProductItem[]>();
+import { ReactElement } from "react";
+import dynamic from "next/dynamic";
 
-	const searchParams = useSearchParams();
+const ProductsSwiper = async () => {
+    const urlSearchParams = new URLSearchParams({
+        limit: "8",
+        sortBy: "createdAt",
+        sort: "DESC",
+    });
+    const { products } = await appProductsGet({
+        searchParams: urlSearchParams,
+    });
 
-	useEffect(() => {
-		(async () => {
-			const urlSearchParams = new URLSearchParams({ limit: '8' });
+    const SwiperComponentDynamic = dynamic(() => import("./swiper/Swiper"), {
+        ssr: true,
+        loading: () => (
+            <div className={classes["loading"]}>
+                <div className={classes["loading__spinner"]}></div>
+            </div>
+        ),
+    });
 
-			const { products } = await appProductsGet({
-				searchParams: urlSearchParams,
-			});
-			setProductsData(products);
-		})();
-	}, [searchParams]);
+    // const productsArr: ReactElement[] = [];
 
-	return (
-		<div className={`container  ${classes.wrapper}`}>
-			{productsData && (
-				<Swiper
-					modules={[Navigation, Pagination]}
-					spaceBetween={32}
-					slidesPerView={4}
-					pagination={{
-						el: '.swiper-custom--pagnation',
-						bulletClass: classes['swiper-custom--bullet'],
-						bulletActiveClass: classes['swiper-custom--bullet-action'],
-					}}
-					navigation={{
-						prevEl: '.swiper-arrow-left',
-						nextEl: '.swiper-arrow-right',
-					}}
-					className={classes['swiper-custom']}
-				>
-					<div className={classes['swiper-head']}>
-						<div className={classes.wrapper__title}>
-							<h5>Latest Arrivals</h5>
-						</div>
-						<div className={classes['swiper-controls']}>
-							<button
-								className={` ${classes['swiper-custom--navigation-btn']} swiper-arrow-left`}
-							>
-								<DisplayIcon iconName={IconsIdList.ARROW_LEFT} />
-							</button>
-							<ul
-								className={`${classes['swiper-custom--pagination']} swiper-custom--pagnation`}
-							></ul>
-							<button
-								className={` ${classes['swiper-custom--navigation-btn']} swiper-arrow-right`}
-							>
-								<DisplayIcon iconName={IconsIdList.ARROW_RIGHT} />
-							</button>
-						</div>
-					</div>
-					{productsData.map((product) => (
-						<SwiperSlide key={product.id}>
-							<ProductPreview
-								product={product}
-								style={classes['products-carusel--card']}
-							>
-								<ProductPreview.Default />
-							</ProductPreview>
-						</SwiperSlide>
-					))}
-				</Swiper>
-			)}
-		</div>
-	);
+    // productsArr.push(
+    //     ...products.map((product, i) => (
+    //         <ProductPreviewDefault
+    //             key={i}
+    //             showIcon
+    //             className={classes["products-swiper__product"]}
+    //             product={product}
+    //         />
+    //     ))
+    // );
+
+    return (
+        <div className='container'>
+            <div className={classes["products-swiper"]}>
+                <SwiperComponentDynamic label='Latest Arrivals'>
+                    {products.map((product, i) => (
+                        <ProductPreviewDefault
+                            key={i}
+                            showIcon
+                            className={classes["products-swiper__product"]}
+                            product={product}
+                        />
+                    ))}
+                </SwiperComponentDynamic>
+            </div>
+        </div>
+    );
 };
 
 export default ProductsSwiper;
