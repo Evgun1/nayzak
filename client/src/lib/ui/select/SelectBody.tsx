@@ -21,7 +21,6 @@ const SelectBody: FC<{ children: ReactNode }> = (props) => {
     const { itemKey, addDefaultLabel } = useSelect();
     const [currentChildren, setCurrentChildren] = useState<ReactNode>();
 
-
     const childrenRecursion = useCallback(
         (children: ReactNode): ReactNode => {
             return React.Children.map(children, (child) => {
