@@ -5,7 +5,7 @@ const BASE_URL = "http://localhost:3030";
 
 type AppFetchProps = {
     pathname: string;
-    searchParams?: URLSearchParams;
+    searchParams?: URLSearchParams | string;
     init: RequestInit;
     customError?: React.ReactNode;
 };
@@ -72,7 +72,7 @@ const appFetch = async <T>({
 type AppGetFetch = {
     tag: keyof TagsItem;
     pathname: string;
-    searchParams?: URLSearchParams;
+    searchParams?: URLSearchParams | string;
     authorization?: string;
 };
 

@@ -37,53 +37,6 @@ const DropDownComponent: FC<DropDownProps> = (
     const generateId = useId().replaceAll(":", "");
     const dropDownId = `drop-down__${generateId}`;
 
-    // const btnClickHandler: EventListener = (event) => {
-    //     const target = event.target as HTMLElement;
-    //     const wrapperRefId = wrapperRef?.current?.id.replaceAll(":", "");
-
-    //     if (!target) return;
-
-    //     if (childrenRef.current) {
-    //         const childrenRefId = childrenRef.current.id;
-    //         const currentWrapper = target.closest(`#${childrenRefId}`);
-
-    //         if (currentWrapper) return;
-    //     }
-
-    //     const closestBtn = target.closest(`#${wrapperRefId}`);
-
-    //     if (event.type === "mouseenter" && closestBtn) {
-    //         setShowElements((prev) => !prev);
-    //     }
-    //     if (event.type === "mouseleave") {
-    //         setShowElements(false);
-    //     }
-
-    //     if (event.type === "click") {
-    //         if (closestBtn) {
-    //             setShowElements((prev) => !prev);
-    //         } else {
-    //             setShowElements((prev) => (prev ? !prev : prev));
-    //         }
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     if (typeProperty === "mouseenter") {
-    //         document
-    //             .querySelectorAll(`#${wrapperRef.current?.id}`)
-    //             .forEach((val) => {
-    //                 val?.addEventListener("mouseenter", btnClickHandler);
-    //                 val?.addEventListener("mouseleave", btnClickHandler);
-    //             });
-    //     } else {
-    //         document.addEventListener(typeProperty, btnClickHandler);
-    //     }
-
-    //     return () =>
-    //         document.removeEventListener(typeProperty, btnClickHandler);
-    // }, [typeProperty]);
-
     function childrenRecursion(children: ReactNode): ReactNode {
         return React.Children.map(children, (child) => {
             if (!React.isValidElement(child)) return;
@@ -119,7 +72,7 @@ const DropDownComponent: FC<DropDownProps> = (
         <div
             ref={wrapperRef}
             id={dropDownId}
-            className={`${styles ?? ""} ${classes["drop-down"]}`}
+            className={`${styles ? styles : ""} ${classes["drop-down"]}`}
         >
             {childrenRecursion(children)}
         </div>

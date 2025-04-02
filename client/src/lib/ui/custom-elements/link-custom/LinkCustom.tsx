@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { FC, ReactNode, RefObject } from "react";
 
@@ -27,7 +29,7 @@ export interface StyleSettingsObject {
 
 export type LinkCustomProps = {
     id?: string;
-    styleSettings: StyleSettingsObject;
+    styleSettings?: StyleSettingsObject;
     className?: string;
     children?: ReactNode;
     target?: boolean;
@@ -38,9 +40,8 @@ export type LinkCustomProps = {
 };
 
 const LinkCustom: FC<LinkCustomProps> = ({
-    styleSettings: { color, icon, roundness, size, type, fill },
+    styleSettings,
     className,
-    searchParams,
     href: { queryParams, deleteQueryParams, endpoint },
     linkRef,
     children,
@@ -48,33 +49,36 @@ const LinkCustom: FC<LinkCustomProps> = ({
     onClick,
     id,
 }) => {
+    const searchParams = useSearchParams();
     const urlSearchParams = new URLSearchParams(searchParams?.toString());
 
     let linkColor;
-    if (type === "DEFAULT" || type === "SQUARE") {
-        color === "DARK"
+    if (styleSettings?.type === "DEFAULT" || styleSettings?.type === "SQUARE") {
+        styleSettings?.color === "DARK"
             ? (linkColor = Color.DARK_DEFAULT)
             : (linkColor = Color.LIGHT_DEFAULT);
     }
 
-    if (type === "TEXT") {
-        color === "DARK"
+    if (styleSettings?.type === "TEXT") {
+        styleSettings?.color === "DARK"
             ? (linkColor = Color.DARK_TEXT)
             : (linkColor = Color.LIGHT_TEXT);
     }
 
-    if (type === "UNDERLINE") {
-        color === "DARK"
+    if (styleSettings?.type === "UNDERLINE") {
+        styleSettings?.color === "DARK"
             ? (linkColor = Color.DARK_UNDERLINE)
             : (linkColor = Color.LIGHT_UNDERLINE);
     }
 
     const classes: any[] = [
         linkColor,
-        Size[size],
-        roundness && Roundness[roundness],
-        Type[type],
-        fill && Fill[fill],
+        styleSettings && styleSettings.size && Size[styleSettings.size],
+        styleSettings &&
+            styleSettings.roundness &&
+            Roundness[styleSettings.roundness],
+        styleSettings && styleSettings.type && Type[styleSettings.type],
+        styleSettings && styleSettings.fill && Fill[styleSettings.fill],
     ];
 
     if (queryParams) {
@@ -100,14 +104,14 @@ const LinkCustom: FC<LinkCustomProps> = ({
             // style={{ pointerEvents: true ? "none" : "auto" }}
             onClick={onClick}
         >
-            {icon?.left ? (
-                <DisplayIcon iconName={IconsIdList[icon.left]} />
+            {styleSettings?.icon?.left ? (
+                <DisplayIcon iconName={IconsIdList[styleSettings.icon.left]} />
             ) : (
                 ""
             )}
             {children ?? ""}
-            {icon?.right ? (
-                <DisplayIcon iconName={IconsIdList[icon.right]} />
+            {styleSettings?.icon?.right ? (
+                <DisplayIcon iconName={IconsIdList[styleSettings.icon.right]} />
             ) : (
                 ""
             )}

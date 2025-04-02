@@ -92,7 +92,7 @@ export const useLoadMoreReducer = <T extends { [key: string]: any }, P>(
                 });
             }
         },
-        [loaderFn]
+        [dispatch, loaderFn]
     );
 
     const loadMore = async (

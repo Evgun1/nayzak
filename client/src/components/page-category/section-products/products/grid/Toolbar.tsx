@@ -4,13 +4,13 @@ import DisplayIcon from "@/components/elements/icons/displayIcon";
 import classes from "./Toolbar.module.scss";
 import IconsIdList from "@/components/elements/icons/IconsIdList";
 import Link from "next/link";
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { FilterContext } from "../filter/FilterCtx";
 import DropDown from "@/lib/ui/drop-down/DropDown";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
-import Select from "@/lib/ui/select/Select";
+import { Select, SelectItem } from "@/lib/ui/select/Select";
 import ListTypeButton from "./ListTypeButton";
 
 export enum TypeList {
@@ -59,8 +59,34 @@ type ToolbarProps = {
 
 const Toolbar: FC<ToolbarProps> = ({ totalCount }) => {
     const { isActive, setIsActive } = useContext(FilterContext);
+    const [defaultKey, setDefaultKey] = useState<string | undefined>(undefined);
+    const searchParams = useSearchParams();
+
+    const getDefaultSelectKey = useCallback(() => {
+        const [sortBySearch, sortSearch] = searchParams
+            .toString()
+            .split("&")
+            .map((val) => val.split("="));
+
+        let title;
+
+        for (const element of sortData) {
+            if (
+                sortBySearch.includes(element.valueName.sortBy) &&
+                sortSearch.includes(element.valueName.sort)
+            ) {
+                title = element.title;
+            }
+        }
+
+        return title?.toLocaleLowerCase();
+    }, [searchParams]);
 
     const btnClickFilter = () => setIsActive(!isActive);
+
+    useEffect(() => {
+        setDefaultKey(getDefaultSelectKey());
+    }, [getDefaultSelectKey]);
 
     return (
         <div className={classes["toolbar"]}>
@@ -80,7 +106,7 @@ const Toolbar: FC<ToolbarProps> = ({ totalCount }) => {
 
                     <Select
                         label='Sort By'
-                        trackByQuery
+                        defaultSelectKey={defaultKey}
                         styleSetting={{
                             type: "TEXT",
                             fill: "SOLID",
@@ -90,12 +116,24 @@ const Toolbar: FC<ToolbarProps> = ({ totalCount }) => {
                         }}
                     >
                         {sortData.map((value, index) => (
-                            <Select.OptionLink
+                            <SelectItem
+                                textValue={value.title}
+                                itemKey={value.title.toLowerCase()}
                                 key={index}
-                                href={{ queryParams: value.valueName }}
                             >
-                                {value.title}
-                            </Select.OptionLink>
+                                <LinkCustom
+                                    styleSettings={{
+                                        color: "DARK",
+                                        size: "X_SMALL",
+                                        type: "TEXT",
+                                        fill: "SOLID",
+                                        roundness: "SHARP",
+                                    }}
+                                    href={{ queryParams: value.valueName }}
+                                >
+                                    {value.title}
+                                </LinkCustom>
+                            </SelectItem>
                         ))}
                     </Select>
 

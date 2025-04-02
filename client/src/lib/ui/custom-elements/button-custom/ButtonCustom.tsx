@@ -7,11 +7,11 @@ import IconsIdList from "../../../../components/elements/icons/IconsIdList";
 import { Color, Fill, Roundness, Size, Type } from "../ActionElements.types";
 
 export interface StyleSettingsObject {
-    size: keyof typeof Size;
+    size?: keyof typeof Size;
     roundness?: keyof typeof Roundness;
     fill?: keyof typeof Fill;
-    type: keyof typeof Type;
-    color: "DARK" | "LIGHT";
+    type?: keyof typeof Type;
+    color?: "DARK" | "LIGHT";
     icon?: {
         left?: keyof typeof IconsIdList;
         right?: keyof typeof IconsIdList;
@@ -67,9 +67,9 @@ export const ButtonCustom: FC<SiteButtonProps> = ({
 
     const classes: any[] = [
         btnColor,
-        Size[size],
+        size && Size[size],
         roundness && Roundness[roundness],
-        Type[type],
+        type && Type[type],
         fill && Fill[fill],
     ];
 

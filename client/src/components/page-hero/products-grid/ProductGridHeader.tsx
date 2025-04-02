@@ -3,16 +3,17 @@
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import classes from "./ProductGrid.module.scss";
 
-import { useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { CategoryItem } from "@/types/categories.types";
 import { SubcategoryItem } from "@/types/subcategories.types";
 import { useSearchParams } from "next/navigation";
 import { appCategoriesGet } from "@/utils/http/categories";
 import { appSubcategoriesGet } from "@/utils/http/subcategories";
 import { appProductsGet } from "@/utils/http/products";
-import Select from "@/lib/ui/select/Select";
+import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
+import { Select, SelectItem } from "@/lib/ui/select/Select";
 
-const ProductGridHeader = () => {
+const ProductGridHeader: FC<{ searchParams: any }> = ({}) => {
     const searchParams = useSearchParams();
     const [categories, setCategories] = useState<CategoryItem[]>([]);
     const [subcategories, setSubcategories] = useState<SubcategoryItem[]>([]);
@@ -58,7 +59,6 @@ const ProductGridHeader = () => {
                 You’re browsing
             </div>
             <Select
-                trackByQuery
                 label={"Categories"}
                 styleSetting={{
                     color: "DARK",
@@ -68,23 +68,39 @@ const ProductGridHeader = () => {
                     icon: { right: "CHEVRON" },
                     roundness: "SHARP",
                 }}
+                defaultSelectKey={searchParams.get("category") ?? undefined}
             >
                 {categories &&
                     categories.length > 0 &&
-                    categories.map((category, index) => (
-                        <Select.OptionLink
-                            key={index}
-                            href={{
-                                queryParams: { category: category.title },
-                                deleteQueryParams: "subcategory",
-                            }}
+                    categories.map((category, i) => (
+                        <SelectItem
+                            textValue={category.title}
+                            itemKey={category.title.toLowerCase()}
+                            key={i}
                         >
-                            {category.title}
-                        </Select.OptionLink>
+                            <LinkCustom
+                                styleSettings={{
+                                    type: "TEXT",
+                                    color: "DARK",
+                                    size: "X_SMALL",
+                                    fill: "SOLID",
+                                    roundness: "SHARP",
+                                }}
+                                href={{
+                                    queryParams: {
+                                        category: category.title.toLowerCase(),
+                                    },
+                                    deleteQueryParams: "subcategory",
+                                }}
+                            >
+                                {category.title}
+                            </LinkCustom>
+                        </SelectItem>
                     ))}
             </Select>
             <div className={ButtonClassList.BUTTON_X_LARGE}>In</div>
             <Select
+                defaultSelectKey={searchParams.get("subcategory") ?? undefined}
                 label={"Subcategories"}
                 styleSetting={{
                     color: "DARK",
@@ -97,18 +113,29 @@ const ProductGridHeader = () => {
             >
                 {subcategories &&
                     subcategories.length > 0 &&
-                    subcategories.map((subcategory, index) => (
-                        <Select.OptionLink
-                            // acton={subcategory.active}
-                            key={index}
-                            href={{
-                                queryParams: {
-                                    subcategory: subcategory.title,
-                                },
-                            }}
+                    subcategories.map((subcategory, i) => (
+                        <SelectItem
+                            textValue={subcategory.title}
+                            itemKey={subcategory.title.toLowerCase()}
+                            key={i}
                         >
-                            {subcategory.title}
-                        </Select.OptionLink>
+                            <LinkCustom
+                                styleSettings={{
+                                    color: "DARK",
+                                    size: "X_SMALL",
+                                    type: "TEXT",
+                                    roundness: "SHARP",
+                                }}
+                                href={{
+                                    queryParams: {
+                                        subcategory:
+                                            subcategory.title.toLowerCase(),
+                                    },
+                                }}
+                            >
+                                {subcategory.title}
+                            </LinkCustom>
+                        </SelectItem>
                     ))}
             </Select>
         </div>
