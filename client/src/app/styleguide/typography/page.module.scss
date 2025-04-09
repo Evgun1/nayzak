@@ -1,8 +1,0 @@
-.wrapper {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  &__text {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-}

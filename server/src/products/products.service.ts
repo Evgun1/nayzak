@@ -1,16 +1,22 @@
-import { $Enums, Prisma, Products } from "@prisma/client";
+import {
+    $Enums,
+    Categories,
+    Media,
+    Prisma,
+    Products,
+    Reviews,
+    Subcategories,
+} from "@prisma/client";
 import prismaClient from "../prismaClient";
 import { ProductsGetDTO } from "./interfaces/ProductsGetDTO";
 import { MainService } from "../utils/service/main.service";
 import { QueryParameterTypes } from "../utils/service/service.type";
 import { QueryParamHandler } from "../utils/query-params/QueryParams.service";
 import { ReviewsService } from "../reviews/reviews.service";
-import { privateDecrypt } from "crypto";
-import { number, string } from "zod";
+import { sqlQuery } from "../../sql";
 
 class ProductsOptions {
     private queryParams = new QueryParamHandler();
-    private ratingAvg = new ReviewsService().ratingAvg;
 
     private supportedMimeTypes: Map<boolean, (data: string) => object> =
         new Map();
@@ -203,102 +209,94 @@ class ProductsOptions {
 class ProductsService {
     private deleteData = new MainService().delete;
     private productsOptions = new ProductsOptions();
-    private ratingAvg = new ReviewsService().ratingAvg;
 
     async getAllProducts(
         query: QueryParameterTypes,
         params?: { category: string; subcategory: string }
     ) {
         const options = await this.productsOptions.optionsGetAll(query, params);
-        let sqlProducts = `
-		SELECT *
-		FROM (
-			SELECT products.*, reviews."rating", media."img"
-			FROM "Products" AS products
-			INNER JOIN (
-				SELECT "id"
-				FROM "Categories" AS insCategories
-				WHERE insCategories."title" ${query.category !== undefined ? `ILIKE '%${query.category}%'` : "IS NOT NULL"}
-			) AS categories ON categories.id = products."categoriesId"
-			INNER JOIN (
-				SELECT "id"
-				FROM "Subcategories" as insSubcategories
-				WHERE insSubcategories."title" ${query.subcategory !== undefined ? `ILIKE '%${query.subcategory}%'` : "IS NOT NULL"}
-			) AS subcategories ON subcategories."id" = products."subcategoriesId"
-			LEFT JOIN (
-        		SELECT inMedia.*, inMedia.src AS "img"
-        		FROM "Media" AS inMedia
-    		) AS media ON media.id = products."mediaId"
-			LEFT JOIN (
-				SELECT "productsId",  ROUND(AVG("rating")) AS rating
-				FROM "Reviews" as insReviews
-				GROUP BY
-				"productsId"
-			) AS reviews ON reviews."productsId" = products."id"
-			ORDER BY ${query.sortBy === "rating" ? `reviews."rating" DESC NULLS LAST` : " NOT NULL"}
-        	LIMIT (
-                SELECT COUNT(*)
-                FROM "Products"
-				)
-		) 
-		`;
 
-        if (query.search) {
-            sqlProducts += ` WHERE "title" ILIKE '%${query.search}%'`;
+        const select = sqlQuery.select<Products>("Products");
+        select.fields([
+            "*",
+            `CAST("Reviews"."rating" AS INT)`,
+            `"Media"."src"`,
+        ]);
+
+        const categoriesJoin = await select.join<Categories>(
+            "Categories",
+            "INNER"
+        );
+        categoriesJoin.fields(["id"]);
+        if (query.category)
+            categoriesJoin.where({ title: `*${query.category}*` });
+        categoriesJoin.on({ id: "categoriesId" });
+        select.joinQuery();
+
+        const subcategoriesJoin = select.join<Subcategories>(
+            "Subcategories",
+            "INNER"
+        );
+        subcategoriesJoin.fields(["id"]);
+
+        if (query.subcategory)
+            subcategoriesJoin.where({ title: `*${query.subcategory}*` });
+        subcategoriesJoin.on({ id: "subcategoriesId" });
+        select.joinQuery();
+
+        const reviewsJoin = select.join<Reviews>("Reviews", "LEFT");
+        reviewsJoin.fields(["productsId", 'ROUND(AVG("rating")) AS rating']);
+        reviewsJoin.groupBy("productsId");
+        reviewsJoin.on({ productsId: "id" });
+        select.joinQuery();
+
+        const mediaJoin = select.join<Media>("Media", "LEFT");
+        mediaJoin.fields(["id", "src"]);
+        mediaJoin.on({ id: "mediaId" });
+        select.joinQuery();
+
+        if (query.search) select.where({ title: `*${query.search}*` });
+        if (query.minPrice && query.maxPrice)
+            select.where({
+                mainPrice: `BETWEEN ${query.minPrice} AND ${query.maxPrice}`,
+            });
+        if (query.id) select.where({ id: query.id });
+        if (query.sortBy && query.sort) {
+            const sort = query.sort.toUpperCase() as "ASC" | "DESC";
+            switch (query.sortBy) {
+                case "price":
+                    select.orderBy("rating" as any, sort);
+                    break;
+                default:
+                    select.orderBy(query.sortBy as any, sort);
+                    break;
+            }
         }
+        if (query.limit) select.limit(+query.limit);
+        if (query.offset) select.offset(+query.offset);
 
-        if (query.minPrice && query.maxPrice) {
-            sqlProducts += ` WHERE "mainPrice" BETWEEN ${query.minPrice} AND ${query.maxPrice}`;
-        }
-
-        if (query.id) {
-            sqlProducts += `WHERE id IN (${query.id.toString().replaceAll(",", ", ")})`;
-        }
-
-        if (query.sortBy !== "rating" && query.sort) {
-            sqlProducts += ` ORDER BY ${`"${query.sortBy === "price" ? "mainPrice" : query.sortBy}" ${query.sort.toUpperCase()}`}`;
-        }
-        if (query.limit) {
-            sqlProducts += ` LIMIT ${parseInt(query.limit)}`;
-        }
-
-        if (query.offset) {
-            sqlProducts += ` OFFSET ${parseInt(query.offset)}`;
-        }
-
-        const products =
-            await prismaClient.$queryRawUnsafe<Products[]>(sqlProducts);
-
-        // const products = await prismaClient.products.findMany(options);
+        const products = await select.query<Products[]>();
         const productCounts = await prismaClient.products.count({
             where: options.where,
         });
+
         return { products, productCounts };
     }
 
     async getProduct(params: { productParam: string }) {
-        const sqlProduct = `
-        SELECT products.*, reviews."rating", media."img"
-        FROM "Products" AS products
-        LEFT JOIN (
-            SELECT "productsId",  ROUND(AVG("rating")) AS rating
-            FROM "Reviews" as insReviews
-            GROUP BY "productsId"
-        ) AS reviews ON reviews."productsId" = products."id"
-        LEFT JOIN (
-            SELECT inMedia.*, inMedia.src AS "img"
-            FROM "Media" AS inMedia
-        ) AS media ON media.id = products."mediaId"
-        WHERE ${!isNaN(Number(params.productParam)) ? `products."id" = ${+params.productParam}` : `products."title" ILIKE '%${params.productParam}%'`}
-        `;
+        const select = sqlQuery.select<Products>("Products");
+        const reviewsJoin = select.join<Reviews>("Reviews", "LEFT");
+        reviewsJoin.fields(["productsId", 'ROUND(AVG("rating")) AS rating']);
+        reviewsJoin.groupBy("productsId");
+        reviewsJoin.on({ productsId: "id" });
+        select.joinQuery();
 
-        const product =
-            await prismaClient.$queryRawUnsafe<Products[]>(sqlProduct);
+        const mediaJoin = select.join<Media>("Media", "LEFT");
+        mediaJoin.fields(["id", "src"]);
+        mediaJoin.on({ id: "mediaId" });
+        select.joinQuery();
 
-        // const options = this.productsOptions.optionsGetOne(params);
-
-        // const product = await prismaClient.products.findFirst(options);
-
+        const product = await select.query<Products[]>();
         return product.pop();
     }
 

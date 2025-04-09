@@ -26,6 +26,7 @@ export const appProductsGet = async ({
         searchParams,
         pathname,
     });
+    console.log(pathname);
 
     return { productCounts: totalCount, products: response };
 };
@@ -70,6 +71,8 @@ export const appMinMaxPriceGet = async (
     const param = Array.isArray(slug) ? slug.join("/") : slug;
 
     const pathname = `products/min-max-price/${param}`;
+
+    console.log(slug);
 
     const { response } = await appFetchGet<{
         minPrice: number;

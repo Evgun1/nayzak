@@ -1,13 +1,10 @@
 "use client";
 
-import DisplayIcon from "@/components/elements/icons/displayIcon";
 import classes from "./Toolbar.module.scss";
 import IconsIdList from "@/components/elements/icons/IconsIdList";
-import Link from "next/link";
 import { FC, useCallback, useContext, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { FilterContext } from "../filter/FilterCtx";
-import DropDown from "@/lib/ui/drop-down/DropDown";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
 import { Select, SelectItem } from "@/lib/ui/select/Select";

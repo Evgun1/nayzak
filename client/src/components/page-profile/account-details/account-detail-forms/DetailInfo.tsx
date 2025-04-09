@@ -4,13 +4,11 @@ import Form from "@/lib/ui/form/Form";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { validation } from "@/utils/validator/validator";
-import { FormEvent, RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useRef } from "react";
 import { z, ZodObject } from "zod";
 
 import classes from "./DetailInfo.module.scss";
 import { writeCustomerAction } from "@/lib/redux/store/customer/action";
-import { CustomerItem } from "@/lib/redux/store/customer/customer";
-import { log } from "node:console";
 
 const schemaDetailInformation: Array<ZodObject<any>> = [];
 
@@ -19,7 +17,6 @@ schemaDetailInformation.push(
 );
 
 const DetailInfo = () => {
-    const ref = useRef() as RefObject<HTMLDivElement>;
     const dispatch = useAppDispatch();
     const customerSelector = useAppSelector(
         (state) => state.customer.customerData

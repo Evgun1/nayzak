@@ -33,33 +33,40 @@ const CONTENT = [
 
 export default function IconsBox() {
     return (
-        <div className='container'>
-            <ul className={`${classes["icon-box__list"]}`}>
-                {CONTENT &&
-                    CONTENT.length > 0 &&
-                    CONTENT.map((value, index) => (
-                        <li key={index} className={classes["icon-box__item"]}>
-                            <div className={classes["icon-box__content"]}>
-                                <DisplayIcon
-                                    className={classes.icon}
-                                    iconName={value.icon}
-                                />
-                                <div className={classes["icon-box__info"]}>
-                                    <div
-                                        className={
-                                            ButtonClassList.BUTTON_MEDIUM
-                                        }
-                                    >
-                                        {value.title}
+        <section className='section'>
+            <div className='container'>
+                <ul className={`${classes["icon-box__list"]}`}>
+                    {CONTENT &&
+                        CONTENT.length > 0 &&
+                        CONTENT.map((value, index) => (
+                            <li
+                                key={index}
+                                className={classes["icon-box__item"]}
+                            >
+                                <div className={classes["icon-box__content"]}>
+                                    <DisplayIcon
+                                        className={classes.icon}
+                                        iconName={value.icon}
+                                    />
+                                    <div className={classes["icon-box__info"]}>
+                                        <div
+                                            className={
+                                                ButtonClassList.BUTTON_MEDIUM
+                                            }
+                                        >
+                                            {value.title}
+                                        </div>
+                                        <span
+                                            className={TextClassList.REGULAR_14}
+                                        >
+                                            {value.span}
+                                        </span>
                                     </div>
-                                    <span className={TextClassList.REGULAR_14}>
-                                        {value.span}
-                                    </span>
                                 </div>
-                            </div>
-                        </li>
-                    ))}
-            </ul>
-        </div>
+                            </li>
+                        ))}
+                </ul>
+            </div>
+        </section>
     );
 }

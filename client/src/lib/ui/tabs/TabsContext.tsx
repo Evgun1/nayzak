@@ -1,14 +1,6 @@
 "use client";
 
-import React, {
-    createContext,
-    useContext,
-    useState,
-    ReactNode,
-    useEffect,
-    useCallback,
-    useLayoutEffect,
-} from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface TabsContextProps {
     activeTab: number;

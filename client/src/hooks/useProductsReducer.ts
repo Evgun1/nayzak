@@ -1,7 +1,8 @@
-import { AllPriceItem, ProductItem } from "../types/product.types";
-import { Reducer, useCallback, useReducer, useState } from "react";
+"use client";
+
+import { ProductItem } from "../types/product.types";
+import { Reducer, useCallback, useReducer } from "react";
 import { useSearchParams } from "next/navigation";
-import { appProductsGet } from "@/utils/http/products";
 
 export type fetchProductsProps = {
     urlSearchParams?: URLSearchParams;

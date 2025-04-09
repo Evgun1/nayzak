@@ -1,10 +1,7 @@
-"use client";
-
 import Link from "next/link";
 import { FC, ReactNode, RefObject } from "react";
 
 import "../style.scss";
-import { Url } from "url";
 import { Color, Fill, Roundness, Size, Type } from "../ActionElements.types";
 import IconsIdList from "@/components/elements/icons/IconsIdList";
 import DisplayIcon from "@/components/elements/icons/displayIcon";
@@ -47,9 +44,9 @@ const LinkCustom: FC<LinkCustomProps> = ({
     children,
     target,
     onClick,
+    searchParams,
     id,
 }) => {
-    const searchParams = useSearchParams();
     const urlSearchParams = new URLSearchParams(searchParams?.toString());
 
     let linkColor;

@@ -1,4 +1,4 @@
-import { FC, MouseEvent, MouseEventHandler, ReactNode, RefObject } from "react";
+import { FC, MouseEvent, ReactNode, RefObject } from "react";
 
 import DisplayIcon from "../../../../components/elements/icons/displayIcon";
 

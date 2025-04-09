@@ -20,6 +20,7 @@ import {
 import { initCustomer } from "../customer/action";
 import { notificationAction } from "../notification/notification";
 import PopupNotification from "@/components/popup-notifications/PopupNotifications";
+import { cookies } from "next/headers";
 
 export const registrationAction = (userData: CredentialsDTO) => {
     return async function (dispatch: AppDispatch) {

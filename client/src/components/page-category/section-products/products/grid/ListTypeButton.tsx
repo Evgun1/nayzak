@@ -1,3 +1,5 @@
+"use client";
+
 import DisplayIcon from "@/components/elements/icons/displayIcon";
 import IconsIdList from "@/components/elements/icons/IconsIdList";
 import Link from "next/link";

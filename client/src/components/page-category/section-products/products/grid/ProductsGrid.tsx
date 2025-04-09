@@ -3,20 +3,15 @@
 import Toolbar from "./Toolbar";
 
 import classes from "./ProductsGrid.module.scss";
-import { useLoadMoreReducer } from "@/hooks/useProductsReducer";
-import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
-import { appProductsGet } from "@/utils/http/products";
-import dynamic from "next/dynamic";
+import { appProductsByParamsGet, appProductsGet } from "@/utils/http/products";
 import ProductsLoaderServer from "@/components/elements/load-more/loader-products/ProductsLoaderServer";
-import { headers } from "next/headers";
 
 export default async function ProductsGrid({
     params,
     searchParams,
 }: {
     searchParams: URLSearchParams;
-    params?: string;
+    params: string | string[];
 }) {
     const newSearchParams = searchParams as Record<string, any>;
 
@@ -36,8 +31,8 @@ export default async function ProductsGrid({
         ? listTypeLimits.get(getListType)
         : listTypeLimits.get("default");
 
-    const { productCounts } = await appProductsGet({
-        params: params ? params : undefined,
+    const { productCounts } = await appProductsByParamsGet({
+        params: params,
     });
 
     return (

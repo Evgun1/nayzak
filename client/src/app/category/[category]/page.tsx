@@ -4,17 +4,12 @@ import HeaderCategories from "@/components/page-category/HeaderCategories";
 import { PageProps } from "../../../../.next/types/app/page";
 
 export default async function Page(props: PageProps) {
+    console.log(props);
+
     return (
         <section>
-            <HeaderCategories slug={[...props.params.slug]} />
-            {props.params.slug.length === 1 ? (
-                <Subcategories slug={props.params.slug[0]} />
-            ) : (
-                <Products
-                    params={props.params.slug}
-                    searchParams={props.searchParams}
-                />
-            )}
+            <HeaderCategories slug={[props.params.category]} />
+            <Subcategories slug={props.params.category} />
         </section>
     );
 }

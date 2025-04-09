@@ -58,7 +58,7 @@ const SelectBody: FC<{ children: ReactNode }> = (props) => {
                 }
             });
         },
-        [itemKey]
+        [itemKey, addDefaultLabel]
     );
 
     useEffect(() => {

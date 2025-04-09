@@ -1,97 +1,44 @@
-"use client";
+"use server";
 
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import classes from "./Profile.module.scss";
-import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
-import { useAppDispatch } from "@/lib/redux/redux";
-import { useRouter, redirect } from "next/navigation";
-import { cartAction } from "@/lib/redux/store/cart/cart";
-import { logOutActive } from "@/lib/redux/store/auth/action";
 import Image from "next/image";
 import Tabs from "@/lib/ui/tabs/Tabs";
-import dynamic from "next/dynamic";
-import { appCookieGet } from "@/utils/http/cookie";
+import Logout from "./Logout";
+import AccountDetails from "./account-details/AccountDetails";
+import Addresses from "./addresses/Addresses";
+import Wishlist from "./wishlist/Wishlist";
+import Orders from "./orders/Orders";
 
 type PageContentType = {
     label: string;
     content: ReactNode;
 };
 
-const AccountDetailsDynamic = dynamic(
-    () => import("./account-details/AccountDetails"),
-    {
-        ssr: false,
-        loading: () => (
-            <div className={classes["loading"]}>
-                <div className={classes["loading__spinner"]}></div>
-            </div>
-        ),
-    }
-);
-const AddressDynamic = dynamic(() => import("./addresses/Addresses"), {
-    ssr: false,
-    loading: () => (
-        <div className={classes["loading"]}>
-            <div className={classes["loading__spinner"]}></div>
-        </div>
-    ),
-});
-const WishlistDynamic = dynamic(() => import("./wishlist/Wishlist"), {
-    ssr: false,
-    loading: () => (
-        <div className={classes["loading"]}>
-            <div className={classes["loading__spinner"]}></div>
-        </div>
-    ),
-});
-const OrdersDynamic = dynamic(() => import("./orders/Orders"), {
-    ssr: false,
-    loading: () => (
-        <div className={classes["loading"]}>
-            <div className={classes["loading__spinner"]}></div>
-        </div>
-    ),
-});
-
 const MENU: PageContentType[] = [
     {
         label: "Account details",
-        content: <AccountDetailsDynamic />,
+        content: <AccountDetails />,
     },
     {
         label: "Addresses",
-        content: <AddressDynamic />,
+        content: <Addresses />,
     },
     {
         label: "Wishlist",
-        content: <WishlistDynamic />,
+        content: <Wishlist />,
     },
     {
         label: "Orders",
-        content: <OrdersDynamic />,
+        content: <Orders />,
     },
+    // {
+    //     label: "Logout",
+    //     content: <Logout />,
+    // },
 ];
 
-export default function Profile() {
-    const dispatch = useAppDispatch();
-    const router = useRouter();
-    const [tabAction, setTabAction] = useState(0);
-
-    const btnLogOutHandler = () => {
-        dispatch(logOutActive());
-        dispatch(cartAction.cleanCart());
-        router.push("/");
-    };
-
-    useEffect(() => {
-        (async () => {
-            const userToken = await appCookieGet("user-token");
-            if (!userToken) {
-                redirect("/");
-            }
-        })();
-    }, []);
-
+export default async function Profile() {
     return (
         <div className={classes["profile"]}>
             <h3 className={classes["profile__header"]}>My account</h3>
@@ -114,17 +61,7 @@ export default function Profile() {
                         {MENU.map((val, i) => (
                             <Tabs.Toggle key={i} index={i} label={val.label} />
                         ))}
-                        <ButtonCustom
-                            styleSettings={{
-                                type: "TEXT",
-                                color: "DARK",
-                                size: "MEDIUM",
-                            }}
-                            className={classes["profile-navigation__button"]}
-                            onClick={btnLogOutHandler}
-                        >
-                            Logout
-                        </ButtonCustom>
+                        <Logout />
                     </Tabs.Header>
 
                     <Tabs.Body>

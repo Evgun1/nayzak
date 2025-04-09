@@ -1,10 +1,8 @@
 "use server";
 
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 
 import classes from "./Subcategories.module.scss";
-import { usePathname } from "next/navigation";
-import { SubcategoryItem } from "@/types/subcategories.types";
 import { appSubcategoryByCategoryGet } from "@/utils/http/subcategories";
 import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
 

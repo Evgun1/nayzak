@@ -1,7 +1,6 @@
 "use client";
-import { FC, useCallback, useContext, useState } from "react";
+import { FC } from "react";
 import { useTabs } from "./TabsContext";
-import ButtonCustom from "../custom-elements/button-custom/ButtonCustom";
 import classes from "./Tabs.module.scss";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 

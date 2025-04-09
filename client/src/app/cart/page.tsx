@@ -1,7 +1,5 @@
-
-import Cart from '../../components/page-cart/Cart';
-
+import Cart from "@/components/page-cart/Cart";
 
 export default function Page() {
-	return <Cart />;
+    return <Cart />;
 }

@@ -13,7 +13,6 @@ const Banner = async () => {
                     className={classes["banner__img"]}
                     priority
                     fill
-                    
                     sizes={"height: 100%"}
                     src='https://placehold.co/800'
                     alt='banner'

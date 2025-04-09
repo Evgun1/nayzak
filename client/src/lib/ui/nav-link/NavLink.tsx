@@ -3,7 +3,7 @@
 import classes from "./NavLink.module.scss";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import React, { ReactElement, ReactNode, useEffect, useState } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import LinkCustom, {
     HrefObject,
     StyleSettingsObject,

@@ -1,5 +1,5 @@
 import Form from "@/lib/ui/form/Form";
-import classes from "./CheckoutFormPreview.module.scss";
+import classes from "./CheckoutInputs.module.scss";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 import React, { FC, useEffect, useState } from "react";

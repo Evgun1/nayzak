@@ -8,7 +8,7 @@ import {
 } from "next/navigation";
 import classes from "./SliderPrice.module.scss";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ButtonCustom } from "../custom-elements/button-custom/ButtonCustom";
 import { appMinMaxPriceGet } from "@/utils/http/products";
 import { TextClassList } from "@/types/textClassList.enum";
@@ -21,13 +21,20 @@ const SliderPrice = () => {
     const searchParam = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
-    const param = useParams();
+    const param = useParams() as Record<string, any>;
 
-    const slug = param.slug;
+    const slug: string[] = useMemo(() => {
+        const slug = [];
+        for (const key in param) {
+            slug.push(param[key]);
+        }
+        return slug;
+    }, [param]);
 
     const sliderHandler = useCallback(
         async (searchParam: URLSearchParams) => {
             const prices = await appMinMaxPriceGet(searchParam, slug);
+
             if (!prices) return;
 
             const { maxPrice, minPrice } = prices;

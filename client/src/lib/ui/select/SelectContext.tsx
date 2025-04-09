@@ -45,7 +45,7 @@ export const SelectProvider: FC<{
         if (!defaultSelectKey) {
             setDefaultLabel(label);
         }
-    }, [defaultSelectKey]);
+    }, [defaultSelectKey, label]);
 
     return (
         <SelectContext.Provider

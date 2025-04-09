@@ -1,10 +1,6 @@
 "use client";
 
-import DisplayIcon from "@/components/elements/icons/displayIcon";
-
 import classes from "./AddressesPreview.module.scss";
-import { ButtonClassList } from "@/types/buttonClassList.enum";
-import IconsIdList from "@/components/elements/icons/IconsIdList";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { TextClassList } from "@/types/textClassList.enum";
 import { AddressType } from "./Addresses";
@@ -12,9 +8,7 @@ import { useAppDispatch } from "@/lib/redux/redux";
 import { popupActions } from "@/lib/redux/store/popup/popup";
 import PopupAddress from "@/components/popup-address/PopupAddress";
 import { deleteAddresses } from "@/lib/redux/store/address/action";
-import { notificationAction } from "@/lib/redux/store/notification/notification";
-import { ReactElement, ReactNode } from "react";
-import { AddressData } from "@/lib/redux/store/address/address";
+import { ReactElement } from "react";
 
 export default function AddressesPreview({
     address,

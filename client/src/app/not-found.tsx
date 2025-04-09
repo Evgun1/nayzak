@@ -1,11 +1,11 @@
-"use client";
+"use server";
 
 import Link from "next/link";
-
 import classes from "./Hero.module.scss";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
+import { Suspense } from "react";
 
-const NotFoundPage = () => {
+const NotFoundPage = async () => {
     return (
         <div className='container'>
             <div className={classes["not-found-page"]}>

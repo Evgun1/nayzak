@@ -12,15 +12,17 @@ export default async function ProductGrid({
     searchParams: Record<string, any>;
 }) {
     return (
-        <div className='container'>
-            <div className={classes["product-grid"]}>
-                <ProductGridHeader searchParams={searchParams} />
-                <ProductsLoaderServer
-                    className={classes["product-grid__product"]}
-                    listType='four_grid'
-                    searchParams={searchParams}
-                />
+        <section className='section'>
+            <div className='container'>
+                <div className={classes["product-grid"]}>
+                    <ProductGridHeader searchParams={searchParams} />
+                    <ProductsLoaderServer
+                        className={classes["product-grid__product"]}
+                        listType='four_grid'
+                        searchParams={searchParams}
+                    />
+                </div>
             </div>
-        </div>
+        </section>
     );
 }

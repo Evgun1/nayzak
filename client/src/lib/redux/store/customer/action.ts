@@ -42,9 +42,7 @@ export const writeCustomerAction = (customerForm: FormData) => {
         if (!userToken || userToken === undefined) return;
 
         const userData = appJwtDecode<CredentialsDTO>(userToken);
-
         const formData = new FormData();
-
         const objectForm = Object.fromEntries(customerForm.entries());
 
         for (const key in objectForm) {
@@ -60,7 +58,6 @@ export const writeCustomerAction = (customerForm: FormData) => {
             if (!customerID) return;
 
             formData.set("id", customerID.toString());
-
             const res = await appCustomersPut(formData);
 
             dispatch(customerAction.setCustomer(res));

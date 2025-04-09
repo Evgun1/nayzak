@@ -86,6 +86,7 @@ const ProductGridHeader: FC<{ searchParams: any }> = ({}) => {
                                     fill: "SOLID",
                                     roundness: "SHARP",
                                 }}
+                                searchParams={searchParams}
                                 href={{
                                     queryParams: {
                                         category: category.title.toLowerCase(),
@@ -120,6 +121,7 @@ const ProductGridHeader: FC<{ searchParams: any }> = ({}) => {
                             key={i}
                         >
                             <LinkCustom
+                                searchParams={searchParams}
                                 styleSettings={{
                                     color: "DARK",
                                     size: "X_SMALL",

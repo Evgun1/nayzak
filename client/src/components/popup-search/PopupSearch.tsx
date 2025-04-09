@@ -12,8 +12,6 @@ import { useAppDispatch } from "@/lib/redux/redux";
 import ProductList from "../elements/products-list/ProductList";
 import { popupActions } from "@/lib/redux/store/popup/popup";
 import { appProductsGet } from "@/utils/http/products";
-import { FilterProvider } from "../page-category/section-products/products/filter/FilterCtx";
-import Form from "../../lib/ui/form/Form";
 
 const PopupSearch = () => {
     const dispatch = useAppDispatch();

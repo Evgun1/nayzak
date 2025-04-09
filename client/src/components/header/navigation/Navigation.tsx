@@ -8,8 +8,6 @@ import { SubcategoryItem } from "@/types/subcategories.types";
 import { appCategoriesGet } from "@/utils/http/categories";
 import { appSubcategoriesGet } from "@/utils/http/subcategories";
 import { appProductsGet } from "@/utils/http/products";
-import dynamic from "next/dynamic";
-import Loading from "@/app/loading";
 import NavigationAction from "./NavigationAction";
 interface NavigationItem {
     label: string;

@@ -8,7 +8,7 @@ import getReqBody from "../tools/getReqBody";
 import { QueryParameterTypes } from "../utils/service/service.type";
 import { log } from "console";
 import { json } from "stream/consumers";
-import clearCache from "../utils/clear-cache/ClearCache";
+import clearCache from "../utils/clear-cache/clearCache";
 
 class ProductsController {
     async getAll(c: Context) {
@@ -17,7 +17,6 @@ class ProductsController {
         try {
             const { products, productCounts } =
                 await productsService.getAllProducts(inputData);
-
             return c.json(products, 200, {
                 "X-Total-Count": productCounts.toString(),
             });

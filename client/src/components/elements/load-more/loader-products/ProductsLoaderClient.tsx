@@ -60,10 +60,14 @@ const ProductsLoaderClient = ({
         : (listTypeLimits.get(listType) as string);
 
     const btnClickHandler = () => {
-        loadMoreProducts(+getLimit, +getLimit);
+        loadMoreProducts(
+            children ? state.data.length + parseInt(getLimit) : +getLimit,
+            +getLimit,
+            params
+        );
     };
 
-    const initDataHandler = useCallback(() => {
+    useEffect(() => {
         const urlSearchParams = new URLSearchParams(searchParams.toString());
 
         if (children) {
@@ -71,17 +75,9 @@ const ProductsLoaderClient = ({
             initData({ searchParams: urlSearchParams });
             return;
         }
-        urlSearchParams.set(
-            "offset",
-            `${state.data.length + parseInt(getLimit)}`
-        );
         urlSearchParams.set("limit", getLimit.toString());
         initData({ searchParams: urlSearchParams });
-    }, [initData, children, searchParams, getLimit]);
-
-    useEffect(() => {
-        initDataHandler();
-    }, [initDataHandler]);
+    }, [children, initData, getLimit, searchParams]);
 
     return (
         <LoadMore

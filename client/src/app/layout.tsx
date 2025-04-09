@@ -7,7 +7,6 @@ import Footer from "../components/footer/Footer";
 import Popup from "../components/elements/popup/popup";
 import Header from "@/components/header/Header";
 import Notification from "@/lib/ui/notification/Notification";
-import dynamic from "next/dynamic";
 import InitData from "@/components/elements/initData";
 
 export const metadata: Metadata = {
@@ -17,10 +16,10 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
     children,
-    modal,
+    test,
 }: Readonly<{
     children: React.ReactNode;
-    modal: React.ReactNode;
+    test: React.ReactNode;
 }>) {
     return (
         <StoreProvider>
@@ -30,11 +29,11 @@ export default async function RootLayout({
                         <div id='popup'></div>
                         <div id='overlay'></div>
                         <div id='notification-container'></div>
+
                         <Header />
-                        <main>{children}</main>
+                        {children}
                         <Footer />
                     </div>
-                    {/* {modal} */}
                     <Popup />
                     <Notification />
                     <IconsSprite />

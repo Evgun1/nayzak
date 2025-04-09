@@ -63,7 +63,7 @@ const Select: FC<SelectComponentProps> = (props) => {
                 }
             }
         },
-        [generateId]
+        [selectId]
     );
 
     useLayoutEffect(() => {

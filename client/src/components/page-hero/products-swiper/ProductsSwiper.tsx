@@ -27,34 +27,23 @@ const ProductsSwiper = async () => {
         ),
     });
 
-    // const productsArr: ReactElement[] = [];
-
-    // productsArr.push(
-    //     ...products.map((product, i) => (
-    //         <ProductPreviewDefault
-    //             key={i}
-    //             showIcon
-    //             className={classes["products-swiper__product"]}
-    //             product={product}
-    //         />
-    //     ))
-    // );
-
     return (
-        <div className='container'>
-            <div className={classes["products-swiper"]}>
-                <SwiperComponentDynamic label='Latest Arrivals'>
-                    {products.map((product, i) => (
-                        <ProductPreviewDefault
-                            key={i}
-                            showIcon
-                            className={classes["products-swiper__product"]}
-                            product={product}
-                        />
-                    ))}
-                </SwiperComponentDynamic>
+        <section className='section'>
+            <div className='container'>
+                <div className={classes["products-swiper"]}>
+                    <SwiperComponentDynamic label='Latest Arrivals'>
+                        {products.map((product, i) => (
+                            <ProductPreviewDefault
+                                key={i}
+                                showIcon
+                                className={classes["products-swiper__product"]}
+                                product={product}
+                            />
+                        ))}
+                    </SwiperComponentDynamic>
+                </div>
             </div>
-        </div>
+        </section>
     );
 };
 

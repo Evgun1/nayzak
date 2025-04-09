@@ -1,5 +1,7 @@
 import Checkout from "@/components/page-checkout/Checkout";
 
-export default async function Page() {
+const Page = () => {
     return <Checkout />;
-}
+};
+
+export default Page;

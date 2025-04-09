@@ -10,52 +10,52 @@ const CategoryGrid = async () => {
     // const t = new URL(window.history)
 
     return (
-        <div className='container'>
-            <ul className={classes["categories-grid"]}>
-                {categoriesData &&
-                    categoriesData.length > 0 &&
-                    categoriesData.map((category, i) => (
-                        <li key={i}>
-                            <div
-                                className={classes["categories-grid__content"]}
-                            >
-                                <Image
-                                    loading='lazy'
-                                    fill
-                                    sizes='width:100%; height:100%;'
+        <section className='section'>
+            <div className='container'>
+                <ul className={classes["categories-grid"]}>
+                    {categoriesData &&
+                        categoriesData.length > 0 &&
+                        categoriesData.map((category, i) => (
+                            <li key={i}>
+                                <div
                                     className={
-                                        classes["categories-grid__image"]
+                                        classes["categories-grid__content"]
                                     }
-                                    src='https://placehold.co/400'
-                                    alt={category.title}
-                                />
-
-                                <LinkCustom
-                                    className={classes["categories-grid__link"]}
-                                    href={{
-                                        endpoint: `/category/${category.title.toLowerCase()}`,
-                                    }}
-                                    styleSettings={{
-                                        color: "LIGHT",
-                                        fill: "SOLID",
-                                        roundness: "ROUNDED",
-                                        size: "MEDIUM",
-                                        type: "DEFAULT",
-                                    }}
                                 >
-                                    {category.title}
-                                </LinkCustom>
-                                {/* <Link
-								className={` ${classes['grid--content-link']} h7`}
-								href={`/category/${category.title.toLowerCase()}`}
-							>
-								{category.title}
-							</Link> */}
-                            </div>
-                        </li>
-                    ))}
-            </ul>
-        </div>
+                                    <Image
+                                        loading='lazy'
+                                        fill
+                                        sizes='width:100%; height:100%;'
+                                        className={
+                                            classes["categories-grid__image"]
+                                        }
+                                        src='https://placehold.co/400'
+                                        alt={category.title}
+                                    />
+
+                                    <LinkCustom
+                                        className={
+                                            classes["categories-grid__link"]
+                                        }
+                                        href={{
+                                            endpoint: `/category/${category.title.toLowerCase()}`,
+                                        }}
+                                        styleSettings={{
+                                            color: "LIGHT",
+                                            fill: "SOLID",
+                                            roundness: "ROUNDED",
+                                            size: "MEDIUM",
+                                            type: "DEFAULT",
+                                        }}
+                                    >
+                                        {category.title}
+                                    </LinkCustom>
+                                </div>
+                            </li>
+                        ))}
+                </ul>
+            </div>
+        </section>
     );
 };
 

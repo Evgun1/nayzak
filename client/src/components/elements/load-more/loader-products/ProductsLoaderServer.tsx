@@ -9,7 +9,7 @@ import { FC } from "react";
 import ProductPreviewList from "../../product-preview/product-preview-list/ProductPreviewList";
 
 type ProductsLoaderProps = {
-    params?: string;
+    params?: string | string[];
     limit?: number;
     searchParams: Record<string, any>;
     listType?: keyof ListType;

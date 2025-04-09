@@ -4,7 +4,7 @@ import Form from "@/lib/ui/form/Form";
 import { useAppDispatch } from "@/lib/redux/redux";
 import { changePasswordAction } from "@/lib/redux/store/auth/action";
 import { TextClassList } from "@/types/textClassList.enum";
-import { schemePassword, validation } from "@/utils/validator/validator";
+import { validation } from "@/utils/validator/validator";
 import { z, ZodEffects, ZodObject } from "zod";
 
 import classes from "./ChangePassword.module.scss";

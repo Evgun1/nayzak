@@ -10,12 +10,8 @@ const SelectTrigger: FC<{
     label: string;
     styleSetting: StyleSettingsObject;
     defaultSelectKey: string | undefined;
-}> = ({ defaultSelectKey, label, styleSetting }) => {
-    const { defaultLabel, addDefaultLabel } = useSelect();
-
-    useEffect(() => {
-        console.log(defaultLabel);
-    }, [defaultLabel]);
+}> = ({ styleSetting }) => {
+    const { defaultLabel } = useSelect();
 
     return (
         <ButtonCustom styleSettings={styleSetting}>{defaultLabel}</ButtonCustom>
