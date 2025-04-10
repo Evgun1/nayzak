@@ -26,7 +26,6 @@ export const appProductsGet = async ({
         searchParams,
         pathname,
     });
-    console.log(pathname);
 
     return { productCounts: totalCount, products: response };
 };

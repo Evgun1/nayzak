@@ -258,7 +258,7 @@ class ProductsService {
         if (query.search) select.where({ title: `*${query.search}*` });
         if (query.minPrice && query.maxPrice)
             select.where({
-                mainPrice: `BETWEEN ${query.minPrice} AND ${query.maxPrice}`,
+                mainPrice: { between: [+query.minPrice, +query.maxPrice] },
             });
         if (query.id) select.where({ id: query.id });
         if (query.sortBy && query.sort) {

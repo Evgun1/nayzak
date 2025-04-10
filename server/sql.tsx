@@ -8,19 +8,38 @@ import {
 import { json } from "stream/consumers";
 import prismaClient from "./src/prismaClient";
 
-const where = (conditions: Record<string, any>) => {
+// interface WhereParams<T> {
+//     [key: keyof T]: string;
+// }
+
+interface WhereObjectItem {
+    in?: number[];
+    between?: [number, number];
+}
+
+type WhereParams<T = Record<string, any>> = {
+    [key in keyof T]?: WhereObjectItem | string | number;
+};
+
+const where = (conditions: WhereParams) => {
     let clause: string | undefined = "";
     const args = [];
     let i = 1;
     for (const key in conditions) {
-        let value = conditions[key];
+        let value = conditions[key] as WhereObjectItem | string | number;
+
         let condition;
+
         if (typeof value === "number") {
             condition = `${key} = ${value}`;
         } else if (typeof value === "object") {
-            const operator = value.operator;
-            value = value.value;
-            condition = `${key}  ${operator}(${value}::int[])`;
+            if (value.in) {
+                condition = `${key} IN (${value.in.join(", ")})`;
+            }
+            if (value.between) {
+                const [first, last] = value.between;
+                condition = `"${key}" BETWEEN ${first} AND ${last} `;
+            }
         } else if (typeof value === "string") {
             if (value.startsWith("IN")) {
                 value = value.substring(2);
@@ -53,6 +72,8 @@ const where = (conditions: Record<string, any>) => {
         args.push(value);
         clause = clause ? `${clause} AND ${condition}` : condition;
     }
+
+    console.log(clause);
 
     return { clause, args };
 };
@@ -88,7 +109,7 @@ class Join<J, M> {
         this.mainTable = mainTable;
     }
 
-    where(conditions: Partial<Record<keyof J, string>>) {
+    where(conditions: WhereParams<J>) {
         const { clause, args } = where(conditions);
         this.whereConfig = clause;
 
@@ -170,7 +191,7 @@ class Select<M> {
         this.joinConfig = [];
     }
 
-    where(conditions: Partial<Record<keyof M, any>> | Record<string, any>) {
+    where(conditions: WhereParams<M>) {
         const { clause } = where(conditions);
         this.whereConfig = clause;
         return this;
@@ -239,7 +260,7 @@ class Select<M> {
         if (orderByConfig)
             sql += ` ORDER BY ${orderByConfig.join(" ")} NULLS LAST`;
 
-        if (typeof limitConfig === "number") sql += `  LIMIT ${limitConfig}`;
+        if (typeof limitConfig === "number") sql += ` LIMIT ${limitConfig}`;
         if (offsetConfig) sql += ` OFFSET ${offsetConfig}`;
 
         return await prismaClient.$queryRawUnsafe<T>(sql);

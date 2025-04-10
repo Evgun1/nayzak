@@ -49,8 +49,8 @@ const appFetch = async <T>({
         searchParams ? `?${searchParams}` : ""
     }`;
 
-    init.next = { revalidate: 1 };
-    init.cache = "no-store";
+    init.next = { revalidate: 1800 };
+    // init.cache = "no-store";
 
     try {
         const res = await fetch(url, init);
