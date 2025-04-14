@@ -11,7 +11,7 @@ import PopupError from "../popup-error/PopupError";
 import { ButtonCustom } from "@/lib/ui/custom-elements/button-custom/ButtonCustom";
 import { appCookieGet } from "@/utils/http/cookie";
 import LinkCustom from "@/lib/ui/custom-elements/link-custom/LinkCustom";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 const Actions: FC = () => {
     const dispatch = useAppDispatch();

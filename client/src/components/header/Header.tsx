@@ -17,16 +17,18 @@ const NavigationDynamic = dynamic(() => import("./navigation/Navigation"), {
 
 const Header: FC = async () => {
     return (
-        <header className={"container"}>
-            <div className={classes.header}>
-                <Link href={"/"} className={classes["header__logo"]}>
-                    <DisplayIcon
-                        className={classes["header__icon"]}
-                        iconName={IconsIdList.LOGOTYPE}
-                    />
-                </Link>
-                <NavigationDynamic />
-                <Actions />
+        <header>
+            <div className='container'>
+                <div className={classes.header}>
+                    <Link href={"/"} className={classes["header__logo"]}>
+                        <DisplayIcon
+                            className={classes["header__icon"]}
+                            iconName={IconsIdList.LOGOTYPE}
+                        />
+                    </Link>
+                    <NavigationDynamic />
+                    <Actions />
+                </div>
             </div>
         </header>
     );
