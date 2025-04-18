@@ -208,6 +208,7 @@ class Select<M> {
     }
     offset(offset: number) {
         this.offsetConfig = offset;
+
         return this;
     }
 

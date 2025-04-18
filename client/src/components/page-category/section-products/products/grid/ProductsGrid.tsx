@@ -5,6 +5,8 @@ import Toolbar from "./Toolbar";
 import classes from "./ProductsGrid.module.scss";
 import { appProductsByParamsGet, appProductsGet } from "@/utils/http/products";
 import ProductsLoaderServer from "@/components/elements/load-more/loader-products/ProductsLoaderServer";
+import Pagination from "@/lib/ui/pagination/Pagination";
+import { url } from "inspector";
 
 export default async function ProductsGrid({
     params,
@@ -16,7 +18,6 @@ export default async function ProductsGrid({
     const newSearchParams = searchParams as Record<string, any>;
 
     const getListType = newSearchParams["list_type"];
-
     const listTypeLimits = new Map([
         ["default", "15"],
         [null, "15"],
@@ -31,9 +32,12 @@ export default async function ProductsGrid({
         ? listTypeLimits.get(getListType)
         : listTypeLimits.get("default");
 
-    const { productCounts } = await appProductsByParamsGet({
+    const { productCounts, products } = await appProductsByParamsGet({
         params: params,
+        searchParams: searchParams,
     });
+
+    // const { productCounts } = await appProductsGet();
 
     return (
         <div className={classes["products-grid"]}>

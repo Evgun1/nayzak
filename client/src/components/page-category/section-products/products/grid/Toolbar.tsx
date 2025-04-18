@@ -87,105 +87,66 @@ const Toolbar: FC<ToolbarProps> = ({ totalCount }) => {
 
     return (
         <div className={classes["toolbar"]}>
-            <div className={classes["toolbar__wrap"]}>
-                <span>{totalCount} products</span>
-                <div className={classes["toolbar__filter"]}>
-                    <ButtonCustom
-                        onClick={btnClickFilter}
-                        styleSettings={{
-                            size: "SMALL",
-                            type: "TEXT",
-                            color: "DARK",
-                        }}
-                    >
-                        Filter
-                    </ButtonCustom>
+            <span>{totalCount} products</span>
+            <div className={classes["toolbar__filter"]}>
+                <ButtonCustom
+                    onClick={btnClickFilter}
+                    styleSettings={{
+                        size: "SMALL",
+                        type: "TEXT",
+                        color: "DARK",
+                    }}
+                >
+                    Filter
+                </ButtonCustom>
 
-                    <Select
-                        label='Sort By'
-                        defaultSelectKey={defaultKey}
-                        styleSetting={{
-                            type: "TEXT",
-                            fill: "SOLID",
-                            color: "DARK",
-                            size: "SMALL",
-                            icon: { right: "CHEVRON" },
-                        }}
-                    >
-                        {sortData.map((value, index) => (
-                            <SelectItem
-                                textValue={value.title}
-                                itemKey={value.title.toLowerCase()}
-                                key={index}
+                <Select
+                    label='Sort By'
+                    defaultSelectKey={defaultKey}
+                    styleSetting={{
+                        type: "TEXT",
+                        fill: "SOLID",
+                        color: "DARK",
+                        size: "SMALL",
+                        icon: { right: "CHEVRON" },
+                    }}
+                >
+                    {sortData.map((value, index) => (
+                        <SelectItem
+                            textValue={value.title}
+                            itemKey={value.title.toLowerCase()}
+                            key={index}
+                        >
+                            <LinkCustom
+                                styleSettings={{
+                                    color: "DARK",
+                                    size: "X_SMALL",
+                                    type: "TEXT",
+                                    fill: "SOLID",
+                                    roundness: "SHARP",
+                                }}
+                                searchParams={searchParams}
+                                href={{ queryParams: value.valueName }}
                             >
-                                <LinkCustom
-                                    styleSettings={{
-                                        color: "DARK",
-                                        size: "X_SMALL",
-                                        type: "TEXT",
-                                        fill: "SOLID",
-                                        roundness: "SHARP",
-                                    }}
-                                    href={{ queryParams: value.valueName }}
-                                >
-                                    {value.title}
-                                </LinkCustom>
-                            </SelectItem>
-                        ))}
-                    </Select>
+                                {value.title}
+                            </LinkCustom>
+                        </SelectItem>
+                    ))}
+                </Select>
 
-                    <ul className={classes["toolbar__selector"]}>
-                        {SELECTOR.map((value, index) => (
-                            <li key={index}>
-                                <ListTypeButton
-                                    icon={value.icon}
-                                    typeList={value.typeList}
-                                />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                <ul className={classes["toolbar__selector"]}>
+                    {SELECTOR.map((value, index) => (
+                        <li key={index}>
+                            <ListTypeButton
+                                icon={value.icon}
+                                typeList={value.typeList}
+                            />
+                        </li>
+                    ))}
+                </ul>
             </div>
-            {/* <div className={classes.wrapper__filter_button}>
-                <div></div>
-            </div> */}
         </div>
     );
 };
-
-// type ListBtnProps = {
-//     icon: IconsIdList;
-//     typeList: string;
-// };
-// const ListBtn: FC<ListBtnProps> = ({ typeList, icon }) => {
-//     const [activeBtn, setActiveBtn] = useState<boolean>(false);
-//     const searchParams = useSearchParams();
-
-//     useEffect(() => {
-//         if (
-//             searchParams.has("list_type") &&
-//             searchParams.get("list_type") !== null
-//         ) {
-//             setActiveBtn(searchParams.get("list_type") === typeList);
-//         } else {
-//             setActiveBtn("five_grid" === typeList);
-//         }
-//     }, [searchParams]);
-
-//     return (
-//         <Link
-//             scroll={false}
-//             href={`?list_type=${typeList}`}
-//             className={`${classes["toolbar__selector-button"]} ${
-//                 activeBtn ? classes["toolbar__selector-button--action"] : ""
-//             }`}
-//         >
-//             <DisplayIcon
-//                 className={classes["toolbar__selector-icon"]}
-//                 iconName={icon}
-//             />
-//         </Link>
-//     );
-// };
 
 export default Toolbar;

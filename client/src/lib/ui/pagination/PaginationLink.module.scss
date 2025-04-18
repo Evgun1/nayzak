@@ -1,0 +1,13 @@
+.pagination-link {
+    text-decoration: none;
+    list-style: none;
+    color: #3e3e59;
+    padding: 0 2px;
+    &--action {
+        background-color: var(--black-200);
+        color: var(--black-900);
+
+        border-radius: 100%;
+        padding: 8px 19px;
+    }
+}

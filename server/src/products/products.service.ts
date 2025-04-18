@@ -1,3 +1,4 @@
+import { path } from "node:path";
 import {
     $Enums,
     Categories,
@@ -274,11 +275,15 @@ class ProductsService {
         }
         if (query.limit) select.limit(+query.limit);
         if (query.offset) select.offset(+query.offset);
+        if (query.page && query.limit)
+            select.offset((+query.page - 1) * +query.limit);
 
         const products = await select.query<Products[]>();
         const productCounts = await prismaClient.products.count({
             where: options.where,
         });
+
+        console.log(query);
 
         return { products, productCounts };
     }

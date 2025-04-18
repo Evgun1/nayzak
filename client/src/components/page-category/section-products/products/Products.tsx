@@ -6,6 +6,7 @@ import { FilterProvider } from "./filter/FilterCtx";
 import Sidebar from "./filter/Sidebar";
 import ProductsGrid from "./grid/ProductsGrid";
 import { Suspense } from "react";
+import Pagination from "@/lib/ui/pagination/Pagination";
 
 export default async function Products({
     params,
