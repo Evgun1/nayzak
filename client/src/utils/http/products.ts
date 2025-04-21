@@ -71,8 +71,6 @@ export const appMinMaxPriceGet = async (
 
     const pathname = `products/min-max-price/${param}`;
 
-    console.log(slug);
-
     const { response } = await appFetchGet<{
         minPrice: number;
         maxPrice: number;

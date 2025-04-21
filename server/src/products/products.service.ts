@@ -1,4 +1,4 @@
-import { path } from "node:path";
+import { title } from "process";
 import {
     $Enums,
     Categories,
@@ -208,8 +208,28 @@ class ProductsOptions {
 }
 
 class ProductsService {
+    private supportedMimeTypes: Map<boolean, (data: string) => object> =
+        new Map();
+
+    private setupMimeTypes() {
+        this.supportedMimeTypes.set(false, (data: string) => ({
+            id: data,
+        }));
+        this.supportedMimeTypes.set(true, (data: string) => ({
+            title: data.replaceAll("_", " "),
+        }));
+    }
     private deleteData = new MainService().delete;
     private productsOptions = new ProductsOptions();
+
+    constructor() {
+        this.setupMimeTypes();
+    }
+
+    private getSupportedMimeTypes(value: string) {
+        const getData = this.supportedMimeTypes.get(isNaN(Number(value)));
+        if (getData) return getData(value) as { id?: string; title?: string };
+    }
 
     async getAllProducts(
         query: QueryParameterTypes,
@@ -283,8 +303,6 @@ class ProductsService {
             where: options.where,
         });
 
-        console.log(query);
-
         return { products, productCounts };
     }
 
@@ -300,9 +318,18 @@ class ProductsService {
         mediaJoin.fields(["id", "src"]);
         mediaJoin.on({ id: "mediaId" });
         select.joinQuery();
+        select.fields([
+            "*",
+            `CAST("Reviews"."rating" AS INT)`,
+            `"Media"."src"`,
+        ]);
+        const getObject = this.getSupportedMimeTypes(params.productParam);
+
+        if (getObject) select.where(getObject);
 
         const product = await select.query<Products[]>();
-        return product.pop();
+
+        return product.shift();
     }
 
     async updateProduct(inputData: ProductsGetDTO) {

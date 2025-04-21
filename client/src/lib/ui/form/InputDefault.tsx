@@ -46,9 +46,7 @@ const InputDefault: FC<InputDefaultProps> = ({
     const inputContainerRef = useRef(null) as RefObject<HTMLDivElement>;
     const inputRef = useRef() as RefObject<HTMLInputElement>;
 
-    const [displayMessage, setDisplayMessage] = useState<any>(
-        inputSettings.defaultValue ?? ""
-    );
+    const [displayMessage, setDisplayMessage] = useState<any>("");
 
     const handleFocus = () => {
         if (!inputContainerRef.current) return;
@@ -60,11 +58,11 @@ const InputDefault: FC<InputDefaultProps> = ({
         inputContainerRef.current.classList.remove(classes["input--focus"]);
     };
 
-    // useEffect(() => {
-    //     if (inputSettings.defaultValue) {
-    //         setDisplayMessage(inputSettings.defaultValue);
-    //     }
-    // }, [inputSettings.defaultValue]);
+    useEffect(() => {
+        if (inputSettings.defaultValue) {
+            setDisplayMessage(inputSettings.defaultValue);
+        }
+    }, [inputSettings.defaultValue]);
 
     useEffect(() => {
         if (error !== undefined) {

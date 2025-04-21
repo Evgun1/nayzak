@@ -50,18 +50,18 @@ const Form = <T extends ZodRawShape>({
         setErrorMessages(error);
 
         if (!hasErrors && submitHandler) {
-            const elements = event.currentTarget.elements;
-
+            const inputElements = event.currentTarget.querySelectorAll("input");
             const object = new Object() as { [key: string]: any };
-            Array.from(elements).map((data) => {
-                const inputElement = data as HTMLInputElement;
+            Array.from(inputElements).map((data) => {
+                const input = data as HTMLInputElement;
 
-                const inputName = inputElement.name;
-                const inputValue = inputElement.value;
+                const inputName = input.name;
+                const inputValue = input.value;
 
                 if (inputValue) {
                     object[inputName] = inputValue;
                 }
+
                 delete object[""];
             });
 
@@ -75,6 +75,7 @@ const Form = <T extends ZodRawShape>({
         if (target.type === "radio") {
             Array.from(event.currentTarget).map((data) => {
                 const input = data as HTMLInputElement;
+
                 if (input !== target) {
                     input.value = "";
                     input.checked = false;

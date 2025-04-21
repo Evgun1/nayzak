@@ -187,7 +187,7 @@ class Select<M> {
         this.limitConfig = undefined;
         this.offsetConfig = undefined;
         this.joinInstance = undefined;
-        this.fieldsConfig = ["*"];
+        this.fieldsConfig = [`"${table}".*`];
         this.joinConfig = [];
     }
 
@@ -263,6 +263,8 @@ class Select<M> {
 
         if (typeof limitConfig === "number") sql += ` LIMIT ${limitConfig}`;
         if (offsetConfig) sql += ` OFFSET ${offsetConfig}`;
+
+      
 
         return await prismaClient.$queryRawUnsafe<T>(sql);
         // return sql;

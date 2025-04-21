@@ -1,9 +1,13 @@
 "use client";
 
-import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./Pagination.module.scss";
-import Link from "next/link";
-import React, { FC, ReactElement, ReactNode, useCallback } from "react";
+import React, {
+    FC,
+    ReactElement,
+    useCallback,
+    useEffect,
+    useMemo,
+} from "react";
 import { useSearchParams } from "next/navigation";
 import PaginationLink from "./PaginationLink";
 
@@ -14,17 +18,19 @@ type PaginationProps = {
 
 const Pagination: FC<PaginationProps> = (props) => {
     const { limit, totalCount } = props;
+
     const searchParams = useSearchParams();
 
     const urlSearchParams = new URLSearchParams(searchParams.toString());
 
     const paginationLinkArr: ReactElement[] = [];
-    const activePage = useCallback(() => {
-        if (!urlSearchParams.has("page")) return 1;
-        return parseInt(urlSearchParams.get("page") as string);
-    }, [urlSearchParams])() as number;
+
+    const activePage = urlSearchParams.has("page")
+        ? parseInt(urlSearchParams.get("page") as string)
+        : 1;
 
     let dotsAdded = false;
+
     for (let index = 1; index <= Math.ceil(totalCount / limit); index++) {
         if (activePage + 4 > index && activePage - 1 <= index) {
             paginationLinkArr.push(
