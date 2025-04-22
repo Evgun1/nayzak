@@ -1,6 +1,14 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import React, {
+    FC,
+    JSXElementConstructor,
+    ReactElement,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import classes from "./Popup.module.scss";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/redux";
 import { createPortal } from "react-dom";

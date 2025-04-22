@@ -111,12 +111,14 @@ export const CheckoutFormAddress = () => {
 
     return (
         <div className={`${classes["preview"]} ${"preview-addresses"}`}>
-            <input
-                type='hidden'
-                name='addressesId'
-                value={address?.id}
-                id={address?.id?.toString()}
-            />
+            {address && (
+                <input
+                    type='hidden'
+                    name='addressesId'
+                    value={address.id}
+                    id={address.id.toString()}
+                />
+            )}
             <div className={classes["preview-addresses__header"]}>
                 <div className={ButtonClassList.BUTTON_LARGE}>
                     Shipping address

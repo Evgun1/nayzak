@@ -103,7 +103,7 @@ const PopupAuth = () => {
                         // required: true,
                         autoComplete: "current-password",
                     }}
-                    buttonSettings={{
+                    icon={{
                         right: {
                             type: "button",
                             icon: IconsIdList.VIEWS,

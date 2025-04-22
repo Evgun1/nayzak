@@ -7,7 +7,6 @@ const CheckoutFormDynamic = dynamic(
     () => import("./checkout-forms/CheckoutForm"),
     {
         ssr: false,
-        loading: () => <div>Loading...</div>,
     }
 );
 const Checkout = async () => {

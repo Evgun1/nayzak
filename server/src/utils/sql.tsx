@@ -6,7 +6,7 @@ import {
     ObjectEnumValue,
 } from "@prisma/client/runtime/library";
 import { json } from "stream/consumers";
-import prismaClient from "./src/prismaClient";
+import prismaClient from "../prismaClient";
 
 // interface WhereParams<T> {
 //     [key: keyof T]: string;
@@ -72,9 +72,6 @@ const where = (conditions: WhereParams) => {
         args.push(value);
         clause = clause ? `${clause} AND ${condition}` : condition;
     }
-
-    console.log(clause);
-
     return { clause, args };
 };
 

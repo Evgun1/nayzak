@@ -63,6 +63,7 @@ enum IconsIdList {
     THREE_COLUMNS = "icon_three-columns",
     TWO_COLUMNS = "icon_two-columns",
     LIST_COLUMNS = "icon_list-columns",
+    NOT_FOUND = "not-found",
 }
 
 export default IconsIdList;

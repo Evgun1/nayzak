@@ -1,19 +1,15 @@
-.not-found-page {
-    padding: 100px 0;
-    // height: 100%;
-    justify-content: center;
-    align-items: center;
-    display: grid;
-    gap: 20px;
+.not-found {
+    padding: 228px 0;
 
-    &__link {
-        margin: 0 auto;
-        width: max-content;
-        display: block;
-        text-decoration: none;
-        color: var(--black-600);
-        &:hover {
-            color: var(--black-900);
-        }
+    &__icon {
+        margin-bottom: 32px;
+        width: 93px;
+        height: 80px;
+    }
+    &__title {
+        margin-bottom: 16px;
+    }
+    &__description {
+        margin-bottom: 24px;
     }
 }

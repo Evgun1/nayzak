@@ -4,7 +4,7 @@ import IconsIdList from "../elements/icons/IconsIdList";
 import DisplayIcon from "../elements/icons/displayIcon";
 import classes from "./PopupSearch.module.scss";
 import { ProductItem } from "../../types/product.types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/lib/redux/redux";
@@ -61,21 +61,23 @@ const PopupSearch = () => {
         urlSearchParams.append("offset", count.toString());
         updateData(urlSearchParams);
     };
+    document.body.style.overflow = "visible";
+    
 
     return (
-        <div className={classes.wrapper}>
+        <div className={classes.search}>
             <div className={"container"}>
-                <div className={classes.wrapper__header}>
+                <div className={classes.search__header}>
                     <DisplayIcon
                         className={classes["icon-logo"]}
                         iconName={IconsIdList.LOGOTYPE}
                     />
                     <button
                         onClick={togglePopupHandler}
-                        className={classes["wrapper__header-btn"]}
+                        className={classes["search__header-btn"]}
                     ></button>
                 </div>
-                <div className={classes.wrapper__search}>
+                <div className={classes.search__search}>
                     <form className={classes.form} action={searchActionHandler}>
                         <input
                             name='search'
@@ -94,7 +96,7 @@ const PopupSearch = () => {
 
                 {/* <FilterProvider> */}
 
-                <div className={classes.wrapper__searchResult}>
+                <div className={classes.search__result}>
                     {!message ? (
                         <ProductList
                             style={classes["grid-search"]}

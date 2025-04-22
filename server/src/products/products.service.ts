@@ -13,8 +13,8 @@ import { ProductsGetDTO } from "./interfaces/ProductsGetDTO";
 import { MainService } from "../utils/service/main.service";
 import { QueryParameterTypes } from "../utils/service/service.type";
 import { QueryParamHandler } from "../utils/query-params/QueryParams.service";
-import { ReviewsService } from "../reviews/reviews.service";
-import { sqlQuery } from "../../sql";
+
+import { sqlQuery } from "../utils/sql";
 
 class ProductsOptions {
     private queryParams = new QueryParamHandler();

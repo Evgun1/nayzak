@@ -118,8 +118,6 @@ class CredentialsService {
     async login(data: UserGetDTO) {
         const { email } = data;
 
-        console.log(email);
-
         // const {
         //   payload: { email, password },
         // }: { payload: { email: string; password: string } } = decode(userToken);

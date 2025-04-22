@@ -4,7 +4,7 @@ import productsController from "./products.controller";
 import validation from "../validator/validation";
 import customValidator from "../validator/customValidator";
 import mainMiddleware from "../utils/middleware/main.middleware";
-import { sqlQuery } from "../../sql";
+import { sqlQuery } from "../utils/sql";
 import { json } from "stream/consumers";
 import { Brands, Categories, Prisma, Products } from "@prisma/client";
 

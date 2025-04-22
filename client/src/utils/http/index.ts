@@ -49,7 +49,7 @@ const appFetch = async <T>({
         searchParams ? `?${searchParams}` : ""
     }`;
 
-    init.next = { revalidate: 1 };
+    init.next = { revalidate: 1800 };
 
     try {
         const res = await fetch(url, init);

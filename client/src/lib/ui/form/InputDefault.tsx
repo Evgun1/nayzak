@@ -1,8 +1,9 @@
 "use client";
 
-import {
+import React, {
     ChangeEvent,
     FC,
+    ReactElement,
     Ref,
     RefObject,
     useEffect,
@@ -23,7 +24,7 @@ interface ButtonItem {
     type: "reset" | "submit" | "button";
 }
 
-interface ButtonObject {
+interface IconItem {
     left?: ButtonItem;
     right?: ButtonItem;
 }
@@ -31,13 +32,13 @@ interface ButtonObject {
 interface InputDefaultProps extends InputType {
     style: "line" | "contained";
     customClasses?: string;
-    buttonSettings?: ButtonObject;
+    icon?: IconItem;
     label?: string;
 }
 
 const InputDefault: FC<InputDefaultProps> = ({
     style,
-    buttonSettings,
+    icon,
     inputSettings,
     label,
     customClasses,
@@ -89,13 +90,110 @@ const InputDefault: FC<InputDefaultProps> = ({
         }
     };
 
-    useEffect(() => {
-        const timeOut = setTimeout(() => {
-            if (displayMessage) {
-            }
-        }, 500);
-        return () => clearTimeout(timeOut);
-    }, [displayMessage]);
+    const elements: ReactElement[] = [];
+
+    elements.push(
+        <input
+            ref={inputRef}
+            id={inputSettings?.id}
+            name={inputSettings?.name}
+            className={`${classes["input__item"]} ${
+                inputSettings.disabled && classes["input__item--disabled"]
+            }`}
+            placeholder={inputSettings?.placeholder}
+            type={inputSettings?.type}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            required={inputSettings?.required}
+            autoComplete={inputSettings.autoComplete}
+            onChange={changeHandler}
+            value={displayMessage}
+        />
+    );
+    if (icon?.left && icon?.right) {
+        elements.unshift(
+            <button
+                type={icon?.left?.type}
+                className={`${classes["input__btn"]} ${
+                    inputSettings.disabled && classes["input__btn--disabled"]
+                }`}
+                onClick={icon.left.onClick}
+            >
+                {icon.left.icon ? (
+                    <DisplayIcon
+                        className={classes["input__btn-icon"]}
+                        iconName={icon.left.icon}
+                    />
+                ) : (
+                    <span className={ButtonClassList.BUTTON_SMALL}>
+                        {icon.left.text}
+                    </span>
+                )}
+            </button>
+        );
+        elements.push(
+            <button
+                type={icon?.right?.type}
+                className={`${classes["input__btn"]} ${
+                    inputSettings.disabled && classes["input__btn--disabled"]
+                }`}
+                onClick={icon.right.onClick}
+            >
+                {icon.right.icon ? (
+                    <DisplayIcon
+                        className={classes["input__btn-icon"]}
+                        iconName={icon.right.icon}
+                    />
+                ) : (
+                    <span className={ButtonClassList.BUTTON_SMALL}>
+                        {icon.right.text}
+                    </span>
+                )}
+            </button>
+        );
+    } else if (icon?.left) {
+        elements.unshift(
+            <button
+                type={icon?.left?.type}
+                className={`${classes["input__btn"]} ${
+                    inputSettings.disabled && classes["input__btn--disabled"]
+                }`}
+                onClick={icon.left.onClick}
+            >
+                {icon.left.icon ? (
+                    <DisplayIcon
+                        className={classes["input__btn-icon"]}
+                        iconName={icon.left.icon}
+                    />
+                ) : (
+                    <span className={ButtonClassList.BUTTON_SMALL}>
+                        {icon.left.text}
+                    </span>
+                )}
+            </button>
+        );
+    } else if (icon?.right) {
+        elements.push(
+            <button
+                type={icon?.right?.type}
+                className={`${classes["input__btn"]} ${
+                    inputSettings.disabled && classes["input__btn--disabled"]
+                }`}
+                onClick={icon.right.onClick}
+            >
+                {icon.right.icon ? (
+                    <DisplayIcon
+                        className={classes["input__btn-icon"]}
+                        iconName={icon.right.icon}
+                    />
+                ) : (
+                    <span className={ButtonClassList.BUTTON_SMALL}>
+                        {icon.right.text}
+                    </span>
+                )}
+            </button>
+        );
+    }
 
     return (
         <div
@@ -118,65 +216,7 @@ const InputDefault: FC<InputDefaultProps> = ({
 						`
                 }
             >
-                {buttonSettings?.left && (
-                    <button
-                        type={buttonSettings?.left?.type}
-                        className={`${classes["input__btn"]} ${
-                            inputSettings.disabled &&
-                            classes["input__btn--disabled"]
-                        }`}
-                        onClick={buttonSettings.left.onClick}
-                    >
-                        {buttonSettings.left.icon ? (
-                            <DisplayIcon
-                                className={classes["input__btn-icon"]}
-                                iconName={buttonSettings.left.icon}
-                            />
-                        ) : (
-                            <span className={ButtonClassList.BUTTON_SMALL}>
-                                {buttonSettings.left.text}
-                            </span>
-                        )}
-                    </button>
-                )}
-                <input
-                    ref={inputRef}
-                    id={inputSettings?.id}
-                    name={inputSettings?.name}
-                    className={`${classes["input__item"]} ${
-                        inputSettings.disabled &&
-                        classes["input__item--disabled"]
-                    }`}
-                    placeholder={inputSettings?.placeholder}
-                    type={inputSettings?.type}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    required={inputSettings?.required}
-                    autoComplete={inputSettings.autoComplete}
-                    onChange={changeHandler}
-                    value={displayMessage}
-                />
-                {buttonSettings?.right && (
-                    <button
-                        type={buttonSettings?.right?.type}
-                        className={`${classes["input__btn"]} ${
-                            inputSettings.disabled &&
-                            classes["input__btn--disabled"]
-                        }`}
-                        onClick={buttonSettings.right.onClick}
-                    >
-                        {buttonSettings.right.icon ? (
-                            <DisplayIcon
-                                className={classes["input__btn-icon"]}
-                                iconName={buttonSettings.right.icon}
-                            />
-                        ) : (
-                            <span className={ButtonClassList.BUTTON_SMALL}>
-                                {buttonSettings.right.text}
-                            </span>
-                        )}
-                    </button>
-                )}
+                {elements}
             </div>
 
             {error && error.length > 0 && (
