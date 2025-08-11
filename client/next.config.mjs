@@ -1,17 +1,17 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-    pageExtensions: ["mdx", "md", "jsx", "js", "tsx", "ts"],
-    images: {
-        dangerouslyAllowSVG: true,
-        remotePatterns: [
-            {
-                protocol: "https",
-                hostname: "placehold.co",
-                pathname: "/**",
-            },
-        ],
-    },
+	pageExtensions: ["mdx", "md", "jsx", "js", "tsx", "ts"],
+	images: {
+		dangerouslyAllowSVG: true,
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "**",
+				pathname: "/**",
+			},
+		],
+	},
 };
 
 // export default withBundleAnalyzer(nextConfig);

@@ -1,7 +1,7 @@
-import Checkout from "@/components/page-checkout/Checkout";
+import Checkout from "@/page/checkout/Checkout";
 
-const Page = () => {
-    return <Checkout />;
+const Page = async () => {
+	return <Checkout />;
 };
 
 export default Page;

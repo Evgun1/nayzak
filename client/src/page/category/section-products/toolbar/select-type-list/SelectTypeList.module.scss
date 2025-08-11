@@ -1,0 +1,15 @@
+.type-list {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	&__link {
+		display: block;
+		border: 1px solid var(--black-200);
+		width: 46px;
+		height: 40px;
+		padding: 8px 11px;
+		.icon-selector {
+			color: var(--black-400);
+		}
+	}
+}

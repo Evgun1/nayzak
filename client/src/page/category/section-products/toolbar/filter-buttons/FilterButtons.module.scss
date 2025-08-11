@@ -1,0 +1,15 @@
+.filter-list {
+	display: flex;
+	gap: 16px;
+
+	.filter-list__button {
+		padding: 2px 10px;
+		gap: 4px;
+		background-color: var(--black-200);
+		border-radius: 4px;
+
+		&-clear {
+			color: var(--black-500);
+		}
+	}
+}

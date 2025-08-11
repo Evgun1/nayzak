@@ -1,0 +1,53 @@
+.auth {
+	position: absolute;
+	padding: 32px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: white;
+	max-width: 652px;
+	width: 100%;
+	// min-height: 656px;
+	z-index: 4;
+
+	.auth__title-button {
+		width: 40px;
+		height: 40px;
+		svg {
+			width: 40px;
+			height: 40px;
+		}
+	}
+
+	&__header {
+		margin-bottom: 32px;
+	}
+	&__title {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 24px;
+	}
+
+	&__info {
+		display: flex;
+        gap: 5px;
+	}
+
+	// &--form {
+	//     display: grid;
+	//     gap: 32px;
+
+	//     &-input {
+	//         position: relative;
+	//         display: block;
+	//         padding: 13px 5px;
+	//         border: none;
+	//         border-bottom: 1px solid var(--black-300);
+	//         background: none;
+
+	//         &:focus-visible {
+	//             outline: none;
+	//         }
+	//     }
+	// }
+}

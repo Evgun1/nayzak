@@ -1,0 +1,133 @@
+.filter {
+	display: grid;
+	gap: 40px;
+
+	.filter__checkbox-color {
+		width: 38px;
+		height: 38px;
+
+		border-color: var(--checkbox-border-color);
+		&::before {
+			background-color: var(--checkbox-background-color);
+		}
+	}
+
+	input[type="checkbox"]:checked + .filter__checkbox-color {
+		border-color: black;
+
+		&::after {
+			mask: none;
+			background-color: var(--checkbox-background-color);
+			max-width: 28px;
+			max-height: 28px;
+			border: 1px solid var(--checkbox-border-color);
+			border-radius: 100%;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		&::before {
+			background-color: white;
+		}
+	}
+
+	// &-item {
+	// 	&__title {
+	// 		display: inline-block;
+	// 		margin-bottom: 16px;
+	// 		cursor: pointer;
+	// 	}
+	// 	&__list {
+	// 		// display: grid;
+	// 		gap: 12px;
+	// 	}
+	// }
+
+	&__attribute {
+		display: grid;
+		gap: 40px;
+		&-header {
+			margin-bottom: 16px;
+		}
+
+		&-list {
+			display: grid;
+			gap: 12px;
+			max-height: 192px;
+			overflow: scroll;
+
+			&--scroll {
+				&::-webkit-scrollbar {
+					width: 8px;
+					height: 100%;
+					background-color: var(--black-200);
+				}
+
+				&::-webkit-scrollbar-thumb {
+					border-radius: 1em;
+					background-color: var(--black-500);
+					&:hover {
+						background-color: var(--black-600);
+					}
+				}
+			}
+		}
+		&-item--disable {
+			pointer-events: none;
+			opacity: 0.5;
+		}
+	}
+
+	&__color-list {
+		flex-wrap: wrap;
+		gap: 12px;
+		display: flex;
+	}
+}
+
+.show-result-filters {
+	position: absolute;
+	display: none;
+	// background: white;
+	left: 110%;
+	z-index: 5;
+	transform: translateY(20%);
+
+	&__content {
+		width: max-content;
+		align-items: center;
+		display: flex;
+		gap: 15px;
+		border: 1px solid black;
+		border-left-width: 0;
+		padding: 0 10px;
+		height: 40px;
+
+		background: white;
+	}
+
+	&__icon {
+		background: white;
+		top: 6px;
+		left: -15px;
+		rotate: 45deg;
+		width: 28px;
+		height: 28px;
+		border: 1px solid black;
+		position: absolute;
+		border-width: 0 0 1px 1px;
+		z-index: -1;
+	}
+
+	&__item {
+		// display: flex;
+		width: max-content;
+		align-items: center;
+		text-align: center;
+	}
+}
+
+.filter-link {
+	color: var(--black-500);
+}

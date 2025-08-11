@@ -1,68 +1,86 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { ProductItem } from "@/types/product.types";
 import { useSearchParams } from "next/navigation";
-import { appProductsGet } from "@/utils/http/products";
+import { appProductsGet } from "@/lib/api/products";
+import { ProductBase } from "@/types/product/productBase";
 
 type ProductsArrayData = {
-    id?: number;
-    amount?: number;
-    productID: number;
+	id?: number;
+	amount?: number;
+	productsId: number;
 };
 
+export interface ProductsById extends ProductBase {
+	amount?: number;
+}
+
 const useFetchProductsById = (
-    productsArray: ProductsArrayData[],
-    returnAmount: boolean = true
+	productsArray: ProductsArrayData[],
+	returnAmount: boolean = true,
 ) => {
-    const searchParams = useSearchParams();
-    const [products, setProducts] = useState<ProductItem[]>([]);
+	const searchParams = useSearchParams();
+	const [products, setProducts] = useState<ProductsById[]>([]);
 
-    const fetchProduct = useCallback(async () => {
-        if (!productsArray || !productsArray.length) {
-            setProducts([]);
-            return;
-        }
+	const fetchProduct = useCallback(async () => {
+		if (!productsArray || !productsArray.length) {
+			setProducts([]);
+			return;
+		}
 
-        const productsID: number[] = productsArray.map(
-            (element) => element.productID
-        );
+		const productsId: number[] = productsArray.map(
+			(element) => element.productsId,
+		);
 
-        const urlSearchParams = new URLSearchParams(searchParams.toString());
+		const urlSearchParams = new URLSearchParams(searchParams?.toString());
 
-        urlSearchParams.set(`id`, `${productsID}`);
+		urlSearchParams.set(`productsId`, `${productsId}`);
 
-        const productsData = await appProductsGet({
-            searchParams: urlSearchParams,
-        });
+		const productsFetch = await appProductsGet({
+			searchParams: urlSearchParams,
+		});
 
-        if (!returnAmount) {
-            setProducts(productsData.products);
-            return;
-        }
+		const products = productsArray.map((data) => {
+			const product = productsFetch.products.find(
+				(product) => product.id === data.productsId,
+			);
 
-        const output: ProductItem[] = productsData.products.map((item) => {
-            const index = productsArray.findIndex(
-                (element) => element.productID === item.id
-            );
+			if (product) {
+				const obj: ProductsById = {
+					amount: data.amount || 0,
+					...product,
+				};
+				return obj;
+			}
+		});
 
-            const newItem = { ...item };
+		if (!returnAmount) {
+			setProducts(productsFetch.products);
 
-            if (index !== -1) {
-                newItem.amount = productsArray[index].amount;
-            }
+			return;
+		}
 
-            return newItem;
-        });
+		const output: ProductsById[] = productsFetch.products.map((item) => {
+			const index = productsArray.findIndex(
+				(element) => element.productsId === item.id,
+			);
 
-        setProducts(output);
-    }, [searchParams, productsArray, returnAmount]);
+			const newItem: ProductsById = { ...item };
+			if (index !== -1) {
+				newItem.amount = productsArray[index].amount;
+			}
 
-    useEffect(() => {
-        fetchProduct();
-    }, [fetchProduct]);
+			return newItem;
+		});
 
-    return products;
+		setProducts(output);
+	}, [searchParams, productsArray, returnAmount]);
+
+	useEffect(() => {
+		fetchProduct();
+	}, [fetchProduct]);
+
+	return products;
 };
 
 export default useFetchProductsById;

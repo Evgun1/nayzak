@@ -1,0 +1,33 @@
+.subcategories {
+	padding: 52px 0;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 32px;
+
+	&__item {
+		position: relative;
+		// background: url("https://placehold.co/400") no-repeat center;
+		// background-size: cover;
+		height: 384px;
+		width: 100%;
+
+		&-image {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			z-index: 1;
+		}
+		&-btn {
+			// text-decoration: none;
+			left: 50%;
+			bottom: 40px;
+			min-width: 204px;
+			transform: translate(-50%, 0);
+			position: absolute;
+			z-index: 2;
+			// background: white;
+		}
+	}
+}

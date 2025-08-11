@@ -4,75 +4,92 @@ import React, { FC } from "react";
 
 import classes from "./Navigation.module.scss";
 import { CategoryItem } from "@/types/categories.types";
-import { SubcategoryItem } from "@/types/subcategories.types";
-import { appCategoriesGet } from "@/utils/http/categories";
-import { appSubcategoriesGet } from "@/utils/http/subcategories";
-import { appProductsGet } from "@/utils/http/products";
+import { ISubcategory } from "@/types/subcategories.interface";
+import { appCategoriesGet } from "@/lib/api/categories";
+import {
+	appSubcategoriesGet,
+	appSubcategoryByCategoryGet,
+} from "@/lib/api/subcategories";
+import { appProductsGet } from "@/lib/api/products";
 import NavigationAction from "./NavigationAction";
+import { ICategory } from "@/types/category/category.interface";
 interface NavigationItem {
-    label: string;
-    url: string;
-    active?: boolean;
-    children?: NavigationItem[];
+	label: string;
+	url: string;
+	active?: boolean;
+	children?: NavigationItem[];
 }
 
 type AppNavigation = NavigationItem[];
 
+interface BuildNavDataItem {
+	id: number;
+	title: string;
+}
+type BuildNavParam = {
+	data: BuildNavDataItem;
+	url: string;
+	active?: boolean;
+};
+
 const Navigation: FC = async () => {
-    const navigation: AppNavigation = [];
+	const navigation: AppNavigation = [];
 
-    const buildNavItem = (category: {
-        data: CategoryItem | SubcategoryItem;
-        active?: boolean;
-    }): NavigationItem => ({
-        label: category.data.title,
-        active: category.active,
-        url: category.data.title.replaceAll(" ", "-").toLowerCase(),
-    });
+	const buildNav = (param: BuildNavParam): NavigationItem => ({
+		label: param.data.title,
+		active: param.active,
+		url: param.url.toLowerCase(),
+	});
 
-    const categories = await appCategoriesGet();
+	const categories = await appCategoriesGet();
 
-    for await (const category of categories) {
-        const navItem: NavigationItem = buildNavItem({
-            data: category,
-        });
+	for await (const category of categories) {
+		const navItem: NavigationItem = buildNav({
+			data: category,
+			url: `${category.title}-c${category.id}`,
+		});
+		const urlSearchParams = new URLSearchParams({
+			categoryId: category.id.toString(),
+		});
+		const urlSearchParamsSubcategories = new URLSearchParams({
+			categoryId: category.id.toString(),
+		});
+		const subcategories = await appSubcategoriesGet(
+			urlSearchParamsSubcategories,
+		);
 
-        const urlSearchParams = new URLSearchParams({
-            category: category.title,
-        });
+		const subCategoriesForDisplay = [];
 
-        const subCategories = await appSubcategoriesGet(urlSearchParams);
-        const subCategoriesForDisplay = [];
+		for (const subcategory of subcategories) {
+			urlSearchParams.set("subcategory", subcategory.id.toString());
 
-        for (const subcategory of subCategories) {
-            urlSearchParams.set("subcategory", subcategory.title);
+			const { productCounts } = await appProductsGet({
+				searchParams: urlSearchParams,
+			});
 
-            const { productCounts } = await appProductsGet({
-                searchParams: urlSearchParams,
-            });
+			subCategoriesForDisplay.push({
+				active: productCounts > 0,
+				data: subcategory,
+				url: `${subcategory.title}-s${subcategory.id}`,
+			});
+		}
 
-            subCategoriesForDisplay.push({
-                active: productCounts > 0,
-                data: subcategory,
-            });
-        }
+		if (subCategoriesForDisplay && subCategoriesForDisplay.length) {
+			navItem.children = subCategoriesForDisplay.map(buildNav);
+		}
 
-        if (subCategoriesForDisplay && subCategoriesForDisplay.length) {
-            navItem.children = subCategoriesForDisplay.map(buildNavItem);
-        }
+		navigation.push(navItem);
+	}
 
-        navigation.push(navItem);
-    }
+	if (!navigation || navigation.length === 0) {
+		return "";
+	}
 
-    if (!navigation || navigation.length === 0) {
-        return "";
-    }
-
-    return (
-        <nav className={classes["header-navigation"]}>
-            <NavigationAction navigationData={navigation} />
-        </nav>
-    );
+	return (
+		<nav className={classes["header-navigation"]}>
+			<NavigationAction navigationData={navigation} />
+		</nav>
+	);
 };
 
 export default Navigation;

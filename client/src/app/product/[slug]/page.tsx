@@ -1,64 +1,72 @@
 "use server";
 import "./style.scss";
-import { appOneProductGet } from "@/utils/http/products";
-import { appReviewsProductGet } from "@/utils/http/reviews";
-import { appCustomersGet } from "@/utils/http/customer";
+import { appOneProductGet } from "@/lib/api/products";
+import { appReviewsProductGet } from "@/lib/api/reviews";
+import { appCustomersGet } from "@/lib/api/customer";
 import { ReviewItem } from "@/types/reviews.types";
-import Product from "@/components/page-product/Product";
-import { appCategoriesOneGet } from "@/utils/http/categories";
-import { appSubcategoriesOneGet } from "@/utils/http/subcategories";
+import Product from "@/page/product/Product";
+import { appCategoriesOneGet } from "@/lib/api/categories";
+import { appSubcategoriesOneGet } from "@/lib/api/subcategories";
 import ClientComponent from "@/components/ClientComponent";
+import Link from "next/link";
 
 export default async function Page(props: { params: { slug: string } }) {
-    const urlSearchParams = new URLSearchParams();
-    // const product = await appOneProductGet(props.params.slug);
+	const urlSearchParams = new URLSearchParams();
+	// const product = await appOneProductGet(props.params.slug);
 
-    const productData = async () => {
-        const product = await appOneProductGet(props.params.slug);
-        const category = await appCategoriesOneGet(product.categoriesId);
-        const subcategory = await appSubcategoriesOneGet(
-            product.subcategoriesId
-        );
+	const product = await appOneProductGet({ slug: props.params.slug });
 
-        return Object.assign(product, {
-            category: category.title,
-            subcategory: subcategory.title,
-        });
-    };
+	const productData = async () => {
+		const product = await appOneProductGet({ slug: props.params.slug });
 
-    const reviews = async () => {
-        const { reviewsData, totalReviews } = await appReviewsProductGet(
-            props.params.slug
-        );
-        const customers = await appCustomersGet(urlSearchParams);
-        const customersId = reviewsData
-            .map((review) => review.customersId)
-            .join(",");
-        urlSearchParams.set("id", customersId);
+		// const category = await appCategoriesOneGet(product.categoriesId);
+		// const subcategory = await appSubcategoriesOneGet(
+		// 	product.subcategoriesId,
+		// );
 
-        const reviews: ReviewItem[] = reviewsData.map((review) => {
-            const index = customers.findIndex((customer) => {
-                return review.customersId === customer.id;
-            });
-            const newReview = { ...review };
-            if (index !== -1) {
-                newReview.customerName = `${customers[index].firstName} ${customers[index].lastName}`;
-            }
+		// return Object.assign(product, {
+		// 	category: category.title,
+		// 	subcategory: subcategory.title,
+		// });
+	};
 
-            return newReview;
-        });
+	// const reviews = async () => {
+	// 	const { reviewsData, totalReviews } = await appReviewsProductGet(
+	// 		(
+	// 			await productData()
+	// 		).id,
+	// 	);
+	// 	const customers = await appCustomersGet(urlSearchParams);
+	// 	const customersId = reviewsData
+	// 		.map((review) => review.customersId)
+	// 		.join(",");
+	// 	urlSearchParams.set("id", customersId);
 
-        return { reviewsArray: reviews, totalReviews };
-    };
+	// 	const reviews: ReviewItem[] = reviewsData.map((review) => {
+	// 		const index = customers.findIndex((customer) => {
+	// 			return review.customersId === customer.id;
+	// 		});
+	// 		const newReview = { ...review };
+	// 		if (index !== -1) {
+	// 			newReview.customerName = `${customers[index].firstName} ${customers[index].lastName}`;
+	// 		}
 
-    return (
-        <div className='wrapper'>
-            <Product
-                productData={await productData()}
-                reviewsData={await reviews()}
-            />
+	// 		return newReview;
+	// 	});
 
-            {/* {product ? (
+	// 	return { reviewsArray: reviews, totalReviews };
+	// };
+
+	return (
+		<div className="wrapper">
+			<Product
+				productData={product}
+				reviewsData={
+					{ reviewsArray: [], totalReviews: 0 } /*await reviews()*/
+				}
+			/>
+
+			{/* {product ? (
 				<>
 					<ProductLoop
 						productData={product}
@@ -74,6 +82,6 @@ export default async function Page(props: { params: { slug: string } }) {
 			) : (
 				<div>Product not Found</div>
 			)} */}
-        </div>
-    );
+		</div>
+	);
 }

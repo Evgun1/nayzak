@@ -1,0 +1,42 @@
+// .accordion {
+//     // max-height: 0;
+//     // overflow: hidden;
+//     // transition: max-height 0.3s linear;
+
+//     // svg {
+//     //     rotate: 0deg;
+//     // }
+
+//     &--visible {
+//         max-height: auto;
+
+//         svg {
+//             transition: rotate 0.3s linear;
+//             rotate: 90deg;
+//         }
+//     }
+// }
+
+.accordion__header {
+    cursor: pointer;
+    svg {
+        transition: rotate 0.2s linear;
+        rotate: 0deg;
+    }
+
+    &--active {
+        svg {
+            rotate: 90deg;
+        }
+    }
+}
+
+.accordion__body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s linear, padding 0.2s linear;
+
+    &--visible {
+        max-height: auto;
+    }
+}
