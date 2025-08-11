@@ -11,18 +11,16 @@ import { HTTPException } from "hono/http-exception";
 // export default test
 
 export default function errors(err: HTTPException, c: Context) {
-    if (err.status === 204) {
+	if (err.status === 204) {
+		return c.text(err.message, err.status);
+	}
+	if (err instanceof HTTPException) {
+		console.log(err);
 
-		
-        return c.text(err.message, err.status);
-    }
-    if (err instanceof HTTPException) {
-        console.log(err);
+		return err.getResponse();
+		// return c.text(err.message);
+		// return c.json({ message: err.message }, err.status);
+	}
 
-        return err.getResponse();
-        // return c.text(err.message);
-        // return c.json({ message: err.message }, err.status);
-    }
-
-    return c.json({ message: "unexpected error" }, 500);
+	return c.json({ message: "unexpected error" }, 500);
 }

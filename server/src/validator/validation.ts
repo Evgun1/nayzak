@@ -151,7 +151,6 @@ export default function validation() {
         email: z.string().email(),
         password: z
             .string()
-            // .min(3)
             .refine((val) => val.length >= 3, {
                 message: "Password less than three words",
             })

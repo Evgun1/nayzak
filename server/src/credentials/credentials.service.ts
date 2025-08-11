@@ -13,222 +13,222 @@ import { QueryParameterTypes } from "../utils/service/service.type";
 import { QueryParamHandler } from "../utils/query-params/QueryParams.service";
 
 type FindUserData = {
-    token?: string;
-    email?: string;
+	token?: string;
+	email?: string;
 };
 
 class CredentialsOption {
-    whereEmail({ email }: { email: string }) {
-        const where: Prisma.CredentialsWhereInput = {};
+	whereEmail({ email }: { email: string }) {
+		const where: Prisma.CredentialsWhereInput = {};
 
-        if (email) {
-            where.email = email;
-        }
+		if (email) {
+			where.email = email;
+		}
 
-        return where;
-    }
+		return where;
+	}
 
-    whereCredentialsOne(id: number) {
-        const where: Prisma.CredentialsWhereUniqueInput = { id };
-        return where;
-    }
+	whereCredentialsOne(id: number) {
+		const where: Prisma.CredentialsWhereUniqueInput = { id };
+		return where;
+	}
 
-    whereCredentialsMany(ids: number[]) {
-        const where: Prisma.CredentialsWhereInput = {};
-        where.id = { in: ids };
-        return where;
-    }
+	whereCredentialsMany(ids: number[]) {
+		const where: Prisma.CredentialsWhereInput = {};
+		where.id = { in: ids };
+		return where;
+	}
 }
 
 class CredentialsService {
-    private credentialsOption = new CredentialsOption();
-    private mainService = new MainService();
-    private queryParams = new QueryParamHandler();
+	private credentialsOption = new CredentialsOption();
+	private mainService = new MainService();
+	private queryParams = new QueryParamHandler();
 
-    async getAll(inputData: QueryParameterTypes) {
-        const skip = this.queryParams.offset({ offset: inputData.offset });
-        const take = this.queryParams.limit({ limit: inputData.limit });
-        const orderBy =
-            this.queryParams.orderBy<Prisma.CredentialsOrderByWithRelationInput>(
-                inputData,
-                Prisma.CredentialsScalarFieldEnum
-            );
+	async getAll(inputData: QueryParameterTypes) {
+		const skip = this.queryParams.offset({ offset: inputData.offset });
+		const take = this.queryParams.limit({ limit: inputData.limit });
+		const orderBy =
+			this.queryParams.orderBy<Prisma.CredentialsOrderByWithRelationInput>(
+				inputData,
+				Prisma.CredentialsScalarFieldEnum,
+			);
 
-        const option: Prisma.CredentialsFindManyArgs = {
-            take,
-            skip,
-            orderBy,
-        };
+		const option: Prisma.CredentialsFindManyArgs = {
+			take,
+			skip,
+			orderBy,
+		};
 
-        const credentials = await prismaClient.credentials.findMany(option);
-        const count = await prismaClient.credentials.count();
+		const credentials = await prismaClient.credentials.findMany(option);
+		const count = await prismaClient.credentials.count();
 
-        return { credentials, count };
-    }
+		return { credentials, count };
+	}
 
-    async getOne(credentialsId: number) {
-        return prismaClient.credentials.findFirst({
-            where: { id: credentialsId },
-        });
-    }
+	async getOne(credentialsId: number) {
+		return prismaClient.credentials.findFirst({
+			where: { id: credentialsId },
+		});
+	}
 
-    async registration(data: UserGetDTO) {
-        const { email, role, password, isActive } = data;
+	async registration(data: UserGetDTO) {
+		const { email, role, password, isActive } = data;
 
-        const activationLink = randomUUID();
+		const activationLink = randomUUID();
 
-        const hashPassword = await bcrypt.hash(password, genSaltSync());
+		const hashPassword = await bcrypt.hash(password, genSaltSync());
 
-        const createUser = await prismaClient.credentials.create({
-            data: {
-                email: email.trim(),
-                password: hashPassword,
-                activationLink: isActive ? "" : activationLink,
-                isActive: isActive === "true",
-                role: role,
-                createdAt: new Date().toISOString(),
-            },
-        });
+		const createUser = await prismaClient.credentials.create({
+			data: {
+				email: email.trim(),
+				password: hashPassword,
+				activationLink: activationLink,
+				isActive: false,
+				role: "client",
+				createdAt: new Date().toISOString(),
+			},
+		});
 
-        await customersService.create({
-            credentialsId: createUser.id.toString(),
-            firstName: "",
-            lastName: "",
-            phone: 0,
-        });
+		await customersService.create({
+			credentialsId: createUser.id.toString(),
+			firstName: "",
+			lastName: "",
+			phone: 0,
+		});
 
-        await mailService.sendActivateMail(
-            email,
-            `${process.env.API_URL}user/active/${activationLink}`
-        );
+		await mailService.sendActivateMail(
+			email,
+			`${process.env.API_URL}user/active/${activationLink}`,
+		);
 
-        const credentialsDto = new UserDto({
-            id: createUser.id,
-            email: createUser.email,
-            role: createUser.role,
-            isActivated: createUser.isActive,
-        });
+		const credentialsDto = new UserDto({
+			id: createUser.id,
+			email: createUser.email,
+			role: createUser.role,
+			isActivated: createUser.isActive,
+		});
 
-        return await sign(
-            credentialsDto,
-            process.env["JWT_SECRET_KEY"] as string
-        );
-    }
+		return await sign(
+			credentialsDto,
+			process.env["JWT_SECRET_KEY"] as string,
+		);
+	}
 
-    async login(data: UserGetDTO) {
-        const { email } = data;
+	async login(data: UserGetDTO) {
+		const { email } = data;
 
-        // const {
-        //   payload: { email, password },
-        // }: { payload: { email: string; password: string } } = decode(userToken);
+		// const {
+		//   payload: { email, password },
+		// }: { payload: { email: string; password: string } } = decode(userToken);
 
-        const where = this.credentialsOption.whereEmail({ email });
-        const queryOptions: Prisma.CredentialsFindFirstArgs = {
-            where,
-        };
+		const where = this.credentialsOption.whereEmail({ email });
+		const queryOptions: Prisma.CredentialsFindFirstArgs = {
+			where,
+		};
 
-        const user = await prismaClient.credentials.findFirst(queryOptions);
+		const user = await prismaClient.credentials.findFirst(queryOptions);
 
-        if (!user) {
-            return;
-        }
+		if (!user) {
+			return;
+		}
 
-        const userDto = new UserDto({
-            id: user.id,
-            email: user.email,
-            role: user.role,
-            isActivated: user.isActive,
-        });
+		const userDto = new UserDto({
+			id: user.id,
+			email: user.email,
+			role: user.role,
+			isActivated: user.isActive,
+		});
 
-        return await sign(userDto, process.env.JWT_SECRET_KEY as string);
-    }
+		return await sign(userDto, process.env.JWT_SECRET_KEY as string);
+	}
 
-    async changePassword(userToken: string) {
-        const {
-            payload: { email, newPassword },
-        }: { payload: { newPassword: string; email: string } } =
-            decode(userToken);
+	async changePassword(userToken: string) {
+		const {
+			payload: { email, newPassword },
+		}: { payload: { newPassword: string; email: string } } =
+			decode(userToken);
 
-        const salt = await bcrypt.genSalt();
-        const hashPassword = await bcrypt.hash(newPassword, salt);
+		const salt = await bcrypt.genSalt();
+		const hashPassword = await bcrypt.hash(newPassword, salt);
 
-        const userID = (await this.findCredentials({ email })).id;
+		const userID = (await this.findCredentials({ email })).id;
 
-        return prismaClient.credentials.update({
-            where: { id: userID },
-            data: { password: hashPassword },
-        });
-    }
+		return prismaClient.credentials.update({
+			where: { id: userID },
+			data: { password: hashPassword },
+		});
+	}
 
-    async activate(activationLink: string) {
-        const user = await prismaClient.credentials.findFirst({
-            where: { activationLink },
-        });
+	async activate(activationLink: string) {
+		const user = await prismaClient.credentials.findFirst({
+			where: { activationLink },
+		});
 
-        if (!user) {
-            return;
-            // throw new HTTPException(400, { message: "Invalid activation link" });
-        }
+		if (!user) {
+			return;
+			// throw new HTTPException(400, { message: "Invalid activation link" });
+		}
 
-        await prismaClient.credentials.update({
-            where: { id: user.id },
-            data: { isActive: true },
-        });
-    }
+		await prismaClient.credentials.update({
+			where: { id: user.id },
+			data: { isActive: true },
+		});
+	}
 
-    async init(token: string) {
-        const user = await this.findCredentials({ token });
+	async init(token: string) {
+		const user = await this.findCredentials({ token });
 
-        if (!user) {
-            return;
-        }
+		if (!user) {
+			return;
+		}
 
-        const userData = new UserDto({
-            id: user.id,
-            email: user.email,
-            role: user.role,
-            isActivated: user.isActive,
-        });
+		const userData = new UserDto({
+			id: user.id,
+			email: user.email,
+			role: user.role,
+			isActivated: user.isActive,
+		});
 
-        return await sign(userData, process.env.JWT_SECRET_KEY as string);
-    }
+		return await sign(userData, process.env.JWT_SECRET_KEY as string);
+	}
 
-    async change(data: CredentialsChangeGetDTO, id: string) {
-        const isActive = data.isActive === "true";
+	async change(data: CredentialsChangeGetDTO, id: string) {
+		const isActive = data.isActive === "true";
 
-        return prismaClient.credentials.update({
-            where: { id: parseInt(id.toString()) },
-            data: {
-                email: data.email,
-                isActive,
-                role: data.role,
-                updatedAt: new Date(),
-            },
-        });
-    }
+		return prismaClient.credentials.update({
+			where: { id: parseInt(id.toString()) },
+			data: {
+				email: data.email,
+				isActive,
+				role: data.role,
+				updatedAt: new Date(),
+			},
+		});
+	}
 
-    async delete(credentialId: number | number[]) {
-        return this.mainService.delete("Credentials", credentialId);
-    }
+	async delete(credentialId: number | number[]) {
+		return this.mainService.delete("Credentials", credentialId);
+	}
 
-    async findCredentials({ email, token }: FindUserData) {
-        let userData: { email: string } | null;
+	async findCredentials({ email, token }: FindUserData) {
+		let userData: { email: string } | null;
 
-        if (token) {
-            const decodeToken: { header: any; payload: UserDto } =
-                decode(token);
-            userData = decodeToken.payload;
-        } else {
-            userData = { email: email as string };
-        }
+		if (token) {
+			const decodeToken: { header: any; payload: UserDto } =
+				decode(token);
+			userData = decodeToken.payload;
+		} else {
+			userData = { email: email as string };
+		}
 
-        const user = await prismaClient.credentials.findFirst({
-            where: { email: userData?.email },
-        });
+		const user = await prismaClient.credentials.findFirst({
+			where: { email: userData?.email },
+		});
 
-        if (!user) throw new HTTPException(401, { message: "Not authorized" });
-        return user;
-    }
+		if (!user) throw new HTTPException(401, { message: "Not authorized" });
+		return user;
+	}
 }
 
 export default new CredentialsService();

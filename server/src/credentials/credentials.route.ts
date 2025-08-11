@@ -19,51 +19,51 @@ const schemaChangePassword = new Map();
 schemaChangePassword.set("newPassword", validation().auth.password);
 
 const schemaChangeParam = new Map().set(
-    "credentialsId",
-    validation().global.number
+	"credentialsId",
+	validation().global.number,
 );
 
 credentialsRoute.get("/", credentialsController.getAll);
 credentialsRoute.get("/:credentialsId", credentialsController.getOne);
 
 credentialsRoute.get(
-    "/active/:link ",
-    credentialsMiddleware.active,
-    credentialsController.active
+	"/active/:link ",
+	credentialsMiddleware.active,
+	credentialsController.active,
 );
 
 credentialsRoute.post(
-    "/registration",
-    customValidator("body", schemaRegister),
-    credentialsMiddleware.registration,
-    credentialsController.registration
+	"/registration",
+	customValidator("body", schemaRegister),
+	credentialsMiddleware.registration,
+	credentialsController.registration,
 );
 
 credentialsRoute.post(
-    "/login",
-    credentialsMiddleware.login,
-    credentialsController.login
+	"/login",
+	credentialsMiddleware.login,
+	credentialsController.login,
 );
 
 credentialsRoute.post(
-    "/init",
-    credentialsMiddleware.check,
-    credentialsController.check
+	"/init",
+	credentialsMiddleware.check,
+	credentialsController.check,
 );
 
 credentialsRoute.put(
-    "/change-password",
-    customValidator("body", schemaChangePassword),
+	"/change-password",
+	customValidator("body", schemaChangePassword),
 
-    credentialsMiddleware.changePassword,
-    credentialsController.changePassword
+	credentialsMiddleware.changePassword,
+	credentialsController.changePassword,
 );
 
 credentialsRoute.put(
-    "/:credentialsId",
-    customValidator("param", schemaChangeParam),
-    credentialsMiddleware.change,
-    credentialsController.change
+	"/:credentialsId",
+	customValidator("param", schemaChangeParam),
+	credentialsMiddleware.change,
+	credentialsController.change,
 );
 
 credentialsRoute.delete("/", credentialsController.delete);

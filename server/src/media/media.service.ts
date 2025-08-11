@@ -1,9 +1,9 @@
 import {
-    deleteObject,
-    getDownloadURL,
-    getStorage,
-    ref,
-    uploadBytes,
+	deleteObject,
+	getDownloadURL,
+	getStorage,
+	ref,
+	uploadBytes,
 } from "firebase/storage";
 import { HTTPException } from "hono/http-exception";
 import { MediaGetDTO } from "./interface/MediaGetDTO"; // import fs from "node:fs/promises";
@@ -16,222 +16,219 @@ import fs from "node:fs";
 import { QueryParamHandler } from "../utils/query-params/QueryParams.service";
 
 interface FileData {
-    fileExtension: string;
-    fileDirectory: string;
+	fileExtension: string;
+	fileDirectory: string;
 }
 
 class MediaOptions {}
 
 class MediaService {
-    private mainService = new MainService();
-    private queryParams = new QueryParamHandler();
+	private mainService = new MainService();
+	private queryParams = new QueryParamHandler();
 
-    protected supportedMimeTypes: Map<string, FileData> = new Map();
+	protected supportedMimeTypes: Map<string, FileData> = new Map();
 
-    constructor() {
-        this.setupMimeTypes();
-    }
+	constructor() {
+		this.setupMimeTypes();
+	}
 
-    public setupMimeTypes(): void {
-        this.supportedMimeTypes
-            .set("image/png", {
-                fileExtension: ".png",
-                fileDirectory: "image/png",
-            })
-            .set("image/jpeg", {
-                fileExtension: ".jpg",
-                fileDirectory: "image/jpg",
-            });
-    }
+	public setupMimeTypes(): void {
+		this.supportedMimeTypes
+			.set("image/png", {
+				fileExtension: ".png",
+				fileDirectory: "image/png",
+			})
+			.set("image/jpeg", {
+				fileExtension: ".jpg",
+				fileDirectory: "image/jpg",
+			});
+	}
+	protected getUrl(fileData: FileData, fileName: string): string {
+		const url: string[] = ["nayzak-images"];
+		url.push(fileData.fileDirectory);
+		url.push(fileName + fileData.fileExtension);
+		return url.join("/");
+	}
+	private async deleteToFirebase(url?: string) {
+		const storage = getStorage();
+		const storageRef = ref(storage, url);
+		return await deleteObject(storageRef);
+	}
+	private async getUniqueFileName(baseName: string) {
+		let uniqueFileName = baseName;
 
-    protected getUrl(fileData: FileData, fileName: string): string {
-        const url: string[] = ["nayzak-images"];
-        url.push(fileData.fileDirectory);
-        url.push(fileName + fileData.fileExtension);
-        return url.join("/");
-    }
+		const media = await prismaClient.media.findMany({
+			where: {
+				OR: [
+					{ name: uniqueFileName },
+					{ name: { startsWith: `${uniqueFileName}[` } },
+				],
+			},
+		});
 
-    private async deleteToFirebase(url?: string) {
-        const storage = getStorage();
-        const storageRef = ref(storage, url);
-        return await deleteObject(storageRef);
-    }
+		for (let i = 0; i < media.length; i++) {
+			uniqueFileName = `${baseName}[${i + 1}]`;
+		}
 
-    private async getUniqueFileName(baseName: string) {
-        let uniqueFileName = baseName;
+		return uniqueFileName;
+	}
 
-        const media = await prismaClient.media.findMany({
-            where: {
-                OR: [
-                    { name: uniqueFileName },
-                    { name: { startsWith: `${uniqueFileName}[` } },
-                ],
-            },
-        });
+	async getAll(inputData: QueryParameterTypes) {
+		const take = this.queryParams.limit(inputData);
+		const skip = this.queryParams.offset(inputData);
+		const orderBy =
+			this.queryParams.orderBy<Prisma.MediaOrderByWithRelationInput>(
+				inputData,
+				Prisma.MediaScalarFieldEnum,
+			);
+		const where = this.queryParams.filter<Prisma.MediaWhereInput>(
+			inputData,
+			Prisma.MediaScalarFieldEnum,
+		);
 
-        for (let i = 0; i < media.length; i++) {
-            uniqueFileName = `${baseName}[${i + 1}]`;
-        }
+		const queryParams: Prisma.MediaFindManyArgs = {
+			take,
+			orderBy,
+			skip,
+			where,
+		};
 
-        return uniqueFileName;
-    }
+		const media = await prismaClient.media.findMany(queryParams);
+		const totalCount = await prismaClient.media.count();
 
-    async getAll(inputData: QueryParameterTypes) {
-        const take = this.queryParams.limit(inputData);
-        const skip = this.queryParams.offset(inputData);
-        const orderBy =
-            this.queryParams.orderBy<Prisma.MediaOrderByWithRelationInput>(
-                inputData,
-                Prisma.MediaScalarFieldEnum
-            );
-        const where = this.queryParams.filter<Prisma.MediaWhereInput>(
-            inputData,
-            Prisma.MediaScalarFieldEnum
-        );
+		return { totalCount, media };
+	}
 
-        const queryParams: Prisma.MediaFindManyArgs = {
-            take,
-            orderBy,
-            skip,
-            where,
-        };
+	async getOne(mediaId: string) {
+		return prismaClient.media.findFirst({ where: { id: +mediaId } });
+	}
 
-        const media = await prismaClient.media.findMany(queryParams);
-        const totalCount = await prismaClient.media.count();
+	async uploadMedia(data: MediaGetDTO) {
+		const fileData = this.supportedMimeTypes.get(data.file.type);
 
-        return { totalCount, media };
-    }
+		if (!fileData)
+			throw new HTTPException(415, { message: "Unsupported Media Type" });
 
-    async getOne(mediaId: string) {
-        return prismaClient.media.findFirst({ where: { id: +mediaId } });
-    }
+		const storage = getStorage();
 
-    async uploadMedia(data: MediaGetDTO) {
-        const fileData = this.supportedMimeTypes.get(data.file.type);
+		const currentFileName = data.fileName
+			? data.fileName
+					.trim()
+					.replaceAll(fileData.fileExtension, "")
+					.replaceAll(/[ _/.]/g, "-")
+			: data.file.name
+					.trim()
+					.replaceAll(fileData.fileExtension, "")
+					.replaceAll(/[ _/.]/g, "-");
 
-        if (!fileData)
-            throw new HTTPException(415, { message: "Unsupported Media Type" });
+		const uniqueFileName = await this.getUniqueFileName(currentFileName);
 
-        const storage = getStorage();
+		const uploadURL = this.getUrl(fileData, uniqueFileName);
 
-        const currentFileName = data.fileName
-            ? data.fileName
-                  .trim()
-                  .replaceAll(fileData.fileExtension, "")
-                  .replaceAll(/[ _/.]/g, "-")
-            : data.file.name
-                  .trim()
-                  .replaceAll(fileData.fileExtension, "")
-                  .replaceAll(/[ _/.]/g, "-");
+		const storageRef = ref(storage, uploadURL);
 
-        const uniqueFileName = await this.getUniqueFileName(currentFileName);
+		await uploadBytes(storageRef, data.file);
 
-        const uploadURL = this.getUrl(fileData, uniqueFileName);
+		const downloadURL = await getDownloadURL(storageRef);
 
-        const storageRef = ref(storage, uploadURL);
+		return prismaClient.media.create({
+			data: {
+				name: uniqueFileName,
+				src: downloadURL,
+				description: data.description,
+			},
+		});
+	}
 
-        await uploadBytes(storageRef, data.file);
+	async uploadMediaToLocalHost(data: MediaGetDTO) {
+		const fileData = this.supportedMimeTypes.get(
+			data.file.type,
+		) as FileData;
 
-        const downloadURL = await getDownloadURL(storageRef);
+		const fileName =
+			data.fileName.replaceAll(/[ _/.]/g, "-") + fileData.fileExtension;
 
-        return prismaClient.media.create({
-            data: {
-                name: uniqueFileName,
-                src: downloadURL,
-                description: data.description,
-            },
-        });
-    }
+		const currentFileName = fileName ? fileName : data.file.name;
 
-    async uploadMediaToLocalHost(data: MediaGetDTO) {
-        const fileData = this.supportedMimeTypes.get(
-            data.file.type
-        ) as FileData;
+		try {
+			const uploadDir = path.join(
+				process.cwd(),
+				"static",
+				fileData.fileDirectory,
+				currentFileName,
+			);
+			const dirPath = path.dirname(uploadDir);
 
-        const fileName =
-            data.fileName.replaceAll(/[ _/.]/g, "-") + fileData.fileExtension;
+			fs.access(dirPath, (err) => {
+				if (err)
+					fs.mkdir(dirPath, (err) => {
+						console.error(err);
+					});
+			});
 
-        const currentFileName = fileName ? fileName : data.file.name;
+			const chunk = await data.file
+				.stream()
+				.getReader()
+				.read()
+				.then(({ value }) => value);
 
-        try {
-            const uploadDir = path.join(
-                process.cwd(),
-                "static",
-                fileData.fileDirectory,
-                currentFileName
-            );
-            const dirPath = path.dirname(uploadDir);
+			fs.createWriteStream(uploadDir).write(chunk);
+		} catch (e) {
+			console.log(e);
+		}
+	}
 
-            fs.access(dirPath, (err) => {
-                if (err)
-                    fs.mkdir(dirPath, (err) => {
-                        console.error(err);
-                    });
-            });
+	async getMedialToLocalHost() {
+		const uploadDir = path.join(process.cwd(), "static");
 
-            const chunk = await data.file
-                .stream()
-                .getReader()
-                .read()
-                .then(({ value }) => value);
+		// const readStream = fs.createReadStream(uploadDir);
+		// console.log(readStream);
 
-            fs.createWriteStream(uploadDir).write(chunk);
-        } catch (e) {
-            console.log(e);
-        }
-    }
+		// readStream
+		//   .on("ready", (event) => {
+		//     console.log(event);
+		//   })
+		//   .on("error", (err) => {
+		//     console.log(err);
+		//   })
+		//   .end(() => {
+		//     console.log("stream end");
+		//   });
+		return;
+	}
 
-    async getMedialToLocalHost() {
-        const uploadDir = path.join(process.cwd(), "static");
+	async deleteMedia(mediaId: number | number[]) {
+		const supportedMapTypes = new Map<
+			string,
+			(media: any) => Promise<number | number[]>
+		>()
+			.set("Array", async (media: Media[]) => {
+				const arrId: number[] = [];
 
-        // const readStream = fs.createReadStream(uploadDir);
-        // console.log(readStream);
+				for (const key of media) {
+					await this.deleteToFirebase(key.src);
+					arrId.push(key.id);
+				}
 
-        // readStream
-        //   .on("ready", (event) => {
-        //     console.log(event);
-        //   })
-        //   .on("error", (err) => {
-        //     console.log(err);
-        //   })
-        //   .end(() => {
-        //     console.log("stream end");
-        //   });
-        return;
-    }
+				return arrId;
+			})
+			.set("Object", async (media: Media) => {
+				await this.deleteToFirebase(media.src);
+				return media.id;
+			});
 
-    async deleteMedia(mediaId: number | number[]) {
-        const supportedMapTypes = new Map<
-            string,
-            (media: any) => Promise<number | number[]>
-        >()
-            .set("Array", async (media: Media[]) => {
-                const arrId: number[] = [];
+		const media = await this.mainService.delete<Media | Media[]>(
+			"Media",
+			mediaId,
+		);
 
-                for (const key of media) {
-                    await this.deleteToFirebase(key.src);
-                    arrId.push(key.id);
-                }
-
-                return arrId;
-            })
-            .set("Object", async (media: Media) => {
-                await this.deleteToFirebase(media.src);
-                return media.id;
-            });
-
-        const media = await this.mainService.delete<Media | Media[]>(
-            "Media",
-            mediaId
-        );
-
-        if (!media) return;
-        for (const [key, value] of supportedMapTypes) {
-            if (media.constructor.name.includes(key)) {
-                return await value(media);
-            }
-        }
-    }
+		if (!media) return;
+		for (const [key, value] of supportedMapTypes) {
+			if (media.constructor.name.includes(key)) {
+				return await value(media);
+			}
+		}
+	}
 }
 
 export default new MediaService();

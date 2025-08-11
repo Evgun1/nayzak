@@ -1,4 +1,3 @@
-import { th } from "@faker-js/faker";
 import { Prisma } from "@prisma/client";
 import {
     AllModelsToStringIndex,

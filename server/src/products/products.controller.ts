@@ -1,7 +1,6 @@
 import { Context } from "hono";
 import prismaClient from "../prismaClient";
 import { Prisma } from "@prisma/client";
-import productsService from "./products.service";
 import ProductsService from "./products.service";
 import { ProductsGetDTO } from "./interfaces/ProductsGetDTO";
 import getReqBody from "../tools/getReqBody";
@@ -9,6 +8,8 @@ import { QueryParameterTypes } from "../utils/service/service.type";
 import { log } from "console";
 import { json } from "stream/consumers";
 import clearCache from "../utils/clear-cache/clearCache";
+import redisClient from "../redisClient";
+import productsService from "./products.service";
 
 class ProductsController {
     async getAll(c: Context) {

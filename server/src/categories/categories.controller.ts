@@ -25,9 +25,6 @@ class CategoriesController {
 
     async create(c: Context) {
         const body = (await getReqBody(c)) as CategoryGetDTO;
-
-        console.log(body);
-
         const category = await categoriesService.create(body);
 
         await clearCache("categories");

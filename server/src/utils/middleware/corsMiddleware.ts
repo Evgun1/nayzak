@@ -1,19 +1,23 @@
-import { log } from 'console';
-import { MiddlewareHandler } from 'hono';
-import { cors } from 'hono/cors';
+import { log } from "console";
+import { MiddlewareHandler } from "hono";
+import { cors } from "hono/cors";
 
 const corsMiddleware: MiddlewareHandler = async (c, next) => {
 	const corsHandler = cors({
-		origin: ['http://localhost:3000', 'http://localhost:5173'],
-		allowMethods: ['POST', 'GET', 'OPTIONS', 'DELETE', 'PUT'],
-		allowHeaders: [
-			'Origin',
-			'Content-Type',
-			'Authorization',
-			'Access-Control-Allow-Methods',
-			'Access-Control-Expose-Headers',
+		origin: [
+			"http://localhost:3000",
+			"http://localhost:2999",
+			"http://localhost:5173",
 		],
-		exposeHeaders: ['X-Total-Count'],
+		allowMethods: ["POST", "GET", "OPTIONS", "DELETE", "PUT"],
+		allowHeaders: [
+			"Origin",
+			"Content-Type",
+			"Authorization",
+			"Access-Control-Allow-Methods",
+			"Access-Control-Expose-Headers",
+		],
+		exposeHeaders: ["X-Total-Count"],
 	});
 
 	return corsHandler(c, next);

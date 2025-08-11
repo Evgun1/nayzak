@@ -1,4 +1,4 @@
-import nodemailer, { Transporter } from 'nodemailer';
+import nodemailer, { Transporter } from "nodemailer";
 
 class MailService {
 	transporter: Transporter;
@@ -21,7 +21,7 @@ class MailService {
 				from: process.env.SMTP_USER,
 				to,
 				subject: `Activision account ${process.env.API_URL}`,
-				text: '',
+				text: "",
 				html: ` 
       <div>
         <h1>Activation</h1>

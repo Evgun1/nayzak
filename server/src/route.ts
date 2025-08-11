@@ -15,7 +15,7 @@ import orderRoute from "./orders/orders.route";
 const appRouter = new Hono();
 
 const allRouters = new Map<string, Hono>([
-    ["products", productRouter],
+    ["/products", productRouter],
     ["/categories", categoriesRoute],
     ["/brands", brandsRouter],
     ["/cart", cartRouter],

@@ -1,15 +1,15 @@
-import { Prisma } from '@prisma/client';
-import prismaClient from '../prismaClient';
-import categoriesService from '../categories/categories.service';
+import { Prisma } from "@prisma/client";
+import prismaClient from "../prismaClient";
+import categoriesService from "../categories/categories.service";
 import {
 	SubcategoriesGeDTO,
 	SubcategoriesGetParams,
 	SubcategoriesGetQuery,
 	SubcategoryByCategoryGetParams,
-} from './subcategories.type';
-import { MainService } from '../utils/service/main.service';
-import { QueryParameterTypes } from '../utils/service/service.type';
-import { QueryParamHandler } from '../utils/query-params/QueryParams.service';
+} from "./subcategories.type";
+import { MainService } from "../utils/service/main.service";
+import { QueryParameterTypes } from "../utils/service/service.type";
+import { QueryParamHandler } from "../utils/query-params/QueryParams.service";
 
 class SubcategoriesOption {
 	async getAllSubcategoryWhere(subcategoryGetGTO: SubcategoriesGetQuery) {
@@ -17,7 +17,7 @@ class SubcategoriesOption {
 
 		if (subcategoryGetGTO.category) {
 			const category = await categoriesService.getCategoryIDByTitle(
-				subcategoryGetGTO.category
+				subcategoryGetGTO.category,
 			);
 
 			where.categoriesId = category?.id;
@@ -27,13 +27,13 @@ class SubcategoriesOption {
 	}
 
 	async getSubcategoryByTitleWhere(
-		subcategoryGetParamGTO: SubcategoryByCategoryGetParams
+		subcategoryGetParamGTO: SubcategoryByCategoryGetParams,
 	) {
 		const where: Prisma.SubcategoriesWhereInput = {};
 
 		if (subcategoryGetParamGTO.categoryName) {
 			const category = await categoriesService.getCategoryIDByTitle(
-				subcategoryGetParamGTO.categoryName
+				subcategoryGetParamGTO.categoryName,
 			);
 
 			where.categoriesId = category?.id;
@@ -67,19 +67,20 @@ class SubcategoriesService {
 	private queryParams = new QueryParamHandler();
 
 	async getAllSubcategories(inputData: QueryParameterTypes) {
+
 		const where = this.queryParams.filter<Prisma.SubcategoriesWhereInput>(
 			inputData,
-			Prisma.SubcategoriesScalarFieldEnum
+			Prisma.SubcategoriesScalarFieldEnum,
 		);
 		where.Categories = {
-			title: { contains: inputData.category, mode: 'insensitive' },
+			title: { contains: inputData.category, mode: "insensitive" },
 		};
 
 		const skip = this.queryParams.offset(inputData);
 		const orderBy =
 			this.queryParams.orderBy<Prisma.SubcategoriesOrderByWithRelationInput>(
 				inputData,
-				Prisma.SubcategoriesScalarFieldEnum
+				Prisma.SubcategoriesScalarFieldEnum,
 			);
 		const take = this.queryParams.limit(inputData);
 
@@ -103,24 +104,25 @@ class SubcategoriesService {
 		if (!subcategoriesParam) return;
 
 		const subcategoriesData = this.supportedMimeTypes.get(
-			isNaN(Number(subcategoriesParam))
+			isNaN(Number(subcategoriesParam)),
 		);
 
 		if (!subcategoriesData) return;
 		const inputData = subcategoriesData(
-			subcategoriesParam
+			subcategoriesParam,
 		) as QueryParameterTypes;
 
 		const where = this.queryParams.filter<Prisma.SubcategoriesWhereInput>(
 			inputData,
-			Prisma.SubcategoriesScalarFieldEnum
+			Prisma.SubcategoriesScalarFieldEnum,
 		);
 
 		const options: Prisma.SubcategoriesFindFirstArgs = {
 			where,
 		};
 
-		const subcategories = await prismaClient.subcategories.findFirst(options);
+		const subcategories =
+			await prismaClient.subcategories.findFirst(options);
 
 		return subcategories;
 	}
@@ -142,8 +144,9 @@ class SubcategoriesService {
 		return prismaClient.subcategories.findFirst({
 			where: {
 				title: subcategoryTitle
-					? subcategoryTitle[0].toUpperCase() + subcategoryTitle.slice(1)
-					: '',
+					? subcategoryTitle[0].toUpperCase() +
+						subcategoryTitle.slice(1)
+					: "",
 			},
 			select: { id: true },
 		});
@@ -159,7 +162,7 @@ class SubcategoriesService {
 	}
 
 	async deleteSubcategories(subcategoriesId: number | number[]) {
-		return await this.mainService.delete('Subcategories', subcategoriesId);
+		return await this.mainService.delete("Subcategories", subcategoriesId);
 	}
 }
 

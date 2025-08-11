@@ -325,6 +325,9 @@ class ProductsService {
         ]);
         const getObject = this.getSupportedMimeTypes(params.productParam);
 
+
+        
+
         if (getObject) select.where(getObject);
 
         const product = await select.query<Products[]>();

@@ -1,12 +1,12 @@
-import prismaClient from '../prismaClient';
+import prismaClient from "../prismaClient";
 import WishlistsGTO, {
 	WishlistsDataGTO as WishlistsDataGTO,
 	WishlistInputDTO,
-} from './interface/WishlistGetInput';
-import { MainService } from '../utils/service/main.service';
-import { QueryParameterTypes } from '../utils/service/service.type';
-import { Prisma } from '@prisma/client';
-import { QueryParamHandler } from '../utils/query-params/QueryParams.service';
+} from "./interface/WishlistGetInput";
+import { MainService } from "../utils/service/main.service";
+import { QueryParameterTypes } from "../utils/service/service.type";
+import { Prisma, Wishlist } from "@prisma/client";
+import { QueryParamHandler } from "../utils/query-params/QueryParams.service";
 
 class WishlistService {
 	private mainService = new MainService();
@@ -15,12 +15,12 @@ class WishlistService {
 	async getAll(queryParams: QueryParameterTypes) {
 		const where = this.queryParams.filter<Prisma.WishlistWhereInput>(
 			queryParams,
-			Prisma.WishlistScalarFieldEnum
+			Prisma.WishlistScalarFieldEnum,
 		);
 		const orderBy =
 			this.queryParams.orderBy<Prisma.WishlistOrderByWithRelationInput>(
 				queryParams,
-				Prisma.WishlistScalarFieldEnum
+				Prisma.WishlistScalarFieldEnum,
 			);
 		const skip = this.queryParams.offset(queryParams);
 		const take = this.queryParams.limit(queryParams);
@@ -72,7 +72,7 @@ class WishlistService {
 	}
 
 	async removeWishlist(id: number | number[]) {
-		return this.mainService.delete('Wishlist', id);
+		return this.mainService.delete<Wishlist>("Wishlist", id);
 	}
 }
 
