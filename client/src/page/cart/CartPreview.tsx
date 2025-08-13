@@ -50,7 +50,9 @@ export default function CartPreview({
 	};
 
 	useEffect(() => {
-		dispatch(changeAmount({ amount: quantity, productsId: productID }));
+		dispatch(
+			changeAmount({ id: NaN, amount: quantity, productsId: productID }),
+		);
 	}, [dispatch, quantity, productID]);
 
 	const price = Math.round(mainPrice);

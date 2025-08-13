@@ -1,10 +1,7 @@
-export interface OrdersItem {
+export interface IOrder {
 	id: number;
-	amount: number;
-	price: number;
-	status: string;
-	customersId: number;
 	productsId: number;
-	createdAt: number;
-	addressesId: number;
+	createdAt: Date;
+	status: string;
+	price: number;
 }

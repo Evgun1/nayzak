@@ -52,9 +52,9 @@ export const appCartPut = async (product: CartItemData, token: string) => {
 	return result;
 };
 
-export const appCartDelete = async (id: number | number[], token: string) => {
+export const appCartDelete = async (id: number[], token: string) => {
 	const pathname = "cart";
-	const nginxPathname = `user/cart`;
+	const nginxPathname = `user/cart/`;
 
 	const result = await appFetchDelete({
 		authorization: token,

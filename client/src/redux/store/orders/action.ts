@@ -1,22 +1,27 @@
 import { RootState } from "../../store";
-import { appOrdersPost, OrdersUpload } from "@/lib/api/orders";
 import { AppDispatch } from "../../store";
 import { ordersAction } from "./orders";
 import { removeCart } from "../cart/action";
 import { notificationAction } from "../notification/notification";
 import NotificationCheckout from "@/components/notification/NotificationCheckout";
+import { appCookieGet } from "@/lib/api/cookie";
+import {
+	appOrderInitGet,
+	appOrderUpload,
+	OrdersUpload,
+} from "@/lib/api/orders";
 
 export const initOrders = () => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
-		const customerId = getState().customer.customerData?.id;
-		if (!customerId) return;
+		const token = await appCookieGet("user-token");
+		if (!token) return;
+
+		console.log(true);
 
 		try {
-			// const orders = await appOrdersPost({ init: { customerId } });
-			const orders = {} as any;
-			if (!orders) return;
+			const orderFetch = await appOrderInitGet(token);
 
-			dispatch(ordersAction.uploadOrders(orders));
+			dispatch(ordersAction.uploadOrders(orderFetch));
 		} catch (error) {
 			console.log(error);
 		}
@@ -26,16 +31,19 @@ export const initOrders = () => {
 export function uploadOrders(currentOrders: OrdersUpload) {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		const ordersArr = [...getState().orders.ordersData];
+		const token = await appCookieGet("user-token");
+		if (!token) return;
+
+		console.log(token);
 
 		try {
-			const orders = await appOrdersPost({ upload: currentOrders });
+			const { orders } = await appOrderUpload(currentOrders, token);
+
 			if (!orders) return;
-
-			ordersArr.push(...orders);
-			dispatch(ordersAction.uploadOrders(ordersArr));
-
 			const productsId = orders.map((val) => val.productsId);
+			ordersArr.push(...orders);
 
+			dispatch(ordersAction.uploadOrders(ordersArr));
 			dispatch(removeCart(productsId as number[]));
 			dispatch(notificationAction.toggle(NotificationCheckout()));
 

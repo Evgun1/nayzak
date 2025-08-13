@@ -25,15 +25,22 @@ const DetailInfo = () => {
 		(state) => state.auth.credentials?.email,
 	);
 
-	const dataInformationHandler = (event: { data: any }) => {
-		// const formData = new FormData();
-		// for (const key in event.data) {
-		// 	if (!Object.keys(event.data).includes(key)) continue;
-
-		// 	formData.set(key, event.data[key].toString().trim());
-		// }
-
-		dispatch(writeCustomerAction(event.data));
+	const dataInformationHandler = (event: {
+		data: {
+			firstName: string;
+			lastName: string;
+			email: string;
+			phone: string;
+		};
+	}) => {
+		const { email, firstName, lastName, phone } = event.data;
+		dispatch(
+			writeCustomerAction({
+				firstName,
+				lastName,
+				phone: parseInt(phone),
+			}),
+		);
 	};
 
 	return (
@@ -80,6 +87,7 @@ const DetailInfo = () => {
 					}}
 					style="contained"
 				/>
+
 				<Form.InputDefault
 					label="Email *"
 					inputSettings={{

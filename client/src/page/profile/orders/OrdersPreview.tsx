@@ -1,6 +1,6 @@
 "use client";
 
-import { OrdersItem } from "@/types/orders.types";
+import { IOrder } from "@/types/orders.types";
 import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./OrdersPreview.module.scss";
 import { useCallback, useEffect, useState } from "react";
@@ -14,7 +14,7 @@ import Accordion from "@/ui/accordion/Accordion";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 
-export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
+export const OrdersPreview = (props: { order: Partial<IOrder> }) => {
 	const { order } = props;
 
 	const customerState = useAppSelector(
@@ -44,19 +44,6 @@ export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
 		const productFetch = await appOneProductGet({
 			slug: order.productsId.toString(),
 		});
-
-		const addresses = addressesState.find(
-			(address) => address.id === order.addressesId,
-		);
-		if (!addresses) return;
-
-		setAddress(addresses as AddressItem);
-		setProduct({
-			...productFetch,
-			discountPrice:
-				productFetch.price -
-				(productFetch.price * productFetch.discount) / 100,
-		});
 	}, [order, addressesState]);
 
 	useEffect(() => {
@@ -85,7 +72,7 @@ export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
 					}}
 				/>
 			</Accordion.Header>
-			<Accordion.Body>
+			{/* <Accordion.Body>
 				<div className={classes["orders-preview__info"]}>
 					<div
 						className={`${classes["orders-preview__product-wrap"]}`}
@@ -151,7 +138,7 @@ export const OrdersPreview = (props: { order: Partial<OrdersItem> }) => {
 						<span>{customerState?.phone}</span>
 					</div>
 				</div>
-			</Accordion.Body>
+			</Accordion.Body> */}
 		</Accordion>
 	);
 };

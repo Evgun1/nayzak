@@ -47,7 +47,6 @@ export const uploadAddress = (inputData: UploadAddressProps) => {
 			if (addressesIndex === -1) {
 				const address = await appAddressesPost({
 					sendData: {
-						id: +inputData.id,
 						city: inputData.city,
 						street: inputData.street,
 						postalCode: +inputData.postalCode,

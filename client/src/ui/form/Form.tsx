@@ -73,9 +73,10 @@ const Form = <T extends ZodRawShape>({
 				const inputName = input.name;
 				const inputValue = input.value;
 
-				if (inputValue) {
-					object[inputName] = inputValue;
-				}
+				if (inputValue)
+					object[inputName] = isNaN(+inputValue)
+						? inputValue
+						: +inputValue;
 
 				delete object[""];
 			});

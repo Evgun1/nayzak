@@ -1,22 +1,14 @@
 import { appCookieGet } from "@/lib/api/cookie";
 import { AppDispatch, RootState } from "../../store";
-import {
-	appCustomersInitGet,
-	appCustomersPost,
-	appCustomersPut,
-} from "@/lib/api/customer";
-import { customerAction, CustomerItem } from "./customer";
-import { SignUp } from "../auth/auth.type";
+import { appCustomersInitGet, appCustomersPut } from "@/lib/api/customer";
+import { customerAction } from "./customer";
 import { notificationAction } from "../notification/notification";
-import NotificationCustomer from "@/components/notification/NotificationCustomer";
 import PopupNotification from "@/popups/popup-notifications/PopupNotifications";
 import { initAddress } from "../address/action";
 import { initWishlist } from "../wishlist/action";
 import { initCart } from "../cart/action";
 import { initOrders } from "../orders/action";
-import { jwtDecode } from "jwt-decode";
 import { ICustomerAction } from "./type/customer-action.interface";
-import { CustomerPost } from "@/types/customer.types";
 
 export const initCustomer = () => {
 	return async (dispatch: AppDispatch) => {
@@ -24,15 +16,14 @@ export const initCustomer = () => {
 		if (!token) return;
 
 		try {
-			const res = await appCustomersInitGet(token);
+			const customerInit = await appCustomersInitGet(token);
+			if (!customerInit) return;
 
-			if (res) {
-				dispatch(customerAction.setCustomer(res));
-				dispatch(initAddress());
-				dispatch(initWishlist());
-				dispatch(initCart());
-				dispatch(initOrders());
-			}
+			dispatch(customerAction.setCustomer(customerInit));
+			dispatch(initAddress());
+			dispatch(initWishlist());
+			dispatch(initCart());
+			dispatch(initOrders());
 		} catch (error) {
 			console.log(error);
 		}
@@ -43,6 +34,8 @@ export const writeCustomerAction = (inputData: ICustomerAction) => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		const userToken = await appCookieGet("user-token");
 		if (!userToken) return;
+
+		console.log(inputData);
 
 		try {
 			const customerID = getState().customer.customerData?.id;

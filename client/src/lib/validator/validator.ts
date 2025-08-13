@@ -88,7 +88,7 @@ export const validation = {
 		phone: z.coerce
 			.string()
 			.refine((val) => val.length >= 9, {
-				message: "Phone less than six characters",
+				message: "Phone less than nine characters",
 			})
 			.refine((val) => val.length <= 20, {
 				message: "Postal code is more than twenty characters",

@@ -6,11 +6,11 @@ import Feature from "@/page/hero/feature/Feature";
 import FeatureTwo from "@/page/hero/feature-two/FeatureTwo";
 import IconsBox from "@/page/hero/iconsBox/IconsBox";
 import React from "react";
-import { PageProps } from "../../.next/types/app/(home)/layout";
+import { PageProps } from "../../.next/types/app/layout";
 
 export default async function Home(props: PageProps) {
 	return (
-		<main>
+		<>
 			<Banner />
 			{/* <ProductsSwiper /> */}
 			<CategoryGrid />
@@ -18,6 +18,6 @@ export default async function Home(props: PageProps) {
 			<Feature />
 			<FeatureTwo />
 			<IconsBox />
-		</main>
+		</>
 	);
 }

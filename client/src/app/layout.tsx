@@ -48,7 +48,7 @@ export default async function RootLayout({
 						<div id="notification-container"></div>
 
 						<Header />
-						{children}
+						<main>{children}</main>
 						<Footer />
 					</div>
 					<Popup />

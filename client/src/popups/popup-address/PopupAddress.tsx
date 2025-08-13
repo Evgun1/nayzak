@@ -13,7 +13,11 @@ import { validation } from "@/lib/validator/validator";
 import Form from "@/ui/form/Form";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 
-type SubmitHandlerProps = AddressData & CustomerItem;
+type SubmitHandlerProps = {
+	city: string;
+	street: string;
+	postalCode: string;
+};
 
 export default function PopupAddress({ data }: { data?: AddressType }) {
 	const dispatch = useAppDispatch();
@@ -30,9 +34,11 @@ export default function PopupAddress({ data }: { data?: AddressType }) {
 		object: { data: SubmitHandlerProps },
 		element: FormEvent<HTMLFormElement>,
 	) => {
-		const eventData = object.data;
+		const { street, postalCode, city } = object.data;
 
-		dispatch(uploadAddress(eventData));
+		dispatch(
+			uploadAddress({ street, postalCode: parseInt(postalCode), city }),
+		);
 	};
 
 	return (

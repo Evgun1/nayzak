@@ -29,7 +29,6 @@ const CheckoutForm = () => {
 	const submitHandler = (value: {
 		data: {
 			addressesId: number;
-			cartId: number[] | number;
 			credentialsId: number;
 			customersId: number;
 			firstName: string;
@@ -38,14 +37,11 @@ const CheckoutForm = () => {
 		};
 	}) => {
 		const data = value.data;
-
 		try {
 			dispatch(
 				uploadOrders({
 					addressesId: data.addressesId,
-					cartId: data.cartId,
-					credentialsId: data.credentialsId,
-					customersId: data.credentialsId,
+					cartId: cart.map((cart) => cart.id),
 				}),
 			);
 			dispatch(

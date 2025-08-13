@@ -145,41 +145,29 @@ export function changeAmount(currentProduct: CartItemData) {
 	};
 }
 
-export function removeCart(productsId: number | number[]) {
+export function removeCart(productsId: number[] | number) {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		const token = appCookieGet("user-token");
 		if (!token) return;
 
 		const cart = getState().cart.productsArray.map((cart) => cart);
-		const suggestRemoveCartMap = new Map<
-			boolean,
-			(data: any) => Promise<void>
-		>()
-			.set(true, async (data: number[]) => {
-				const cartId = cart
-					.filter((val) => data[cart.indexOf(val)] === val.productsId)
-					.map((data) => data.id);
 
-				await appCartDelete(cartId as number[], token);
-				dispatch(cartAction.removeCart(cartId as number[]));
-			})
-			.set(false, async (data: number) => {
-				const id = cart
-					.filter((cart) => cart.productsId === productsId)
-					.map((product) => product.id)
-					.pop();
-				if (!id) return;
-
-				await appCartDelete(id, token);
-				dispatch(cartAction.removeCart(id));
-			});
+		const productsArrId = Array.isArray(productsId)
+			? productsId
+			: [productsId];
 
 		try {
-			for (const [key, value] of suggestRemoveCartMap.entries()) {
-				if (key === Array.isArray(productsId)) {
-					await value(productsId);
-				}
-			}
+			const filterCartId = cart
+				.filter((cart) => {
+					const productsFilter = productsArrId.find(
+						(productId) => productId === cart.productsId,
+					);
+					if (productsFilter) return cart;
+				})
+				.map((cart) => cart.id);
+
+			await appCartDelete(filterCartId, token);
+			dispatch(cartAction.removeCart(filterCartId));
 		} catch (error) {
 			console.log(error);
 		}

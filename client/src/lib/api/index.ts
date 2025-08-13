@@ -1,7 +1,7 @@
 import { AppGetFetch, TagsItem } from "./interface/appGetFetch.interface";
 
 let BASE_URL = "http://localhost:3030";
-const BASE_URL_CATALOG = "http://localhost:8080";
+const BASE_URL_NGINX = "http://localhost:8080";
 
 type AppFetchProps = {
 	pathname: string;
@@ -34,7 +34,7 @@ const appFetch = async <T>({
 	totalCount: number;
 	headers: Headers;
 }> => {
-	const url = `${BASE_URL_CATALOG}/${pathname}${
+	const url = `${BASE_URL_NGINX}/${pathname}${
 		searchParams ? `?${searchParams}` : ""
 	}`;
 

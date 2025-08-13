@@ -1,7 +1,7 @@
-import { OrdersItem } from '@/types/orders.types';
-import { Action, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IOrder } from "@/types/orders.types";
+import { Action, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface OrdersData extends Partial<OrdersItem> {}
+interface OrdersData extends Partial<IOrder> {}
 
 type InitialState = {
 	ordersData: OrdersData[];
@@ -12,7 +12,7 @@ const initialState: InitialState = {
 };
 
 const ordersSlice = createSlice({
-	name: 'orders',
+	name: "orders",
 	initialState,
 	reducers: {
 		uploadOrders(state, action: PayloadAction<OrdersData[]>) {

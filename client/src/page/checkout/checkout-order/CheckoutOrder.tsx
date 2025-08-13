@@ -110,11 +110,6 @@ const CheckoutOrder = () => {
 
 	return (
 		<div className={classes["order"]}>
-			<input
-				type="hidden"
-				name="cartId"
-				value={cart.map((data) => data.id).join(",")}
-			/>
 			<div
 				className={`${ButtonClassList.BUTTON_LARGE} ${classes["order__header"]}`}
 			>

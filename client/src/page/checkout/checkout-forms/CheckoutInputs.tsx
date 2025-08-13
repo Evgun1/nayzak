@@ -116,7 +116,7 @@ export const CheckoutFormAddress = () => {
 					type="hidden"
 					name="addressesId"
 					value={address.id}
-					id={address.id.toString()}
+					id={address.id ? address.id.toString() : ""}
 				/>
 			)}
 			<div className={classes["preview-addresses__header"]}>
