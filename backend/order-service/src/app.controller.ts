@@ -1,9 +1,17 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Get,
+	Post,
+	Req,
+	Res,
+	UseGuards,
+} from "@nestjs/common";
 import { AppService } from "./app.service";
 import { JwtAuthGuard } from "./guard/jwtAuth.guard";
-import { Request } from "express";
+import { Request, Response } from "express";
 import { IUserJwt } from "./type/userJwt.interface";
-import { ValidationOrderUploadBodyDTO } from "./validation/validationOrderUpload.dto";
+import { ValidationOrderKafkaBodyDTO } from "./validation/validationOrderKafka.dto";
 
 @Controller()
 export class AppController {
@@ -15,20 +23,19 @@ export class AppController {
 		const user = req.user as IUserJwt;
 		const init = await this.appService.init(user);
 
-		console.log("init");
-
+		// if (init.length <= 0) return;
 		return init;
 	}
 
-	@Post("/")
+	@Post("/upload")
 	@UseGuards(JwtAuthGuard)
 	async create(
 		@Req() req: Request,
-		@Body() body: ValidationOrderUploadBodyDTO,
+		@Body() body: ValidationOrderKafkaBodyDTO,
 	) {
 		const user = req.user as IUserJwt;
-		const t = await this.appService.create(body, user);
-
-		return "Hello world";
+		const order = await this.appService.create(body, user);
+		
+		return order;
 	}
 }

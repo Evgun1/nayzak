@@ -1,0 +1,50 @@
+.trending {
+	display: grid;
+	grid-template-columns: 1fr max(766px);
+
+	&__info {
+		margin: auto 0;
+
+		max-width: 456px;
+		text-align: start;
+
+		&-header {
+			display: grid;
+			gap: 8px;
+		}
+
+		&-header,
+		&-paragraph {
+			margin-bottom: 24px;
+		}
+	}
+
+	&__images {
+		position: relative;
+		height: 100vh;
+		max-height: 627px;
+	}
+
+	&__image {
+		object-fit: cover;
+
+		&-back {
+			position: absolute;
+			top: 0;
+			right: 0;
+			aspect-ratio: 1/1 auto;
+			max-width: 570px;
+			width: 100%;
+			z-index: 1;
+		}
+		&-front {
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			aspect-ratio: 0.8256;
+			max-width: 337px;
+			width: 100%;
+			z-index: 2;
+		}
+	}
+}

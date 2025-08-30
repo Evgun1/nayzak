@@ -1,4 +1,8 @@
+import localStorageHandler from "@/utils/localStorage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import { stat } from "fs";
+import { ca } from "zod/v4/locales";
 
 export interface CartItemData {
 	id: number;
@@ -6,24 +10,46 @@ export interface CartItemData {
 	amount: number;
 }
 
-type CartState = {
+export type CartState = {
 	productsArray: CartItemData[];
 	totalAmount: number;
 };
+
+const storage = localStorageHandler<CartState>("cartState");
+const localStorageCart = storage.get();
 
 const initialState: CartState = {
 	productsArray: [],
 	totalAmount: 0,
 };
 
+// const initialState: CartState = localStorageCart
+// 	? localStorageCart
+// 	: {
+// 			productsArray: [],
+// 			totalAmount: 0,
+// 	  };
+
 export const cartSlice = createSlice({
 	name: "cart",
 	initialState,
+
+	selectors: {
+		getCartSelector: (state: CartState) => {
+			const storage = localStorageHandler<CartState>("cartState");
+			const localCart = storage.get();
+			return localCart ? localCart : state;
+		},
+	},
+
 	reducers: {
 		saveCart(state, action: PayloadAction<CartItemData[]>) {
 			if (action.payload && action.payload.length) {
 				state.productsArray = action.payload;
 				state.totalAmount = action.payload.length;
+				const storage = localStorageHandler<CartState>("cartState");
+
+				storage.set(state);
 			}
 		},
 
@@ -56,11 +82,19 @@ export const cartSlice = createSlice({
 					value(action.payload);
 				}
 			}
+			const storage = localStorageHandler<CartState>("cartState");
+			storage.set(state);
+			const localStorage = storage.get();
+			state = localStorage ? localStorage : state;
 		},
 
 		cleanCart(state) {
 			state.productsArray.splice(0);
 			state.totalAmount = 0;
+			const storage = localStorageHandler<CartState>("cartState");
+			storage.set(state);
+			const localStorage = storage.get();
+			state = localStorage ? localStorage : state;
 		},
 	},
 });

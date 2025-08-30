@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import { TextClassList } from "@/types/textClassList.enum";
 import Link from "next/link";
@@ -7,9 +7,8 @@ import classes from "./style.module.scss";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import IconsIdList from "@/components/icons/IconsIdList";
 import DisplayIcon from "@/components/icons/displayIcon";
-import { useEffect } from "react";
 
-export default function FeatureTwo() {
+export default async function FeatureTwo() {
 	return (
 		<section className="section">
 			<div className={`container ${classes.wrapper}`}>

@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from "../../store";
-import { addressAction, AddressData } from "./address";
+import { addressAction, AddressData, AddressState } from "./address";
 import { writeCustomerAction } from "../customer/action";
 import { popupActions } from "../popup/popup";
 import { notificationAction } from "../notification/notification";
@@ -11,11 +11,17 @@ import {
 	appAddressesDelete,
 	appAddressesPost,
 } from "@/lib/api/addresses";
+import localStorageHandler from "@/utils/localStorage";
 
 export const initAddress = () => {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		const token = await appCookieGet("user-token");
-		if (!token || token === null) return;
+		const localStorageAddress =
+			localStorageHandler<AddressState>("addressState");
+
+
+		if (!token || token === null) return localStorageAddress.delete();
+		if (localStorageAddress.get()) return;
 
 		try {
 			const { result, totalCount } = await appAddressesInitGet(token);

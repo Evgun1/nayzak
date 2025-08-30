@@ -30,7 +30,7 @@ interface IconItem {
 
 interface InputDefaultProps extends InputType {
 	style: "line" | "contained";
-	customClasses?: string;
+	className?: string;
 	icon?: IconItem;
 	label?: string;
 }
@@ -40,7 +40,7 @@ const InputDefault: FC<InputDefaultProps> = ({
 	icon,
 	inputSettings,
 	label,
-	customClasses,
+	className,
 	error,
 }) => {
 	const inputContainerRef = useRef(null) as RefObject<HTMLDivElement>;
@@ -197,7 +197,7 @@ const InputDefault: FC<InputDefaultProps> = ({
 	return (
 		<div
 			className={`${classes["input"]} ${
-				customClasses ? customClasses : ""
+				className ? className : ""
 			} ${inputSettings.disabled && classes["input--disabled"]}`}
 		>
 			{label && (

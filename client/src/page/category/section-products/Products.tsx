@@ -7,14 +7,14 @@ import { FilterProvider } from "./filter/useFilter";
 import LoaderProducts from "@/components/loader/products/LoaderProducts";
 import Toolbar from "./toolbar/Toolbar";
 import { appProductsGet } from "@/lib/api/products";
-import Filter from "./filter/Filter";
+import Page from "./filter/page";
 
 type ProductsProps = {
 	searchParams: URLSearchParams;
 	params: { id: number }[];
 };
 
-const SidebarDynamic = dynamic(() => import("./filter/Filter"), {
+const SidebarDynamic = dynamic(() => import("./filter/page"), {
 	ssr: false,
 	loading: () => <></>,
 });
@@ -31,7 +31,7 @@ const ProductsSection: FC<ProductsProps> = async ({ params, searchParams }) => {
 		<FilterProvider>
 			<div className={`container`}>
 				<div className={classes.products}>
-					<Filter />
+					<Page />
 					<div className={classes["products__main"]}>
 						<Toolbar productsCount={productCounts} />
 						<LoaderProducts

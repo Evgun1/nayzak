@@ -1,0 +1,34 @@
+.header-skeleton {
+	display: flex;
+	padding: 19px 0;
+	justify-content: space-between;
+	align-items: center;
+
+	&__logo {
+		width: 155px;
+		height: 30px;
+		color: var(--black-900);
+	}
+
+	&__navbar {
+		display: flex;
+		gap: 40px;
+
+		&-item {
+			height: 20px;
+			width: 100px;
+			border-radius: 5px;
+		}
+	}
+
+	&__action {
+		display: flex;
+		gap: 20px;
+
+		&-item {
+			width: 28px;
+			height: 28px;
+			border-radius: 100%;
+		}
+	}
+}

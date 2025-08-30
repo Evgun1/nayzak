@@ -12,7 +12,7 @@ import { Prisma } from "@prisma/client";
 import e from "express";
 import { IUserJwt } from "src/interface/credentialsJwt.interface";
 import { EventPattern, MessagePattern, Payload } from "@nestjs/microservices";
-import { GetCartKafkaDTO } from "./dto/getCartKafka.dto";
+import { ValidationCartKafkaPayloadDTO } from "./validation/validationCartKafka.dto";
 import { CartKafkaDTO } from "./dto/CartKafka.dto";
 
 @Injectable()
@@ -26,7 +26,7 @@ export class CartService {
 	) {
 		this.clearCacheToClient = this.clientApiService.clearCache("cart");
 	}
-	async getAll(query: QueryDTO & Partial<GetCartKafkaDTO>) {
+	async getAll(query: QueryDTO & Partial<ValidationCartKafkaPayloadDTO>) {
 		const getQuery = this.queryService.getQuery("Cart", query);
 		const options: Prisma.CartFindManyArgs = { ...getQuery };
 
@@ -77,17 +77,17 @@ export class CartService {
 			throw new UnauthorizedException(error);
 		}
 	}
-	async removeCart(id: number | number[]) {
+	async removeCart(id: number[]) {
 		try {
 			const sqlQuery = await this.prisma.sqlQuery("Cart");
 			const sqlSelect = sqlQuery.select;
 			const sqlDelete = sqlQuery.delete;
 
 			sqlSelect.fields();
-			sqlSelect.where({ id: id });
+			sqlSelect.where({ id: { in: id } });
 			const selectQuery = await sqlSelect.query();
 
-			sqlDelete.where({ id: id });
+			sqlDelete.where({ id: { in: id } });
 			await sqlDelete.query();
 
 			await this.clearCacheToClient;
@@ -109,8 +109,8 @@ export class CartService {
 		return cart;
 	}
 
-	async getCartKafka(query: GetCartKafkaDTO) {
-		const { cart } = await this.getAll(query);
+	async getCartKafka(inputData: ValidationCartKafkaPayloadDTO) {
+		const { cart } = await this.getAll(inputData);
 
 		const cartKafkaDTO: CartKafkaDTO[] = cart.map(
 			(item) => new CartKafkaDTO({ ...item }),

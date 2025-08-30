@@ -3,6 +3,7 @@ import { appFetchGet } from ".";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { CacheItem } from "./interface/appGetFetch.interface";
 import { ProductDetails } from "@/types/product/productDetails";
+import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
 
 type AppProductsGetProps = {
 	searchParams?: URLSearchParams;
@@ -114,7 +115,7 @@ export const appOneProductGet = async (param: AppOneProductGetParam) => {
 
 export const appMinMaxPriceGet = async (
 	searchParams: URLSearchParams,
-	slug: string[] | string,
+	slug: string[] | string | number | number[],
 ) => {
 	const param = Array.isArray(slug) ? slug.join("/") : slug;
 	let pathnameCatalog = `catalog/products/`;

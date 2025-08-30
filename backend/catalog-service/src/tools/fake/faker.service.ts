@@ -189,7 +189,7 @@ export class FakerService {
 
 			const colorArr: ValidationAttributeUploadBodyDTO[] = [];
 			for (let index = 0; index < random; index++) {
-				const colorFaker = faker.color.human();
+				const colorFaker = faker.color.rgb({ format: "hex" });
 				pushIfUnique(colorArr, {
 					name: "color",
 					type: colorFaker,
@@ -222,7 +222,7 @@ export class FakerService {
 
 		await this.attributeDefinitionsService.createMany(allAttributes);
 
-		const attribute = await this.attributeDefinitionsService.getAll();
+		const attribute = await this.attributeDefinitionsService.getAll({});
 		const products = await this.prisma.products.findMany();
 
 		if (attribute.length < 0 || products.length < 0) return;

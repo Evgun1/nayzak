@@ -33,10 +33,16 @@ const ProductPreviewDefault: FC<ProductPreviewProps> = (props) => {
 			as={as}
 		>
 			<div className={classes["preview__img-wrapper"]}>
-				{props.showIcon && !date ? (
-					<div className={classes["preview__img-icon"]}>
-						<span className={TextClassList.SEMIBOLD_14}>NEW</span>
-					</div>
+				{props.showIcon ? (
+					!date ? (
+						<></>
+					) : (
+						<div className={classes["preview__img-icon"]}>
+							<span className={TextClassList.SEMIBOLD_14}>
+								NEW
+							</span>
+						</div>
+					)
 				) : (
 					<></>
 				)}

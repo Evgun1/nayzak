@@ -44,8 +44,6 @@ export class SubcategoriesControllers {
 		@Res({ passthrough: true }) res: Response,
 	) {
 		try {
-			console.log(param);
-
 			const { subcategories, totalCount } =
 				await this.subcategoriesService.getSubcategoryByCategory(param);
 

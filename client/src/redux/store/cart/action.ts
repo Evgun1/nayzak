@@ -6,24 +6,29 @@ import {
 	appCartPut,
 } from "@/lib/api/cart";
 import { AppDispatch, RootState } from "../../store";
-import { cartAction, CartItemData } from "./cart";
+import { cartAction, CartItemData, CartState } from "./cart";
 import { useCookieGet } from "@/hooks/useCookie";
 import { notificationAction } from "../notification/notification";
 import NotificationCart from "@/components/notification/NotificationCart";
 import { appOneProductGet } from "@/lib/api/products";
 import { appCookieGet } from "@/lib/api/cookie";
+import localStorageHandler from "@/utils/localStorage";
 
 export function initCart() {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
+		const storage = localStorageHandler("cartState");
 		const token = appCookieGet("user-token");
-		if (!token) return;
+		const cartLocalStorage = storage.get();
 
-		const cartProducts = await appCartInitGet(token);
-		if (!cartProducts) return;
+		console.log(token, "cart");
 
-		console.log(cartProducts);
+		if (!token) return storage.delete();
 
-		dispatch(cartAction.saveCart(cartProducts));
+		if (!cartLocalStorage) {
+			const cartProducts = await appCartInitGet(token);
+			if (!cartProducts) return;
+			dispatch(cartAction.saveCart(cartProducts));
+		}
 	};
 }
 

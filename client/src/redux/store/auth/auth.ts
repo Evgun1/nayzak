@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CredentialsStateItem } from "@/redux/store/auth/auth.type";
+import localStorageHandler from "@/utils/localStorage";
 
 type CredentialsState = {
 	credentials: CredentialsStateItem | null;
@@ -20,6 +21,14 @@ const authSlice = createSlice({
 		},
 		logOut(state) {
 			state.credentials = null;
+			const storage = localStorageHandler("all");
+			storage.delete([
+				"addressState",
+				"cartState",
+				"customerState",
+				"ordersState",
+				"wishlistState",
+			]);
 		},
 
 		writeErrorMessage(state, action) {

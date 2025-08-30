@@ -11,15 +11,19 @@ import {
 	Res,
 	UnauthorizedException,
 	UseGuards,
+	ValidationPipe,
 } from "@nestjs/common";
 import { Request, Response } from "express";
 import { JwtAuthGuard } from "src/guard/jwtAuth.guard";
 import { LocalAuthGuard } from "src/guard/localAuth.guard";
 import { IUserJwt } from "src/interface/credentialsJwt.interface";
-import { GetAddressesOneParam } from "./dto/getAddressesOneParam.dto";
-import { UploadAddressesDTO } from "./dto/uploadAddresses.dto";
-import { UpdateAddressesDTO } from "./dto/updateAddresses.dto";
-import { DeleteAddressesDTO } from "./dto/deleteAddresses.dto";
+import { ValidationAddressesGetOneParamDTO } from "./validation/validationAddressesGetOne.dto";
+import { ValidationAddressesUploadBodyDTO } from "./validation/validationAddressesUpload.dto";
+import { ValidationAddressesUpdateBodyDTO } from "./validation/validationAddressesUpdate.dto";
+import { ValidationAddressesDeleteBodyDTO } from "./validation/validationAddressesDelete.dto";
+import { MessagePattern, Payload } from "@nestjs/microservices";
+import { validationExceptionFactory } from "src/utils/validationExceptionFactory";
+import { ValidationAddressesKafkaPayloadDTO } from "./validation/validationAddressesKafka.dto";
 
 @Controller("addresses")
 export class AddressesController {
@@ -43,7 +47,7 @@ export class AddressesController {
 	}
 
 	@Get("/:id")
-	async getAddressesOne(@Param() param: GetAddressesOneParam) {
+	async getAddressesOne(@Param() param: ValidationAddressesGetOneParamDTO) {
 		const address = await this.addressesService.getOne(param.id);
 
 		return address;
@@ -51,8 +55,10 @@ export class AddressesController {
 
 	@Post()
 	@UseGuards(JwtAuthGuard)
-	async uploadAddresses(@Req() req: Request<any, any, UploadAddressesDTO>) {
-		const body = req.body;
+	async uploadAddresses(
+		@Req() req: Request,
+		@Body() body: ValidationAddressesUploadBodyDTO,
+	) {
 		const user = req.user as IUserJwt;
 
 		try {
@@ -65,7 +71,9 @@ export class AddressesController {
 
 	@Put()
 	@UseGuards(JwtAuthGuard)
-	async updateAddresses(@Req() req: Request<any, any, UpdateAddressesDTO>) {
+	async updateAddresses(
+		@Req() req: Request<any, any, ValidationAddressesUpdateBodyDTO>,
+	) {
 		const body = req.body;
 		const user = req.user as IUserJwt;
 		const addresses = await this.addressesService.update(body, user);
@@ -74,10 +82,24 @@ export class AddressesController {
 
 	@Delete()
 	@UseGuards(JwtAuthGuard)
-	async deleteAddresses(@Req() req: Request<any, any, DeleteAddressesDTO>) {
-		const body = req.body;
+	async deleteAddresses(
+		@Req() req: Request,
+		@Body() body: ValidationAddressesDeleteBodyDTO,
+	) {
 		const user = req.user as IUserJwt;
 		const address = await this.addressesService.delete(body, user);
 		return address;
+	}
+
+	@MessagePattern("get.addresses.user")
+	async getAddressesKafka(
+		@Payload(
+			new ValidationPipe({
+				exceptionFactory: validationExceptionFactory,
+			}),
+		)
+		payload: ValidationAddressesKafkaPayloadDTO,
+	) {
+		return "addresses  true";
 	}
 }

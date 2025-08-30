@@ -1,5 +1,3 @@
-"use server";
-
 import classes from "./Breadcrumbs.module.scss";
 
 import { TextClassList } from "@/types/textClassList.enum";
@@ -18,7 +16,7 @@ type BreadcrumbsProductProps = {
 	path?: string;
 };
 
-export default async function Breadcrumbs(props: BreadcrumbsProductProps) {
+export default function Breadcrumbs(props: BreadcrumbsProductProps) {
 	const { path, item } = props;
 
 	const breadcrumbsArr = [] as {
@@ -46,9 +44,9 @@ export default async function Breadcrumbs(props: BreadcrumbsProductProps) {
 
 	return (
 		<ul
-			className={
-				`${classes.breadcrumbs} ${props.className ? props.className : ""}`
-			}
+			className={`${classes.breadcrumbs} ${
+				props.className ? props.className : ""
+			}`}
 		>
 			{breadcrumbsArr &&
 				breadcrumbsArr.map((data, index, array) => (

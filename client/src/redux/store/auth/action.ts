@@ -20,12 +20,11 @@ import PopupNotification from "@/popups/popup-notifications/PopupNotifications";
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import { jwtSign } from "@/lib/jwt/jwt";
+import localStorageHandler from "@/utils/localStorage";
 
 export const registrationAction = (userData: SignUp) => {
 	return async function (dispatch: AppDispatch) {
 		try {
-			console.log(userData);
-
 			const token = await appCredentialsPost({ registration: userData });
 			if (!token) return;
 
@@ -114,7 +113,16 @@ export const logOutActive = () => {
 export function initAuth() {
 	return async function (dispatch: AppDispatch) {
 		const userToken = await appCookieGet("user-token");
-		if (!userToken) return;
+		const storage = localStorageHandler("all");
+
+		if (!userToken)
+			return storage.delete([
+				"addressState",
+				"cartState",
+				"customerState",
+				"ordersState",
+				"wishlistState",
+			]);
 
 		try {
 			const token = await appCredentialsInitGet(userToken);

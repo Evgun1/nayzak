@@ -4,10 +4,10 @@ import { useAppDispatch } from "@/redux/redux";
 import { changePasswordAction } from "@/redux/store/auth/action";
 import { TextClassList } from "@/types/textClassList.enum";
 import { z, ZodEffects, ZodObject } from "zod";
+import { validation } from "@/lib/validator/validator";
 
 import classes from "./ChangePassword.module.scss";
 import { CredentialsPasswordDTO } from "@/redux/store/auth/auth.type";
-import { validation } from "@/lib/validator/validator";
 import Form from "@/ui/form/Form";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 

@@ -1,0 +1,25 @@
+.skeleton {
+	display: block;
+	background-color: var(--black-600);
+	animation: pulse 2s infinite;
+}
+
+.skeleton--parent {
+	display: block;
+	background-color: var(--black-400);
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.7;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}

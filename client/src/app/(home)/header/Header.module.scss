@@ -1,0 +1,17 @@
+.header {
+	display: flex;
+	padding: 19px 0;
+	justify-content: space-between;
+	align-items: center;
+
+	&__logo {
+		width: 155px;
+		height: 30px;
+		color: var(--black-900);
+	}
+
+	&__icon {
+		width: 100%;
+		height: 100%;
+	}
+}

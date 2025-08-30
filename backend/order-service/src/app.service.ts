@@ -3,13 +3,20 @@ import { IUserJwt } from "./type/userJwt.interface";
 import { PrismaService } from "./prisma/prisma.service";
 import { KafkaService } from "./kafka/kafka.service";
 import { ClientKafka } from "@nestjs/microservices";
-import { ValidationOrderUploadBodyDTO } from "./validation/validationOrderUpload.dto";
-import { lastValueFrom } from "rxjs";
+import { ValidationOrderKafkaBodyDTO } from "./validation/validationOrderKafka.dto";
+import { firstValueFrom, from, lastValueFrom } from "rxjs";
 import { CartKafkaInput, CartKafkaResult } from "./type/cartKafka.type";
 import {
 	ProductsKafkaInput,
 	ProductsKafkaResult,
 } from "./type/productsKafka.type";
+import {
+	CartAndAddressesKafkaInput,
+	CartAndAddressesKafkaResult,
+} from "./type/cartAndAddressesKafka.type";
+import { ValidationAddressesUploadBodyDTO } from "./validation/validationAddressesUpload.dto";
+import { ValidationOrderUploadBodyDTO } from "./validation/validationOrderUpload.dto";
+import { OrderDTO } from "./dto/order.dto";
 
 @Injectable()
 export class AppService implements OnModuleInit {
@@ -26,7 +33,7 @@ export class AppService implements OnModuleInit {
 	}
 
 	async onModuleInit() {
-		this.userKafka.subscribeToResponseOf("cart.user");
+		this.userKafka.subscribeToResponseOf("get.cart.and.addresses.user");
 		await this.userKafka.connect();
 
 		this.catalogKafka.subscribeToResponseOf("get.products.catalog");
@@ -37,43 +44,93 @@ export class AppService implements OnModuleInit {
 		const order = await this.prisma.orders.findMany({
 			where: { customersId: user.customerId },
 		});
+
+		console.log(order);
+
+		const orderDTO = order.map((item) => new OrderDTO({ ...item }));
+		return orderDTO;
+	}
+
+	async createAddresses(inputData: ValidationAddressesUploadBodyDTO) {
+		const addresses = await this.prisma.addresses.create({
+			data: { ...inputData },
+		});
+
+		return addresses;
+	}
+	async createOrderMany(inputData: ValidationOrderUploadBodyDTO[]) {
+		const order = await this.prisma.orders.createManyAndReturn({
+			data: inputData,
+		});
 		return order;
 	}
 
-	async create(body: ValidationOrderUploadBodyDTO, user: IUserJwt) {
-		try {
-			const cartKafka = await lastValueFrom(
-				this.userKafka.send<CartKafkaResult, CartKafkaInput>(
-					"get.cart.user",
-					{
-						cartId: body.cartId,
-						customerId: user.customerId,
-					},
-				),
+	async create(body: ValidationOrderKafkaBodyDTO, user: IUserJwt) {
+		const cartAndAddressesKafka = await lastValueFrom(
+			this.userKafka.send<
+				CartAndAddressesKafkaResult,
+				CartAndAddressesKafkaInput
+			>("get.cart.and.addresses.user", {
+				addressesId: body.addressesId,
+				cartId: body.cartId,
+				customerId: user.customerId,
+			}),
+		);
+
+		// if (
+		// 	!cartAndAddressesKafka ||
+		// 	!cartAndAddressesKafka.addresses ||
+		// 	cartAndAddressesKafka.cart.length <= 0
+		// ) {
+		// 	return;
+		// }
+
+		const productsKafka = await firstValueFrom(
+			this.catalogKafka.send<ProductsKafkaResult, ProductsKafkaInput>(
+				"get.products.catalog",
+				{
+					productsId: cartAndAddressesKafka.cart.map(
+						(cart) => cart.productsId,
+					),
+				},
+			),
+		);
+
+		if (!cartAndAddressesKafka.addresses) return;
+		if (productsKafka.length <= 0) return;
+
+		const addresses = await this.createAddresses(
+			cartAndAddressesKafka.addresses,
+		);
+
+		const orderManyBody = productsKafka.reduce((acc, cur) => {
+			const findCart = cartAndAddressesKafka.cart.find(
+				(cart) => cart.productsId === cur.id,
 			);
+			if (!findCart) return acc;
+			const totalPrice =
+				Math.round(cur.price - cur.price * (cur.discount / 100)) *
+				findCart?.amount;
 
-			const addressesKafka = await lastValueFrom(
-				this.userKafka.send("get.addresses.user", {}),
-			);
+			acc.push({
+				addressesId: addresses.id,
+				amount: findCart.amount,
+				customersId: user.customerId,
+				price: totalPrice,
+				productsId: cur.id,
+			});
+			return acc;
+		}, [] as ValidationOrderUploadBodyDTO[]);
 
-			if (cartKafka.length <= 0) return;
+		const order = await this.createOrderMany(orderManyBody);
 
-			this.catalogKafka
-				.send<ProductsKafkaResult, ProductsKafkaInput>(
-					"get.products.catalog",
-					{
-						// productsId: cartKafka.map((cart) => cart.productsId),
-						productsId: [1],
-					},
-				)
-				.subscribe((e) => {
-					console.log(e);
-					return e;
-				});
+		// console.log(orderManyBody, "orderManyBody");
+		// console.log(order, "order");
+		// console.log(cartAndAddressesKafka, "cartAndAddressesKafka");
+		// console.log(productsKafka, "productsKafka");
 
-			return "";
-		} catch (error) {
-			console.log(error);
-		}
+		const orderDTO = order.map((item) => new OrderDTO({ ...item }));
+
+		return orderDTO;
 	}
 }

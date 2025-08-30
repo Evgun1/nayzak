@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import localStorageHandler from "@/utils/localStorage";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CustomerItem {
 	id?: number;
@@ -8,20 +9,29 @@ export interface CustomerItem {
 	// displayName: string;
 }
 
-type CustomerState = {
+export type CustomerState = {
 	customerData: CustomerItem | null;
 };
+
+const storage = localStorageHandler<CustomerState>("customerState");
+
+const localStorageCustomer = storage.get();
+
+// const initialState: CustomerState = localStorageCustomer
+// 	? JSON.parse(localStorageCustomer)
+// 	: ;
 
 const initialState: CustomerState = {
 	customerData: null,
 };
 
 const customerSlice = createSlice({
-	name: 'customer',
+	name: "customer",
 	initialState,
 	reducers: {
 		setCustomer(state, action: PayloadAction<CustomerItem>) {
 			state.customerData = action.payload;
+			storage.set(state);
 		},
 	},
 });

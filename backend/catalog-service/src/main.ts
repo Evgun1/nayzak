@@ -17,7 +17,6 @@ async function bootstrap() {
 		transport: Transport.KAFKA,
 		options: {
 			client: {
-				retry: {},
 				clientId: "catalog-service",
 				brokers: ["0.0.0.0:9092"],
 			},
@@ -29,13 +28,13 @@ async function bootstrap() {
 	await app.startAllMicroservices();
 
 	app.enableCors({
-		origin: "http://localhost:2999",
+		origin: ["http://localhost:2999", "http://localhost:2998"],
 		credentials: true,
 	});
-	app.enableCors({
-		origin: "http://localhost:2998",
-		credentials: true,
-	});
+	// app.enableCors({
+	// 	origin: "http://localhost:2998",
+	// 	credentials: true,
+	// });
 
 	await app.listen(PORT, () => {
 		console.log(`Server running on port: ${PORT}`);

@@ -28,8 +28,8 @@ model Orders {
     status      OrdersStatus @default(pending)
     customersId Int
     productsId  Int
-    Addresses   Addresses    @relation(fields: [addressesId], references: [id])
     addressesId Int
+    Addresses   Addresses    @relation(fields: [addressesId], references: [id])
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
 }

@@ -49,6 +49,12 @@ export class ProductsController {
 		return products;
 	}
 
+	@Get("new-products")
+	async getNewProducts() {
+		const newProducts = await this.productsService.getNewProducts();
+		return newProducts;
+	}
+
 	@Get("by-params/:categoryId/:subcategoryId")
 	async getProductsByParams(
 		@Param() param: ValidationProductsByParamsParamDTO,
@@ -77,36 +83,32 @@ export class ProductsController {
 		return { minPrice, maxPrice };
 	}
 
-	// @MessagePattern("update.product.rating", Transport.KAFKA)
-	// async updateRatingProduct(
-	// 	@Payload(
-	// 		new ValidationPipe({
-	// 			exceptionFactory: validationExceptionFactory,
-	// 		}),
-	// 	)
-	// 	payload: ValidationProductsKafkaRatingPayloadDTO,
-	// ) {
-	// 	await this.productsService.updateProduct({
-	// 		id: payload.productsId,
-	// 		rating: payload.rating,
-	// 	});
-	// }
+	@MessagePattern("update.product.rating", Transport.KAFKA)
+	async updateRatingProduct(
+		@Payload(
+			new ValidationPipe({
+				exceptionFactory: validationExceptionFactory,
+			}),
+		)
+		payload: ValidationProductsKafkaRatingPayloadDTO,
+	) {
+		await this.productsService.updateProduct({
+			id: payload.productsId,
+			rating: payload.rating,
+		});
+	}
 
-	// @UsePipes(
-	// 	new ValidationPipe({
-	// 		exceptionFactory: validationExceptionFactory,
-	// 	}),
-	// )
-	// @MessagePattern("get.products.catalog")
-	// async getProductCatalog(
-	// 	@Payload() payload: ValidationProductsKafkaPayloadDTO,
-	// ) {
-	// 	console.log(payload);
-	// 	// const productsKafka = await this.productsService.productsKafka(payload);
+	@MessagePattern("get.products.catalog", Transport.KAFKA)
+	async getProductCatalog(
+		@Payload(
+			new ValidationPipe({
+				exceptionFactory: validationExceptionFactory,
+			}),
+		)
+		payload: ValidationProductsKafkaPayloadDTO,
+	) {
+		const productsKafka = await this.productsService.productsKafka(payload);
 
-	// 	return payload;
-	// 	// return productsKafka;
-	// }
-
-	
+		return productsKafka;
+	}
 }

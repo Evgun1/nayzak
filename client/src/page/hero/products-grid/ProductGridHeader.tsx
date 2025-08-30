@@ -144,8 +144,6 @@ const ProductGridHeader: FC<{ searchParams: any }> = ({}) => {
 				searchParams: urlSearchParams,
 			});
 
-			console.log(productCounts);
-
 			if (!Number.isNaN(productCounts) && productCounts > 0) {
 				setSubcategories(subcategoriesFetch);
 			}

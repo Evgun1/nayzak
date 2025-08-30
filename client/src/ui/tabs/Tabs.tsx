@@ -9,26 +9,27 @@ import TabsToggle from "./TabsToggle";
 import classes from "./Tabs.module.scss";
 
 type TabsProps = {
-    children: ReactNode;
-    isVertical?: boolean;
+	children: ReactNode;
+	isVertical?: boolean;
+	className?: string;
 };
 
-function Tabs({ children, isVertical }: TabsProps) {
-    return (
-        <TabsProvider isVertical={isVertical}>
-            <div
-                className={`${classes["tabs"]} ${
-                    isVertical ? classes["tabs--vertical"] : ""
-                }`}
-            >
-                {children}
-            </div>
-        </TabsProvider>
-    );
+function Tabs({ children, isVertical, className }: TabsProps) {
+	return (
+		<TabsProvider isVertical={isVertical}>
+			<div
+				className={`${classes["tabs"]} ${
+					isVertical ? classes["tabs--vertical"] : ""
+				} ${className ? className : ""} `}
+			>
+				{children}
+			</div>
+		</TabsProvider>
+	);
 }
 
 export default Object.assign(Tabs, {
-    Header: TabsHeader,
-    Body: TabsBody,
-    Toggle: TabsToggle,
+	Header: TabsHeader,
+	Body: TabsBody,
+	Toggle: TabsToggle,
 });

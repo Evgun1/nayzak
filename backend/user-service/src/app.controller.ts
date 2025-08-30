@@ -18,12 +18,13 @@ import { Request, Response } from "express";
 import { GetOneParamDTO } from "./dto/getOneParam.dto";
 import { RegistrationBodyDTO } from "./dto/registrationBody.dto";
 import { ActivationParamDTO } from "./dto/activationParam.dto";
-import { ClientKafka } from "@nestjs/microservices";
+import { ClientKafka, MessagePattern, Payload } from "@nestjs/microservices";
 import { ChangePasswordBodyDTO } from "./dto/changePasswordBody.dto";
 import { QueryDTO } from "./query/dto/query.dto";
 import { LocalAuthGuard } from "./guard/localAuth.guard";
 import { UserJwtDTO } from "./dto/userJwt.dto";
 import { JwtAuthGuard } from "./guard/jwtAuth.guard";
+import { ValidationCartAndAddressesPayloadDTO } from "./validation/validationCartAndAddressesKafka.dto";
 
 @Controller("/")
 export class AppController implements OnModuleDestroy {
@@ -98,5 +99,14 @@ export class AppController implements OnModuleDestroy {
 	@Put("change-password")
 	async changePassword(@Body() body: ChangePasswordBodyDTO) {
 		return await this.appService.changePassword(body);
+	}
+
+	@MessagePattern("get.cart.and.addresses.user")
+	async getCartAndAddressesUser(
+		@Payload() payload: ValidationCartAndAddressesPayloadDTO,
+	) {
+		const result = await this.appService.getCartAndAddressesKafka(payload);
+
+		return result;
 	}
 }

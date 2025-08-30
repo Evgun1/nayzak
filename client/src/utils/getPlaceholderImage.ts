@@ -1,6 +1,5 @@
 "use server";
 
-
 import sharp from "sharp";
 
 function bufferToBase64(buffer: Buffer): string {
@@ -9,6 +8,7 @@ function bufferToBase64(buffer: Buffer): string {
 
 async function getBuffer(url: string | URL) {
 	const res = await fetch(url, { cache: "no-cache" });
+
 	return Buffer.from(await res.arrayBuffer());
 }
 
@@ -20,11 +20,6 @@ export async function getPlaceholderImage(imageUrl: string) {
 			)}&w=48&q=50`,
 		);
 
-		// const lowResImage = await getBuffer(
-		// 	`${process.env.NEXT_URL}_next/image?url=${encodeURIComponent(
-		// 		imageUrl,
-		// 	)}&w=48&q=50`,
-		// );
 		const lowResImage = await getBuffer(url);
 
 		const resizeBuffer = await sharp(lowResImage).resize(20).toBuffer();

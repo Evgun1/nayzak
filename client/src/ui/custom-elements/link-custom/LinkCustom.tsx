@@ -10,7 +10,7 @@ import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 export interface HrefObject {
 	endpoint?: string;
 	queryParams?: { [key: string]: any };
-	deleteQueryParams?: string;
+	deleteQueryParams?: string | { [key: string]: any };
 }
 export interface StyleSettingsObject {
 	size: keyof typeof Size;
@@ -33,6 +33,7 @@ export type LinkCustomProps = {
 	searchParams?: URLSearchParams | ReadonlyURLSearchParams | null;
 	linkRef?: RefObject<HTMLAnchorElement>;
 	href: HrefObject;
+	// href: HrefObject;
 	onClick?: (e: MouseEvent) => void;
 };
 
@@ -83,7 +84,15 @@ const LinkCustom: FC<LinkCustomProps> = ({
 			urlSearchParams.set(urlNameKey, queryParams[urlNameKey]);
 		}
 	}
-	if (deleteQueryParams) urlSearchParams.delete(deleteQueryParams);
+	if (deleteQueryParams) {
+		if (typeof deleteQueryParams === "string") {
+			urlSearchParams.delete(deleteQueryParams);
+		} else if (typeof deleteQueryParams === "object") {
+			for (const key in deleteQueryParams) {
+				urlSearchParams.delete(key, deleteQueryParams[key]);
+			}
+		}
+	}
 
 	const setQueryParams = `?${urlSearchParams}`;
 

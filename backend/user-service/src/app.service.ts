@@ -19,10 +19,15 @@ import { ChangePasswordBodyDTO } from "./dto/changePasswordBody.dto";
 import { QueryDTO } from "./query/dto/query.dto";
 import { PrismaService } from "./prisma/prisma.service";
 import { QueryService } from "./query/query.service";
+import { CartService } from "./feature/cart/cart.service";
+import { AddressesService } from "./feature/addresses/addresses.service";
+import { ValidationCartAndAddressesPayloadDTO } from "./validation/validationCartAndAddressesKafka.dto";
 
 @Injectable()
 export class AppService {
 	constructor(
+		private readonly cartService: CartService,
+		private readonly addressesService: AddressesService,
 		private readonly queryService: QueryService,
 		private readonly prisma: PrismaService,
 		private readonly jwtService: JwtService,
@@ -70,7 +75,7 @@ export class AppService {
 		}
 
 		return new UserJwtDTO({
-			customerId: 1,
+			customerId: credential.customerId,
 			id: credential.id,
 			email: credential.email,
 			role: credential.role,
@@ -105,8 +110,6 @@ export class AppService {
 	async registration(body: RegistrationBodyDTO) {
 		const { email, password, firstName, lastName } = body;
 
-		console.log(body, "registration");
-
 		const actionLink = randomUUID();
 		const saltRounds = Math.floor(Math.random() * (10 - 1) + 1);
 		const hashPassword = await bcrypt.hash(password, saltRounds);
@@ -135,21 +138,6 @@ export class AppService {
 		const jwtCredentials = await this.jwtService.signAsync({ ...user });
 		return jwtCredentials;
 	}
-	// async init(authorization: string | null) {
-	// 	if (!authorization) return;
-	// 	const credentialJwtDecode =
-	// 		this.jwtService.decode<CredentialsJwtItem | null>(authorization);
-	// 	if (!credentialJwtDecode) return;
-	// 	const email = credentialJwtDecode.email;
-	// 	const id = credentialJwtDecode.id;
-
-	// 	const where: Prisma.CredentialsWhereInput = { email, id };
-	// 	const options: Prisma.CredentialsFindFirstArgs = { where };
-	// 	const credentials = await this.prisma.credentials.findFirst(options);
-
-	// 	if (!credentials) return;
-	// 	return authorization;
-	// }
 
 	async activation(param: ActivationParamDTO): Promise<string> {
 		const redisCacheKey = "registration-cache";
@@ -199,6 +187,15 @@ export class AppService {
 		});
 
 		return "Password successfully changed";
+	}
+
+	async getCartAndAddressesKafka(
+		inputData: ValidationCartAndAddressesPayloadDTO,
+	) {
+		const cart = await this.cartService.getCartKafka(inputData);
+		const addresses =
+			await this.addressesService.getAddressesKafka(inputData);
+		return { cart, addresses };
 	}
 
 	@Interval(6e5)

@@ -4,6 +4,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { ValidationMediaUploadDTO } from "./validation/validationMediaUpload.dto";
 import { Prisma } from "@prisma/client";
 import { UploadApiResponse } from "cloudinary";
+import { strict } from "assert";
 
 @Injectable()
 export class MediaService {
@@ -59,4 +60,15 @@ export class MediaService {
 
 	// 	return media;
 	// }
+
+	async getMediaByProduct(productId: number) {
+		const media = await this.prisma.media.findMany({
+			select: { src: true, name: true },
+			where: { productsId: productId },
+		});
+
+		console.log(media);
+
+		return media;
+	}
 }

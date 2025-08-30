@@ -17,8 +17,6 @@ export class MailController implements OnModuleDestroy {
 
 	@MessagePattern("send-mail-action-link")
 	async sendActionLink(@Body() body: SendActionLinkDTO) {
-		console.log(body);
-
 		await this.mailService.sendActionMail(body.email, body.activeLink);
 	}
 }

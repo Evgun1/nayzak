@@ -1,0 +1,28 @@
+.action-packed {
+	display: grid;
+	grid-template-columns: (1fr 766px);
+	// justify-content: space-between;
+	background: var(--red-500);
+	&__info {
+		margin: auto 40px;
+		text-align: start;
+
+		&-header,
+		&-paragraph {
+			color: white;
+		}
+		&-header {
+			margin-bottom: 13px;
+		}
+		&-paragraph {
+			margin-bottom: 24px;
+		}
+	}
+	&__video {
+		right: 0;
+		max-width: 766px;
+		width: 100%;
+		min-height: 494px;
+		height: 100%;
+	}
+}

@@ -7,6 +7,7 @@ type CheckboxProps = {
 	id?: number;
 	name?: string;
 	value?: string | number;
+	checked?: boolean;
 	className?: string;
 	style?: CSSProperties;
 	children?: ReactNode;
@@ -33,9 +34,11 @@ const Checkbox: FC<CheckboxProps> = (props) => {
 				name={props.name}
 				id={props.id?.toString()}
 				value={props.value}
+				defaultChecked={props.checked}
 			/>
 			<div
-				id={props.id?.toString()}
+				id={"checkbox-marker"}
+				// key={""}
 				style={props.style}
 				className={`${classes["checkbox__input-marker"]}
                 ${classes[Size[props.settingsStyle.size]]}

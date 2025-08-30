@@ -34,9 +34,6 @@ export class CustomersController {
 	async initCustomer(@Req() req: Request) {
 		const credential = req.user as IUserJwt;
 
-		console.log(true);
-		console.log(credential);
-
 		const customer = await this.customersService.init(credential);
 		if (!customer) return;
 

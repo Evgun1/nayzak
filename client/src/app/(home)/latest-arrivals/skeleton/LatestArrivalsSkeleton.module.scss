@@ -1,0 +1,38 @@
+.skeleton {
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 32px;
+
+		&-btn {
+			border-radius: 5px;
+			width: 130px;
+			height: 24px;
+		}
+	}
+
+	&__list {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 32px;
+	}
+
+	.skeleton__item {
+		display: grid;
+		width: 100%;
+		height: max-content;
+		gap: 4px;
+
+		&-img {
+			margin-bottom: 8px;
+			width: 100%;
+			height: 413px;
+		}
+		&-text {
+			border-radius: 5px;
+			width: 50%;
+			height: 20px;
+		}
+	}
+}

@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import localStorageHandler from "@/utils/localStorage";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {} from "redux";
 
 export interface AddressData {
 	id?: number;
@@ -7,27 +9,32 @@ export interface AddressData {
 	postalCode: number;
 }
 
-type AddressState = {
+export type AddressState = {
 	address: AddressData[];
 	error?: null;
 };
+
+const storage = localStorageHandler<AddressState>("addressState");
 
 const initialState: AddressState = {
 	address: [],
 };
 
 const addressSlice = createSlice({
-	name: 'address',
+	name: "address",
 	initialState,
 	reducers: {
 		uploadAddress(state, action: PayloadAction<AddressState>) {
 			state.address = action.payload.address;
+
+			storage.set(state);
 		},
 		deleteAddress(state, action: PayloadAction<{ id: number }>) {
 			const addressIndex = state.address.findIndex(
-				(data) => data.id === action.payload.id
+				(data) => data.id === action.payload.id,
 			);
 			state.address.splice(addressIndex, 1);
+			storage.set(state);
 		},
 	},
 });

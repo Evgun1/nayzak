@@ -9,5 +9,6 @@ import { AddressesService } from "./addresses.service";
 	imports: [PrismaModule, QueryModule, ClientApiModule],
 	controllers: [AddressesController],
 	providers: [AddressesService],
+	exports: [AddressesService],
 })
 export class AddressesModel {}

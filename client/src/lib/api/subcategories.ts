@@ -16,8 +16,6 @@ export const appSubcategoriesGet = async (
 		revalidate: 1800,
 	};
 
-	console.log(searchParams?.toString());
-
 	const { result } = await appFetchGet<ISubcategory[]>({
 		pathname: pathnameCatalog,
 		searchParams,

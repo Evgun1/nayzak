@@ -1,13 +1,16 @@
 import { IOrder } from "@/types/orders.types";
+import localStorageHandler from "@/utils/localStorage";
 import { Action, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface OrdersData extends Partial<IOrder> {}
+interface OrdersData extends IOrder {}
 
-type InitialState = {
+export type OrderState = {
 	ordersData: OrdersData[];
 };
 
-const initialState: InitialState = {
+const storage = localStorageHandler<OrderState>("ordersState");
+
+const initialState: OrderState = {
 	ordersData: [],
 };
 
@@ -18,6 +21,7 @@ const ordersSlice = createSlice({
 		uploadOrders(state, action: PayloadAction<OrdersData[]>) {
 			if (action.payload && action.payload.length) {
 				state.ordersData = action.payload;
+				storage.set(state);
 			}
 		},
 	},

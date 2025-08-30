@@ -1,7 +1,7 @@
 import { appCookieGet } from "@/lib/api/cookie";
 import { AppDispatch, RootState } from "../../store";
 import { appCustomersInitGet, appCustomersPut } from "@/lib/api/customer";
-import { customerAction } from "./customer";
+import { customerAction, CustomerState } from "./customer";
 import { notificationAction } from "../notification/notification";
 import PopupNotification from "@/popups/popup-notifications/PopupNotifications";
 import { initAddress } from "../address/action";
@@ -9,11 +9,15 @@ import { initWishlist } from "../wishlist/action";
 import { initCart } from "../cart/action";
 import { initOrders } from "../orders/action";
 import { ICustomerAction } from "./type/customer-action.interface";
+import localStorageHandler from "@/utils/localStorage";
 
 export const initCustomer = () => {
 	return async (dispatch: AppDispatch) => {
 		const token = await appCookieGet("user-token");
-		if (!token) return;
+		const storage = localStorageHandler("customerState");
+		// const localStorageCustomer = storage.get();
+
+		if (!token) return storage.delete();
 
 		try {
 			const customerInit = await appCustomersInitGet(token);
@@ -34,8 +38,6 @@ export const writeCustomerAction = (inputData: ICustomerAction) => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		const userToken = await appCookieGet("user-token");
 		if (!userToken) return;
-
-		console.log(inputData);
 
 		try {
 			const customerID = getState().customer.customerData?.id;

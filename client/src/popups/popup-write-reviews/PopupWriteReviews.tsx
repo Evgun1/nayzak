@@ -80,8 +80,6 @@ const PopupWriteReview = () => {
 		} catch (error) {}
 	};
 
-	console.log("PopupWriteReviews", params.slug);
-
 	useEffect(() => {
 		(async () => {
 			if (params) {

@@ -4,14 +4,18 @@ import {
 	appWishlistsPost,
 } from "@/lib/api/wishlist";
 import { AppDispatch, RootState } from "../../store";
-import { wishlistAction, WishlistItemData } from "./wishlist";
+import { wishlistAction, WishlistItemData, WishlistState } from "./wishlist";
 import { appCookieGet } from "@/lib/api/cookie";
+import localStorageHandler from "@/utils/localStorage";
 
 export function initWishlist() {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
-		const productsArray = [...getState().wishlist.productsArray];
 		const token = appCookieGet("user-token");
-		if (!token) return;
+		const storage = localStorageHandler<WishlistState>("wishlistState");
+		if (!token) return storage.delete();
+		if (storage.get()) return;
+
+		const productsArray = [...getState().wishlist.productsArray];
 
 		try {
 			const wishlist = await appWishlistsInitGet(token);

@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsArray, IsNotEmpty, IsNumber } from "class-validator";
 
 export class DeleteCartDTO {
 	@IsNotEmpty()
-	@IsNumber()
-	id: number;
+	@IsArray()
+	@IsNumber({}, { each: true })
+	id: number[];
 }

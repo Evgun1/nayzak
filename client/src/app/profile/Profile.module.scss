@@ -1,0 +1,20 @@
+.profile-container {
+	max-width: 1092px;
+	margin: 0 auto;
+	padding: 0 16px;
+}
+
+.profile {
+	&__header {
+		text-align: center;
+		padding-bottom: 52px;
+		margin-bottom: 52px;
+	}
+	.profile__tabs {
+		display: grid;
+		grid-template-columns: max(196px) 1fr;
+	}
+	.profile__logout {
+		color: var(--black-600);
+	}
+}

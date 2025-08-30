@@ -10,11 +10,7 @@ const InitData = () => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		(async () => {
-			const token = await appCookieGet("user-token");
-
-			if (token) dispatch(initAuth());
-		})();
+		dispatch(initAuth());
 	}, [dispatch]);
 
 	return null;

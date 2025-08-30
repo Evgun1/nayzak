@@ -44,8 +44,6 @@ export const appAddressesPost = async (props: AppAddressesPostProps) => {
 	const { sendData } = props;
 	const nginxPathname = "user/addresses";
 
-	console.log(sendData);
-
 	const { result, totalCount } = await appFetchPost<AddressItem>({
 		authorization: props.token,
 		pathname: nginxPathname,

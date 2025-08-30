@@ -35,7 +35,7 @@ export const CheckoutFormContactInformation = () => {
 			</div>
 			<div className={classes["preview__double"]}>
 				<Form.InputDefault
-					customClasses={classes["preview__input"]}
+					className={classes["preview__input"]}
 					label="First name"
 					style={"contained"}
 					inputSettings={{
@@ -47,7 +47,7 @@ export const CheckoutFormContactInformation = () => {
 					}}
 				/>
 				<Form.InputDefault
-					customClasses={classes["preview__input"]}
+					className={classes["preview__input"]}
 					label="Last name"
 					style={"contained"}
 					inputSettings={{
@@ -60,7 +60,7 @@ export const CheckoutFormContactInformation = () => {
 				/>
 
 				<Form.InputDefault
-					customClasses={`${classes["preview__input"]} ${classes["preview__input-phone"]}`}
+					className={`${classes["preview__input"]} ${classes["preview__input-phone"]}`}
 					label="Phone"
 					style={"contained"}
 					inputSettings={{

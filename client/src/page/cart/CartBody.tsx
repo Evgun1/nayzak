@@ -61,16 +61,6 @@ const CartBody: FC = () => {
 		});
 	}, [cart]);
 
-	// if (!cart || cart.length === 0) {
-	// 	return (
-	// 		<div
-	// 			className={`${TextClassList.REGULAR_22} ${classes["cart__message"]}`}
-	// 		>
-	// 			The cart is empty
-	// 		</div>
-	// 	);
-	// }
-
 	return (
 		<>
 			{!cart || cart.length <= 0 ? (

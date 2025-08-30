@@ -11,13 +11,42 @@ import {
 } from "../products/products.service";
 import { AttributeDTO } from "./dto/attribute.dto";
 import { ValidationAttributeUploadBodyDTO } from "./validation/validationAttributeUpload.dto";
+import { ValidationAttributesQueryDTO } from "./validation/validationAttributes.dto";
+import { QueryService } from "src/query/query.service";
 
 @Injectable()
 export class AttributeDefinitionsService {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly productsService: ProductsService,
+		private query: QueryService,
 	) {}
+
+	async getAll(query: ValidationAttributesQueryDTO) {
+		const queryHandler = this.query.getQuery("AttributeDefinitions", query);
+
+		const ids: number[] = [];
+
+		if (query.color) ids.push(...ids, ...query.color);
+		if (query.material) ids.push(...ids, ...query.material);
+		if (query.manufacturer) ids.push(...ids, ...query.manufacturer);
+
+		const where: Prisma.AttributeDefinitionsWhereInput = {
+			...queryHandler.where,
+			id: { in: ids },
+		};
+
+		const attributeArgs: Prisma.AttributeDefinitionsFindManyArgs = {
+			where,
+		};
+
+		const attributes =
+			await this.prisma.attributeDefinitions.findMany(attributeArgs);
+
+		console.log(attributes);
+
+		return attributes;
+	}
 
 	async getByParam(
 		param: ValidationAttributeByParamParamDTO,
@@ -48,8 +77,6 @@ export class AttributeDefinitionsService {
 			attribute: AttributeDTO[];
 			count: number;
 		} = { attribute: [], count: productCounts };
-
-		console.log(query);
 
 		for (const element of attribute) {
 			const productsArgs: GetProductsAllParams = {
@@ -84,12 +111,6 @@ export class AttributeDefinitionsService {
 			attribute: attributeDTO.attribute,
 			countActiveAttributes: productCounts,
 		};
-	}
-
-	async getAll() {
-		const attributes = await this.prisma.attributeDefinitions.findMany();
-
-		return attributes;
 	}
 
 	async createMany(body: ValidationAttributeUploadBodyDTO[]) {

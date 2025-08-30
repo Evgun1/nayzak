@@ -4,7 +4,6 @@ import classes from "./Toolbar.module.scss";
 import IconsIdList from "@/components/icons/IconsIdList";
 import { FC, useCallback, useContext, useEffect, useState } from "react";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
-import { FilterContext } from "../filter/FilterCtx";
 import ListTypeButton from "./ListTypeButton";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { Select, SelectItem } from "@/ui/select/Select";

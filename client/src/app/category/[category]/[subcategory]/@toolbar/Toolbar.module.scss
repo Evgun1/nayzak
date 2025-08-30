@@ -1,0 +1,131 @@
+// .wrapper {
+// 	margin-bottom: 12px;
+// 	padding: 16px 0;
+
+// 	&__toolbar {
+// 		display: flex;
+// 		align-items: center;
+// 		justify-content: space-between;
+
+// 		&-filter {
+// 			display: flex;
+// 			align-items: center;
+// 			gap: 32px;
+
+// 			// &_item {
+// 			//     display: flex;
+// 			//     align-items: center;
+// 			//     gap: 4px;
+// 			//     background: none;
+// 			//     border: none;
+// 			//     cursor: pointer;
+// 			// }
+// 		}
+// 	}
+
+// 	&__filter_button {
+// 		display: flex;
+// 		gap: 16px;
+// 	}
+// }
+
+// .selector {
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	&__link {
+// 		display: block;
+// 		border: 1px solid var(--black-200);
+// 		width: 46px;
+// 		height: 40px;
+// 		padding: 8px 11px;
+// 		.icon-selector {
+// 			color: var(--black-400);
+// 		}
+// 	}
+// }
+
+// // .selector_action {
+// //   background: var(--black-100);
+// //   svg {
+// //     color: var(--black-900);
+// //   }
+// // }
+
+// .active {
+// 	background: var(--black-100);
+// 	.icon-selector {
+// 		color: var(--black-900);
+// 	}
+// }
+
+// .icon {
+// 	&-btn {
+// 		width: 20px;
+// 		height: 20px;
+// 	}
+// 	&-selector {
+// 		width: 20px;
+// 		height: 20px;
+// 	}
+// }
+
+// .toolbar {
+// 	margin-bottom: 12px;
+// 	padding: 16px 0;
+
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: space-between;
+
+// 	&__filter {
+// 		display: flex;
+// 		align-items: center;
+// 		gap: 32px;
+// 	}
+
+// 	&__selector {
+// 		display: flex;
+// 		align-items: center;
+// 		justify-content: center;
+
+// 		&-button {
+// 			display: block;
+// 			border: 1px solid var(--black-200);
+// 			width: 46px;
+// 			height: 40px;
+// 			padding: 8px 11px;
+// 			&--action {
+// 				background: var(--black-100);
+// 				color: var(--black-900);
+
+// 				.toolbar__selector-icon {
+// 					color: var(--black-900);
+// 				}
+// 			}
+// 		}
+
+// 		&-icon {
+// 			width: 20px;
+// 			height: 20px;
+// 			color: var(--black-400);
+// 		}
+// 	}
+// }
+
+.toolbar {
+	margin: 16px 0;
+
+	&__products-count {
+		color: var(--black-600);
+	}
+	&__select-list {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+	}
+	&__item-list {
+		display: flex;
+		justify-content: space-between;
+	}
+}

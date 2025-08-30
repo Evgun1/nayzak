@@ -9,16 +9,19 @@ import { popupActions } from "@/redux/store/popup/popup";
 import PopupAuth from "../../popups/popup-auth/PopupAuth";
 import PopupError from "../../popups/popup-error/PopupError";
 import { appCookieGet } from "@/lib/api/cookie";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 
 const Actions: FC = () => {
 	const dispatch = useAppDispatch();
-	const cartAmount = useAppSelector((selector) => selector.cart.totalAmount);
+	const cartSelector = useAppSelector((selector) => selector.cart);
 	const userData = useAppSelector((selector) => selector.auth.credentials);
-
 	const token = appCookieGet("user-token");
+
+	const [cartAmount, setCartAmount] = useState(0);
+
+	// const cartAmount = useMemo(() => cartSelector.totalAmount, [cartSelector]);
 
 	function btnAuthHandler() {
 		return dispatch(popupActions.toggle(<PopupAuth />));
@@ -35,6 +38,10 @@ const Actions: FC = () => {
 			),
 		);
 	};
+
+	useEffect(() => {
+		setCartAmount(cartSelector.totalAmount);
+	}, [cartSelector]);
 
 	if (userData) {
 		setTimeout(() => {

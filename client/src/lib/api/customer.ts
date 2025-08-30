@@ -46,8 +46,6 @@ export const appCustomersPut = async (
 	const nginxPathname = `user/customers/update`;
 	const pathname = "customers/update";
 
-	console.log(inputData);
-
 	const { result } = await appFetchPut<CustomerItem>({
 		authorization: token,
 		pathname: nginxPathname,

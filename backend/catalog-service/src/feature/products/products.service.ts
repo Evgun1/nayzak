@@ -130,7 +130,6 @@ export class ProductsService {
 			orderBy,
 		} as ProductsPrismaArgs;
 
-		// console.log(where.AND, true);
 		const products = await this.productPrisma.getProducts(args);
 		const count = await this.productPrisma.getProductsCount(args);
 

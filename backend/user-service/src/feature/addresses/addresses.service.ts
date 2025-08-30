@@ -4,10 +4,12 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { QueryDTO } from "src/query/dto/query.dto";
-import { UploadAddressesDTO } from "./dto/uploadAddresses.dto";
-import { UpdateAddressesDTO } from "./dto/updateAddresses.dto";
-import { DeleteAddressesDTO } from "./dto/deleteAddresses.dto";
+import { ValidationAddressesUploadBodyDTO } from "./validation/validationAddressesUpload.dto";
+import { ValidationAddressesUpdateBodyDTO } from "./validation/validationAddressesUpdate.dto";
+import { ValidationAddressesDeleteBodyDTO } from "./validation/validationAddressesDelete.dto";
 import { IUserJwt } from "src/interface/credentialsJwt.interface";
+import { ValidationAddressesKafkaPayloadDTO } from "./validation/validationAddressesKafka.dto";
+import { AddressesKafkaDTO } from "./dto/addressesKafka.dto";
 
 @Injectable()
 export class AddressesService {
@@ -40,8 +42,10 @@ export class AddressesService {
 		return address;
 	}
 
-	async upload(body: UploadAddressesDTO, user: IUserJwt) {
-		console.log(user);
+	async upload(body: ValidationAddressesUploadBodyDTO, user: IUserJwt) {
+		console.log(body, user);
+
+		// return;
 
 		const addresses = await this.prisma.addresses.create({
 			data: {
@@ -56,7 +60,7 @@ export class AddressesService {
 		return addresses;
 	}
 
-	async update(body: UpdateAddressesDTO, user: IUserJwt) {
+	async update(body: ValidationAddressesUpdateBodyDTO, user: IUserJwt) {
 		const { city, id, postalCode, street } = body;
 		const { customerId } = user;
 
@@ -71,7 +75,7 @@ export class AddressesService {
 			throw new UnauthorizedException(error);
 		}
 	}
-	async delete(body: DeleteAddressesDTO, user: IUserJwt) {
+	async delete(body: ValidationAddressesDeleteBodyDTO, user: IUserJwt) {
 		try {
 			const sqlQuery = await this.prisma.sqlQuery("Addresses");
 			const sqlSelect = sqlQuery.select;
@@ -95,5 +99,18 @@ export class AddressesService {
 		} catch (error) {
 			throw new UnauthorizedException(error);
 		}
+	}
+
+	async getAddressesKafka(inputData: ValidationAddressesKafkaPayloadDTO) {
+		const addresses = await this.prisma.addresses.findFirst({
+			where: {
+				id: inputData.addressesId,
+				customersId: inputData.customersId,
+			},
+		});
+		if (!addresses) return;
+
+		const addressesDTO = new AddressesKafkaDTO({ ...addresses });
+		return addressesDTO;
 	}
 }

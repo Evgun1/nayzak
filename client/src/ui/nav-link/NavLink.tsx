@@ -68,8 +68,6 @@ export default function NavLink({
 			urlSearchParams.set(key, queryParams[key]);
 		}
 
-		console.log(searchParams?.toString());
-
 		// active =
 		// 	searchParams.get('category') === children?.toString().toLocaleLowerCase();
 	}

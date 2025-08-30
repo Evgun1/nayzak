@@ -26,6 +26,17 @@ export const appMediaAllGet = async (props: AppMediaGetAllProps) => {
 	return { result, totalCount };
 };
 
+export const appMediaByProductGet = async (productId: number) => {
+	const nginxPathname = `catalog/media/by-product/${productId}`;
+
+	const { result } = await appFetchGet<MediaItem[]>({
+		pathname: nginxPathname,
+		cache: { request: "no-cache" },
+	});
+
+	return result;
+};
+
 export const appMediaOneGet = async (mediaId: number | string) => {
 	const pathname = `media/${mediaId}`;
 	const cache: CacheItem = {

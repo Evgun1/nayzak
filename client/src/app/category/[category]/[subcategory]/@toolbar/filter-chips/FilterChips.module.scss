@@ -1,0 +1,17 @@
+.filter-buttons {
+	.filter-buttons__list {
+		display: flex;
+		gap: 16px;
+
+		.filter-buttons__list-item {
+			padding: 2px 10px;
+			gap: 4px;
+			background-color: var(--black-200);
+			border-radius: 4px;
+		}
+	}
+
+	.filter-buttons__button-clear {
+		color: var(--black-500);
+	}
+}

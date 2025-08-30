@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { UploadAddressesDTO } from "../addresses/dto/uploadAddresses.dto";
+import { ValidationAddressesUploadBodyDTO } from "../addresses/validation/validationAddressesUpload.dto";
 
 @Injectable()
 export class ReviewService {
-	async uploadReview(body: UploadAddressesDTO) {}
+	async uploadReview(body: ValidationAddressesUploadBodyDTO) {}
 }

@@ -27,6 +27,7 @@ const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
 							classes["tooltip__full-value--visible"],
 						);
 					}, 400);
+					``;
 					break;
 
 				default:

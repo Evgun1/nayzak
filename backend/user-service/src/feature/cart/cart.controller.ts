@@ -22,7 +22,7 @@ import { Request } from "express";
 import { IUserJwt } from "src/interface/credentialsJwt.interface";
 import { CartService } from "./cart.service";
 import { MessagePattern, Payload, RpcException } from "@nestjs/microservices";
-import { GetCartKafkaDTO } from "./dto/getCartKafka.dto";
+import { ValidationCartKafkaPayloadDTO } from "./validation/validationCartKafka.dto";
 import { validationExceptionFactory } from "src/utils/validationExceptionFactory";
 
 @Controller("cart")
@@ -59,8 +59,10 @@ export class CartController {
 
 	@Delete()
 	@UseGuards(JwtAuthGuard)
-	async deleteCart(@Req() req: Request<any, any, DeleteCartDTO>) {
-		const body = req.body as DeleteCartDTO;
+	async deleteCart(
+		@Req() req: Request<any, any>,
+		@Body() body: DeleteCartDTO,
+	) {
 		return this.cartService.removeCart(body.id);
 	}
 
@@ -72,7 +74,7 @@ export class CartController {
 	@MessagePattern("get.cart.user")
 	async getCartKafka(
 		@Payload()
-		payload: GetCartKafkaDTO,
+		payload: ValidationCartKafkaPayloadDTO,
 	) {
 		const cart = await this.cartService.getCartKafka(payload);
 		const bufferArr = Buffer.from(JSON.stringify(cart));

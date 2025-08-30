@@ -5,12 +5,20 @@ import {
 	ValidationAttributeByParamParamDTO,
 	ValidationAttributeByParamQueryDTO,
 } from "./validation/validationAttributeByParam.dto";
+import { ValidationAttributesQueryDTO } from "./validation/validationAttributes.dto";
 
 @Controller("attribute-definitions")
 export class AttributeDefinitionsController {
 	constructor(
 		private readonly attributeDefinitionsService: AttributeDefinitionsService,
 	) {}
+
+	@Get('/')
+	async getAttributes(@Query() query: ValidationAttributesQueryDTO) {
+		const attributes = await this.attributeDefinitionsService.getAll(query);
+		return attributes;
+	}
+
 	@Get("/:subcategoryId")
 	async getAttributeByParam(
 		@Param() param: ValidationAttributeByParamParamDTO,

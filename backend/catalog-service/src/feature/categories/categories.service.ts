@@ -39,8 +39,6 @@ export class CategoriesService {
 			include: { Media: { select: { src: true, name: true } } },
 		});
 
-        console.log(categories);
-        
 		const categoriesCount = await this.prisma.categories.count({});
 
 		const categoriesDTO: CategoryDTO[] = categories.map((category) => {

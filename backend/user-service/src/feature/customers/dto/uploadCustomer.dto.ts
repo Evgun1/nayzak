@@ -1,6 +1,13 @@
-import { number } from "zod";
-import { IsNotEmpty, IsNumber, IsString, Matches } from "class-validator";
-import { CustomerBaseDTO } from "./customerBase.dto";
+import {
+	IsInt,
+	IsNotEmpty,
+	IsNumber,
+	IsOptional,
+	IsString,
+	Matches,
+	Max,
+	Min,
+} from "class-validator";
 
 export class UploadCustomerDTO {
 	@IsNotEmpty({ message: "The field must not be empty" })

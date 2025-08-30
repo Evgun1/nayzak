@@ -35,7 +35,7 @@ import { ReviewModule } from "./feature/review/review.module";
 		ScheduleModule.forRoot(),
 		JwtModule.register({
 			secret: process.env.JWT_SECRET_KEY,
-			signOptions: { expiresIn: "30d" },
+			signOptions: { expiresIn: "5d" },
 		}),
 	],
 	controllers: [AppController],

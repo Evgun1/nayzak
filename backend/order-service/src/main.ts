@@ -21,6 +21,14 @@ async function bootstrap() {
 		},
 	});
 
+	app.enableCors({
+		origin: ["http://localhost:2999", "http://localhost:2998"],
+		credentials: true,
+	});
+	// app.enableCors({
+	// 	origin: "http://localhost:2998",
+	// 	credentials: true,
+	// });
 	await app.startAllMicroservices();
 	await app.listen(PORT, () =>
 		console.log(`Server running on port: ${PORT}`),

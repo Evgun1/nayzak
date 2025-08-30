@@ -1,0 +1,45 @@
+.footer {
+    background: var(--black-100);
+
+    &__info-wrap {
+        padding: 72px 0;
+        display: flex;
+        justify-content: space-between;
+        gap: 120px;
+        text-align: left;
+    }
+    &__info {
+        max-width: 310px;
+        &-logo {
+            width: 155px;
+            height: 30px;
+            margin-bottom: 16px;
+        }
+        &-paragraph {
+            margin-bottom: 24px;
+        }
+    }
+
+    &__nav-wrap {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        padding: 24px 0 27px 0;
+        // padding-top: 24px;
+        // margin-bottom: 27px;
+
+        &::after {
+            position: absolute;
+            content: "";
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--black-300);
+        }
+    }
+    &__nav {
+        display: flex;
+        gap: 32px;
+    }
+}

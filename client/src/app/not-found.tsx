@@ -1,9 +1,6 @@
 "use server";
 
-import Link from "next/link";
-import classes from "./Hero.module.scss";
-import { ButtonClassList } from "@/types/buttonClassList.enum";
-import { Suspense } from "react";
+import classes from "./NotFound.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import DisplayIcon from "@/components/icons/displayIcon";
 import IconsIdList from "@/components/icons/IconsIdList";
