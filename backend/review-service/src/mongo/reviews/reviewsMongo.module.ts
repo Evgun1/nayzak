@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import ReviewsSchema, { Review } from "./reviews.schema";
 import { ReviewsMongoService } from "./reviewsMongo.service";
+import { Review, ReviewsSchema } from "./reviews.schema";
 
 @Module({
 	imports: [

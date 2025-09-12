@@ -24,7 +24,7 @@ export class IsNumberOrArray implements ValidatorConstraintInterface {
 		return `${args.property} must be a number or an array of numbers`;
 	}
 }
-export class DeleteCustomersDTO {
+export class ValidationDeleteCustomersBodyDTO {
 	@Transform(({ value }) => {
 		if (Array.isArray(value)) return value.map(Number);
 		return Number(value);

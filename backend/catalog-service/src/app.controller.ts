@@ -42,7 +42,6 @@ export class AppController {
 	// 	)
 	// 	payload: ValidationProductsKafkaPayloadDTO,
 	// ) {
-	// 	console.log(payload);
 
 	// 	return payload;
 	// 	// const productsKafka = await this.productsService.productsKafka(payload);

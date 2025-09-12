@@ -67,8 +67,6 @@ export class MediaService {
 			where: { productsId: productId },
 		});
 
-		console.log(media);
-
 		return media;
 	}
 }

@@ -1,6 +1,15 @@
-import { IsNotEmpty, IsString, Matches, ValidateIf } from "class-validator";
+import {
+	IsInt,
+	IsNotEmpty,
+	IsNumber,
+	IsOptional,
+	IsString,
+	Matches,
+	Max,
+	Min,
+} from "class-validator";
 
-export class CustomerBaseDTO {
+export class ValidationUploadCustomerBodyDTO {
 	@IsNotEmpty({ message: "The field must not be empty" })
 	@IsString()
 	@Matches(/[A-Z]/, {
@@ -32,4 +41,8 @@ export class CustomerBaseDTO {
 		message: 'Should not have symbols: !@#$%^&*()+=[]{};":\\|,<>/?~',
 	})
 	lastName: string;
+
+	@IsNotEmpty()
+	@IsNumber()
+	credentialsId: number;
 }

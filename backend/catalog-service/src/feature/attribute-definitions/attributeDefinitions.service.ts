@@ -13,7 +13,10 @@ import { AttributeDTO } from "./dto/attribute.dto";
 import { ValidationAttributeUploadBodyDTO } from "./validation/validationAttributeUpload.dto";
 import { ValidationAttributesQueryDTO } from "./validation/validationAttributes.dto";
 import { QueryService } from "src/query/query.service";
+import { ValidationAttributeByProductParamDTO } from "./validation/validationAttributeByProduct.dto.";
 
+type GetAllParam = ValidationAttributesQueryDTO &
+	Partial<ValidationAttributeByProductParamDTO>;
 @Injectable()
 export class AttributeDefinitionsService {
 	constructor(
@@ -22,19 +25,25 @@ export class AttributeDefinitionsService {
 		private query: QueryService,
 	) {}
 
-	async getAll(query: ValidationAttributesQueryDTO) {
-		const queryHandler = this.query.getQuery("AttributeDefinitions", query);
+	async getAll(param: GetAllParam) {
+		const queryHandler = this.query.getQuery("AttributeDefinitions", param);
 
 		const ids: number[] = [];
 
-		if (query.color) ids.push(...ids, ...query.color);
-		if (query.material) ids.push(...ids, ...query.material);
-		if (query.manufacturer) ids.push(...ids, ...query.manufacturer);
+		if (param.color) ids.push(...ids, ...param.color);
+		if (param.material) ids.push(...ids, ...param.material);
+		if (param.manufacturer) ids.push(...ids, ...param.manufacturer);
 
 		const where: Prisma.AttributeDefinitionsWhereInput = {
 			...queryHandler.where,
-			id: { in: ids },
 		};
+
+		if (ids.length > 0) {
+			where.id = { in: ids };
+		}
+
+		if (param.productId)
+			where.ProductAttribute = { some: { productsId: param.productId } };
 
 		const attributeArgs: Prisma.AttributeDefinitionsFindManyArgs = {
 			where,
@@ -42,8 +51,6 @@ export class AttributeDefinitionsService {
 
 		const attributes =
 			await this.prisma.attributeDefinitions.findMany(attributeArgs);
-
-		console.log(attributes);
 
 		return attributes;
 	}

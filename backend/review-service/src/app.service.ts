@@ -1,102 +1,67 @@
-import { log } from "util";
+import { CacheService } from "./cache/cache.service";
 import {
-	BadRequestException,
-	HttpException,
 	Inject,
 	Injectable,
+	OnModuleDestroy,
+	OnModuleInit,
 } from "@nestjs/common";
-import { ReviewsMongoService } from "./mongo/reviews/reviewsMongo.service";
-import { UploadReviewsDTO } from "./dto/uploadReviews.dto";
+import { ValidationUploadReviewsBodyDTO } from "./validation/validationUploadReviews.dto";
 import { UserDTO } from "./dto/user.dto";
-import { GetQueryDto } from "./dto/get-query-dto";
-import { GetReviewsQueryDTO } from "./dto/getReviewsQuery.dto";
-import { randomFillSync } from "crypto";
-import { ClientKafka, KafkaContext } from "@nestjs/microservices";
-import { KafkaModule } from "./kafka/kafka.module";
-import { E } from "@faker-js/faker/dist/airline-BUL6NtOJ";
+import { ValidationQueryDTO } from "./validation/validationQuery.dto";
+import { ValidationGetReviewsQueryDTO } from "./validation/ValidationGetReviews.dto";
+import { ClientKafka } from "@nestjs/microservices";
+import { ValidationReviewsByProductParamsDTO } from "./validation/validationReviewsByProduct.dto";
+import { firstValueFrom } from "rxjs";
+import {
+	CustomerKafkaInput,
+	CustomerKafkaResult,
+} from "./type/kafkaGetCustomerData.type";
+import { ReviewDTO } from "./dto/reviews.dto";
+import { RedisService } from "./redis/redis.service";
+import {
+	ReviewMongoArgs,
+	ReviewMongoSort,
+	ReviewMongoWhere,
+} from "./mongo/reviews/type/reviewsArgs.type";
+import { ReviewsMongoService } from "./mongo/reviews/reviewsMongo.service";
+import { Cron, Interval } from "@nestjs/schedule";
+import { TProductRatingInput } from "./type/kafkaUpdateProductRatig.type";
+import { KafkaService } from "./kafka/kafka.service";
+import { ClientApiService } from "./client-api/clientApi.service";
+
+type GetReviewsAllParam = ValidationQueryDTO &
+	ValidationGetReviewsQueryDTO &
+	Partial<ValidationReviewsByProductParamsDTO>;
 
 @Injectable()
-export class AppService {
+export class AppService implements OnModuleInit, OnModuleDestroy {
+	private catalogKafka: ClientKafka;
+	private userKafka: ClientKafka;
+
 	constructor(
+		private readonly cache: CacheService,
+		private readonly kafka: KafkaService,
 		private readonly reviewsMongo: ReviewsMongoService,
-		@Inject("CATALOG_SERVICE") private readonly kafka: ClientKafka,
-	) {}
-
-	// async getAll(query: GetQueryDto) {
-	// 	if (query.offset) this.skip = +query.offset;
-	// 	if (query.limit) this.take = +query.limit;
-	// 	if (query.sortBy && query.sort) this.orderBy[query.sortBy] = query.sort;
-
-	// 	const options: Prisma.ReviewsFindManyArgs = {
-	// 		where: this.where,
-	// 		orderBy: this.orderBy,
-	// 		take: this.take,
-	// 		skip: this.skip,
-	// 	};
-	// 	const reviewsCount = await prismaClient.reviews.count({
-	// 		where: options.where,
-	// 	});
-	// 	const reviews = await prismaClient.reviews.findMany(options);
-	// 	return { reviews, reviewsCount };
-	// }
-
-	async getReviewsAll(query: GetQueryDto & GetReviewsQueryDTO) {
-		const { sort, sortBy, limit, offset, page, productsId } = query;
-
-		const reviews = await this.reviewsMongo.findAll({
-			limit: limit ? limit : undefined,
-			skip: offset ? offset : undefined,
-			sort:
-				sort && sortBy
-					? ({ [`${sortBy}`]: sort.toLocaleLowerCase() } as any)
-					: undefined,
-			where: productsId ? { productsId } : undefined,
-		});
-
-		return reviews;
+		private readonly clientApi: ClientApiService,
+	) {
+		this.userKafka = kafka.userService();
+		this.catalogKafka = kafka.catalogService();
 	}
 
-	async getReview(id: string) {
-		const review = await this.reviewsMongo.findOne(id);
-		return review;
+	async onModuleInit() {
+		this.userKafka.subscribeToResponseOf("get.customers.data");
+		await this.userKafka.connect();
+	}
+	async onModuleDestroy() {
+		await this.userKafka.close();
 	}
 
-	// 	async getAllReviewsByProduct(productParams: number) {
-	// 		this.clearArgs();
-
-	// 		this.orderBy.createdAt = "desc";
-	// 		this.where = { productsId: productParams };
-
-	// 		const reviews = await prismaClient.reviews.findMany({
-	// 			orderBy: { createdAt: "desc" },
-	// 			where: this.where,
-	// 		});
-	// 		const reviewsCount = await prismaClient.reviews.count({
-	// 			where: this.where,
-	// 		});
-	// 		return { reviews, reviewsCount };
-	// 	}
-
-	// 	async getAllProductReviews(productsId: string) {
-	// 		const reviews = await prismaClient.reviews.findMany({
-	// 			where: { productsId: +productsId },
-	// 		});
-	// 		return reviews;
-	// 	}
-
-	async uploadReviews(body: UploadReviewsDTO & UserDTO) {
-		const review = await this.reviewsMongo.create({
-			customersId: body.customerId,
-			productsId: body.productsId,
-			rating: body.rating,
-			text: body.text,
+	private async kafkaUpdateRatingInProduct(param: { productId: number }) {
+		const { reviews } = await this.getReviewsAll({
+			productsId: param.productId,
 		});
 
-		const reviewResult = await this.getReviewsAll({
-			productsId: body.productsId,
-		});
-
-		const reviewObj = reviewResult
+		const reviewObj = reviews
 			.map((data) => {
 				return { rating: data.rating, productsId: data.productsId };
 			})
@@ -107,18 +72,135 @@ export class AppService {
 				};
 			});
 
-		const ratingAvg = Math.round(reviewObj.rating / reviewResult.length);
-		this.kafka
-			.send("update.product.rating", {
+		const ratingAvg = Math.round(reviewObj.rating / reviews.length);
+
+		this.catalogKafka.emit<any, TProductRatingInput>(
+			"update.product.rating",
+			{
 				productsId: reviewObj.productsId,
 				rating: ratingAvg,
-			})
-			.subscribe({
-				error: (err) => {
-					console.error(err);
+			},
+		);
+	}
+	private async kafkaGetCustomersData(customersId: number[]) {
+		const userKafka = await firstValueFrom(
+			this.userKafka.send<CustomerKafkaResult, CustomerKafkaInput>(
+				"get.customers.data",
+				{
+					customersId: customersId,
 				},
-			});
+			),
+		);
+		const user: { fullName: string; id: number }[] = userKafka.reduce(
+			(acc, cur) => {
+				acc.push({
+					id: cur.id,
+					fullName: `${cur.firstName} ${cur.lastName}`,
+				});
+				return acc;
+			},
+			[] as { fullName: string; id: number }[],
+		);
 
+		return user;
+	}
+
+	async getReviewsAll(
+		param: GetReviewsAllParam &
+			Partial<ValidationReviewsByProductParamsDTO>,
+	) {
+		const { sort, sortBy, limit, offset, page, productsId } = param;
+		const sortArgs: ReviewMongoSort = {};
+		if (sort && sortBy) sortArgs[`${sortBy}`] = sort.toLocaleLowerCase();
+
+		const where: ReviewMongoWhere = {};
+		if (productsId) where.productsId = productsId;
+
+		const args: ReviewMongoArgs = {
+			limit: limit,
+			skip: offset,
+			sort: sortArgs,
+			where,
+		};
+
+		const reviews = await this.reviewsMongo.findAll(args);
+		const reviewsCount = await this.reviewsMongo.count({
+			where: args.where,
+		});
+
+		return { reviews, reviewsCount };
+	}
+	async getReview(id: string) {
+		const review = await this.reviewsMongo.findOne(id);
+		return review;
+	}
+
+	async getReviewByProduct(param: ValidationReviewsByProductParamsDTO) {
+		const reviewCache = await this.cache.cachingReviewsByProductGetAll(
+			param.productsId,
+		);
+		const reviewCount = await this.reviewsMongo.count({
+			where: { productsId: param.productsId },
+		});
+		const reviewsCacheDTO = reviewCache.map(
+			(review) => new ReviewDTO(review),
+		);
+
+		if (reviewCache && reviewCache.length > 0)
+			return { reviews: reviewsCacheDTO, totalCount: reviewCount };
+
+		const reviews = await this.reviewsMongo.findAll({
+			where: { productsId: param.productsId },
+		});
+		const user = await this.kafkaGetCustomersData(
+			reviews.map((item) => item.customersId),
+		);
+		const reviewsDTO: ReviewDTO[] = [];
+		for (const element of reviews) {
+			const findUser = user.find(
+				(item) => item.id === element.customersId,
+			);
+			if (!findUser) continue;
+			reviewsDTO.push(
+				new ReviewDTO({
+					fullName: findUser.fullName,
+					createdAt: element.createAt as Date,
+					customersId: element.customersId,
+					rating: element.rating,
+					text: element.text,
+				}),
+			);
+		}
+
+		await this.cache.cachingReviewsByProductUpload(
+			param.productsId,
+			reviews,
+			user,
+		);
+
+		return { reviews: reviewsDTO, totalCount: reviewCount };
+	}
+
+	async uploadReviews(body: ValidationUploadReviewsBodyDTO & UserDTO) {
+		const review = await this.reviewsMongo.create({
+			customersId: body.customerId,
+			productsId: body.productsId,
+			rating: body.rating,
+			text: body.text,
+		});
+
+		const customerData = await this.kafkaGetCustomersData([
+			body.customerId,
+		]);
+
+		await this.cache.cachingReviewsByProductUpload(
+			body.productsId,
+			[review],
+			customerData,
+		);
+		await this.kafkaUpdateRatingInProduct({ productId: body.productsId });
+
+		await this.clientApi.clearCache("reviews");
 		return review;
 	}
 }

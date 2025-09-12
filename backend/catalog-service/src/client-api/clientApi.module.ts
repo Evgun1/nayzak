@@ -4,7 +4,6 @@ import { HttpClientService } from "./httpClient.service";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Module({
-	imports: [],
 	providers: [ClientApiService, HttpClientService],
 	exports: [ClientApiService, HttpClientService],
 })

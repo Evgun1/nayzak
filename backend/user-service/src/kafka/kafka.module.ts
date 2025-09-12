@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ClientsModule, Transport } from "@nestjs/microservices";
+import { KafkaService } from "./kafka.service";
 
 @Module({
 	imports: [
@@ -10,30 +11,49 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
 				options: {
 					client: {
 						clientId: "mail",
-						brokers: ["localhost:9092"],
+						brokers: ["localhost:29092", "localhost:39092"],
 					},
 					consumer: {
 						groupId: "mail-consumer",
+						rebalanceTimeout: 60000,
+						heartbeatInterval: 3000,
+						sessionTimeout: 45000,
+						allowAutoTopicCreation: false,
+
+						retry: {
+							initialRetryTime: 300,
+							retries: 5,
+						},
 					},
+					subscribe: { fromBeginning: true },
 				},
 			},
-		]),
-		ClientsModule.register([
 			{
 				name: "REVIEW_SERVICE",
 				transport: Transport.KAFKA,
 				options: {
 					client: {
 						clientId: "review-service",
-						brokers: ["localhost:9092"],
+						brokers: ["localhost:29092", "localhost:39092"],
 					},
 					consumer: {
 						groupId: "review-consumer",
+						rebalanceTimeout: 60000,
+						heartbeatInterval: 3000,
+						sessionTimeout: 45000,
+						allowAutoTopicCreation: false,
+
+						retry: {
+							initialRetryTime: 300,
+							retries: 5,
+						},
 					},
+					subscribe: { fromBeginning: true },
 				},
 			},
 		]),
 	],
-	exports: [ClientsModule],
+	providers: [KafkaService],
+	exports: [ClientsModule, KafkaService],
 })
 export class KafkaModule {}

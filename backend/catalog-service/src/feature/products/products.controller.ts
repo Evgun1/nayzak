@@ -83,7 +83,7 @@ export class ProductsController {
 		return { minPrice, maxPrice };
 	}
 
-	@MessagePattern("update.product.rating", Transport.KAFKA)
+	@MessagePattern("update.product.rating")
 	async updateRatingProduct(
 		@Payload(
 			new ValidationPipe({
@@ -92,6 +92,8 @@ export class ProductsController {
 		)
 		payload: ValidationProductsKafkaRatingPayloadDTO,
 	) {
+		console.log(payload);
+
 		await this.productsService.updateProduct({
 			id: payload.productsId,
 			rating: payload.rating,

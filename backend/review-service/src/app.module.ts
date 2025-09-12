@@ -8,12 +8,18 @@ import { ReviewsMongoModule } from "./mongo/reviews/reviewsMongo.module";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule } from "@nestjs/config";
 import { JwtStrategy } from "./strategy/jwt.strategy";
+import { CacheModule } from "./cache/cache.module";
+import { ScheduleModule } from "@nestjs/schedule";
+import { ClientApiModule } from "./client-api/clientApi.module";
 
 @Module({
 	imports: [
-		KafkaModule,
 		RedisModule,
+		CacheModule,
+		KafkaModule,
+        ClientApiModule,
 		ConfigModule.forRoot(),
+		ScheduleModule.forRoot(),
 		MongooseModule.forRoot("mongodb://0.0.0.0:5057/reviews", {
 			auth: { username: "nayzak", password: "nayzak" },
 			authSource: "admin",

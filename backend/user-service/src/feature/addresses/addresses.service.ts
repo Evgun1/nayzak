@@ -43,10 +43,6 @@ export class AddressesService {
 	}
 
 	async upload(body: ValidationAddressesUploadBodyDTO, user: IUserJwt) {
-		console.log(body, user);
-
-		// return;
-
 		const addresses = await this.prisma.addresses.create({
 			data: {
 				city: body.city,

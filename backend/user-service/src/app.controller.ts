@@ -12,6 +12,7 @@ import {
 	Res,
 	UnauthorizedException,
 	UseGuards,
+	ValidationPipe,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { Request, Response } from "express";
@@ -25,18 +26,11 @@ import { LocalAuthGuard } from "./guard/localAuth.guard";
 import { UserJwtDTO } from "./dto/userJwt.dto";
 import { JwtAuthGuard } from "./guard/jwtAuth.guard";
 import { ValidationCartAndAddressesPayloadDTO } from "./validation/validationCartAndAddressesKafka.dto";
+import { validationExceptionFactory } from "./utils/validationExceptionFactory";
 
 @Controller("/")
-export class AppController implements OnModuleDestroy {
-	constructor(
-		private readonly appService: AppService,
-		@Inject("MAIL_NOTIFICATION_SERVICE")
-		private readonly mailKafkaClient: ClientKafka,
-	) {}
-
-	async onModuleDestroy() {
-		await this.mailKafkaClient.connect();
-	}
+export class AppController {
+	constructor(private readonly appService: AppService) {}
 
 	@Get()
 	async getAll(
@@ -101,12 +95,25 @@ export class AppController implements OnModuleDestroy {
 		return await this.appService.changePassword(body);
 	}
 
-	@MessagePattern("get.cart.and.addresses.user")
-	async getCartAndAddressesUser(
-		@Payload() payload: ValidationCartAndAddressesPayloadDTO,
-	) {
-		const result = await this.appService.getCartAndAddressesKafka(payload);
+	// @MessagePattern("get.cart.and.addresses.user")
+	// async getCartAndAddressesUser(
+	// 	@Payload(
+	// 		new ValidationPipe({
+	// 			exceptionFactory: validationExceptionFactory,
+	// 		}),
+	// 	)
+	// 	payload: ValidationCartAndAddressesPayloadDTO,
+	// ) {
+	// 	const result = await this.appService.getCartAndAddressesKafka(payload);
+	// 	return result;
+	// }
+	// @MessagePattern("get.customers.data")
+	// kafkaGetCustomerData(
+	// 	@Payload()
+	// 	payload: any,
+	// ) {
+	// 	console.log(payload);
 
-		return result;
-	}
+	// 	return { message: "hello kafka" };
+	// }
 }

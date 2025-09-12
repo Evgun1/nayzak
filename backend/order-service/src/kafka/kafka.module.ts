@@ -11,11 +11,20 @@ import { KafkaService } from "./kafka.service";
 				options: {
 					client: {
 						clientId: "user-service",
-						brokers: ["0.0.0.0:9092"],
+						brokers: ["localhost:29092", "localhost:39092"],
 					},
 					consumer: {
 						groupId: "user-consumer",
+						rebalanceTimeout: 60000,
+						allowAutoTopicCreation: false,
+						heartbeatInterval: 3000,
+						sessionTimeout: 45000,
+						retry: {
+							initialRetryTime: 300,
+							retries: 5,
+						},
 					},
+					subscribe: { fromBeginning: true },
 				},
 			},
 			{
@@ -24,11 +33,20 @@ import { KafkaService } from "./kafka.service";
 				options: {
 					client: {
 						clientId: "catalog-service",
-						brokers: ["0.0.0.0:9092"],
+						brokers: ["localhost:29092", "localhost:39092"],
 					},
 					consumer: {
 						groupId: "catalog-consumer",
+						rebalanceTimeout: 60000,
+						allowAutoTopicCreation: false,
+						heartbeatInterval: 3000,
+						sessionTimeout: 45000,
+						retry: {
+							initialRetryTime: 300,
+							retries: 5,
+						},
 					},
+					subscribe: { fromBeginning: true },
 				},
 			},
 		]),

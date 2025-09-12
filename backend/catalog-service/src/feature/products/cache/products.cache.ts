@@ -2,6 +2,8 @@ import { NewProductsCacheDTO } from "src/feature/products/cache/dto/newProductsC
 import { RedisService } from "src/redis/redis.service";
 import { ProductDTOItem, ProductDTOParam } from "../interface/productDTO";
 import { NewProductsCacheParam } from "./interface/newProductsCache";
+import { ProductCacheDTO } from "../dto/productCache.dto";
+import { ProductDTO } from "../dto/product.dto";
 
 export class ProductsCache {
 	newProductsCacheKey = "list-new-products";
@@ -114,17 +116,43 @@ export class ProductsCache {
 				new Date(a.createdAt).getTime(),
 		);
 	}
-
 	async deleteAllProductFromCache() {
 		const redis = this.redis.redis();
 		const allProduct = await redis.keys(`product*`);
 
 		const newProducts = await redis.hGetAll(this.newProductsCacheKey);
 
-		for (const element of allProduct) {
-			await redis.del(element);
-		}
+		for (const element of allProduct) await redis.del(element);
 
 		await this.deleteCacheNewProducts(Object.keys(newProducts));
+	}
+
+	async updateProductCache(body: ProductDTO) {
+		await this.updateCacheNewProducts([
+			{
+				id: body.id,
+				title: body.title,
+				discount: body.discount,
+				price: body.price,
+				createdAt: body.createdAt as Date,
+				Media: body.Media.map((media) => ({
+					src: media.src,
+					name: media.name,
+				})),
+			},
+		]);
+
+		const productCache = await this.redis.get<ProductCacheDTO>(
+			`product-${body.id}`,
+		);
+
+		if (!productCache) return;
+
+		const cursProductCache = new ProductCacheDTO({
+			count: productCache.count,
+			product: body,
+		});
+
+		await this.redis.set(`product-${body.id}`, cursProductCache, 60 * 30);
 	}
 }

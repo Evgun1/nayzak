@@ -35,7 +35,7 @@ export class AppController {
 	) {
 		const user = req.user as IUserJwt;
 		const order = await this.appService.create(body, user);
-		
+
 		return order;
 	}
 }

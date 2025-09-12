@@ -1,17 +1,17 @@
-import { ClientApiService } from "./../../client-api/clientApi.service";
-import { JwtService } from "@nestjs/jwt";
+import { ClientApiService } from "../../client-api/clientApi.service";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { CustomerBaseDTO } from "./dto/customerBase.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { QueryService } from "src/query/query.service";
 import { QueryDTO } from "src/query/dto/query.dto";
 import { Prisma } from "@prisma/client";
-import { UploadCustomerDTO } from "./dto/uploadCustomer.dto";
-import { ChangeCustomerDTO } from "./dto/changeCustomer.dto";
-import { UserJwtDTO } from "src/dto/userJwt.dto";
-import { GetCustomerDTO } from "./dto/getCustomer.dto";
-import { DeleteCustomersDTO } from "./dto/deleteCustomers.dto";
+import { ValidationUploadCustomerBodyDTO } from "./validation/validationUploadCustomer.dto";
+import { ValidationChangeCustomerBodyDTO } from "./validation/validationChangeCustomer.dto";
+import { ValidationGetCustomerParamDTO } from "./validation/validationGetCustomer.dto";
+import { ValidationDeleteCustomersBodyDTO } from "./validation/validationDeleteCustomers.dto";
 import { IUserJwt } from "src/interface/credentialsJwt.interface";
+import { ValidationKafkaGetCustomerDataPayloadDTO } from "./validation/validationKafkaGetCustomerData.dto";
+import { KafkaCustomerResult } from "./type/kafkaCustomer.dto";
+import { KafkaService } from "src/kafka/kafka.service";
 
 @Injectable()
 export class CustomersService {
@@ -19,17 +19,21 @@ export class CustomersService {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly queryService: QueryService,
-		private readonly jwtService: JwtService,
 		private readonly clientApiService: ClientApiService,
 	) {
 		this.clearCacheToClient = this.clientApiService.clearCache("customers");
 	}
 
-	async getAll(query: QueryDTO) {
+	async getAll(
+		query: QueryDTO & Partial<ValidationKafkaGetCustomerDataPayloadDTO>,
+	) {
 		const { orderBy, skip, take, where } = this.queryService.getQuery(
 			"Customers",
 			query,
 		);
+
+		if (query.customersId && query.customersId.length > 0)
+			where.id = { in: query.customersId };
 
 		const queryOptions: Prisma.CustomersFindManyArgs = {
 			where,
@@ -43,9 +47,9 @@ export class CustomersService {
 		return { customers, totalCount };
 	}
 
-	async getOne(param: GetCustomerDTO) {
+	async getOne(param: ValidationGetCustomerParamDTO) {
 		const customer = await this.prisma.customers.findFirst({
-			where: { id: param.parma },
+			where: { id: param.id },
 		});
 		return customer;
 	}
@@ -54,7 +58,7 @@ export class CustomersService {
 		firstName,
 		lastName,
 		credentialsId,
-	}: UploadCustomerDTO) {
+	}: ValidationUploadCustomerBodyDTO) {
 		const customers = this.prisma.customers.create({
 			data: {
 				firstName: firstName,
@@ -67,7 +71,7 @@ export class CustomersService {
 		return customers;
 	}
 
-	async change(body: ChangeCustomerDTO, credential: IUserJwt) {
+	async change(body: ValidationChangeCustomerBodyDTO, credential: IUserJwt) {
 		const { firstName, id, lastName, phone } = body;
 
 		try {
@@ -95,7 +99,7 @@ export class CustomersService {
 		return customer;
 	}
 
-	async delete(body: DeleteCustomersDTO) {
+	async delete(body: ValidationDeleteCustomersBodyDTO) {
 		try {
 			const sqlQuery = await this.prisma.sqlQuery("Customers");
 			const sqlSelect = sqlQuery.select;
@@ -110,5 +114,25 @@ export class CustomersService {
 			await this.clearCacheToClient;
 			return selectQuery;
 		} catch (error) {}
+	}
+
+	async kafkaGetCustomerData(
+		payload: ValidationKafkaGetCustomerDataPayloadDTO,
+	): Promise<KafkaCustomerResult[]> {
+		const customer = await this.getAll({
+			customersId: payload.customersId,
+		});
+
+		const curCustomer: KafkaCustomerResult[] = customer.customers.map(
+			(customer) => {
+				return {
+					id: customer.id,
+					firstName: customer.firstName,
+					lastName: customer.lastName,
+				};
+			},
+		);
+
+		return curCustomer;
 	}
 }

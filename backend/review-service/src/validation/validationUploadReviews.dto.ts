@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty, IsNumber, Matches, Max } from "class-validator";
 
-export class UploadReviewsDTO {
+export class ValidationUploadReviewsBodyDTO {
 	@Type(() => Number)
 	@IsInt()
 	@Max(5, { message: "You need to specify a rating" })

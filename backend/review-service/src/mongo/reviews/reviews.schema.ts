@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 
 export type ReviewsDocument = HydratedDocument<Review>;
+export type ReviewType = Array<Review & { id: string }>;
 
 @Schema()
 export class Review {
@@ -20,16 +21,15 @@ export class Review {
 }
 
 const ReviewsSchema = SchemaFactory.createForClass(Review);
-// ReviewsSchema.virtual("id").get(function () {
-// 	return this._id.toHexString();
-// });
+ReviewsSchema.virtual("id").get(function () {
+	return this._id;
+});
 
-// ReviewsSchema.set("toJSON", {
-// 	virtuals: true,
-// 	versionKey: false,
-// 	transform: (_, ret) => {
-// 		delete ret._id; // чтобы не было и _id и id одновременно
-// 	},
-// });
-export default ReviewsSchema;
-// export const ReviewsSchema = SchemaFactory.createForClass(Review);
+ReviewsSchema.set("toJSON", {
+	virtuals: true,
+	transform: (doc, ret) => {
+		ret.id = ret._id;
+		delete ret._id;
+	},
+});
+export { ReviewsSchema };

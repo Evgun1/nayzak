@@ -6,14 +6,13 @@ import {
 	Max,
 	Min,
 } from "class-validator";
-import { CustomerBaseDTO } from "./customerBase.dto";
 import { PickType } from "@nestjs/mapped-types";
-import { UploadCustomerDTO } from "./uploadCustomer.dto";
+import { ValidationUploadCustomerBodyDTO } from "./validationUploadCustomer.dto";
 
-export class ChangeCustomerDTO extends PickType(UploadCustomerDTO, [
-	"firstName",
-	"lastName",
-] as const) {
+export class ValidationChangeCustomerBodyDTO extends PickType(
+	ValidationUploadCustomerBodyDTO,
+	["firstName", "lastName"] as const,
+) {
 	@IsNotEmpty()
 	@IsNumber()
 	id: number;

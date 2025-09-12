@@ -11,8 +11,6 @@ export class MediaController {
 
 	@Get("by-product/:productId")
 	async getByProduct(@Param() param: ValidationMEdiaByProductParam) {
-		console.log(param);
-
 		const media = await this.mediaService.getMediaByProduct(
 			param.productId,
 		);

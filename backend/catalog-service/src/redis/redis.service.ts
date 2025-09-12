@@ -1,6 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { RedisClientType } from "redis";
-import { throttleTime } from "rxjs";
 
 @Injectable()
 export class RedisService {
@@ -39,7 +38,7 @@ export class RedisService {
 	}
 
 	async del(key: string) {
-		return await this.client.del(key);
+		await this.client.del(key);
 	}
 
 	async hGet<T>(key: string, field: string | number) {
@@ -65,7 +64,7 @@ export class RedisService {
 	}
 
 	async hDel(key: string, field: string | string[] | number | number[]) {
-		return await this.client.hDel(
+		await this.client.hDel(
 			key,
 			typeof field === "object"
 				? field.map((data: string | number) => data.toString())

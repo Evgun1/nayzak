@@ -2,66 +2,66 @@ import {
 	Body,
 	Controller,
 	Get,
-	Inject,
-	OnModuleDestroy,
-	OnModuleInit,
 	Param,
 	Post,
 	Query,
 	Req,
+	Res,
 	UseGuards,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
-import {
-	ClientKafka,
-	EventPattern,
-	MessagePattern,
-	Payload,
-} from "@nestjs/microservices";
-import { UploadReviewsDTO } from "./dto/uploadReviews.dto";
+import { ClientKafka, MessagePattern } from "@nestjs/microservices";
+import { ValidationUploadReviewsBodyDTO } from "./validation/validationUploadReviews.dto";
 import { JwtAuthGuard } from "./guard/jwtAuth.guard";
-import { Request } from "express";
+import { Request, Response } from "express";
 import { JwtService } from "@nestjs/jwt";
 import { UserDTO } from "./dto/user.dto";
-import query from "utils/query-params/query";
-import { GetQueryDto } from "./dto/get-query-dto";
-import { GetReviewsQueryDTO } from "./dto/getReviewsQuery.dto";
-import { GetReviewParamDTO } from "./dto/getReviewParam.dto";
+import { ValidationQueryDTO } from "./validation/validationQuery.dto";
+import { ValidationGetReviewsQueryDTO } from "./validation/ValidationGetReviews.dto";
+import { ValidationGetReviewByParamsParamDTO } from "./validation/ValidationGetReviewByParams.dto";
+import { ValidationReviewsByProductParamsDTO } from "./validation/validationReviewsByProduct.dto";
+import { KafkaService } from "./kafka/kafka.service";
+import { Timeout } from "@nestjs/schedule";
 
 @Controller()
-export class AppController implements OnModuleInit {
-	constructor(
-		private readonly jwtService: JwtService,
-		private readonly appService: AppService,
-		@Inject("CATALOG_SERVICE") private readonly catalogKafka: ClientKafka,
-	) {}
-
-	async onModuleInit() {
-		this.catalogKafka.subscribeToResponseOf("update.product.rating");
-		await this.catalogKafka.connect();
-	}
+export class AppController {
+	constructor(private readonly appService: AppService) {}
 
 	@Get()
-	async getReviewsAll(@Query() query: GetQueryDto & GetReviewsQueryDTO) {
+	async getReviewsAll(
+		@Query() query: ValidationQueryDTO & ValidationGetReviewsQueryDTO,
+	) {
 		const review = await this.appService.getReviewsAll(query);
 
 		return review;
 	}
 
 	@Get(":id")
-	async getReview(@Param() param: GetReviewParamDTO) {
+	async getReview(@Param() param: ValidationGetReviewByParamsParamDTO) {
 		const review = await this.appService.getReview(param.id);
 		return review;
 	}
 
-	@Get("/by-products/:productPrams")
-	getReviewsByProducts() {}
+	@Get("/by-product/:productsId")
+	async getReviewsByProducts(
+		@Res({ passthrough: true }) res: Response,
+		@Param() param: ValidationReviewsByProductParamsDTO,
+	) {
+		const { reviews, totalCount } =
+			await this.appService.getReviewByProduct(param);
 
-	@Post()
+		console.log(reviews);
+
+		res.setHeader("X-Total-Count", totalCount);
+
+		return reviews;
+	}
+
+	@Post("/")
 	@UseGuards(JwtAuthGuard)
 	async uploadReview(
 		@Req() request: Request,
-		@Body() body: UploadReviewsDTO,
+		@Body() body: ValidationUploadReviewsBodyDTO,
 	) {
 		const user = request.user as UserDTO;
 		const review = await this.appService.uploadReviews({

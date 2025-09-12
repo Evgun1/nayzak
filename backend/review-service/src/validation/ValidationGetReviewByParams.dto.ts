@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty, IsString } from "class-validator";
 
-export class GetReviewParamDTO {
+export class ValidationGetReviewByParamsParamDTO {
 	@IsNotEmpty()
 	@Type(() => String)
 	@IsString()

@@ -185,7 +185,7 @@ export class ProductsService {
 					count: ++productCache.count,
 					product: productCache.product,
 				},
-				ttl,
+				ttl === -1 ? 0 : ttl,
 			);
 
 			if (Number.isInteger(10 / productCache.count)) {
@@ -301,28 +301,20 @@ export class ProductsService {
 
 	async updateProduct(body: ValidationProductUpdateBodyDTO) {
 		const product = await this.prisma.products.update({
-			include: { Media: { select: { src: true, name: true } } },
+			include: {
+				Media: { select: { src: true, name: true } },
+				Categories: true,
+				Subcategories: true,
+			},
 			where: { id: body.id },
 			data: { ...body },
 		});
 
-		await this.productsCache.updateCacheNewProducts([
-			{
-				id: product.id,
-				title: product.title,
-				discount: product.discount,
-				price: product.price,
-				createdAt: product.createdAt,
-				Media: product.Media.map((media) => ({
-					src: media.src,
-					name: media.name,
-				})),
-			},
-		]);
+		const productDTO = new ProductDTO(product);
 
-		await this.productsCache.deleteAllProductFromCache();
+		await this.productsCache.updateProductCache(product);
 		await this.clientApi.clearCache("products");
-		return product;
+		return productDTO;
 	}
 
 	async getMinMaxPrice(params: ValidationMinMaxPriceParamDTO) {

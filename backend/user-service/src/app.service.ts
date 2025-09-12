@@ -9,7 +9,7 @@ import { RedisService } from "./redis/redis.service";
 import { RegistrationCacheDTO } from "./dto/registrationCache.dto";
 import { GetOneParamDTO } from "./dto/getOneParam.dto";
 import { ActivationParamDTO } from "./dto/activationParam.dto";
-import { CustomersService } from "./feature/customers/customer.service";
+import { CustomersService } from "./feature/customers/customers.service";
 import { Interval } from "@nestjs/schedule";
 import { JwtService } from "@nestjs/jwt";
 import { LoginBodyDTO } from "./dto/loginBody.dto";

@@ -1,7 +1,7 @@
 import { Transform, Type } from "class-transformer";
 import { IsEnum, IsInt, IsOptional, IsString, Min } from "class-validator";
 
-export class GetQueryDto {
+export class ValidationQueryDTO {
 	@IsOptional()
 	@IsString()
 	search?: string;

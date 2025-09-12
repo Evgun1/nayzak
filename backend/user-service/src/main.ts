@@ -1,3 +1,4 @@
+import { $Enums } from "@prisma/client";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
@@ -15,15 +16,25 @@ async function bootstrap() {
 
 	app.connectMicroservice<MicroserviceOptions>({
 		transport: Transport.KAFKA,
-
 		options: {
 			client: {
 				clientId: "user-service",
-				brokers: ["0.0.0.0:9092"],
+				brokers: ["localhost:29092", "localhost:39092"],
 			},
 			consumer: {
 				groupId: "user-consumer",
+				rebalanceTimeout: 60000,
+				heartbeatInterval: 3000,
+				sessionTimeout: 60000,
+				maxBytes: 20971520,
+
+				retry: {
+					initialRetryTime: 300,
+					retries: 5,
+				},
+				allowAutoTopicCreation: false,
 			},
+			subscribe: { fromBeginning: true },
 		},
 	});
 

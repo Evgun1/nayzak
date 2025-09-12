@@ -8,13 +8,12 @@ import {
 	Matches,
 	MinLength,
 } from "class-validator";
-import { CustomerBaseDTO } from "src/feature/customers/dto/customerBase.dto";
-import { UploadCustomerDTO } from "src/feature/customers/dto/uploadCustomer.dto";
+import { ValidationUploadCustomerBodyDTO } from "src/feature/customers/validation/validationUploadCustomer.dto";
 
-export class RegistrationBodyDTO extends PickType(UploadCustomerDTO, [
-	"firstName",
-	"lastName",
-] as const) {
+export class RegistrationBodyDTO extends PickType(
+	ValidationUploadCustomerBodyDTO,
+	["firstName", "lastName"] as const,
+) {
 	@IsNotEmpty({ message: "The field must not be empty" })
 	@IsEmail({}, { message: "Invalid email format" })
 	email: string;

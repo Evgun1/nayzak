@@ -1,4 +1,9 @@
-import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
+import {
+	Inject,
+	Injectable,
+	OnModuleDestroy,
+	OnModuleInit,
+} from "@nestjs/common";
 import { IUserJwt } from "./type/userJwt.interface";
 import { PrismaService } from "./prisma/prisma.service";
 import { KafkaService } from "./kafka/kafka.service";
@@ -19,17 +24,16 @@ import { ValidationOrderUploadBodyDTO } from "./validation/validationOrderUpload
 import { OrderDTO } from "./dto/order.dto";
 
 @Injectable()
-export class AppService implements OnModuleInit {
+export class AppService implements OnModuleInit, OnModuleDestroy {
 	private userKafka: ClientKafka;
-	// private catalogKafka: ClientKafka;
+	private catalogKafka: ClientKafka;
 
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly kafka: KafkaService,
-		@Inject("CATALOG_SERVICE") private readonly catalogKafka: ClientKafka,
 	) {
 		this.userKafka = kafka.userService();
-		// this.catalogKafka = kafka.catalogService();
+		this.catalogKafka = kafka.catalogService();
 	}
 
 	async onModuleInit() {
@@ -39,15 +43,18 @@ export class AppService implements OnModuleInit {
 		this.catalogKafka.subscribeToResponseOf("get.products.catalog");
 		await this.catalogKafka.connect();
 	}
+	async onModuleDestroy() {
+		await this.catalogKafka.close();
+		await this.userKafka.close();
+	}
 
 	async init(user: IUserJwt) {
 		const order = await this.prisma.orders.findMany({
 			where: { customersId: user.customerId },
 		});
 
-		console.log(order);
-
 		const orderDTO = order.map((item) => new OrderDTO({ ...item }));
+
 		return orderDTO;
 	}
 
@@ -76,14 +83,6 @@ export class AppService implements OnModuleInit {
 				customerId: user.customerId,
 			}),
 		);
-
-		// if (
-		// 	!cartAndAddressesKafka ||
-		// 	!cartAndAddressesKafka.addresses ||
-		// 	cartAndAddressesKafka.cart.length <= 0
-		// ) {
-		// 	return;
-		// }
 
 		const productsKafka = await firstValueFrom(
 			this.catalogKafka.send<ProductsKafkaResult, ProductsKafkaInput>(

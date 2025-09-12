@@ -1,16 +1,16 @@
 import { Module } from "@nestjs/common";
-import {  ClientsModule, Transport } from "@nestjs/microservices";
+import { ClientsModule, Transport } from "@nestjs/microservices";
 
 @Module({
 	imports: [
 		ClientsModule.register([
 			{
-                name: "MAIL_NOTIFICATION_SERVICE",
+				name: "MAIL_NOTIFICATION_SERVICE",
 				transport: Transport.KAFKA,
 				options: {
 					client: {
 						clientId: "mail",
-						brokers: ["localhost:9092"],
+						brokers: ["localhost:29092", "localhost:39092"],
 					},
 					consumer: {
 						groupId: "mail-consumer",
