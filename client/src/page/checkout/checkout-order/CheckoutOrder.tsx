@@ -16,7 +16,7 @@ import {
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import CheckoutOrderProduct from "./CheckoutOrderProduct";
 import { MediaItem } from "@/types/media.types";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import dynamic from "next/dynamic";
 
 const CheckoutOrderProductDynamic = dynamic(

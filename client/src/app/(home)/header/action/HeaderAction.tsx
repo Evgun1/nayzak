@@ -49,6 +49,7 @@ const HeaderAction: FC = () => {
 		<div className={classes["header-actions"]}>
 			<ButtonCustom
 				styleSettings={{
+					state: ["HOVER"],
 					type: "TEXT",
 					color: "DARK",
 					size: "LARGE",
@@ -62,6 +63,7 @@ const HeaderAction: FC = () => {
 				href={{ endpoint: userData !== null ? "/profile" : "#" }}
 				onClick={userData !== null ? () => {} : btnAuthHandler}
 				styleSettings={{
+					state: ["HOVER"],
 					roundness: "ROUNDED",
 					fill: "SOLID",
 					color: "DARK",
@@ -75,6 +77,7 @@ const HeaderAction: FC = () => {
 			<LinkCustom
 				href={{ endpoint: !userData ? "#" : "/cart" }}
 				styleSettings={{
+					state: ["HOVER"],
 					roundness: "ROUNDED",
 					color: "DARK",
 					icon: { left: "BAG" },

@@ -5,7 +5,7 @@ import NavbarContent from "./NavbarContent";
 import NavbarTrigger from "./NavbarTrigger";
 import NavbarBody from "./NavbarBody";
 import NavbarItem from "./NavbarItem";
-import childrenRecursion from "@/utils/childrenRecursionT";
+import childrenRecursion from "@/tools/childrenRecursionT";
 
 import classes from "./Navbar.module.scss";
 import { NavbarProvider } from "./NavbarContext";

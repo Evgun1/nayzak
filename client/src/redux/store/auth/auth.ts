@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CredentialsStateItem } from "@/redux/store/auth/auth.type";
-import localStorageHandler from "@/utils/localStorage";
+import localStorageHandler from "@/tools/localStorage";
 
 type CredentialsState = {
 	credentials: CredentialsStateItem | null;

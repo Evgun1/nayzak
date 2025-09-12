@@ -7,7 +7,7 @@ import customer, { CustomerState } from "./store/customer/customer";
 import address, { AddressState } from "./store/address/address";
 import orders, { OrderState } from "./store/orders/orders";
 import notification from "./store/notification/notification";
-import localStorageHandler from "@/utils/localStorage";
+import localStorageHandler from "@/tools/localStorage";
 
 const storageCart = localStorageHandler<CartState>("cartState");
 const storageWishlist = localStorageHandler<CartState>("wishlistState");

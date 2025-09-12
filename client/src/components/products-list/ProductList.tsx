@@ -6,7 +6,7 @@ import ProductPreviewDefault from "../product-preview/product-preview-default/Pr
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { ProductBase } from "@/types/product/productBase";
 import { ProductPreviewItem } from "../product-preview/ProductPreview.types";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 
 type ProductListProps = {
 	productsArray: ProductBase[];

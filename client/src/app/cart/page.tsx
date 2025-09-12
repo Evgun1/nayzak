@@ -8,7 +8,7 @@ import { FC, useEffect, useMemo, useState } from "react";
 import classes from "./Cart.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import { log } from "console";
 import CartPreview, { CartItemProps } from "./_preview/CartPreview";
 

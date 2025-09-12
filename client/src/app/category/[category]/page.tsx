@@ -4,22 +4,18 @@ import { FC } from "react";
 
 import classes from "./Subcategories.module.scss";
 import { appSubcategoryByCategoryGet } from "@/lib/api/subcategories";
-import getIdCategoryOrSubcategory from "@/utils/getIdCategoryOrSubcategory";
-import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { ISubcategory } from "@/types/subcategories.interface";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
-import Image from "next/image";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import SubcategoryPreview from "./SubcategoryPreview";
 
 type SubcategoriesGridProps = {
-	params: { category?: string };
+	params: { category: string };
 };
 
 const Page: FC<SubcategoriesGridProps> = async ({ params }) => {
-	const { categoryId } = getIdCategoryOrSubcategory({ params });
-	if (!categoryId) return;
-
-	const subcategoriesFetch = await appSubcategoryByCategoryGet(categoryId);
+	const subcategoriesFetch = await appSubcategoryByCategoryGet(
+		params.category,
+	);
 
 	const subcategories: Array<
 		ISubcategory & {

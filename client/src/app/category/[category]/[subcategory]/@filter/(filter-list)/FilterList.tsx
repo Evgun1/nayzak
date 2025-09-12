@@ -11,11 +11,11 @@ import React, {
 import classes from "./FilterList.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import Form, { FormOnChangeParams } from "@/ui/form/Form";
-import { useFilter } from "../../(filter-tools)/context/useFilter";
 import PopupResultFilter from "./popup-show-result-filter/PopupResultFilter";
 import FilterColorCheckbox from "./FilterColorCheckbox";
 import { SliderPrice } from "@/components/slider-price/SliderPrice";
 import { fa } from "zod/v4/locales";
+import { useFilterContext } from "../../(filter-tools)/context/useFilter";
 
 export type FilterAttributesItem = {
 	name: string;
@@ -31,7 +31,7 @@ type FilterListProps = {
 };
 
 const FilterList: FC<FilterListProps> = (props) => {
-	const { fetchAttributesHandler: setAttributesHandler } = useFilter();
+	const { fetchAttributesHandler: setAttributesHandler } = useFilterContext();
 	const refTimeout = useRef<NodeJS.Timeout>();
 
 	const randomId = useId().replaceAll(":", "");

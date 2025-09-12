@@ -13,24 +13,24 @@ export enum Color {
 }
 
 export enum Size {
-	XL = `link-size--xl ${ButtonClassList.BUTTON_X_LARGE}`,
-	L = `link-size--l ${ButtonClassList.BUTTON_LARGE}`,
-	M = `link-size--m ${ButtonClassList.BUTTON_MEDIUM}`,
-	S = `link-size--s ${ButtonClassList.BUTTON_SMALL}`,
-	XS = `link-size--xs ${ButtonClassList.BUTTON_X_SMALL}`,
+	XL = `size--xl ${ButtonClassList.BUTTON_X_LARGE}`,
+	L = `size--l ${ButtonClassList.BUTTON_LARGE}`,
+	M = `size--m ${ButtonClassList.BUTTON_MEDIUM}`,
+	S = `size--s ${ButtonClassList.BUTTON_SMALL}`,
+	XS = `size--xs ${ButtonClassList.BUTTON_X_SMALL}`,
 }
 
 export enum Rounded {
-	pill = "link-roundness--pill",
-	rounded = "link-roundness--rounded",
-	sharp = "link-roundness--sharp",
+	pill = "roundness--pill",
+	rounded = "roundness--rounded",
+	sharp = "roundness--sharp",
 }
 
 export enum Type {
-	default = "link-type--default",
-	circle = "link-type--circle",
-	text = "link-type--text",
-	underline = "link-type--underline",
+	default = "type--default",
+	circle = "type--circle",
+	text = "type--text",
+	underline = "type--underline",
 }
 
 export interface IconInterface {

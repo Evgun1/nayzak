@@ -1,7 +1,7 @@
 "use client";
 
 import store from "@/redux/store";
-import PurgeCachedInterval from "@/utils/purgeCachedInterval";
+import PurgeCachedInterval from "@/tools/purgeCachedInterval";
 import { ReactNode, useEffect } from "react";
 import { Provider } from "react-redux";
 

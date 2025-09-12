@@ -4,7 +4,7 @@ import React, { FC, useEffect, useMemo, useState } from "react";
 import classes from "./Header.module.scss";
 import Breadcrumbs from "@/ui/breadcrumbs/Breadcrumbs";
 import { useParams } from "next/navigation";
-import { capitalizeAndSeparateWords } from "@/utils/capitalizeAndSeparateWords";
+import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
 import Image from "next/image";
 import PasteImage from "@/../public/PasteImage.png";
 

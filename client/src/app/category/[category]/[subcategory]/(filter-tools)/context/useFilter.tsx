@@ -1,7 +1,9 @@
 "use client";
 
-import { appAttributeBySubcategoryGet } from "@/lib/api/attribute";
-import getIdCategoryOrSubcategory from "@/utils/getIdCategoryOrSubcategory";
+import {
+	appAttributeBySubcategoryGet,
+	appAttributesAllGet,
+} from "@/lib/api/attribute";
 import { useParams, useSearchParams } from "next/navigation";
 import {
 	createContext,
@@ -12,12 +14,11 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
-	useMemo,
 	useState,
 } from "react";
-import { tr } from "zod/v4/locales";
 import { FilterAttributesArray } from "../../@filter/(filter-list)/FilterList";
 import filterAttributesHandler from "../tools/filterAttributesHandler";
+import { IAttribute } from "@/types/attribute.interface";
 
 type AttributeItem = Record<
 	string,
@@ -55,20 +56,17 @@ export const FilterProvider: FC<{
 	const params = useParams() as { category: string; subcategory: string };
 	const [showFilter, setShowFilter] = useState<boolean>(true);
 	const [attributeCount, setAttributeCount] = useState<number>(NaN);
-	const [filterChips, setFilterChips] = useState();
+	const [filterChips, setFilterChips] = useState<any[]>([]);
 
 	const appAttributeBySubcategoryHandler = async (
 		searchParams?: URLSearchParams,
 	) => {
-		const { subcategoryId } = getIdCategoryOrSubcategory({ params });
-		if (!subcategoryId) return;
 		const attributes = await appAttributeBySubcategoryGet({
-			param: subcategoryId,
+			param: { slug: params.subcategory },
 			searchParams,
 		});
 		return attributes;
 	};
-
 	const fetchAttributesHandler = useCallback(
 		async (searchParams: URLSearchParams) => {
 			const attributes = await appAttributeBySubcategoryHandler(
@@ -105,7 +103,7 @@ export const FilterProvider: FC<{
 	);
 };
 
-export const useFilter = () => {
+export const useFilterContext = () => {
 	const context = useContext(FilterContext);
 	if (!context) {
 		throw new Error("useFilter must be used within a FilterProvider");

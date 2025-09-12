@@ -9,7 +9,7 @@ import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { FC, useEffect, useState } from "react";
 import { ProductBase } from "@/types/product/productBase";
 import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 
 type WishlistItemProps = {
 	product: ProductPreviewItem;

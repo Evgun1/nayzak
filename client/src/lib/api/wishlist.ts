@@ -36,13 +36,14 @@ export const appWishlistsPost = async (
 	}
 };
 
-export const appWishlistsDelete = async (wishlistId: number) => {
+export const appWishlistsDelete = async (wishlistId: number, token: string) => {
 	const pathname = "wishlists";
 	const nginxPathname = "user/wishlist";
 
 	const result = await appFetchDelete({
+		authorization: token,
 		pathname: nginxPathname,
-		deleteData: { wishlistId },
+		deleteData: { id: wishlistId },
 	});
 	return result;
 };

@@ -1,0 +1,61 @@
+.review-preview {
+	position: relative;
+	text-align: start;
+	padding: 32px 0;
+
+	&::after {
+		position: absolute;
+		content: "";
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 1px;
+		background: var(--black-300);
+	}
+	&::before {
+		position: absolute;
+		content: "";
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 1px;
+		background: var(--black-300);
+	}
+	&__header {
+		display: flex;
+		gap: 16px;
+		margin-bottom: 12px;
+
+		&-avatar {
+			position: relative;
+			max-width: 76px;
+			width: 100%;
+			max-height: 76px;
+			height: 100vh;
+			border-radius: 100%;
+			overflow: hidden;
+		}
+	}
+	&__user {
+		display: grid;
+		grid-template-columns: repeat(2, max-content);
+		grid-template-rows: max-content;
+		align-items: center;
+		gap: 8px 12px;
+
+		&-date {
+			color: var(--black-500);
+		}
+
+		&-rating {
+			svg {
+				width: 16px;
+				height: 16px;
+			}
+		}
+	}
+
+	&__text {
+		color: #3e3e59;
+	}
+}

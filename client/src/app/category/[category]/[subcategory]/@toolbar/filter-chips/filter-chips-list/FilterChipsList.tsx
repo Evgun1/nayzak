@@ -3,7 +3,7 @@ import classes from "./FilterChipsList.module.scss";
 
 import { TextClassList } from "@/types/textClassList.enum";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
-import { capitalizeAndSeparateWords } from "@/utils/capitalizeAndSeparateWords";
+import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
 import { useRouter } from "next/navigation";
 import { FC, useCallback, useEffect, useState } from "react";
 

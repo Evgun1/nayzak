@@ -5,7 +5,7 @@ import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { Select, SelectItem } from "@/ui/select/Select";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
-import { useFilter } from "../../(filter-tools)/context/useFilter";
+import { useFilterContext } from "../../(filter-tools)/context/useFilter";
 
 const sortData = [
 	{
@@ -33,7 +33,7 @@ const sortData = [
 
 const SelectSortBy: React.FC = () => {
 	const [defaultKey, setDefaultKey] = useState<string | undefined>(undefined);
-	const { showFilter, setShowFilter } = useFilter();
+	const { showFilter, setShowFilter } = useFilterContext();
 	const searchParams = useSearchParams() as ReadonlyURLSearchParams;
 	const btnClickFilter = () => setShowFilter(!showFilter);
 

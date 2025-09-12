@@ -6,12 +6,12 @@ import {
 import { AppDispatch, RootState } from "../../store";
 import { wishlistAction, WishlistItemData, WishlistState } from "./wishlist";
 import { appCookieGet } from "@/lib/api/cookie";
-import localStorageHandler from "@/utils/localStorage";
+import localStorageHandler from "@/tools/localStorage";
 
 export function initWishlist() {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		const token = appCookieGet("user-token");
-		const storage = localStorageHandler<WishlistState>("wishlistState");
+		const storage = localStorageHandler("wishlistState");
 		if (!token) return storage.delete();
 		if (storage.get()) return;
 
@@ -57,7 +57,7 @@ export function saveWishlist({ productsId }: WishlistItemData) {
 
 				if (!wishlistsID) return;
 
-				await appWishlistsDelete(wishlistsID);
+				await appWishlistsDelete(wishlistsID, userToken);
 
 				dispatch(wishlistAction.removeWishlist({ productsId }));
 				productsWishlists.splice(productsIndex, 1);
@@ -72,6 +72,9 @@ export function saveWishlist({ productsId }: WishlistItemData) {
 
 export function removeWishlist(productsId: number) {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
+		const token = await appCookieGet("user-token");
+		if (!token) return;
+
 		const wishlistID = getState()
 			.wishlist.productsArray.filter(
 				(product) => product.productsId === productsId,
@@ -81,7 +84,7 @@ export function removeWishlist(productsId: number) {
 		if (!wishlistID) return;
 
 		try {
-			await appWishlistsDelete(wishlistID);
+			await appWishlistsDelete(wishlistID, token);
 			dispatch(wishlistAction.removeWishlist({ productsId }));
 		} catch (error) {
 			console.log(error);

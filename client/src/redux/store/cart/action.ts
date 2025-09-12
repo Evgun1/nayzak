@@ -12,15 +12,13 @@ import { notificationAction } from "../notification/notification";
 import NotificationCart from "@/components/notification/NotificationCart";
 import { appOneProductGet } from "@/lib/api/products";
 import { appCookieGet } from "@/lib/api/cookie";
-import localStorageHandler from "@/utils/localStorage";
+import localStorageHandler from "@/tools/localStorage";
 
 export function initCart() {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		const storage = localStorageHandler("cartState");
 		const token = appCookieGet("user-token");
 		const cartLocalStorage = storage.get();
-
-		console.log(token, "cart");
 
 		if (!token) return storage.delete();
 

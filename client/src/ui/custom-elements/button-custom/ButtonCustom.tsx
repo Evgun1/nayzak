@@ -1,7 +1,14 @@
 import { FC, MouseEvent, ReactNode, RefObject } from "react";
 
 import "../style.scss";
-import { Color, Fill, Roundness, Size, Type } from "../ActionElements.types";
+import {
+	Color,
+	Fill,
+	Roundness,
+	Size,
+	State,
+	Type,
+} from "../ActionElements.types";
 import IconsIdList from "@/components/icons/IconsIdList";
 import DisplayIcon from "@/components/icons/displayIcon";
 
@@ -11,6 +18,7 @@ export interface StyleSettingsObject {
 	fill?: keyof typeof Fill;
 	type?: keyof typeof Type;
 	color?: "DARK" | "LIGHT";
+	state?: Array<keyof typeof State>;
 	icon?: {
 		left?: keyof typeof IconsIdList;
 		right?: keyof typeof IconsIdList;
@@ -35,7 +43,7 @@ type SiteButtonProps = {
 };
 
 export const ButtonCustom: FC<SiteButtonProps> = ({
-	styleSettings: { color, roundness, size, type, icon, fill },
+	styleSettings: { color, roundness, size, type, icon, fill, state },
 	className,
 	children,
 	btnRef,
@@ -71,6 +79,9 @@ export const ButtonCustom: FC<SiteButtonProps> = ({
 		type && Type[type],
 		fill && Fill[fill],
 	];
+
+	if (state && state.length > 0)
+		for (const element of state) classes.push(State[element]);
 
 	return (
 		<button

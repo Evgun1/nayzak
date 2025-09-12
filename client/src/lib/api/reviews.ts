@@ -17,9 +17,8 @@ export const appReviewsGet = async (id: number) => {
 };
 
 export const appReviewsProductGet = async (params: string | number) => {
-	const pathname = `review/product-reviews/${params
-		?.toString()
-		.replaceAll("_", " ")}`;
+	const pathname = `review/by-product/${params}`;
+
 	const cache: CacheItem = { tag, revalidate: 1800 };
 
 	const { totalCount, result } = await appFetchGet<ReviewItem[]>({
@@ -30,10 +29,14 @@ export const appReviewsProductGet = async (params: string | number) => {
 	return { reviewsData: result, totalReviews: totalCount };
 };
 
-export const appReviewsPost = async (sendData: ReviewItemPost) => {
-	const pathname = "review";
+export const appReviewsPost = async (
+	sendData: ReviewItemPost,
+	token: string,
+) => {
+	const pathname = "review/";
 
 	const { result } = await appFetchPost<ReviewItem>({
+		authorization: token,
 		pathname,
 		sendData,
 	});

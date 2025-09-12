@@ -1,0 +1,13 @@
+.product-swiper {
+	&__slide {
+		&-main {
+			margin-bottom: 20px;
+		}
+
+		&-list {
+			cursor: pointer;
+			margin-right: 19px;
+			max-height: 170px;
+		}
+	}
+}

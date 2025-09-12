@@ -1,5 +1,5 @@
 import { IOrder } from "@/types/orders.types";
-import localStorageHandler from "@/utils/localStorage";
+import localStorageHandler from "@/tools/localStorage";
 import { Action, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface OrdersData extends IOrder {}

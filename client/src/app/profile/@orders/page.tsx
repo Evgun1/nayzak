@@ -3,7 +3,7 @@
 import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./Orders.module.scss";
 import { useAppSelector } from "@/redux/redux";
-import { capitalizeAndSeparateWords } from "@/utils/capitalizeAndSeparateWords";
+import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
 import Tooltip from "@/ui/tooltip/Tooltip";
 
 const Page = () => {

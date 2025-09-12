@@ -12,7 +12,6 @@ import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { ButtonCustom } from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { appMinMaxPriceGet } from "@/lib/api/products";
 import { TextClassList } from "@/types/textClassList.enum";
-import getIdCategoryOrSubcategory from "@/utils/getIdCategoryOrSubcategory";
 
 type SliderPriceProps = {
 	minPrice: number;
@@ -27,29 +26,14 @@ export const SliderPrice: FC<SliderPriceProps> = (props) => {
 	const searchParam = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
-	const param = useParams() as Record<string, any>;
-
-	const slug: string[] = useMemo(() => {
-		const slug = [];
-		for (const key in param) {
-			const { categoryId, subcategoryId } = getIdCategoryOrSubcategory({
-				params: { [key]: param[key] },
-			});
-
-			if (categoryId) {
-				slug.push(categoryId.toString());
-			}
-
-			if (subcategoryId) {
-				slug.push(subcategoryId.toString());
-			}
-		}
-		return slug;
-	}, [param]);
+	const param = useParams() as { category: string; subcategory: string };
 
 	const sliderHandler = useCallback(
 		async (searchParam: URLSearchParams) => {
-			const prices = await appMinMaxPriceGet(searchParam, slug);
+			const prices = await appMinMaxPriceGet(searchParam, [
+				param.category,
+				param.subcategory,
+			]);
 
 			if (!prices) return;
 
@@ -69,7 +53,7 @@ export const SliderPrice: FC<SliderPriceProps> = (props) => {
 			setInputMinPrice(inputMinPrice);
 			setInputMaxPrice(inputMaxPrice);
 		},
-		[slug],
+		[param],
 	);
 
 	const btnClickHandel = () => {

@@ -3,7 +3,6 @@
 import { FC } from "react";
 
 import classes from "./style.module.scss";
-import getIdCategoryOrSubcategory from "@/utils/getIdCategoryOrSubcategory";
 import LoaderProducts from "@/components/loader/products/LoaderProducts";
 
 type PageProps = {
@@ -12,17 +11,12 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = async (props) => {
-	const { categoryId, subcategoryId } = getIdCategoryOrSubcategory({
-		params: props.params,
-	});
-	if (!categoryId || !subcategoryId) return;
-
 	return (
 		<LoaderProducts
 			className={classes["products__preview"]}
 			showRating
 			searchParams={props.searchParams}
-			params={[categoryId, subcategoryId]}
+			params={[props.params.category, props.params.subcategory]}
 		/>
 	);
 };

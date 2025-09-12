@@ -1,6 +1,7 @@
 import { ReactNode, RefObject } from "react";
 import classes from "./ButtonCustom.module.scss";
 import IconsIdList from "@/components/icons/IconsIdList";
+import { ButtonClassList } from "@/types/buttonClassList.enum";
 
 export enum Color {
 	dark_default = "color-default--dark",
@@ -12,24 +13,24 @@ export enum Color {
 }
 
 export enum Size {
-	X_LARGE = "btn-size--xl button-xlarge",
-	LARGE = "btn-size--l button-large",
-	MEDIUM = "btn-size--m button-medium",
-	SMALL = "btn-size--s button-small",
-	X_SMALL = "btn-size--xs button-xsmall",
+	X_LARGE = `size--xl ${ButtonClassList.BUTTON_X_LARGE}`,
+	LARGE = `size--l ${ButtonClassList.BUTTON_LARGE}`,
+	MEDIUM = `size--m ${ButtonClassList.BUTTON_MEDIUM}`,
+	SMALL = `size--s ${ButtonClassList.BUTTON_SMALL}`,
+	X_SMALL = `size--xs ${ButtonClassList.BUTTON_X_SMALL}`,
 }
 
 export enum Roundness {
-	PILL = "btn-roundness--pill",
-	ROUNDED = "btn-roundness--rounded",
-	SHARP = "btn-roundness--sharp",
+	PILL = "roundness--pill",
+	ROUNDED = "roundness--rounded",
+	SHARP = "roundness--sharp",
 }
 
 export enum Type {
-	DEFAULT = "btn-type--default",
-	CIRCLE = "btn-type--circle",
-	text = "btn-type--text",
-	underline = "btn-type--underline",
+	DEFAULT = "type--default",
+	CIRCLE = "type--circle",
+	text = "type--text",
+	underline = "type--underline",
 }
 
 export interface IconInterface {

@@ -66,8 +66,11 @@ const Form = <T extends ZodRawShape>({
 
 		if (!hasErrors && onSubmit) {
 			const inputElements = event.currentTarget.querySelectorAll("input");
+			const textareaElements =
+				event.currentTarget.querySelectorAll("textarea");
 			const object = new Object() as { [key: string]: any };
-			Array.from(inputElements).map((data) => {
+
+			Array.from([...inputElements, ...textareaElements]).map((data) => {
 				const input = data as HTMLInputElement;
 
 				const inputName = input.name;

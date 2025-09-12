@@ -3,7 +3,7 @@ import classes from "./Breadcrumbs.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
 import LinkCustom from "../custom-elements/link-custom/LinkCustom";
-import { capitalizeAndSeparateWords } from "@/utils/capitalizeAndSeparateWords";
+import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
 
 export interface BreadcrumbsPathItems {
 	path?: string;

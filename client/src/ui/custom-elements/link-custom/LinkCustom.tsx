@@ -2,7 +2,14 @@ import Link from "next/link";
 import { FC, MouseEvent, ReactNode, RefObject } from "react";
 
 import "../style.scss";
-import { Color, Fill, Roundness, Size, Type } from "../ActionElements.types";
+import {
+	Color,
+	Fill,
+	Roundness,
+	Size,
+	State,
+	Type,
+} from "../ActionElements.types";
 import IconsIdList from "@/components/icons/IconsIdList";
 import DisplayIcon from "@/components/icons/displayIcon";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
@@ -18,6 +25,7 @@ export interface StyleSettingsObject {
 	type: keyof typeof Type;
 	color: "DARK" | "LIGHT";
 	fill?: keyof typeof Fill;
+	state?: Array<keyof typeof State>;
 	icon?: {
 		left?: keyof typeof IconsIdList;
 		right?: keyof typeof IconsIdList;
@@ -93,6 +101,8 @@ const LinkCustom: FC<LinkCustomProps> = ({
 			}
 		}
 	}
+	if (styleSettings?.state && styleSettings?.state.length > 0)
+		for (const element of styleSettings.state) classes.push(State[element]);
 
 	const setQueryParams = `?${urlSearchParams}`;
 

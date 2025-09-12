@@ -1,0 +1,15 @@
+.product-image {
+	display: block;
+	width: 100%;
+	max-width: 570px;
+	&__image-wrap {
+		position: relative;
+		aspect-ratio: 3 / 4;
+	}
+	&__image {
+		width: 100%;
+		height: 100%;
+		display: block;
+		object-fit: cover;
+	}
+}

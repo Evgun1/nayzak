@@ -2,24 +2,17 @@
 
 import classes from "./ProductsLoader.module.scss";
 import LoaderButton from "../LoaderButton";
-import React, { FC, ReactElement, ReactNode, useEffect, useState } from "react";
-import { useLoadMoreReducer } from "@/hooks/useProductsReducer";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import { appProductsGet } from "@/lib/api/products";
 import ProductPreviewDefault from "@/components/product-preview/product-preview-default/ProductsPreviewDefault";
-import {
-	ProductPreviewItem,
-	ProductPreviewProps,
-} from "@/components/product-preview/ProductPreview.types";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import Spinner from "@/components/loading/Spinner";
-import Loading from "@/components/loading/Loading";
 import { useSearchParams } from "next/navigation";
-import getIdCategoryOrSubcategory from "@/utils/getIdCategoryOrSubcategory";
 import { ProductBase } from "@/types/product/productBase";
-import PreviewReview from "@/page/product/product-tab/product-reviews/PreviewReview";
 
 type LoaderProductsClientProp = {
-	productsParams: string | string[] | undefined | number | number[];
+	productsParams?: string[];
 	limit: number;
 	initProductsElement: ReactNode;
 	productsCount: number;
@@ -38,20 +31,6 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 	async function btnClickHandler() {
 		setIsLoading(true);
 		const urlSearchParams = new URLSearchParams(searchParams?.toString());
-
-		const { categoryId, subcategoryId } = getIdCategoryOrSubcategory({
-			searchParams,
-		});
-
-		if (subcategoryId) {
-			urlSearchParams.set("subcategoryId", subcategoryId.toString());
-			urlSearchParams.delete("subcategory");
-		}
-
-		if (categoryId) {
-			urlSearchParams.set("categoryId", categoryId.toString());
-			urlSearchParams.delete("category");
-		}
 
 		urlSearchParams.set(
 			"offset",

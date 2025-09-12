@@ -1,6 +1,7 @@
 .filter-buttons {
 	.filter-buttons__list {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 16px;
 
 		.filter-buttons__list-item {

@@ -8,7 +8,7 @@ const Loading = (props: any) => {
 
 	for (let index = 1; index <= 15; index++) {
 		productsElementArr.push(
-			<Skeleton className={classes["loading-skeleton__preview"]}>
+			<div className={classes["loading-skeleton__preview"]}>
 				<Skeleton
 					className={classes["loading-skeleton__preview-img"]}
 				/>
@@ -21,7 +21,7 @@ const Loading = (props: any) => {
 				<Skeleton
 					className={classes["loading-skeleton__preview-item"]}
 				/>
-			</Skeleton>,
+			</div>,
 		);
 	}
 

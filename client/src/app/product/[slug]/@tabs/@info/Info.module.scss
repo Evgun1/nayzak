@@ -1,0 +1,23 @@
+.attributes {
+	display: grid;
+	grid-template-columns: repeat(2, max-content);
+	text-align: start;
+	gap: 32px 57px;
+
+	&__item {
+		color: #3e3e59;
+	}
+}
+
+.loading {
+	display: grid;
+	grid-template-columns: 120px 200px;
+	text-align: start;
+	gap: 32px 57px;
+
+	&__item {
+		border-radius: 5px;
+		width: 100%;
+		height: 30px;
+	}
+}

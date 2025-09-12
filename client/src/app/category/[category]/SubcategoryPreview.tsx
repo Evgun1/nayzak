@@ -4,7 +4,7 @@ import Image from "next/image";
 import { FC } from "react";
 
 import classes from "./Subcategories.module.scss";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 
 type SubcategoryPreviewProps = {
 	params: { category?: string };

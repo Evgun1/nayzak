@@ -13,7 +13,7 @@ import React, { FC, Fragment, Suspense } from "react";
 import { ProductDetails } from "@/types/product/productDetails";
 import Breadcrumbs from "@/ui/breadcrumbs/Breadcrumbs";
 import Tabs from "@/ui/tabs/Tabs";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import ProductSlider from "./ProductSlider";
 import Image from "next/image";
 

@@ -5,12 +5,12 @@ import { FC, MouseEventHandler, ReactNode, useContext } from "react";
 import { TextClassList } from "@/types/textClassList.enum";
 import { useSearchParams } from "next/navigation";
 import FilterList from "./FilterList";
-import { useFilter } from "@/app/category/[category]/[subcategory]/(filter-tools)/context/useFilter";
+import { useFilterContext } from "@/app/category/[category]/[subcategory]/(filter-tools)/context/useFilter";
 
 type SidebarProps = {};
 
 const Page: FC<SidebarProps> = (props) => {
-	const { showFilter, setShowFilter } = useFilter();
+	const { showFilter, setShowFilter } = useFilterContext();
 	const btnHiddenFilter: MouseEventHandler = (event) => {
 		setShowFilter(!showFilter);
 	};

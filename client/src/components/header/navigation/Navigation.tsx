@@ -3,16 +3,10 @@
 import React, { FC } from "react";
 
 import classes from "./Navigation.module.scss";
-import { CategoryItem } from "@/types/categories.types";
-import { ISubcategory } from "@/types/subcategories.interface";
 import { appCategoriesGet } from "@/lib/api/categories";
-import {
-	appSubcategoriesGet,
-	appSubcategoryByCategoryGet,
-} from "@/lib/api/subcategories";
+import { appSubcategoriesGet } from "@/lib/api/subcategories";
 import { appProductsGet } from "@/lib/api/products";
 import NavigationAction from "./NavigationAction";
-import { ICategory } from "@/types/category/category.interface";
 interface NavigationItem {
 	label: string;
 	url: string;

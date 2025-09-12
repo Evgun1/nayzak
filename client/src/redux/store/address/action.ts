@@ -11,14 +11,13 @@ import {
 	appAddressesDelete,
 	appAddressesPost,
 } from "@/lib/api/addresses";
-import localStorageHandler from "@/utils/localStorage";
+import localStorageHandler from "@/tools/localStorage";
 
 export const initAddress = () => {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		const token = await appCookieGet("user-token");
 		const localStorageAddress =
 			localStorageHandler<AddressState>("addressState");
-
 
 		if (!token || token === null) return localStorageAddress.delete();
 		if (localStorageAddress.get()) return;

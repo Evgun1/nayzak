@@ -1,7 +1,7 @@
 "use client";
 
 import { appAttributeBySubcategoryGet } from "@/lib/api/attribute";
-import getIdCategoryOrSubcategory from "@/utils/getIdCategoryOrSubcategory";
+import getIdCategoryOrSubcategory from "@/tools/getIdCategoryOrSubcategory";
 import { useParams } from "next/navigation";
 import {
 	createContext,

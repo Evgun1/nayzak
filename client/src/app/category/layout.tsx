@@ -2,7 +2,7 @@
 import classes from "./Category.module.scss";
 import { ReactNode } from "react";
 import Header from "./_header/Header";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import pasteImage from "@/../public/PasteImage.png";
 import { buffer } from "stream/consumers";
 

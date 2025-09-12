@@ -6,7 +6,7 @@ import { useAppSelector } from "@/redux/redux";
 
 import { useEffect, useState } from "react";
 import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import Spinner from "@/components/loading/Spinner";
 import WishlistPreview from "./wishlist-preview/WishlistPreview";
 import { getWishlistSelector } from "@/redux/store/wishlist/wishlist";

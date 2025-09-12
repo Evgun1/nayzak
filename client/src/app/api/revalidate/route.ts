@@ -12,7 +12,6 @@ export async function POST(req: Request, res: NextApiResponse) {
 
 	const { tag } = (await req.json()) as Record<string, string>;
 
-
 	if (req.method !== "POST") {
 		return NextResponse.json(
 			{

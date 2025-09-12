@@ -9,7 +9,7 @@ import React, {
 	useImperativeHandle,
 } from "react";
 import classes from "./Navbar.module.scss";
-import childrenRecursion from "@/utils/childrenRecursionT";
+import childrenRecursion from "@/tools/childrenRecursionT";
 import NavbarBody from "./NavbarBody";
 import NavbarItem from "./NavbarItem";
 ``;

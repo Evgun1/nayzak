@@ -2,6 +2,7 @@ import { appFetchGet } from ".";
 import { ISubcategory } from "@/types/subcategories.interface";
 import { CacheItem } from "./interface/appGetFetch.interface";
 import { log } from "console";
+import getIdByParams from "@/tools/getIdByParams";
 
 const tag = "subcategories";
 
@@ -42,7 +43,7 @@ export const appSubcategoriesOneGet = async (
 	return result;
 };
 
-export const appSubcategoryByCategoryGet = async (id: number) => {
+export const appSubcategoryByCategoryGet = async (slug: string) => {
 	// const pathname = `subcategories/category/${
 	// 	params[0].toUpperCase() + params.slice(1)
 	// }`;
@@ -50,7 +51,10 @@ export const appSubcategoryByCategoryGet = async (id: number) => {
 		tag,
 		revalidate: 1800,
 	};
-	let pathnameCatalog = `catalog/subcategories/category/${id}`;
+
+	const getId = getIdByParams(slug);
+
+	let pathnameCatalog = `catalog/subcategories/category/${getId.id}`;
 
 	const { result } = await appFetchGet<ISubcategory[]>({
 		pathname: pathnameCatalog,

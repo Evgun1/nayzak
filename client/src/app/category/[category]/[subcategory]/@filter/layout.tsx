@@ -1,11 +1,7 @@
 "use server";
 import React, { FC, ReactNode } from "react";
 import classes from "./Filter.module.scss";
-import FilterHeader from "./_filter-header/FilterHeader";
-import getIdCategoryOrSubcategory from "@/utils/getIdCategoryOrSubcategory";
-import { appAttributeBySubcategoryGet } from "@/lib/api/attribute";
-import { FilterAttributesArray } from "./(filter-list)/FilterList";
-import Loading from "./loading";
+import FilterHeader from "./filter-header/FilterHeader";
 
 type RootLayoutProps = {
 	children: ReactNode;

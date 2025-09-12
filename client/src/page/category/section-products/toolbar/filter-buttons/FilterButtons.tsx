@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useFilter } from "../../filter/useFilter";
 import { useRouter, useSearchParams } from "next/navigation";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
-import { capitalizeAndSeparateWords } from "@/utils/capitalizeAndSeparateWords";
+import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
 import { TextClassList } from "@/types/textClassList.enum";
 
 const FilterButtons: React.FC = () => {

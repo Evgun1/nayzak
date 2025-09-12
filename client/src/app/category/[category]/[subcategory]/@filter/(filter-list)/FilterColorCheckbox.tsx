@@ -11,7 +11,7 @@ import classes from "./FilterColorCheckbox.module.scss";
 import { FilterAttributesItem } from "./FilterList";
 import Form from "@/ui/form/Form";
 import { TextClassList } from "@/types/textClassList.enum";
-import { capitalizeAndSeparateWords } from "@/utils/capitalizeAndSeparateWords";
+import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
 
 type FilterColorCheckboxProps = {
 	attribute: FilterAttributesItem;

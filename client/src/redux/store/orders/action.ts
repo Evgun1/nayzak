@@ -10,7 +10,7 @@ import {
 	appOrderUpload,
 	OrdersUpload,
 } from "@/lib/api/orders";
-import localStorageHandler from "@/utils/localStorage";
+import localStorageHandler from "@/tools/localStorage";
 
 export const initOrders = () => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {

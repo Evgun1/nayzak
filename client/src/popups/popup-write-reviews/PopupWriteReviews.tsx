@@ -15,8 +15,9 @@ import { appReviewsPost } from "@/lib/api/reviews";
 import { popupActions } from "@/redux/store/popup/popup";
 import { revalidatePath } from "next/cache";
 import { validation } from "@/lib/validator/validator";
-import Form from "@/ui/form/Form";
+import Form, { FormOnSubmitParams } from "@/ui/form/Form";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
+import { appCookieGet } from "@/lib/api/cookie";
 
 const schema: Array<ZodObject<any>> = [];
 
@@ -48,31 +49,32 @@ const PopupWriteReview = () => {
 		}
 	};
 
-	const submitHandler = async (value: {
-		data: { rating: string; review: string };
+	const submitHandler: FormOnSubmitParams = async (value: {
+		data: {
+			rating: number;
+			review: string;
+			firstName: string;
+			lastName: string;
+		};
 	}) => {
-		const data = value?.data;
-
-		const customerFormData = new FormData();
-		for (const key in data) {
-			const typeKey = key as keyof typeof data;
-			if (key === "firstName" || key === "lastName") {
-				customerFormData.set(key, data[typeKey]);
-			}
-		}
+		const { firstName, lastName, rating, review } = value?.data;
 
 		if (!customerState?.firstName || !customerState?.lastName) {
-			if (Object.keys(Object.fromEntries(customerFormData)).length > 0)
-				dispatch(writeCustomerAction(customerFormData));
+			dispatch(writeCustomerAction({ firstName, lastName, phone: 0 }));
 		}
 
 		try {
-			const t = await appReviewsPost({
-				rating: +data?.rating,
-				text: data.review,
-				customersId: parseInt(`${customerState?.id}`),
-				productsId: productId as number,
-			});
+			const token = await appCookieGet("user-token");
+			if (!token) return;
+			await appReviewsPost(
+				{
+					rating: rating,
+					text: review,
+					customersId: parseInt(`${customerState?.id}`),
+					productsId: productId as number,
+				},
+				token,
+			);
 
 			dispatch(popupActions.toggle(null));
 			route.refresh();

@@ -3,7 +3,7 @@ import Image from "next/image";
 import classes from "./Banner.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import { FC } from "react";
 
 const Banner: FC = async () => {

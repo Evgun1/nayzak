@@ -12,7 +12,7 @@ import React, {
 	useRef,
 	useState,
 } from "react";
-import { capitalizeAndSeparateWords } from "@/utils/capitalizeAndSeparateWords";
+import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
 import { SliderPrice } from "@/ui/slider-price/SliderPrice";
 import { useFilter } from "./useFilter";
 import { TextClassList } from "@/types/textClassList.enum";

@@ -26,6 +26,7 @@ const ActionPacked = async () => {
 						</p>
 						<LinkCustom
 							styleSettings={{
+                                
 								size: "MEDIUM",
 								type: "TEXT",
 								fill: "SOLID",

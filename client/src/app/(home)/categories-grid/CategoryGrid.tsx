@@ -5,7 +5,7 @@ import Image from "next/image";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { appCategoriesGet } from "@/lib/api/categories";
 import { ICategory } from "@/types/category/category.interface";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 
 const CategoryGrid = async () => {
 	const categoriesFetch = await appCategoriesGet();

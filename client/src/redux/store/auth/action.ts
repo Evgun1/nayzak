@@ -20,7 +20,7 @@ import PopupNotification from "@/popups/popup-notifications/PopupNotifications";
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import { jwtSign } from "@/lib/jwt/jwt";
-import localStorageHandler from "@/utils/localStorage";
+import localStorageHandler from "@/tools/localStorage";
 
 export const registrationAction = (userData: SignUp) => {
 	return async function (dispatch: AppDispatch) {

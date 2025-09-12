@@ -6,7 +6,7 @@ import classes from "./LatestArrivals.module.scss";
 import { appNewProductsGet } from "@/lib/api/products";
 
 import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import SwiperComponent from "./swiper/Swiper";
 import { FC } from "react";
 

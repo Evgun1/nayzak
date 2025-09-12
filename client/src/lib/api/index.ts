@@ -156,7 +156,7 @@ export const appFetchPut = async <T>({
 type AppDeleteFetch = {
 	authorization?: string;
 	pathname: string;
-	deleteData: FormData | object;
+	deleteData: object;
 };
 export const appFetchDelete = async <T>({
 	pathname,

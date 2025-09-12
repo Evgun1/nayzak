@@ -3,15 +3,26 @@ import { appFetchGet } from ".";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { CacheItem } from "./interface/appGetFetch.interface";
 import { ProductDetails } from "@/types/product/productDetails";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
+import getIdByParams from "@/tools/getIdByParams";
 
 type AppProductsGetProps = {
 	searchParams?: URLSearchParams;
-	params?: string[] | string | number[] | number;
+	params?: string[];
+};
+
+type AppProductsPyParamsGetProps = {
+	searchParams?: URLSearchParams;
+	params: string[];
+};
+
+type AppOneProductGetParam = {
+	slug: string;
+	getCategoryTitle?: boolean;
+	getSubcategoryTitle?: boolean;
 };
 
 const tag = "products";
-
 export const appProductsGet = async ({
 	params,
 	searchParams,
@@ -23,9 +34,9 @@ export const appProductsGet = async ({
 	const cache: CacheItem = { revalidate: 1, tag };
 
 	if (params) {
-		pathnameCatalog += `/by-params/${
-			Array.isArray(params) ? params.join("/") : params
-		}`;
+		const getId = getIdByParams(params).map((item) => item.id);
+
+		pathnameCatalog += `/by-params/${getId.join("/")}`;
 	}
 
 	const { result, totalCount, headers } = await appFetchGet<ProductBase[]>({
@@ -36,20 +47,6 @@ export const appProductsGet = async ({
 
 	return { productCounts: totalCount, products: result, headers };
 };
-
-type AppProductsPyParamsGetProps = {
-	searchParams?: URLSearchParams;
-	params: string[] | string;
-};
-
-interface NewProductItem {
-	id: number;
-	src: string;
-	title: string;
-	price: number;
-	discount: number;
-	createdAt: Date;
-}
 
 export const appNewProductsGet = async () => {
 	let pathnameCatalog = `catalog/products/new-products`;
@@ -71,10 +68,9 @@ export const appProductsByParamsGet = async ({
 	// const cache: CacheItem = { revalidate: 1800, tag };
 	const cache: CacheItem = { revalidate: 1, tag };
 
-	let pathnameCatalog = `catalog/products/by-params/${
-		Array.isArray(params) ? params.map((data) => +data).join("/") : params
-	}`;
+	const getId = getIdByParams(params).map((item) => item.id);
 
+	let pathnameCatalog = `catalog/products/by-params/${getId.join("/")}`;
 	const { result, totalCount } = await appFetchGet<ProductBase[]>({
 		pathname: pathnameCatalog,
 		searchParams,
@@ -84,26 +80,12 @@ export const appProductsByParamsGet = async ({
 	return { productCounts: totalCount, products: result };
 };
 
-type AppOneProductGetParam = {
-	slug: string;
-	getCategoryTitle?: boolean;
-	getSubcategoryTitle?: boolean;
-};
-
 export const appOneProductGet = async (param: AppOneProductGetParam) => {
 	const { slug } = param;
-
 	let pathnameCatalog = `catalog/products/`;
-	// const cache: CacheItem = { revalidate: 1800, tag };
-	// const cache: CacheItem = { revalidate: 1, tag };
 
-	const slugArr = slug.split("-");
-	const slugIndex = slugArr.findIndex(
-		(val) => !Number.isNaN(+val.replaceAll("p", "")),
-	);
-
-	const productId = +slugArr[slugIndex].replaceAll("p", "");
-	pathnameCatalog += `${productId}`;
+	const productId = getIdByParams(slug);
+	pathnameCatalog += `${productId.id}`;
 
 	const { result, totalCount } = await appFetchGet<ProductDetails>({
 		pathname: pathnameCatalog,
@@ -115,12 +97,17 @@ export const appOneProductGet = async (param: AppOneProductGetParam) => {
 
 export const appMinMaxPriceGet = async (
 	searchParams: URLSearchParams,
-	slug: string[] | string | number | number[],
+	slug: string[],
 ) => {
-	const param = Array.isArray(slug) ? slug.join("/") : slug;
 	let pathnameCatalog = `catalog/products/`;
 
-	pathnameCatalog += `min-max-price/${param}`;
+	const getId = getIdByParams(slug)
+		.map((item) => item.id)
+		.join("/");
+
+	// const param = Array.isArray(slug) ? slug.join("/") : slug;
+
+	pathnameCatalog += `min-max-price/${getId}`;
 
 	const { result } = await appFetchGet<{
 		minPrice: number;

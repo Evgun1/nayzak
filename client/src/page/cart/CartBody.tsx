@@ -9,7 +9,7 @@ import classes from "./Cart.module.scss";
 import CartPreview, { CartItemProps } from "./CartPreview";
 import { TextClassList } from "@/types/textClassList.enum";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import { log } from "console";
 
 const CartBody: FC = () => {

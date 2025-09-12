@@ -1,10 +1,9 @@
 "use server";
 import { appProductsGet } from "@/lib/api/products";
 import LoaderProductsClient from "./LoaderProductsClient";
-import { getPlaceholderImage } from "@/utils/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
 import ProductPreviewDefault from "@/components/product-preview/product-preview-default/ProductsPreviewDefault";
-import getIdCategoryOrSubcategory from "@/utils/getIdCategoryOrSubcategory";
 import { FC } from "react";
 export interface ListType {
 	five_grid: string;
@@ -17,7 +16,7 @@ export interface ListType {
 type LoaderProductsParams = {
 	showRating?: boolean;
 	searchParams?: any;
-	params?: string | string[] | number | number[];
+	params?: string[];
 	listType?: keyof ListType;
 	className?: string;
 };
@@ -46,19 +45,6 @@ const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
 		: (listTypeLimits.get(listType || "default") as string);
 
 	urlSearchParams.set("limit", getLimit);
-
-	const { categoryId, subcategoryId } = getIdCategoryOrSubcategory({
-		searchParams,
-	});
-
-	if (categoryId) {
-		urlSearchParams.delete("category");
-		urlSearchParams.set("categoryId", categoryId.toString());
-	}
-	if (subcategoryId) {
-		urlSearchParams.delete("subcategory");
-		urlSearchParams.set("subcategoryId", subcategoryId.toString());
-	}
 
 	const fetchProducts = await appProductsGet({
 		params,

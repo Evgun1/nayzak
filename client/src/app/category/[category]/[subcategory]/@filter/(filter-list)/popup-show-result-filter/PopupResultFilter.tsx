@@ -4,7 +4,7 @@ import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import classes from "./PopupResultFilter.module.scss";
 import { FC, MouseEvent, RefObject, useEffect, useMemo, useRef } from "react";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
-import { useFilter } from "../../../(filter-tools)/context/useFilter";
+import { useFilterContext } from "../../../(filter-tools)/context/useFilter";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type PopupShowResultFilterProps = {
@@ -13,16 +13,17 @@ type PopupShowResultFilterProps = {
 };
 
 const PopupResultFilter: FC<PopupShowResultFilterProps> = (props) => {
-	const { attributeCount } = useFilter();
+	const { attributeCount, chipsHandler } = useFilterContext();
 	const searchParams = useSearchParams();
 	const refResultFilter = useRef() as RefObject<HTMLDivElement>;
 	const router = useRouter();
 
 	function findFilter(event: MouseEvent) {
 		const urlSearchParams = new URLSearchParams(searchParams);
-		for (const key in props.findFilter) {
+		for (const key in props.findFilter)
 			urlSearchParams.set(key, props.findFilter[key].join(","));
-		}
+
+		chipsHandler({ searchParams: urlSearchParams });
 		router.push(`?${urlSearchParams}`);
 		buttonClickHandler(event);
 	}
@@ -88,14 +89,6 @@ const PopupResultFilter: FC<PopupShowResultFilterProps> = (props) => {
 		filterFindElement.style.display = `block`;
 	}
 
-	// const attributeUrlSearchParams = useMemo(() => {
-	// 	const obj = {} as Record<string, string>;
-	// 	for (const key in props.findFilter) {
-	// 		obj[key] = props.findFilter[key].join(",");
-	// 	}
-	// 	return obj;
-	// }, [props.findFilter]);
-
 	useEffect(() => {
 		if (!props.lastTargetId) return;
 
@@ -126,6 +119,7 @@ const PopupResultFilter: FC<PopupShowResultFilterProps> = (props) => {
 			<div className={classes["popup-result-filter__content"]}>
 				<ButtonCustom
 					styleSettings={{
+						state: ["HOVER"],
 						type: "DEFAULT",
 						color: "DARK",
 						size: "X_SMALL",
@@ -141,6 +135,7 @@ const PopupResultFilter: FC<PopupShowResultFilterProps> = (props) => {
 				</div>
 				<ButtonCustom
 					styleSettings={{
+						state: ["HOVER"],
 						color: "DARK",
 						type: "TEXT",
 						size: "X_SMALL",

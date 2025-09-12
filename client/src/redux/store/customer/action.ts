@@ -9,7 +9,7 @@ import { initWishlist } from "../wishlist/action";
 import { initCart } from "../cart/action";
 import { initOrders } from "../orders/action";
 import { ICustomerAction } from "./type/customer-action.interface";
-import localStorageHandler from "@/utils/localStorage";
+import localStorageHandler from "@/tools/localStorage";
 
 export const initCustomer = () => {
 	return async (dispatch: AppDispatch) => {
