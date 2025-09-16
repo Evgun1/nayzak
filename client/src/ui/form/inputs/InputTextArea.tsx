@@ -1,5 +1,5 @@
 import { FC, RefObject, useEffect, useRef } from "react";
-import classes from "./InputtextArea.module.scss";
+import classes from "./InputTextArea.module.scss";
 import { InputType } from "./InputType";
 import { TextClassList } from "@/types/textClassList.enum";
 

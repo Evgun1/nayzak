@@ -98,7 +98,6 @@ const ProductGridHeader: FC = ({}) => {
 					fill: "SOLID",
 					type: "UNDERLINE",
 					icon: { right: "CHEVRON" },
-					roundness: "SHARP",
 				}}
 				defaultSelectKey={searchParams?.get("category") ?? undefined}
 			>

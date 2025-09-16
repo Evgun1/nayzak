@@ -52,6 +52,7 @@ const Banner: FC = async () => {
 							roundness: "SHARP",
 							icon: { right: "ARROW_RIGHT" },
 							color: "LIGHT",
+							state: ["DISABLE"],
 						}}
 					>
 						See Collection

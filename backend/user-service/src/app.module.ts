@@ -1,9 +1,4 @@
-import {
-	MiddlewareConsumer,
-	Module,
-	NestModule,
-	RequestMethod,
-} from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { KafkaModule } from "./kafka/kafka.module";
 import { RedisModule } from "./redis/redis.module";
@@ -11,7 +6,6 @@ import { CustomersModule } from "./feature/customers/customers.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { JwtModule } from "@nestjs/jwt";
 import { WishlistModule } from "./feature/wishlist/wishlist.module";
-import { AppMiddlewareConfigure } from "./middleware/appMiddleware.configure";
 import { PrismaModule } from "./prisma/prisma.module";
 import { QueryModule } from "./query/query.module";
 import { AppController } from "./app.controller";
@@ -34,7 +28,9 @@ import { ReviewModule } from "./feature/review/review.module";
 		QueryModule,
 		ScheduleModule.forRoot(),
 		JwtModule.register({
-			secret: process.env.JWT_SECRET_KEY,
+            secret: process.env.JWT_SECRET_KEY,
+            // secret: 'JWT_SECRET_KEY',
+
 			signOptions: { expiresIn: "5d" },
 		}),
 	],

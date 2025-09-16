@@ -24,28 +24,28 @@
 				}
 			}
 
-			// &__underline {
-			// 	&-dark {
-			// 		&.state--disable {
-			// 			pointer-events: none;
-			// 			background: var(--black-800);
-			// 			color: var(--black-700);
-			// 		}
-			// 		position: relative;
-			// 		background: none;
-			// 		color: var(--black-900);
-			// 	}
-			// 	&-light {
-			// 		&.state--disable {
-			// 			pointer-events: none;
-			// 			background: var(--black-800);
-			// 			color: var(--black-700);
-			// 		}
-			// 		position: relative;
-			// 		background: none;
-			// 		color: white;
-			// 	}
-			// }
+			&__underline {
+				&-dark {
+					&.state--disable {
+						pointer-events: none;
+						background: var(--black-800);
+						color: var(--black-700);
+					}
+					position: relative;
+					background: none;
+					color: var(--black-900);
+				}
+				&-light {
+					&.state--disable {
+						pointer-events: none;
+						background: var(--black-800);
+						color: var(--black-700);
+					}
+					position: relative;
+					background: none;
+					color: white;
+				}
+			}
 		}
 	}
 	&--outline {

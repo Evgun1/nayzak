@@ -52,6 +52,8 @@ export class CategoriesService {
 		});
 
 		await this.categoriesCache.uploadCategoriesCache(categoriesDTO);
+		console.log(categories, true);
+
 		return { categoriesCount, categories: categoriesDTO };
 	}
 	async getCategory({ param }: ValidationCategoryParamParamDTO) {

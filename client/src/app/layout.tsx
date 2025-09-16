@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./styles/globals.scss";
 import StoreProvider from "./storeProvider";
 import IconsSprite from "../components/icons/IconsSprite";
-import Popup from "../components/popup/popup";
+import Popup from "../components/popup/Popup";
 import Notification from "@/ui/notification/Notification";
 import InitData from "@/components/initData";
 import dynamic from "next/dynamic";

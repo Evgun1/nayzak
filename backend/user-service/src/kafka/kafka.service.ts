@@ -9,4 +9,6 @@ export class KafkaService {
 
 	// catalogKafka = () => this.kafkaCatalog;
 	reviewKafka = () => this.kafkaReview;
+
+
 }

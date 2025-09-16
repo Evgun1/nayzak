@@ -12,9 +12,14 @@ import { ConfigModule } from "@nestjs/config";
 		PrismaModule,
 		KafkaModule,
 		JwtModule.register({
+			// secret: "JWT_SECRET_KEY" as string,
 			secret: process.env.JWT_SECRET_KEY as string,
 		}),
-		ConfigModule.forRoot(),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			envFilePath: [".env"],
+			cache: true,
+		}),
 	],
 	controllers: [AppController],
 	providers: [AppService, JwtStrategy],

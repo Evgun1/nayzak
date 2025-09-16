@@ -17,21 +17,21 @@ async function bootstrap() {
 			},
 			consumer: {
 				groupId: "order-consumer",
-				rebalanceTimeout: 60000,
-				allowAutoTopicCreation: false,
-				heartbeatInterval: 3000,
-				sessionTimeout: 45000,
-				retry: {
-					initialRetryTime: 300,
-					retries: 5,
-				},
-			},
-			subscribe: { fromBeginning: true },
+				// rebalanceTimeout: 60000,
+				// allowAutoTopicCreation: false,
+				// heartbeatInterval: 3000,
+				// sessionTimeout: 45000,
+				// retry: {
+				// 	initialRetryTime: 300,
+				// 	retries: 5,
+				// },
+			}
+			// subscribe: { fromBeginning: true },
 		},
 	});
 
 	app.enableCors({
-		origin: ["http://localhost:2999", "http://localhost:2998"],
+		origin: "http://localhost:2999",
 		credentials: true,
 	});
 	// app.enableCors({

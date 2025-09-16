@@ -34,6 +34,7 @@ const Trending: FC = () => {
 								size: "LARGE",
 								color: "DARK",
 								icon: { right: "ARROW_RIGHT" },
+								state: ["DISABLE"],
 							}}
 							href={{ endpoint: "#" }}
 						>

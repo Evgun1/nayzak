@@ -20,6 +20,9 @@ export class AppController {
 	@Get("/init")
 	@UseGuards(JwtAuthGuard)
 	async init(@Req() req: Request) {
+		console.log(req.headers);
+		console.log(req.user);
+
 		const user = req.user as IUserJwt;
 		const init = await this.appService.init(user);
 

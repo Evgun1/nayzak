@@ -1,6 +1,6 @@
 import { RootState } from "../../store";
 import { AppDispatch } from "../../store";
-import { OrderState, ordersAction } from "./orders";
+import { ordersAction, OrderState } from "./orders";
 import { removeCart } from "../cart/action";
 import { notificationAction } from "../notification/notification";
 import NotificationCheckout from "@/components/notification/NotificationCheckout";
@@ -15,13 +15,13 @@ import localStorageHandler from "@/tools/localStorage";
 export const initOrders = () => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		const token = await appCookieGet("user-token");
-		const storage = localStorageHandler<OrderState>("ordersState");
+		const storage = localStorageHandler("ordersState");
+
 		if (!token) return storage.delete();
-		if (storage.get()) return;
+		if (storage.get()) return storage.get();
 
 		try {
 			const orderFetch = await appOrderInitGet(token);
-
 			dispatch(ordersAction.uploadOrders(orderFetch));
 		} catch (error) {
 			console.log(error);

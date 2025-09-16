@@ -51,6 +51,7 @@ export interface OrdersUpload {
 
 export const appOrderInitGet = async (token: string) => {
 	const nginxPathname = `order/init`;
+
 	const { result } = await appFetchGet<IOrder[]>({
 		pathname: nginxPathname,
 		authorization: token,

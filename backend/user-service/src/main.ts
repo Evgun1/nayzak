@@ -23,18 +23,18 @@ async function bootstrap() {
 			},
 			consumer: {
 				groupId: "user-consumer",
-				rebalanceTimeout: 60000,
-				heartbeatInterval: 3000,
-				sessionTimeout: 60000,
-				maxBytes: 20971520,
+				// rebalanceTimeout: 60000,
+				// heartbeatInterval: 3000,
+				// sessionTimeout: 60000,
+				// maxBytes: 20971520,
 
-				retry: {
-					initialRetryTime: 300,
-					retries: 5,
-				},
-				allowAutoTopicCreation: false,
+				// retry: {
+				// 	initialRetryTime: 300,
+				// 	retries: 5,
+				// },
+				// allowAutoTopicCreation: false,
 			},
-			subscribe: { fromBeginning: true },
+			// subscribe: { fromBeginning: true },
 		},
 	});
 

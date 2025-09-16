@@ -14,6 +14,7 @@ const CategoryGrid = async () => {
 		ICategory & { Media: { src: string; name: string; blurUrl: string } }
 	> = await Promise.all(
 		categoriesFetch.map(async (data) => {
+			console.log(data);
 			const blur = await getPlaceholderImage(data.Media.src);
 
 			return {

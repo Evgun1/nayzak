@@ -36,9 +36,14 @@
 	&__info {
 		min-width: min-content;
 
-		&-item,
-		&-button {
-			color: var(--black-600);
+		&-item {
+			&:not(:first-child) {
+				color: var(--black-600);
+			}
+
+			&:not(:last-child) {
+				margin-bottom: 10px;
+			}
 		}
 	}
 

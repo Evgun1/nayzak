@@ -15,17 +15,17 @@ import { KafkaService } from "./kafka.service";
 					},
 					consumer: {
 						groupId: "mail-consumer",
-						rebalanceTimeout: 60000,
-						heartbeatInterval: 3000,
-						sessionTimeout: 45000,
-						allowAutoTopicCreation: false,
+						// rebalanceTimeout: 60000,
+						// heartbeatInterval: 3000,
+						// sessionTimeout: 45000,
+						// allowAutoTopicCreation: false,
 
-						retry: {
-							initialRetryTime: 300,
-							retries: 5,
-						},
+						// retry: {
+						// 	initialRetryTime: 300,
+						// 	retries: 5,
+						// },
 					},
-					subscribe: { fromBeginning: true },
+					// subscribe: { fromBeginning: true },
 				},
 			},
 			{
@@ -38,17 +38,17 @@ import { KafkaService } from "./kafka.service";
 					},
 					consumer: {
 						groupId: "review-consumer",
-						rebalanceTimeout: 60000,
-						heartbeatInterval: 3000,
-						sessionTimeout: 45000,
-						allowAutoTopicCreation: false,
+						// rebalanceTimeout: 60000,
+						// heartbeatInterval: 3000,
+						// sessionTimeout: 45000,
+						// allowAutoTopicCreation: false,
 
-						retry: {
-							initialRetryTime: 300,
-							retries: 5,
-						},
+						// retry: {
+						// 	initialRetryTime: 300,
+						// 	retries: 5,
+						// },
 					},
-					subscribe: { fromBeginning: true },
+					// subscribe: { fromBeginning: true },
 				},
 			},
 		]),

@@ -11,16 +11,12 @@ async function bootstrap() {
 			options: {
 				client: {
 					brokers: ["localhost:29092", "localhost:39092"],
-					rebalanceTimeout: 60000,
-					allowAutoTopicCreation: false,
-					heartbeatInterval: 3000,
-					sessionTimeout: 45000,
-					retry: {
-						initialRetryTime: 300,
-						retries: 5,
-					},
+					// retry: {
+					// 	initialRetryTime: 300,
+					// 	retries: 5,
+					// },
 				},
-				subscribe: { fromBeginning: false },
+				// subscribe: { fromBeginning: false },
 			},
 		},
 	);

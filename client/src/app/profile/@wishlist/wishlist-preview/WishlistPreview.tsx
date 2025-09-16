@@ -41,7 +41,9 @@ const WishlistPreview: FC<WishlistItemProps> = ({ product }) => {
 					/>
 				</div>
 				<div className={classes["wishlist-preview__info"]}>
-					<div className={TextClassList.SEMIBOLD_18}>
+					<div
+						className={`${TextClassList.SEMIBOLD_18} ${classes["wishlist-preview__info-item"]}`}
+					>
 						{product.title}
 					</div>
 					<div
@@ -56,7 +58,7 @@ const WishlistPreview: FC<WishlistItemProps> = ({ product }) => {
 							type: "TEXT",
 							icon: { left: "TRASH" },
 						}}
-						className={classes["wishlist-preview__info-button"]}
+						className={classes["wishlist-preview__info-item"]}
 						onClick={btnClickRemove}
 					>
 						Remove
