@@ -60,7 +60,6 @@ export class CustomersController {
 		@Body() body: ValidationChangeCustomerBodyDTO,
 	) {
 		const credential = req.user as IUserJwt;
-
 		return this.customersService.change(body, credential);
 	}
 

@@ -7,5 +7,5 @@ export class ValidationCartKafkaPayloadDTO {
 	cartId: number[];
 
 	@IsInt()
-	customerId: number;
+	customersId: number;
 }

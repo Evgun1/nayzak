@@ -31,7 +31,7 @@ export class CartService {
 		const options: Prisma.CartFindManyArgs = { ...getQuery };
 
 		if (query.cartId) options.where = { id: { in: query.cartId } };
-		if (query.customerId) options.where = { customersId: query.customerId };
+		if (query.customersId) options.where = { customersId: query.customersId };
 
 		const cart = await this.prisma.cart.findMany(options);
 		const totalCount = await this.prisma.cart.count({});

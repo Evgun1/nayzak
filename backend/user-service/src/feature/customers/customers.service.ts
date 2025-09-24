@@ -72,11 +72,14 @@ export class CustomersService {
 	}
 
 	async change(body: ValidationChangeCustomerBodyDTO, credential: IUserJwt) {
-		const { firstName, id, lastName, phone } = body;
+		const { firstName, lastName, phone } = body;
 
 		try {
 			const customer = await this.prisma.customers.update({
-				where: { id: id, credentialsId: credential.id },
+				where: {
+					id: credential.customerId,
+					credentialsId: credential.id,
+				},
 				data: {
 					firstName,
 					lastName,

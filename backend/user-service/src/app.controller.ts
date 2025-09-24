@@ -95,18 +95,18 @@ export class AppController {
 		return await this.appService.changePassword(body);
 	}
 
-	// @MessagePattern("get.cart.and.addresses.user")
-	// async getCartAndAddressesUser(
-	// 	@Payload(
-	// 		new ValidationPipe({
-	// 			exceptionFactory: validationExceptionFactory,
-	// 		}),
-	// 	)
-	// 	payload: ValidationCartAndAddressesPayloadDTO,
-	// ) {
-	// 	const result = await this.appService.getCartAndAddressesKafka(payload);
-	// 	return result;
-	// }
+	@MessagePattern("get.cart.and.addresses.user")
+	async getCartAndAddressesUser(
+		@Payload(
+			new ValidationPipe({
+				exceptionFactory: validationExceptionFactory,
+			}),
+		)
+		payload: ValidationCartAndAddressesPayloadDTO,
+	) {
+		const result = await this.appService.getCartAndAddressesKafka(payload);
+		return result;
+	}
 	// @MessagePattern("get.customers.data")
 	// kafkaGetCustomerData(
 	// 	@Payload()
