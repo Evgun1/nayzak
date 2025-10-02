@@ -1,0 +1,24 @@
+version: "3.5"
+services:
+    order-microservice:
+        container_name: order-microservice
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        environment:
+            DATABASE_URL: postgresql://${POSTGRES_DB_USER}:${POSTGRES_DB_PASSWORD}@${POSTGRES_DB_HOST}:${POSTGRES_DB_PORT}/${POSTGRES_DB_NAME}?schema=order
+            DIRECT_DATABASE_URL: postgresql://${POSTGRES_DB_USER}:${POSTGRES_DB_PASSWORD}@${POSTGRES_DB_HOST}:${POSTGRES_DB_PORT}/${POSTGRES_DB_NAME}?schema=order
+        env_file:
+            - ./.env
+        ports:
+            - "13000:11000"
+        networks:
+            - order
+            - docker_nayzak
+
+networks:
+    docker_nayzak:
+        external: true
+    order:
+        driver: bridge
