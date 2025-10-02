@@ -2,7 +2,7 @@
 import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./FilterHeader.module.scss";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
-import { useFilterContext } from "../../(filter-tools)/context/useFilter";
+import { useFilterContext } from "../../(filter-tools)/context/useFilterContext";
 
 const FilterHeader = () => {
 	const { setShowFilter } = useFilterContext();
@@ -12,6 +12,7 @@ const FilterHeader = () => {
 			<span className={TextClassList.SEMIBOLD_22}>Filter</span>
 			<ButtonCustom
 				styleSettings={{
+					state: ["HOVER"],
 					color: "DARK",
 					type: "TEXT",
 					icon: { left: "CLOSE" },

@@ -5,7 +5,7 @@ export type GroupAttributesItem = {
 	value: { type: string; id: number }[];
 };
 
-type GroupAttributesType = Array<GroupAttributesItem>;
+export type GroupAttributesType = Array<GroupAttributesItem>;
 
 function groupAttributes(attributes: IAttribute[]) {
 	const filterAttributes: GroupAttributesType = [];

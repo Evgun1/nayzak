@@ -1,0 +1,10 @@
+.header-action-skeleton {
+	display: flex;
+	gap: 20px;
+
+	&__item {
+		width: 28px;
+		height: 28px;
+		border-radius: 100%;
+	}
+}

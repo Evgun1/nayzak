@@ -5,7 +5,7 @@ import { FC, MouseEventHandler, ReactNode, useContext } from "react";
 import { TextClassList } from "@/types/textClassList.enum";
 import { useSearchParams } from "next/navigation";
 import FilterList from "./FilterList";
-import { useFilterContext } from "@/app/category/[category]/[subcategory]/(filter-tools)/context/useFilter";
+import { useFilterContext } from "@/app/category/[category]/[subcategory]/(filter-tools)/context/useFilterContext";
 
 type SidebarProps = {};
 

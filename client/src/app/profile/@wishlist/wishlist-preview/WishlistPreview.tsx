@@ -10,6 +10,8 @@ import { FC, useEffect, useState } from "react";
 import { ProductBase } from "@/types/product/productBase";
 import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
 import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
+import Link from "next/link";
+import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 
 type WishlistItemProps = {
 	product: ProductPreviewItem;
@@ -29,7 +31,10 @@ const WishlistPreview: FC<WishlistItemProps> = ({ product }) => {
 	return (
 		<div className={classes["wishlist-preview"]}>
 			<div className={classes["wishlist-preview__info-wrap"]}>
-				<div className={classes["wishlist-preview__image-wrap"]}>
+				<Link
+					href={`/product/${product.title}-p${product.id}`}
+					className={classes["wishlist-preview__image-wrap"]}
+				>
 					<Image
 						placeholder="blur"
 						blurDataURL={product.Media.blurImage}
@@ -39,13 +44,22 @@ const WishlistPreview: FC<WishlistItemProps> = ({ product }) => {
 						src={product.Media.src}
 						alt={product.Media.name}
 					/>
-				</div>
+				</Link>
 				<div className={classes["wishlist-preview__info"]}>
-					<div
+					<LinkCustom
+						href={{
+							endpoint: `/product/${product.title}-p${product.id}`,
+						}}
+						styleSettings={{
+							color: "DARK",
+							type: "TEXT",
+							size: "LARGE",
+							state: ["HOVER"],
+						}}
 						className={`${TextClassList.SEMIBOLD_18} ${classes["wishlist-preview__info-item"]}`}
 					>
 						{product.title}
-					</div>
+					</LinkCustom>
 					<div
 						className={`${classes["wishlist-preview__info-item"]} ${TextClassList.REGULAR_14}`}
 					>

@@ -1,0 +1,10 @@
+.skeleton-list {
+	display: flex;
+
+	&__item {
+		border: 1px solid var(--black-200);
+		border-radius: 2px;
+		width: 46px;
+		height: 40px;
+	}
+}

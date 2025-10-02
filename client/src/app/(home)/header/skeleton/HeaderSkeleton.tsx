@@ -2,6 +2,7 @@ import classes from "./HeaderSkeleton.module.scss";
 import DisplayIcon from "@/components/icons/displayIcon";
 import IconsIdList from "@/components/icons/IconsIdList";
 import Skeleton from "@/components/skeleton/Skeleton";
+import HeaderActionSkeleton from "../action/skeleton/HeaderActionSkeleton";
 
 const navbarLength = Array.from({ length: 4 });
 const actionLength = Array.from({ length: 3 });
@@ -22,14 +23,7 @@ const HeaderSkeleton = () => {
 						/>
 					))}
 				</div>
-				<div className={classes["header-skeleton__action"]}>
-					{actionLength.map((_, i) => (
-						<Skeleton
-							key={i}
-							className={classes["header-skeleton__action-item"]}
-						/>
-					))}
-				</div>
+				<HeaderActionSkeleton />
 			</div>
 		</div>
 	);

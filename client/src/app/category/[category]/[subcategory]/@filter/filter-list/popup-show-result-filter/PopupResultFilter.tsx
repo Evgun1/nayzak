@@ -4,7 +4,7 @@ import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import classes from "./PopupResultFilter.module.scss";
 import { FC, MouseEvent, RefObject, useEffect, useMemo, useRef } from "react";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
-import { useFilterContext } from "../../../(filter-tools)/context/useFilter";
+import { useFilterContext } from "../../../(filter-tools)/context/useFilterContext";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type PopupShowResultFilterProps = {
@@ -13,17 +13,24 @@ type PopupShowResultFilterProps = {
 };
 
 const PopupResultFilter: FC<PopupShowResultFilterProps> = (props) => {
-	const { attributeCount, chipsHandler } = useFilterContext();
+	const { attributeCount, fetchAttributes: fetchAttributesHandler } =
+		useFilterContext();
 	const searchParams = useSearchParams();
 	const refResultFilter = useRef() as RefObject<HTMLDivElement>;
 	const router = useRouter();
 
 	function findFilter(event: MouseEvent) {
+		const findFilter = props.findFilter;
 		const urlSearchParams = new URLSearchParams(searchParams);
-		for (const key in props.findFilter)
-			urlSearchParams.set(key, props.findFilter[key].join(","));
 
-		chipsHandler({ searchParams: urlSearchParams });
+		for (const key in findFilter) {
+			if (findFilter[key].length <= 0) {
+				if (urlSearchParams.has(key)) urlSearchParams.delete(key);
+				continue;
+			}
+			urlSearchParams.set(key, findFilter[key].join(","));
+		}
+
 		router.push(`?${urlSearchParams}`);
 		buttonClickHandler(event);
 	}

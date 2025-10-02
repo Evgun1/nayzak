@@ -36,7 +36,7 @@ export const appProductsGet = async ({
 	if (params) {
 		const getId = getIdByParams(params).map((item) => item.id);
 
-		pathnameCatalog += `/by-params/${getId.join("/")}`;
+		pathnameCatalog += `by-params/${getId.join("/")}`;
 	}
 
 	const { result, totalCount, headers } = await appFetchGet<ProductBase[]>({

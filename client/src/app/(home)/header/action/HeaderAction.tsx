@@ -27,14 +27,6 @@ const HeaderAction: FC = () => {
 		return dispatch(popupActions.toggle(<PopupSearch />));
 	}
 
-	// const btnClickCart = () => {
-	// 	dispatch(
-	// 		popupActions.toggle(
-	// 			<PopupError title="You need to log in to the site" />,
-	// 		),
-	// 	);
-	// };
-
 	useEffect(() => {
 		setCartAmount(cartSelector.totalAmount);
 	}, [cartSelector]);
@@ -44,6 +36,11 @@ const HeaderAction: FC = () => {
 			dispatch(popupActions.toggle(null));
 		}, 500);
 	}
+
+	const LinkHref = useMemo(
+		() => (userData !== null ? "/profile" : "#"),
+		[userData],
+	);
 
 	return (
 		<div className={classes["header-actions"]}>
@@ -60,7 +57,7 @@ const HeaderAction: FC = () => {
 			/>
 
 			<LinkCustom
-				href={{ endpoint: userData !== null ? "/profile" : "#" }}
+				href={{ endpoint: LinkHref }}
 				onClick={userData !== null ? () => {} : btnAuthHandler}
 				styleSettings={{
 					state: ["HOVER"],
@@ -84,10 +81,12 @@ const HeaderAction: FC = () => {
 					type: "TEXT",
 					size: "LARGE",
 				}}
-				className={`${classes["header-actions__button"]} ${classes["header-actions__bag"]}`}
+				className={`${classes["header-actions__button"]} ${
+					cartAmount !== 0 ? classes["header-actions__cart"] : ""
+				}`}
 			>
 				{cartAmount !== 0 && (
-					<span className={classes["header-actions__bag-amount"]}>
+					<span className={classes["header-actions__cart-amount"]}>
 						{cartAmount}
 					</span>
 				)}

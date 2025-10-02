@@ -32,12 +32,15 @@ function SlowContent(reviews: { reviewsData: any[]; totalReviews: any }) {
 }
 
 const Page: FC<PageProps> = async (props) => {
-	const productId = props.params.slug
-		.split("-")
-		.find((i) => i.includes("p"))
-		?.replaceAll("p", "");
-	if (!productId) return;
-	const reviews = await appReviewsProductGet(productId);
+	// const productId = props.params.slug
+	// 	.split("-")
+	// 	.find((i) => i.includes("p"))
+	// 	?.replaceAll("p", "");
+	// if (!productId) return;
+
+	console.log(props.params.slug);
+
+	const reviews = await appReviewsProductGet(props.params.slug);
 
 	return (
 		<div>

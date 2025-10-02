@@ -2,6 +2,7 @@
 
 import Tabs from "@/ui/tabs/Tabs";
 import React, { FC, ReactNode, Suspense } from "react";
+import "../style.scss";
 
 type TabsLayoutProps = {
 	description: ReactNode;
@@ -24,7 +25,7 @@ const TabsLayout: FC<TabsLayoutProps> = async (props) => {
 		{
 			label: "Reviews",
 			content: (
-                // reviews
+				// reviews
 				<Suspense fallback={<>Review Loading...</>}>{reviews}</Suspense>
 			),
 		},
@@ -32,7 +33,7 @@ const TabsLayout: FC<TabsLayoutProps> = async (props) => {
 
 	return (
 		<section>
-			<div className="container">
+			<div className="product-container">
 				<Tabs>
 					<Tabs.Header>
 						{TABS_MAP.map((item, i) => (

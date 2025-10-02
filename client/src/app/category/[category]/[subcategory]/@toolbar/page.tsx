@@ -4,8 +4,6 @@ import { FC } from "react";
 import { TextClassList } from "@/types/textClassList.enum";
 import { appProductsByParamsGet } from "@/lib/api/products";
 import FilterChips from "./filter-chips/FilterChips";
-import { appAttributesAllGet } from "@/lib/api/attribute";
-import filterAttributesHandler from "../(filter-tools)/tools/filterAttributesHandler";
 import SelectSortBy from "./select-sort-by/SelectSortBy";
 import SelectTypeList from "./select-type-list/SelectTypeList";
 
@@ -15,7 +13,6 @@ type PageProps = {
 };
 const Page: FC<PageProps> = async (props) => {
 	const urlSearchParams = new URLSearchParams(props.searchParams);
-	console.log(urlSearchParams, true);
 
 	const { productCounts } = await appProductsByParamsGet({
 		searchParams: urlSearchParams,
@@ -35,7 +32,7 @@ const Page: FC<PageProps> = async (props) => {
 					<SelectTypeList searchParams={props.searchParams} />
 				</div>
 			</div>
-			<FilterChips searchParams={urlSearchParams} />;
+			<FilterChips searchParams={urlSearchParams} />
 		</div>
 	);
 };

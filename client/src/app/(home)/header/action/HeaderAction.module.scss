@@ -4,14 +4,14 @@
 	max-width: max-content;
 
 	.header-actions__button {
-		gap: 2px !important;
+		gap: 2px;
 	}
 
-	.header-actions__bag {
-		position: relative !important;
-		padding-right: 22px !important;
+	.header-actions__cart {
+		position: relative;
+		padding-right: 22px;
 
-		.header-actions__bag-amount {
+		.header-actions__cart-amount {
 			right: 0;
 			position: absolute;
 			padding: 0px 6px;

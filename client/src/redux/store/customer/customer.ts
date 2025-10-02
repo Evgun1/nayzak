@@ -13,7 +13,7 @@ export type CustomerState = {
 	customerData: CustomerItem | null;
 };
 
-const storage = localStorageHandler<CustomerState>("customerState");
+const storage = localStorageHandler("customerState");
 
 const localStorageCustomer = storage.get();
 

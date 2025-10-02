@@ -1,6 +1,7 @@
 import { ReviewItem, ReviewItemPost } from "@/types/reviews.types";
 import { appFetchGet, appFetchPost } from ".";
 import { CacheItem } from "./interface/appGetFetch.interface";
+import getIdByParams from "@/tools/getIdByParams";
 
 const tag = "reviews";
 
@@ -16,8 +17,10 @@ export const appReviewsGet = async (id: number) => {
 	return result;
 };
 
-export const appReviewsProductGet = async (params: string | number) => {
-	const pathname = `review/by-product/${params}`;
+export const appReviewsProductGet = async (params: string) => {
+	const getId = getIdByParams(params);
+
+	const pathname = `review/by-product/${getId.id}`;
 
 	const cache: CacheItem = { tag, revalidate: 1800 };
 

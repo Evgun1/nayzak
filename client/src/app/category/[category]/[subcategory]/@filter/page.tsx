@@ -2,9 +2,9 @@
 
 import { FC } from "react";
 import { appAttributeBySubcategoryGet } from "@/lib/api/attribute";
-import FilterList, { FilterAttributesArray } from "./FilterList";
+import FilterList, { FilterAttributesState } from "./filter-list/FilterList";
 import { appMinMaxPriceGet } from "@/lib/api/products";
-import filterAttributesHandler from "../../(filter-tools)/tools/filterAttributesHandler";
+import filterAttributesHandler from "../(filter-tools)/tools/filterAttributesHandler";
 
 type PageProps = {
 	params: { category: string; subcategory: string };

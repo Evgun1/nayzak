@@ -11,6 +11,7 @@ type ProductGridProps = {
 	searchParams: Record<string, any>;
 };
 const ProductGrid: FC<ProductGridProps> = ({ searchParams }) => {
+
 	return (
 		<section className="section">
 			<div className="container">

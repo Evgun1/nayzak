@@ -1,4 +1,3 @@
-"use client";
 import { ChangeEvent, CSSProperties, FC, ReactNode } from "react";
 import classes from "./Checkbox.module.scss";
 import { Roundness, Size } from "./Checkbox.type";

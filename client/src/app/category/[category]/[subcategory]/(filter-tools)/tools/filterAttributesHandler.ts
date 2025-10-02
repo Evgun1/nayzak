@@ -1,11 +1,11 @@
 import { IAttribute } from "@/types/attribute.interface";
-import { FilterAttributesArray } from "../../@filter/(filter-list)/FilterList";
+import { FilterAttributesState } from "../../@filter/filter-list/FilterList";
 
 export default function filterAttributesHandler(
 	attributes: IAttribute[],
 	urlSearchparams: URLSearchParams,
 ) {
-	const filterAttributes: FilterAttributesArray = [];
+	const filterAttributes: FilterAttributesState = [];
 	for (const element of attributes) {
 		const checkedValid = urlSearchparams
 			.get(element.name)

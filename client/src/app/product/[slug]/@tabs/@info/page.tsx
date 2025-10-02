@@ -12,12 +12,9 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = async (props) => {
-	const productId = props.params.slug
-		.split("-")
-		.find((i) => i.includes("p"))
-		?.replaceAll("p", "");
-	if (!productId) return;
-	const attributeFetch = await appAttributeByProductGet({ param: productId });
+	const attributeFetch = await appAttributeByProductGet({
+		param: { slug: props.params.slug },
+	});
 	const attributes = groupAttributes(attributeFetch.attribute);
 
 	const transformAttribute: { name: string; value: string }[] = [];

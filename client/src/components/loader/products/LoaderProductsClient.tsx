@@ -10,6 +10,7 @@ import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import Spinner from "@/components/loading/Spinner";
 import { useSearchParams } from "next/navigation";
 import { ProductBase } from "@/types/product/productBase";
+import getIdByParams from "@/tools/getIdByParams";
 
 type LoaderProductsClientProp = {
 	productsParams?: string[];
@@ -37,6 +38,19 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 			(productsElements.length + props.limit).toString(),
 		);
 		urlSearchParams.set("limit", props.limit.toString());
+
+		const category = urlSearchParams.get("category");
+		const subcategory = urlSearchParams.get("subcategory");
+
+		if (category) {
+			const { id } = getIdByParams(category);
+			urlSearchParams.set("categoryId", id.toString());
+		}
+
+		if (subcategory) {
+			const { id } = getIdByParams(subcategory);
+			urlSearchParams.set("subcategoryId", id.toString());
+		}
 
 		const { products: productsFetch } = await appProductsGet({
 			searchParams: urlSearchParams,

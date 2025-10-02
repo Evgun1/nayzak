@@ -6,9 +6,16 @@ import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import Image from "next/image";
 import { FC, Suspense, useEffect, useState } from "react";
 import ProductsSwiperPreview from "./swiper/ProductsSwiperPreview";
+import dynamic from "next/dynamic";
+import ProductsImageSkeleton from "./skeleton/ProductsImageSkeleton";
 type PageProps = {
 	params: { slug: string };
 };
+
+const ProductsSwiperPreviewDynamic = dynamic(
+	() => import("./swiper/ProductsSwiperPreview"),
+	{ ssr: false, loading: () => <ProductsImageSkeleton /> },
+);
 
 const Page: FC<PageProps> = async (props) => {
 	const productStringId = props.params.slug.split("-").at(-1) as string;
@@ -29,7 +36,7 @@ const Page: FC<PageProps> = async (props) => {
 		);
 	return (
 		<div className={classes["product-image"]}>
-			<ProductsSwiperPreview>
+			<ProductsSwiperPreviewDynamic>
 				{media.map((item, i) => (
 					<div className={classes["product-image__image-wrap"]}>
 						<Image
@@ -46,7 +53,7 @@ const Page: FC<PageProps> = async (props) => {
 						/>
 					</div>
 				))}
-			</ProductsSwiperPreview>
+			</ProductsSwiperPreviewDynamic>
 		</div>
 	);
 };

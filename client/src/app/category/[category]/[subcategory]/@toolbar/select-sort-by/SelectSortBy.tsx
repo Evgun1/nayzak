@@ -5,7 +5,7 @@ import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { Select, SelectItem } from "@/ui/select/Select";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
-import { useFilterContext } from "../../(filter-tools)/context/useFilter";
+import { useFilterContext } from "../../(filter-tools)/context/useFilterContext";
 
 const sortData = [
 	{
@@ -66,6 +66,7 @@ const SelectSortBy: React.FC = () => {
 			<ButtonCustom
 				onClick={btnClickFilter}
 				styleSettings={{
+					state: ["HOVER"],
 					icon: { right: "SETTINGS" },
 					size: "SMALL",
 					type: "TEXT",

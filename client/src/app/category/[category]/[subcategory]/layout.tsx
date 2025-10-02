@@ -1,6 +1,6 @@
 import classes from "./style.module.scss";
 import { ReactNode, Suspense } from "react";
-import { FilterProvider } from "./(filter-tools)/context/useFilter";
+import { FilterProvider } from "./(filter-tools)/context/useFilterContext";
 import dynamic from "next/dynamic";
 // import FilterSkeleton from "./(filter)/_skeleton/FilterSkeleton";
 

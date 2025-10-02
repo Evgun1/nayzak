@@ -5,6 +5,7 @@ import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
 import ProductPreviewDefault from "@/components/product-preview/product-preview-default/ProductsPreviewDefault";
 import { FC } from "react";
+import getIdByParams from "@/tools/getIdByParams";
 export interface ListType {
 	five_grid: string;
 	four_grid: string;
@@ -45,6 +46,19 @@ const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
 		: (listTypeLimits.get(listType || "default") as string);
 
 	urlSearchParams.set("limit", getLimit);
+
+	const category = urlSearchParams.get("category");
+	const subcategory = urlSearchParams.get("subcategory");
+
+	if (category) {
+		const { id } = getIdByParams(category);
+		urlSearchParams.set("categoryId", id.toString());
+	}
+
+	if (subcategory) {
+		const { id } = getIdByParams(subcategory);
+		urlSearchParams.set("subcategoryId", id.toString());
+	}
 
 	const fetchProducts = await appProductsGet({
 		params,

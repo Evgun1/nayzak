@@ -1,7 +1,7 @@
-"use server";
-import { FC } from "react";
+"use client";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import classes from "./FilterChips.module.scss";
-import { FilterAttributesArray } from "../../@filter/(filter-list)/FilterList";
+import { FilterAttributesState } from "../../@filter/filter-list/FilterList";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { TextClassList } from "@/types/textClassList.enum";
 import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
@@ -11,106 +11,102 @@ import { isRSCRequestCheck } from "next/dist/server/base-server";
 import Link from "next/link";
 import { appAttributesAllGet } from "@/lib/api/attribute";
 import filterAttributesHandler from "../../(filter-tools)/tools/filterAttributesHandler";
+import { useFilterContext } from "../../(filter-tools)/context/useFilterContext";
 
 type FilterButtonsProps = {
-	// attributes: FilterAttributesArray;
 	searchParams: URLSearchParams;
 };
 
-const FilterChips: FC<FilterButtonsProps> = async (props) => {
-	const urlSearchParams = new URLSearchParams(props.searchParams);
-	const attributesFetch = await appAttributesAllGet({
-		searchParams: urlSearchParams,
-	});
-	const filterAttributes = filterAttributesHandler(
-		attributesFetch,
-		urlSearchParams,
-	);
-	const attributes: { name: string; href: Record<string, string> }[] = [];
+const FilterChips: FC<FilterButtonsProps> = (props) => {
+	const { filterChips } = useFilterContext();
 
-	for (const attribute of filterAttributes) {
-	}
+	const [attributesState, setAttributesState] = useState<
+		{ name: string; href: Record<string, string> }[]
+	>([]);
 
-	// const hrefClearAll = {} as Record<string, string>;
+	const deleteAllUrlsSearchParams = useMemo(() => {
+		const urlSearchParams = new URLSearchParams(props.searchParams);
+		const obj = {} as Record<string, string>;
+		for (const [key, value] of urlSearchParams.entries()) {
+			if (filterChips.some((item) => item.name === key)) continue;
+			obj[key] = value;
+		}
+		return obj;
+	}, [props.searchParams, filterChips]);
 
-	// const deleteUlrSearchParams = (name: string, value: string) => {
-	// 	const urlSearchParams = new URLSearchParams(props.searchParams);
-	// 	const urlValue = urlSearchParams.get(name);
-	// 	if (!urlValue) return urlSearchParams;
-	// 	const updated = urlValue
-	// 		.split(",")
-	// 		.filter((item) => item !== value)
-	// 		.join(",");
+	const deleteUlrSearchParams = (name: string, value: string) => {
+		const urlSearchParams = new URLSearchParams(props.searchParams);
+		const urlValue = urlSearchParams.get(name);
+		if (!urlValue) return urlSearchParams;
+		const updated = urlValue
+			.split(",")
+			.filter((item) => item !== value)
+			.join(",");
 
-	// 	if (updated) {
-	// 		urlSearchParams.set(name, updated);
-	// 	} else {
-	// 		urlSearchParams.delete(name);
-	// 	}
+		if (updated) {
+			urlSearchParams.set(name, updated);
+		} else {
+			urlSearchParams.delete(name);
+		}
 
-	// 	return urlSearchParams;
-	// };
+		return urlSearchParams;
+	};
 
-	// const deleteAllUrlsSearchParams = (name: string) => {
-	// 	const urlSearchParams = new URLSearchParams(props.searchParams);
-	// 	const urlObj = {} as Record<string, string>;
+	useEffect(() => {
+		(async () => {
+			const attributes: { name: string; href: Record<string, string> }[] =
+				[];
 
-	// 	for (const [key, val] of urlSearchParams.entries()) {
-	// 		if (key === name) continue;
-	// 		urlObj[key] = val;
-	// 	}
-	// 	return urlObj;
-	// };
+			for (const attribute of filterChips) {
+				if (attribute.name !== "color") {
+					for (const element of attribute.value) {
+						const urlSearchParams = deleteUlrSearchParams(
+							attribute.name,
+							element.id.toString(),
+						);
 
-	// for (const attribute of props.attributes) {
-	// 	const data = deleteAllUrlsSearchParams(attribute.name);
-	// 	for (const key in data) hrefClearAll[key] = data[key];
+						const href = {} as Record<string, string>;
 
-	// 	if (attribute.name !== "color") {
-	// 		for (const element of attribute.value) {
-	// 			const urlSearchParams = deleteUlrSearchParams(
-	// 				attribute.name,
-	// 				element.id.toString(),
-	// 			);
+						for (const [key, val] of urlSearchParams.entries()) {
+							href[key] = val;
+						}
 
-	// 			const href = {} as Record<string, string>;
+						attributes.push({ name: element.type, href });
+					}
+				} else {
+					for (const element of attribute.value) {
+						const urlSearchParams = deleteUlrSearchParams(
+							attribute.name,
+							element.id.toString(),
+						);
 
-	// 			for (const [key, val] of urlSearchParams.entries()) {
-	// 				href[key] = val;
-	// 			}
+						const result = await appColorGet({
+							hex: element.type.replaceAll("#", "").toUpperCase(),
+						});
 
-	// 			attributes.push({ name: element.type, href });
-	// 		}
-	// 	} else {
-	// 		for (const element of attribute.value) {
-	// 			const urlSearchParams = deleteUlrSearchParams(
-	// 				attribute.name,
-	// 				element.id.toString(),
-	// 			);
+						const href = {} as Record<string, string>;
 
-	// 			const result = await appColorGet({
-	// 				hex: element.type.replaceAll("#", "").toUpperCase(),
-	// 			});
+						for (const [key, val] of urlSearchParams.entries()) {
+							href[key] = val;
+						}
 
-	// 			const href = {} as Record<string, string>;
+						attributes.push({
+							name: result.name.value,
+							href: href,
+						});
+					}
+				}
+			}
 
-	// 			for (const [key, val] of urlSearchParams.entries()) {
-	// 				href[key] = val;
-	// 			}
-
-	// 			attributes.push({
-	// 				name: result.name.value,
-	// 				href: href,
-	// 			});
-	// 		}
-	// 	}
-	// }
+			setAttributesState(attributes);
+		})();
+	}, [filterChips]);
 
 	return (
 		<div className={classes["filter-buttons"]}>
-			{/* {attributes && attributes.length > 0 && (
+			{attributesState && attributesState.length > 0 && (
 				<div className={classes["filter-buttons__list"]}>
-					{attributes.map((item, i) => (
+					{attributesState.map((item, i) => (
 						<LinkCustom
 							href={{ queryParams: item.href }}
 							key={i}
@@ -128,7 +124,8 @@ const FilterChips: FC<FilterButtonsProps> = async (props) => {
 						</LinkCustom>
 					))}
 					<LinkCustom
-						href={{ queryParams: hrefClearAll }}
+						href={{ queryParams: deleteAllUrlsSearchParams }}
+						// href={{ endpoint: "#" }}
 						className={classes["filter-buttons__button-clear"]}
 						// onClick={buttonClearAllClickHandler}
 						styleSettings={{
@@ -143,7 +140,7 @@ const FilterChips: FC<FilterButtonsProps> = async (props) => {
 						Clear All
 					</LinkCustom>
 				</div>
-			)} */}
+			)}
 		</div>
 	);
 };

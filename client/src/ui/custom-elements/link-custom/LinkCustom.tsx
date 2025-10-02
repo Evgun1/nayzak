@@ -112,9 +112,12 @@ const LinkCustom: FC<LinkCustomProps> = ({
 			ref={linkRef}
 			scroll={false}
 			href={queryParams ? setQueryParams : `${endpoint}`}
+			// href={{
+			// 	query: urlSearchParams.size > 0 ? setQueryParams : undefined,
+			// 	pathname: endpoint,
+			// }}
 			className={`${className ?? ""} ${classes.join(" ")} `}
 			target={target ? "_blank" : "_self"}
-			// style={{ pointerEvents: true ? "none" : "auto" }}
 			onClick={onClick}
 		>
 			{styleSettings?.icon?.left ? (

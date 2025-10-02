@@ -8,9 +8,11 @@ import Price from "@/components/price/Price";
 import ProductActions from "./action/ProductActions";
 import { appAttributeByProductGet } from "@/lib/api/attribute";
 import getIdByParams from "@/tools/getIdByParams";
+import { appReviewsProductGet } from "@/lib/api/reviews";
 
 export default async function Page(props: { params: { slug: string } }) {
 	const productFetch = await appOneProductGet({ slug: props.params.slug });
+	const reviewFetch = await appReviewsProductGet(props.params.slug);
 
 	return (
 		<div className={classes["product-info"]}>
@@ -43,13 +45,8 @@ export default async function Page(props: { params: { slug: string } }) {
 					</p>
 					<div className={classes["product-info__info-rating"]}>
 						<Rating
-							rating={
-								productFetch.rating ? +productFetch.rating : 0
-							}
+							rating={productFetch.rating}
 						/>
-						{/* <span className={TextClassList.REGULAR_12}>
-							{reviewsData.totalReviews} Reviews
-						</span> */}
 					</div>
 				</div>
 				<div
@@ -61,6 +58,7 @@ export default async function Page(props: { params: { slug: string } }) {
 					/>
 				</div>
 			</div>
+
 			<ProductActions
 				className={classes["product-info-action"]}
 				productsId={productFetch.id}
