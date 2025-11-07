@@ -1,6 +1,6 @@
 "use server";
 import { appProductsGet } from "@/lib/api/products";
-import LoaderProductsClient from "./LoaderProductsClient";
+import LoaderProductsClient from "./LoaderProducts.client";
 import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
 import ProductPreviewDefault from "@/components/product-preview/product-preview-default/ProductsPreviewDefault";
@@ -67,16 +67,16 @@ const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
 
 	const initProductElement = await Promise.all(
 		fetchProducts.products.map(async (product, i) => {
-			const blur = await getPlaceholderImage(product.Media[0].src);
-
 			const productParam: ProductPreviewItem = {
 				...product,
 				Media: {
 					src: product.Media[0].src,
 					name: product.Media[0].name,
-					blurImage: blur.placeholder,
 				},
 			};
+
+			const bluer = await getPlaceholderImage(productParam.Media.src);
+			productParam.Media.blurImage = bluer.placeholder;
 
 			return (
 				<li key={product.id}>
@@ -99,10 +99,6 @@ const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
 			productsCount={fetchProducts.productCounts}
 			className={props.className}
 			showRating={props.showRating}
-			// initProducts={{
-			// 	// products: fetchProducts.products,
-			// 	// totalCount: fetchProducts.productCounts,
-			// }}
 		/>
 	);
 };

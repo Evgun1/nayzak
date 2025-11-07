@@ -13,12 +13,14 @@ import { JwtStrategy } from "./strategy/jwt.strategy";
 import { CartModule } from "./feature/cart/cart.module";
 import { LocalStrategy } from "./strategy/local.strategy";
 import { AddressesModel } from "./feature/addresses/addresses.module";
-import { ReviewModule } from "./feature/review/review.module";
 import { ConfigModule } from "@nestjs/config";
+import { CreateUsersModule } from "./tools/createUsers/createUsers.module";
+import { CredentialsModule } from "./feature/credentials/credentials.module";
 
 @Module({
 	imports: [
-		ReviewModule,
+		CredentialsModule,
+		CreateUsersModule,
 		AddressesModel,
 		CartModule,
 		CustomersModule,
@@ -28,12 +30,10 @@ import { ConfigModule } from "@nestjs/config";
 		PrismaModule,
 		QueryModule,
 		ScheduleModule.forRoot(),
-		ConfigModule.forRoot({ envFilePath: "./.env.local", isGlobal: true }),
+		ConfigModule.forRoot({ isGlobal: true }),
 		JwtModule.register({
 			secret: process.env.JWT_SECRET_KEY,
-			// secret: 'JWT_SECRET_KEY',
-
-			signOptions: { expiresIn: "5d" },
+			signOptions: { expiresIn: "5 days" },
 		}),
 	],
 	controllers: [AppController],

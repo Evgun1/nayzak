@@ -5,12 +5,13 @@ import {
 	ProductsPrismaSelect,
 	ProductsPrismaWhere,
 } from "./productsPrismaArgsItem";
+import { ProductsOrderBy } from "src/prisma/interface/orderBy";
 
 export interface ProductsPrismaArgs {
 	select?: ProductsPrismaSelect;
 	includes?: ProductsPrismaIncludes;
 	where?: ProductsWhereInput;
-	orderBy?: ProductsPrismaOrderBy;
+	orderBy?: ProductsOrderBy;
 	limit?: number;
 	offset?: number;
 }

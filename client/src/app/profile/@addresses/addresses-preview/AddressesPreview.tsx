@@ -2,13 +2,13 @@
 
 import classes from "./AddressesPreview.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
-import { AddressType } from "./Addresses";
 import { useAppDispatch } from "@/redux/redux";
 import { popupActions } from "@/redux/store/popup/popup";
 import PopupAddress from "@/popups/popup-address/PopupAddress";
 import { deleteAddresses } from "@/redux/store/address/action";
 import { ReactElement } from "react";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
+import { AddressType } from "../page";
 
 export default function AddressesPreview({
 	address,

@@ -1,8 +1,12 @@
+import { retry } from "rxjs";
 import {
 	Body,
 	Controller,
 	Get,
+	Header,
+	HttpCode,
 	Post,
+	Res,
 	UploadedFile,
 	UploadedFiles,
 	UseInterceptors,
@@ -17,34 +21,19 @@ import { buffer } from "stream/consumers";
 import { MessagePattern, Payload } from "@nestjs/microservices";
 import { ProductsKafkaDTO } from "./feature/products/dto/productsKafka.dto";
 import { validationExceptionFactory } from "./utils/validationExceptionFactory";
-import { ValidationProductsKafkaPayloadDTO } from "./feature/products/validation/validationProductsKafka.dto";
+import { ValidationProductsKafkaPayloadDTO } from "./feature/products/validation/validationKafkaProducts.dto";
+import { Response } from "express";
 
-@Controller("/")
+@Controller()
 export class AppController {
 	constructor(
 		private readonly cloudinaryService: CloudinaryService,
 		private readonly fakerService: FakerService,
 	) {}
 
-	@Post("")
-	@UseInterceptors(FilesInterceptor("files"))
-	async test(
-		@UploadedFiles() file: Array<Express.Multer.File>,
-		@Body() body: any,
-	) {}
-
-	// @MessagePattern("get.products")
-	// async getProductCatalog(
-	// 	@Payload(
-	// 		new ValidationPipe({
-	// 			exceptionFactory: validationExceptionFactory,
-	// 		}),
-	// 	)
-	// 	payload: ValidationProductsKafkaPayloadDTO,
-	// ) {
-
-	// 	return payload;
-	// 	// const productsKafka = await this.productsService.productsKafka(payload);
-	// 	// return productsKafka;
-	// }
+	@Get("health")
+	@HttpCode(200)
+	async health() {
+		return "healthy";
+	}
 }

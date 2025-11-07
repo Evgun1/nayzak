@@ -17,7 +17,7 @@ import { revalidatePath } from "next/cache";
 import { validation } from "@/lib/validator/validator";
 import Form, { FormOnSubmitParams } from "@/ui/form/Form";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
-import { appCookieGet } from "@/lib/api/cookie";
+import { appCookieGet } from "@/tools/cookie";
 
 const schema: Array<ZodObject<any>> = [];
 

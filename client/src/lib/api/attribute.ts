@@ -5,7 +5,7 @@ import getIdByParams from "@/tools/getIdByParams";
 import { partialRecord } from "zod/v4";
 
 type AttributesAllGetParams = {
-	searchParams: URLSearchParams;
+	searchParams?: URLSearchParams;
 };
 type AppAttributeBySubcategoryGetParams = {
 	param: { slug: string };
@@ -51,7 +51,7 @@ export const appAttributeByProductGet = async (
 	});
 
 	return {
-		attribute: attribute.result,
+		attributes: attribute.result,
 		countActiveAttributes: attribute.totalCount,
 	};
 };

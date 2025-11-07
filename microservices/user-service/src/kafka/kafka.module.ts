@@ -10,24 +10,14 @@ import { KafkaService } from "./kafka.service";
 				transport: Transport.KAFKA,
 				options: {
 					client: {
-						clientId: "mail",
+						clientId: "notification-service",
 						brokers: (process.env.KAFKA_BROKERS as string).split(
 							", ",
 						),
 					},
 					consumer: {
-						groupId: "mail-consumer",
-						// rebalanceTimeout: 60000,
-						// heartbeatInterval: 3000,
-						// sessionTimeout: 45000,
-						// allowAutoTopicCreation: false,
-
-						// retry: {
-						// 	initialRetryTime: 300,
-						// 	retries: 5,
-						// },
+						groupId: "notification",
 					},
-					// subscribe: { fromBeginning: true },
 				},
 			},
 			{
@@ -35,24 +25,14 @@ import { KafkaService } from "./kafka.service";
 				transport: Transport.KAFKA,
 				options: {
 					client: {
-						clientId: "review-service",
+						clientId: "review-user-service",
 						brokers: (process.env.KAFKA_BROKERS as string).split(
 							", ",
 						),
 					},
 					consumer: {
-						groupId: "review-consumer",
-						// rebalanceTimeout: 60000,
-						// heartbeatInterval: 3000,
-						// sessionTimeout: 45000,
-						// allowAutoTopicCreation: false,
-
-						// retry: {
-						// 	initialRetryTime: 300,
-						// 	retries: 5,
-						// },
+						groupId: "review-user",
 					},
-					// subscribe: { fromBeginning: true },
 				},
 			},
 		]),

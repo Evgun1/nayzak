@@ -8,10 +8,10 @@ export const redisProvider: Provider = {
 	useFactory: async () => {
 		const client = createClient({
 			socket: {
-				host: "0.0.0.0",
-				port: 5454,
+				host: process.env.REDIS_DB_HOST,
+				port: parseInt(process.env.REDIS_DB_PORT as string),
 			},
-			password: "nayzak",
+			password: process.env.REDIS_DB_PASSWORD,
 		});
 		await client.connect();
 		return client;

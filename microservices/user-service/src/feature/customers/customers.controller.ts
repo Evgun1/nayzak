@@ -6,10 +6,12 @@ import {
 	Get,
 	Headers,
 	Param,
+	ParseIntPipe,
 	Post,
 	Put,
 	Query,
 	Req,
+	Res,
 	UseGuards,
 	ValidationPipe,
 } from "@nestjs/common";
@@ -18,7 +20,7 @@ import { ValidationGetCustomerParamDTO } from "./validation/validationGetCustome
 import { ValidationUploadCustomerBodyDTO } from "./validation/validationUploadCustomer.dto";
 import { ValidationChangeCustomerBodyDTO } from "./validation/validationChangeCustomer.dto";
 import { ValidationDeleteCustomersBodyDTO } from "./validation/validationDeleteCustomers.dto";
-import { Request } from "express";
+import { Request, Response } from "express";
 import { IUserJwt } from "src/interface/credentialsJwt.interface";
 import { JwtAuthGuard } from "src/guard/jwtAuth.guard";
 import { validationExceptionFactory } from "src/utils/validationExceptionFactory";
@@ -35,17 +37,14 @@ export class CustomersController {
 	}
 	@Get("init")
 	@UseGuards(JwtAuthGuard)
-	async initCustomer(@Req() req: Request) {
-		const credential = req.user as IUserJwt;
+	async initCustomer(
+		@Req() req: Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const user = req.user as IUserJwt;
 
-		const customer = await this.customersService.init(credential);
-		if (!customer) return;
-
+		const customer = await this.customersService.init(user);
 		return customer;
-	}
-	@Get("/:params")
-	async getCustomer(@Param() param: ValidationGetCustomerParamDTO) {
-		return this.customersService.getOne(param);
 	}
 
 	@Post()
@@ -53,7 +52,7 @@ export class CustomersController {
 		return this.customersService.uploadCustomer(body);
 	}
 
-	@Put("/update")
+	@Put("update")
 	@UseGuards(JwtAuthGuard)
 	async changeCustomer(
 		@Req() req: Request,
@@ -67,6 +66,11 @@ export class CustomersController {
 	@UseGuards(JwtAuthGuard)
 	async deleteCustomers(@Body() body: ValidationDeleteCustomersBodyDTO) {
 		return await this.customersService.delete(body);
+	}
+
+	@Get(":params")
+	async getCustomer(@Param("params", ParseIntPipe) param: number) {
+		return this.customersService.getOne(param);
 	}
 
 	@MessagePattern("get.customers.data")

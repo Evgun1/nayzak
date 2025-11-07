@@ -11,7 +11,7 @@ import { useCookieGet } from "@/hooks/useCookie";
 import { notificationAction } from "../notification/notification";
 import NotificationCart from "@/components/notification/NotificationCart";
 import { appOneProductGet } from "@/lib/api/products";
-import { appCookieGet } from "@/lib/api/cookie";
+import { appCookieGet } from "@/tools/cookie";
 import localStorageHandler from "@/tools/localStorage";
 
 export function initCart() {
@@ -30,9 +30,10 @@ export function initCart() {
 	};
 }
 
-export function updateCart(currentProduct: CartItemData) {
+export function updateCart(currentProduct: Omit<CartItemData, "id">) {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		const token = appCookieGet("user-token");
+
 		if (!token) return;
 
 		const productsCartArray = [...getState().cart.productsArray];

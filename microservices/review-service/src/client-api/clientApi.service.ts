@@ -11,8 +11,6 @@ export class ClientApiService {
 		const body = { tag };
 		const authorization = "cache-secret-key";
 
-		console.log("clear cache");
-
 		return await this.httpClientService.fetchPost({
 			pathname,
 			body,

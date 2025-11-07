@@ -11,7 +11,8 @@ COPY --from=build /dist ./dist
 COPY --from=build /src/prisma ./prisma
 RUN npm ci --omit=dev
 EXPOSE 13000
-CMD ["sh", "-c", "npm run db:deploy && node dist/main.js"]
+CMD ["sh", "-c", "npm run db:deploy && npm run kafka:deploy && node dist/main.js"]
+
 
 
 

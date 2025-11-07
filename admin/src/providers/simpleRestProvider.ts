@@ -1,50 +1,50 @@
 /** @format */
 
-import { fetchUtils, Options } from 'react-admin';
-import jsonServerProvider from 'ra-data-json-server';
-import { DataProvider } from 'ra-core/src/types.ts';
+import { fetchUtils, Options } from "react-admin";
+import jsonServerProvider from "ra-data-json-server";
+import { DataProvider } from "ra-core/src/types.ts";
+// import dotenv from "dotenv";
+// dotenv.config();
 
-// const productParamsMapper = new Map<string, string>();
-// productParamsMapper.set("_end", "limit");
-// productParamsMapper.set("_order", "sort");
-// productParamsMapper.set("_sort", "sortBy");
-// productParamsMapper.set("_start", "offset");
-// productParamsMapper.set("search", "search");
+const productParamsMapper = new Map<string, string>();
+productParamsMapper.set("_end", "limit");
+productParamsMapper.set("_order", "sort");
+productParamsMapper.set("_sort", "sortBy");
+productParamsMapper.set("_start", "offset");
+productParamsMapper.set("search", "search");
 
-const apiURL = 'http://localhost:3030';
+// const apiURL = process.env.API_URL;
+const apiURL = "http://localhost:8080/services";
 
 const customFetchJson = async (url: string | URL, options: Options = {}) => {
 	const newURL = new URL(url);
-	// const searchParams = new URLSearchParams(newURL.search);
-	// const newSearchParams = new URLSearchParams();
+	const searchParams = new URLSearchParams(newURL.search);
+	const newSearchParams = new URLSearchParams();
 
-	// for (const [key, value] of searchParams.entries()) {
-	// const mappedKey = productParamsMapper.get(key);
+	for (const [key, value] of searchParams.entries()) {
+		const mappedKey = productParamsMapper.get(key);
 
-	// if (mappedKey) {
-	//   newSearchParams.set(mappedKey, value);
-	// }
-	// }
+		if (mappedKey) {
+			newSearchParams.set(mappedKey, value);
+		}
+	}
 
-	// const limit = newSearchParams.get("limit");
-	// const offset = newSearchParams.get("offset");
-	// const sort = newSearchParams.get("sort");
-	//
-	// if (limit && offset) {
-	//   newSearchParams.set("limit", (+limit - +offset).toString());
-	//
-	//
-	//
-	// }
-	// if (sort) {
-	//   newSearchParams.set("sort", sort.toLowerCase());
-	// }
+	const limit = newSearchParams.get("limit");
+	const offset = newSearchParams.get("offset");
+	const sort = newSearchParams.get("sort");
 
-	// newURL.search = newSearchParams.toString();
+	if (limit && offset) {
+		newSearchParams.set("limit", (+limit - +offset).toString());
+	}
+	if (sort) {
+		newSearchParams.set("sort", sort.toLowerCase());
+	}
+
+	newURL.search = newSearchParams.toString();
 
 	return await fetchUtils.fetchJson(newURL.toString(), {
 		...options,
-		cache: 'no-cache',
+		cache: "no-cache",
 	});
 };
 
@@ -55,40 +55,42 @@ export const customDataProvider: DataProvider = {
 		const { data } = params;
 
 		const options: Options = {};
-		options.method = 'POST';
+		options.method = "POST";
 
 		const headers = new Headers({
-			Authorization: `${localStorage.getItem('token')}`,
+			Authorization: `${localStorage.getItem("token")}`,
 		});
 
 		options.body = data instanceof FormData ? data : JSON.stringify(data);
 
 		if (!(data instanceof FormData))
-			headers.set('Content-Type', 'application/json');
+			headers.set("Content-Type", "application/json");
 
 		options.headers = headers;
 
 		return customFetchJson(`${apiURL}/${resource}`, options)
 			.then(({ json }) => ({ data: json }))
 			.catch((err: Error) => {
-				throw new Error(err.message.toString().replace('HttpError2:', ''));
+				throw new Error(
+					err.message.toString().replace("HttpError2:", ""),
+				);
 			});
 	},
 
 	async update(resource, params) {
 		const { data, id } = params;
 		const options: Options = {
-			method: 'PUT',
+			method: "PUT",
 		};
 
 		const headers = new Headers({
-			Authorization: `${localStorage.getItem('token')}`,
+			Authorization: `${localStorage.getItem("token")}`,
 		});
 
 		options.body = data instanceof FormData ? data : JSON.stringify(data);
 
 		if (!(data instanceof FormData)) {
-			headers.set('Content-Type', 'application/json');
+			headers.set("Content-Type", "application/json");
 		}
 
 		options.headers = headers;
@@ -96,18 +98,20 @@ export const customDataProvider: DataProvider = {
 		return customFetchJson(`${apiURL}/${resource}/${id}`, options)
 			.then(({ json }) => ({ data: json }))
 			.catch((err: Error) => {
-				throw new Error(err.message.toString().replace('HttpError2:', ''));
+				throw new Error(
+					err.message.toString().replace("HttpError2:", ""),
+				);
 			});
 	},
 
 	delete: async (resource, params) => {
 		const { id } = params;
 		const options: Options = {
-			method: 'DELETE',
+			method: "DELETE",
 		};
 
 		const headers = new Headers({
-			Authorization: `${localStorage.getItem('token')}`,
+			Authorization: `${localStorage.getItem("token")}`,
 		});
 
 		options.headers = headers;
@@ -116,7 +120,9 @@ export const customDataProvider: DataProvider = {
 		return customFetchJson(`${apiURL}/${resource}`, options)
 			.then(({ json }) => ({ data: json }))
 			.catch((err: Error) => {
-				throw new Error(err.message.toString().replace('HttpError2:', ''));
+				throw new Error(
+					err.message.toString().replace("HttpError2:", ""),
+				);
 			});
 	},
 
@@ -124,11 +130,11 @@ export const customDataProvider: DataProvider = {
 		const { ids } = params;
 
 		const options: Options = {
-			method: 'DELETE',
+			method: "DELETE",
 		};
 
 		const headers = new Headers({
-			Authorization: `${localStorage.getItem('token')}`,
+			Authorization: `${localStorage.getItem("token")}`,
 		});
 
 		options.headers = headers;
@@ -145,7 +151,7 @@ export const customDataProvider: DataProvider = {
 	},
 	getList: async (resource, params) => {
 		const options: Options = {
-			method: 'GET',
+			method: "GET",
 		};
 		const urlSearchParams = new URLSearchParams();
 
@@ -155,34 +161,30 @@ export const customDataProvider: DataProvider = {
 			urlSearchParams.set(key, filter[key]);
 		}
 
-		// urlSearchParams.set('filter', JSON.stringify(filter));
-		// for (const filterKey in filter) {
-		// 	console.log(filter);
-
-		// 	// urlSearchParams.append("filterBy", filterKey);
-		// 	// urlSearchParams.append("filter", filter[filterKey]);
-		// }
 		if (sort?.order && sort.field) {
-			urlSearchParams.set('sortBy', sort?.field);
-			urlSearchParams.set('sort', sort?.order.toLowerCase());
+			urlSearchParams.set("sortBy", sort?.field);
+			urlSearchParams.set("sort", sort?.order.toLowerCase());
 		}
 
 		urlSearchParams.set(
-			'limit',
-			pagination?.perPage ? pagination?.perPage.toString() : '10'
+			"limit",
+			pagination?.perPage ? pagination?.perPage.toString() : "10",
 		);
 		urlSearchParams.set(
-			'offset',
+			"offset",
 			pagination?.page && pagination?.perPage
 				? ((pagination.page - 1) * pagination.perPage).toString()
-				: '0'
+				: "0",
 		);
 
-		return customFetchJson(`${apiURL}/${resource}?${urlSearchParams}`, options)
+		return customFetchJson(
+			`${apiURL}/${resource}?${urlSearchParams}`,
+			options,
+		)
 			.then(({ json, headers }) => ({
 				data: json,
-				total: headers.get('X-Total-Count')
-					? parseInt(headers.get('X-Total-Count') as string)
+				total: headers.get("X-Total-Count")
+					? parseInt(headers.get("X-Total-Count") as string)
 					: undefined,
 			}))
 			.catch((error: Error) => {
@@ -190,32 +192,6 @@ export const customDataProvider: DataProvider = {
 			});
 	},
 
-	// getMany(resource, params) {
-	//     const { ids, meta, signal } = params;
-
-	//     console.log(params, resource);
-
-	//     const options: Options = {};
-	//     options.method = 'GET';
-
-	//     const urlSearchParams = new URLSearchParams();
-
-	//     urlSearchParams.set(`${resource}Id`, ids.join(','));
-
-	//     return customFetchJson(
-	//         `${apiURL}/${resource}?${urlSearchParams}`,
-	//         options
-	//     )
-	//         .then(({ json, headers }) => ({
-	//             data: json,
-	//             total: headers.get('X-Total-Count')
-	//                 ? parseInt(headers.get('X-Total-Count') as string)
-	//                 : undefined,
-	//         }))
-	//         .catch((error: Error) => {
-	//             throw new Error(error.message);
-	//         });
-	// },
 	getMany: restDataProvider.getMany,
 	getOne: restDataProvider.getOne,
 	getManyReference: restDataProvider.getManyReference,

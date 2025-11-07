@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
     provider        = "prisma-client-js"
     previewFeatures = ["driverAdapters"]
@@ -15,12 +9,6 @@ datasource db {
     directUrl = env("DIRECT_DATABASE_URL")
 }
 
-enum ProductsStatus {
-    outOfStock
-    inStock
-    discontinued
-}
-
 model Products {
     id                Int                 @id @default(autoincrement())
     title             String              @db.VarChar(255)
@@ -29,32 +17,40 @@ model Products {
     updatedAt         DateTime            @updatedAt
     description       String
     discount          Int
-    rating            Int                 @default(0)
     status            ProductsStatus      @default(inStock)
-    Subcategories     Subcategories       @relation(fields: [subcategoriesId], references: [id])
-    subcategoriesId   Int
+    Media             Media[]
     Categories        Categories          @relation(fields: [categoriesId], references: [id])
     categoriesId      Int
-    Media             Media[]
+    ProductsRating    ProductsRating?     @relation(fields: [productsRatingId], references: [id])
+    productsRatingId  Int?                @unique
+    Subcategories     Subcategories       @relation(fields: [subcategoriesId], references: [id])
+    subcategoriesId   Int
     ProductsAttribute ProductsAttribute[]
+}
+
+model ProductsRating {
+    id       Int       @id @default(autoincrement())
+    avg      Int       @default(0)
+    count    Int       @default(0)
+    Products Products?
 }
 
 model Subcategories {
     id                   Int                    @id @default(autoincrement())
     title                String                 @db.VarChar(255)
-    Products             Products[]
-    Categories           Categories             @relation(fields: [categoriesId], references: [id])
     categoriesId         Int
     AttributeDefinitions AttributeDefinitions[]
     Media                Media[]
+    Products             Products[]
+    Categories           Categories             @relation(fields: [categoriesId], references: [id])
 }
 
 model Categories {
     id          Int             @id @default(autoincrement())
     title       String          @db.VarChar(255)
+    Media       Media[]
     Products    Products[]
     Subcategory Subcategories[]
-    Media       Media[]
 }
 
 model AttributeDefinitions {
@@ -62,30 +58,36 @@ model AttributeDefinitions {
     name             String
     type             String
     unit             String?
-    Subcategories    Subcategories       @relation(fields: [subcategoriesId], references: [id])
     subcategoriesId  Int
+    Subcategories    Subcategories       @relation(fields: [subcategoriesId], references: [id])
     ProductAttribute ProductsAttribute[]
 
     @@unique([subcategoriesId, type])
 }
 
 model ProductsAttribute {
-    id                     Int                   @id @default(autoincrement())
-    AttributeDefinitions   AttributeDefinitions? @relation(fields: [attributeDefinitionsId], references: [id])
+    id                     Int                  @id @default(autoincrement())
     attributeDefinitionsId Int
-    Products               Products?             @relation(fields: [productsId], references: [id])
     productsId             Int?
+    AttributeDefinitions   AttributeDefinitions @relation(fields: [attributeDefinitionsId], references: [id])
+    Products               Products?            @relation(fields: [productsId], references: [id])
 }
 
 model Media {
     id              Int            @id @default(autoincrement())
-    name            String         @db.Text
-    src             String         @db.Text
+    name            String
+    src             String
     customersId     Int?
-    Products        Products?      @relation(fields: [productsId], references: [id])
-    productsId      Int?
-    Categories      Categories?    @relation(fields: [categoriesId], references: [id])
     categoriesId    Int?
-    Subcategories   Subcategories? @relation(fields: [subcategoriesId], references: [id])
+    productsId      Int?
     subcategoriesId Int?
+    Categories      Categories?    @relation(fields: [categoriesId], references: [id])
+    Products        Products?      @relation(fields: [productsId], references: [id])
+    Subcategories   Subcategories? @relation(fields: [subcategoriesId], references: [id])
+}
+
+enum ProductsStatus {
+    outOfStock
+    inStock
+    discontinued
 }

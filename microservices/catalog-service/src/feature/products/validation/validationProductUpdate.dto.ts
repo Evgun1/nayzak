@@ -9,11 +9,4 @@ export class ValidationProductUpdateBodyDTO extends PartialType(
 	@Type(() => Number)
 	@IsInt()
 	id: number;
-
-	@IsOptional()
-	@Type(() => Number)
-	@IsInt()
-	@Max(5)
-	@Min(1)
-	rating?: number;
 }

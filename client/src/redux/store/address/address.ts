@@ -1,4 +1,4 @@
-import localStorageHandler from "@/tools/localStorage";
+import localStorageHandler from "../../../tools/localStorage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {} from "redux";
 
@@ -14,7 +14,7 @@ export type AddressState = {
 	error?: null;
 };
 
-const storage = localStorageHandler<AddressState>("addressState");
+const storage = localStorageHandler("addressState");
 
 const initialState: AddressState = {
 	address: [],

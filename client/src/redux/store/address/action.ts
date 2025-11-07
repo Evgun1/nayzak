@@ -4,7 +4,7 @@ import { writeCustomerAction } from "../customer/action";
 import { popupActions } from "../popup/popup";
 import { notificationAction } from "../notification/notification";
 import PopupNotification from "@/popups/popup-notifications/PopupNotifications";
-import { appCookieGet } from "@/lib/api/cookie";
+import { appCookieGet } from "@/tools/cookie";
 import {
 	appAddressesPut,
 	appAddressesInitGet,
@@ -16,8 +16,7 @@ import localStorageHandler from "@/tools/localStorage";
 export const initAddress = () => {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		const token = await appCookieGet("user-token");
-		const localStorageAddress =
-			localStorageHandler<AddressState>("addressState");
+		const localStorageAddress = localStorageHandler("addressState");
 
 		if (!token || token === null) return localStorageAddress.delete();
 		if (localStorageAddress.get()) return;
@@ -102,16 +101,16 @@ export const deleteAddresses = (deleteData: number) => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		const token = appCookieGet("user-token");
 		if (!token) return;
-		const addressId = getState()
-			.address.address.filter((data) => data.id === deleteData)
-			.map((address) => address.id)
-			.pop();
+
+		const addressId = getState().address.address.find(
+			(data) => data.id === deleteData,
+		)?.id;
 
 		if (!addressId) return;
 
 		try {
 			const { id } = await appAddressesDelete({
-				deleteData: { addressId },
+				deleteData: { addressesId: addressId },
 				token,
 			});
 

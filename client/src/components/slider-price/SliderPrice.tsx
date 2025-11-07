@@ -8,21 +8,24 @@ import {
 } from "next/navigation";
 import classes from "./SliderPrice.module.scss";
 
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { ButtonCustom } from "@/ui/custom-elements/button-custom/ButtonCustom";
+import { FC, useCallback, useEffect, useState } from "react";
 import { appMinMaxPriceGet } from "@/lib/api/products";
 import { TextClassList } from "@/types/textClassList.enum";
 
 type SliderPriceProps = {
-	minPrice: number;
-	maxPrice: number;
+	minPrice?: number;
+	maxPrice?: number;
 	className?: string;
 };
 export const SliderPrice: FC<SliderPriceProps> = (props) => {
-	// const [minPrice, setMinPrice] = useState<number>(0);
-	// const [maxPrice, setMaxPrice] = useState<number>(0);
-	const [inputMinPrice, setInputMinPrice] = useState(props.minPrice);
-	const [inputMaxPrice, setInputMaxPrice] = useState(props.maxPrice);
+	const [minPriceState, setMinPriceState] = useState<number>(0);
+	const [maxPriceState, setMaxPriceState] = useState<number>(0);
+	const [inputMinPriceState, setInputMinPriceState] = useState(
+		props.minPrice ? props.minPrice : minPriceState,
+	);
+	const [inputMaxPriceState, setInputMaxPriceState] = useState(
+		props.maxPrice ? props.maxPrice : maxPriceState,
+	);
 	const searchParam = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
@@ -39,38 +42,38 @@ export const SliderPrice: FC<SliderPriceProps> = (props) => {
 
 			const { maxPrice, minPrice } = prices;
 
-			// setMinPrice(minPrice);
-			// setMaxPrice(maxPrice);
+			setMinPriceState(minPrice);
+			setMaxPriceState(maxPrice);
 
 			const inputMinPrice = searchParam.has("minPrice")
 				? parseInt(searchParam.get("minPrice") as string)
-				: props.minPrice;
+				: minPrice;
 
 			const inputMaxPrice = searchParam.has("maxPrice")
 				? parseInt(searchParam.get("maxPrice") as string)
-				: props.maxPrice;
+				: maxPrice;
 
-			setInputMinPrice(inputMinPrice);
-			setInputMaxPrice(inputMaxPrice);
+			setInputMinPriceState(inputMinPrice);
+			setInputMaxPriceState(inputMaxPrice);
 		},
 		[param],
 	);
 
-	const btnClickHandel = () => {
-		const urlSearchParams = new URLSearchParams(searchParam.toString());
-		urlSearchParams.set(
-			"minPrice",
-			inputMinPrice?.toString() ?? props.minPrice?.toString(),
-		);
-		urlSearchParams.set(
-			"maxPrice",
-			inputMaxPrice?.toString() ?? props.maxPrice?.toString(),
-		);
+	// const btnClickHandel = () => {
+	// 	const urlSearchParams = new URLSearchParams(searchParam.toString());
+	// 	urlSearchParams.set(
+	// 		"minPrice",
+	// 		inputMinPrice.toString() ?? props.minPrice?.toString(),
+	// 	);
+	// 	urlSearchParams.set(
+	// 		"maxPrice",
+	// 		inputMaxPrice.toString() ?? props.maxPrice?.toString(),
+	// 	);
 
-		router.push(`${pathname}?${urlSearchParams}`);
+	// 	router.push(`${pathname}?${urlSearchParams}`);
 
-		sliderHandler(urlSearchParams);
-	};
+	// 	sliderHandler(urlSearchParams);
+	// };
 
 	useEffect(() => {
 		const urlSearchParams = new URLSearchParams(searchParam.toString());
@@ -98,16 +101,16 @@ export const SliderPrice: FC<SliderPriceProps> = (props) => {
 						onChange={(event) => {
 							const value = Math.min(
 								+event.target.value,
-								inputMaxPrice - 1,
+								inputMaxPriceState - 1,
 							);
-							setInputMinPrice(value);
+							setInputMinPriceState(value);
 						}}
 						name="price"
 						min={props.minPrice}
 						max={props.maxPrice}
 						step={1}
-						value={inputMinPrice}
-						disabled={inputMinPrice >= inputMaxPrice}
+						value={inputMinPriceState}
+						disabled={inputMinPriceState >= inputMaxPriceState}
 					/>
 					<input
 						id="maxPrice"
@@ -116,23 +119,27 @@ export const SliderPrice: FC<SliderPriceProps> = (props) => {
 						onChange={(event) => {
 							const value = Math.max(
 								+event.target.value,
-								inputMinPrice + 1,
+								inputMinPriceState + 1,
 							);
-							setInputMaxPrice(value);
+							setInputMaxPriceState(value);
 						}}
 						name="price"
 						max={props.maxPrice}
 						min={props.minPrice}
 						step={1}
-						value={inputMaxPrice}
-						disabled={inputMaxPrice <= inputMinPrice}
+						value={inputMaxPriceState}
+						disabled={inputMaxPriceState <= inputMinPriceState}
 					/>
 				</div>
 			</div>
 			<div className={classes["slider-price__price"]}>
-				<span>${inputMinPrice ? inputMinPrice : props.minPrice}</span>
+				<span>
+					${inputMinPriceState ? inputMinPriceState : props.minPrice}
+				</span>
 				<span>-</span>
-				<span>${inputMaxPrice ? inputMaxPrice : props.maxPrice}</span>
+				<span>
+					${inputMaxPriceState ? inputMaxPriceState : props.maxPrice}
+				</span>
 			</div>
 			<div className={classes["slider-price__button-wrap"]}>
 				{/* {inputMaxPrice < maxPrice ||

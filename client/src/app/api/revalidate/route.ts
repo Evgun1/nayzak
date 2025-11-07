@@ -1,12 +1,8 @@
-"use server";
-import { json } from "stream/consumers";
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { tags } from "@/lib/api";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { headers } from "next/headers";
 
-export async function POST(req: Request, res: NextApiResponse) {
+export async function POST(req: Request) {
 	const secretKey = process.env.CACHE_SECRET_KEY;
 	const header = req.headers;
 
@@ -48,7 +44,7 @@ export async function POST(req: Request, res: NextApiResponse) {
 		});
 	} catch (error) {
 		return NextResponse.json(
-			{ message: "Error revalidating", error },
+			{ message: "Error revalidating", error: String(error) },
 			{ status: 500 },
 		);
 	}

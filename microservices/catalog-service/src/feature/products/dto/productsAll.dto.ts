@@ -1,9 +1,10 @@
 import { $Enums } from "@prisma/client";
+import { TProductRatingCache } from "../cache/interface/productRatingCache";
 
 export class ProductsAllDTO {
 	id: number;
 	Media?: { src: string; name: string }[] = [];
-	rating: number;
+	rating: TProductRatingCache;
 	title: string;
 	price: number;
 	discount: number;

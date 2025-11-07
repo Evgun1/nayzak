@@ -5,13 +5,11 @@ import classes from "./PopupAddress.module.scss";
 import PopupPreview from "../../components/popup/PopupPreview";
 import { useAppDispatch, useAppSelector } from "@/redux/redux";
 import { uploadAddress } from "@/redux/store/address/action";
-import { AddressData } from "@/redux/store/address/address";
-import { CustomerItem } from "@/redux/store/customer/customer";
 import { FormEvent } from "react";
-import { AddressType } from "../../page/profile/addresses/Addresses";
 import { validation } from "@/lib/validator/validator";
 import Form from "@/ui/form/Form";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
+import { AddressType } from "@/app/profile/@addresses/page";
 
 type SubmitHandlerProps = {
 	city: string;

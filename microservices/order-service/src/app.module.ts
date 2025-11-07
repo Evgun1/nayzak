@@ -15,11 +15,8 @@ import { ConfigModule } from "@nestjs/config";
 			// secret: "JWT_SECRET_KEY" as string,
 			secret: process.env.JWT_SECRET_KEY as string,
 		}),
-		ConfigModule.forRoot({
-			isGlobal: true,
-			envFilePath: [".env"],
-			cache: true,
-		}),
+
+		ConfigModule.forRoot({}),
 	],
 	controllers: [AppController],
 	providers: [AppService, JwtStrategy],

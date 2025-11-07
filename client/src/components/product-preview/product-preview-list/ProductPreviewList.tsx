@@ -41,11 +41,11 @@ const ProductPreviewList = (props: ProductPreviewProps) => {
 						fill
 						className={classes["preview__img"]}
 						src={
-							product.media.src
-								? product.media.src
+							product.Media.src
+								? product.Media.src
 								: "https://placehold.co/652x889"
 						}
-						alt={product.media.name}
+						alt={product.Media.name}
 					/>
 				</div>
 			</Link>
@@ -64,7 +64,7 @@ const ProductPreviewList = (props: ProductPreviewProps) => {
 				/>
 				{rating && (
 					<Rating
-						rating={product.rating ? +product.rating : 0}
+						rating={product.rating.avg ? +product.rating.avg : 0}
 						customClasses={classes["preview__rating"]}
 					/>
 				)}

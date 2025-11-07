@@ -2,14 +2,14 @@ import * as bcrypt from "bcrypt";
 
 import { Body, HttpException, NestMiddleware, Req, Res } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
-import { LoginBodyDTO } from "src/dto/loginBody.dto";
+import { ValidationLoginBodyDTO } from "src/validation/validationLogin.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 
 export class LoginMiddleware implements NestMiddleware {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async use(
-		@Req() { body }: Request<any, any, LoginBodyDTO>,
+		@Req() { body }: Request<any, any, ValidationLoginBodyDTO>,
 		@Res() res: Response,
 		next: NextFunction,
 	) {

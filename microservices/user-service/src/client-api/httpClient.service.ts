@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class HttpClientService {
-	private url = "http://localhost:2999/api/";
+	private url = `${process.env.URL_CLIENT_API}`;
 	private method = {
 		get: "GET",
 		post: "POST",

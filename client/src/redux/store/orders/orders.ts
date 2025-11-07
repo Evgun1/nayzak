@@ -1,5 +1,5 @@
-import { IOrder } from "@/types/orders.types";
-import localStorageHandler from "@/tools/localStorage";
+import localStorageHandler from "../../../tools/localStorage";
+import { IOrder } from "../../../types/orders.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface OrdersData extends IOrder {}
@@ -21,8 +21,6 @@ const ordersSlice = createSlice({
 		uploadOrders(state, action: PayloadAction<OrdersData[]>) {
 			if (action.payload && action.payload.length) {
 				state.ordersData = action.payload;
-
-				console.log(state);
 
 				storage.set(state);
 			}

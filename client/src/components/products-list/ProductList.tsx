@@ -35,14 +35,14 @@ const ProductList: FC<ProductListProps> = ({
 			const products = await Promise.all(
 				productsArray.map(async (product) => {
 					const placeholder = await getPlaceholderImage(
-						product.media.src,
+						product.Media[0].src,
 					);
 
 					const obj: ProductPreviewItem = {
 						...product,
-						media: {
-							src: product.media.name,
-							name: product.media.name,
+						Media: {
+							src: product.Media[0].name,
+							name: product.Media[0].name,
 							blurImage: placeholder.placeholder,
 						},
 					};

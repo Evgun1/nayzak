@@ -13,33 +13,20 @@ async function bootstrap() {
 		options: {
 			client: {
 				clientId: "order-service",
-				brokers: (process.env.KAFKA_BROKERS as string)
-					.split(",")
-					.map((broker) => broker.trim()),
+				brokers: (process.env.KAFKA_BROKERS as string).split(", "),
 			},
 			consumer: {
-				groupId: "order-consumer",
-				// rebalanceTimeout: 60000,
-				// allowAutoTopicCreation: false,
-				// heartbeatInterval: 3000,
-				// sessionTimeout: 45000,
-				// retry: {
-				// 	initialRetryTime: 300,
-				// 	retries: 5,
-				// },
+				groupId: "order",
+				allowAutoTopicCreation: true,
 			},
-			// subscribe: { fromBeginning: true },
 		},
 	});
 
 	app.enableCors({
-		origin: "http://localhost:2999",
+		// origin: process.env.CORS_URL,
+		origin: process.env.CORS_URL ? process.env.CORS_URL.split(",") : true,
 		credentials: true,
 	});
-	// app.enableCors({
-	// 	origin: "http://localhost:2998",
-	// 	credentials: true,
-	// });
 	await app.startAllMicroservices();
 	await app.listen(PORT, () =>
 		console.log(`Server running on port: ${PORT}`),

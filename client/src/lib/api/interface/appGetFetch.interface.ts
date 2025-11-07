@@ -19,7 +19,7 @@ export interface CacheItem {
 	revalidate?: number | false;
 }
 
-export interface AppGetFetch {
+export interface AppFetchGet {
 	pathname: string;
 	searchParams?: URLSearchParams | string;
 	authorization?: string;

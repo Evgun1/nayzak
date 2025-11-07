@@ -19,6 +19,7 @@ const Rating = (props: RatingProps) => {
 			const currentRating = Math.round(
 				rating.reduce((acc, cur) => acc + cur) / rating.length,
 			);
+
 			newRating = currentRating;
 		}
 	} else {

@@ -1,4 +1,3 @@
-import { Where } from "./../../prisma/interface/where";
 import { NewProductsCacheDTO } from "src/feature/products/cache/dto/newProductsCache.dto";
 import { Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
@@ -6,7 +5,6 @@ import { Prisma } from "@prisma/client";
 import { ProductCacheDTO } from "./dto/productCache.dto";
 import { PrismaService } from "../../prisma/prisma.service";
 
-import { ProductsCache } from "./cache/products.cache";
 import { ProductsAllDTO } from "./dto/productsAll.dto";
 import { ProductDTO } from "./dto/product.dto";
 import { ClientApiService } from "src/client-api/clientApi.service";
@@ -14,7 +12,10 @@ import { RedisService } from "src/redis/redis.service";
 import { ProductPrisma } from "./prisma/product.prisma";
 import { ProductsPrismaArgs } from "./prisma/interface/productsPrismaArgs.interface";
 import { ProductsWhereInput } from "src/prisma/interface/where";
-import { ValidationProductsKafkaPayloadDTO } from "./validation/validationProductsKafka.dto";
+import {
+	ValidationProductsKafkaPayloadDTO,
+	ValidationProductsKafkaRatingPayloadDTO,
+} from "./validation/validationKafkaProducts.dto";
 import { ValidationMinMaxPriceParamDTO } from "./validation/validationMinMaxPice.dto";
 import { ValidationProductParamDTO } from "./validation/validationProduct.dto";
 import { ValidationProductsAllQueryDTO } from "./validation/validationProductsAll.dto";
@@ -25,6 +26,13 @@ import {
 	ValidationProductsByParamsQueryDTO,
 } from "./validation/validationProductsByParams.dto";
 import { ProductsKafkaDTO } from "./dto/productsKafka.dto";
+import { ProductsCacheService } from "./cache/productsCache.service";
+import { KafkaService } from "src/kafka/kafka.service";
+import { ProductRatingCacheDTO } from "./cache/dto/productsRating.dto";
+import { IProductCache } from "./cache/interface/productCache";
+import { OrderBy, ProductsOrderBy } from "src/prisma/interface/orderBy";
+import { th } from "@faker-js/faker/.";
+import { ApiSwitchingProtocolsResponse } from "@nestjs/swagger";
 
 export type GetProductsAllParams = Partial<ValidationProductsByParamsQueryDTO> &
 	Partial<ValidationProductsByParamsParamDTO> &
@@ -32,18 +40,17 @@ export type GetProductsAllParams = Partial<ValidationProductsByParamsQueryDTO> &
 
 @Injectable()
 export class ProductsService {
-	productsCache: ProductsCache;
-
 	constructor(
+		private readonly kafka: KafkaService,
+		private readonly productsCache: ProductsCacheService,
 		private readonly productPrisma: ProductPrisma,
 		private readonly clientApi: ClientApiService,
 		private readonly redis: RedisService,
 		private readonly prisma: PrismaService,
-	) {
-		this.productsCache = new ProductsCache(redis);
-	}
+	) {}
 
 	async getProductsAll(params: GetProductsAllParams) {
+		const orderBy: ProductsOrderBy = {};
 		const where: ProductsWhereInput = {};
 		const whereAnd: ProductsWhereInput[] = [];
 
@@ -113,14 +120,25 @@ export class ProductsService {
 				? (params.page - 1) * params.limit
 				: params.offset;
 
-		const orderBy =
-			params.sortBy && params.sort
-				? params.searchBy?.includes("pice")
-					? { ["ROUND(price - price * discount / 100)"]: params.sort }
-					: {
-							[params.sortBy]: params.sort,
-						}
-				: undefined;
+		if (params.sortBy && params.sort) {
+			if (params.sortBy?.includes("pice")) {
+				orderBy["ROUND(price - price * discount / 100)"] = params.sort;
+			} else if (params.sortBy.includes("rating")) {
+				orderBy.ProductsRating = { avg: params.sort };
+			} else {
+				orderBy[params.sortBy] = params.sort;
+			}
+		}
+		// const orderBy: ProductsOrderBy =
+		// 	params.sortBy && params.sort
+		// 		? params.searchBy?.includes("pice")
+		// 			? { ["ROUND(price - price * discount / 100)"]: params.sort }
+		// 			: params.searchBy?.includes("rating")
+		// 				? { ProductsRating: { avg: params.sort } }
+		// 				: {
+		// 						[params.sortBy]: params.sort,
+		// 					}
+		// 		: undefined;
 
 		const args = {
 			includes: { Media: { src: true, name: true } },
@@ -131,16 +149,21 @@ export class ProductsService {
 		} as ProductsPrismaArgs;
 
 		const products = await this.productPrisma.getProducts(args);
+
+		const productsDTO: ProductsAllDTO[] = products.map(
+			(product) =>
+				new ProductsAllDTO({
+					...product,
+					rating: {
+						avg: product.ProductsRating?.avg ?? 0,
+						count: product.ProductsRating?.count ?? 0,
+					},
+				}),
+		);
+
 		const count = await this.productPrisma.getProductsCount(args);
 
-		const allProductsDTO = products.map((product) => {
-			return new ProductsAllDTO({
-				Media: product.Media,
-				...product,
-			});
-		});
-
-		return { products: allProductsDTO, productCounts: count };
+		return { products: productsDTO, productCounts: count };
 	}
 
 	async getProduct(param: ValidationProductParamDTO) {
@@ -200,41 +223,26 @@ export class ProductsService {
 				Media: { select: { src: true, name: true } },
 				Categories: { select: { title: true, id: true } },
 				Subcategories: { select: { title: true, id: true } },
+				ProductsRating: { select: { avg: true, count: true } },
 			},
 
 			where: { id },
 		});
-
 		if (!product) return;
 
-		const productDTO = new ProductDTO({
-			...product,
-			// Categories: product.Categories,
-			// Subcategories: product.Subcategories,
-			Media: product.Media.map((media) => ({
-				src: media.src,
-				name: media.name,
-			})),
-		});
-
 		const productCacheDTO = new ProductCacheDTO({
-			product: productDTO,
 			count: productCache?.count ? ++productCache.count : 1,
+			product: {
+				...product,
+				rating: {
+					avg: product.ProductsRating?.avg ?? 0,
+					count: product.ProductsRating?.count ?? 0,
+				},
+			},
 		});
-
-		// if (productCache && !productCache.product && productCache.count >= 10) {
-		// 	await setProductCache(
-		// 		{
-		// 			product: productDTO,
-		// 			count: productCache.count,
-		// 		},
-		// 		thirtyMin,
-		// 	);
-		// }
 
 		await setProductCache(productCacheDTO);
-
-		return productDTO;
+		return productCacheDTO.product;
 	}
 
 	async getNewProducts() {
@@ -286,7 +294,6 @@ export class ProductsService {
 				discount: true,
 				id: true,
 				price: true,
-				rating: true,
 				status: true,
 				title: true,
 				subcategoriesId: true,
@@ -303,6 +310,7 @@ export class ProductsService {
 		const product = await this.prisma.products.update({
 			include: {
 				Media: { select: { src: true, name: true } },
+				ProductsRating: { select: { avg: true, count: true } },
 				Categories: true,
 				Subcategories: true,
 			},
@@ -310,11 +318,21 @@ export class ProductsService {
 			data: { ...body },
 		});
 
-		const productDTO = new ProductDTO(product);
+		const productDTO = new ProductDTO({
+			...product,
+			rating: {
+				avg: product.ProductsRating?.avg ?? 0,
+				count: product.ProductsRating?.count ?? 0,
+			},
+			Media: product.Media.map((media) => ({
+				src: media.src,
+				name: media.name,
+			})),
+		});
 
-		await this.productsCache.updateProductCache(product);
+		await this.productsCache.updateProductCache(productDTO);
 		await this.clientApi.clearCache("products");
-		return productDTO;
+		return product;
 	}
 
 	async getMinMaxPrice(params: ValidationMinMaxPriceParamDTO) {
@@ -366,7 +384,7 @@ export class ProductsService {
 		return { minPrice, maxPrice };
 	}
 
-	async productsKafka(payload: ValidationProductsKafkaPayloadDTO) {
+	async getProductCatalog(payload: ValidationProductsKafkaPayloadDTO) {
 		const { products } = await this.getProductsAll({
 			productsId: payload.productsId,
 		});
@@ -374,6 +392,74 @@ export class ProductsService {
 			(product) => new ProductsKafkaDTO({ ...product }),
 		);
 		return productsKafkaDTO;
+	}
+	async updateRatingProduct(
+		payload: ValidationProductsKafkaRatingPayloadDTO,
+	) {
+		const productsRating = await this.prisma.productsRating.findFirst({
+			where: { Products: { id: payload.productsId } },
+		});
+
+		if (productsRating) {
+			await this.prisma.productsRating.update({
+				where: { id: productsRating.id },
+				data: {
+					avg: payload.avg,
+					count: payload.count,
+				},
+			});
+		} else {
+			const productsRating = await this.prisma.productsRating.create({
+				data: {
+					avg: payload.avg,
+					count: payload.count,
+				},
+			});
+
+			await this.updateProduct({
+				id: payload.productsId,
+				productsRatingId: productsRating.id,
+			});
+		}
+
+		const product = await this.getProduct({
+			id: payload.productsId,
+		});
+
+		if (product) {
+			await this.productsCache.updateProductCache(product);
+			await this.clientApi.clearCache("products");
+		}
+
+		// await this.prisma.productsRating.update({
+		// 	where: { },
+		// 	data: {},
+		// });
+
+		// await this.prisma.products.update({
+		// 	where: {
+		// 		id: payload.productsId,
+		// 	},
+		// 	data: {
+		// 		ProductsRating: {
+		// 			update: {
+		// 				data: {
+		// 					avg: payload.avg,
+		// 					count: payload.count,
+		// 				},
+		// 			},
+		// 		},
+		// 	},
+		// });
+		// });
+		// await this.prisma.productsRating.update({
+		// 	where: { id },
+		// 	data: {
+		// 		avg: productsRatingDTO.rating.avg,
+		// 		count: productsRatingDTO.rating.count,
+		// 	},
+		// });
+		// await this.productsCache.uploadCacheProductRating(productsRatingDTO);
 	}
 
 	// @Cron("* * * * * 1")

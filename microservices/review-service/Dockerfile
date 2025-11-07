@@ -10,7 +10,7 @@ COPY package.json package-lock.json ./
 COPY --from=build /dist ./dist
 RUN npm ci --omit=dev
 EXPOSE 12000
-CMD ["node", "dist/main.js"]
+CMD [ "sh", "-c", "npm run kafka:deploy && node dist/main.js"]
 
 
 

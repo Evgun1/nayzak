@@ -1,20 +1,8 @@
-import React, {
-	FC,
-	forwardRef,
-	ReactElement,
-	ReactNode,
-	useContext,
-	useEffect,
-	useId,
-	useImperativeHandle,
-} from "react";
+"use client";
+
+import React, { FC, ReactNode, useEffect, useId } from "react";
 import classes from "./Navbar.module.scss";
-import childrenRecursion from "@/tools/childrenRecursionT";
-import NavbarBody from "./NavbarBody";
-import NavbarItem from "./NavbarItem";
-``;
-import NavbarTrigger from "./NavbarTrigger";
-import { NavbarProvider, useNavbar } from "./NavbarContext";
+import { useNavbar } from "./NavbarContext";
 
 type NavbarContentProps = {
 	children: ReactNode;

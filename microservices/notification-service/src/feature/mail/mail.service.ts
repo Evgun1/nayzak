@@ -21,13 +21,13 @@ export class MailService {
 	}
 
 	async sendActionMail(to: string, activeLink: string) {
-		const link = `${process.env.API_URL_USER}/activation/${activeLink}`;
+		const link = `${process.env.LINK_URL_CLIENT}/activation/${activeLink}`;
 
 		await this.transporter
 			.sendMail({
 				from: process.env.SMTP_GMAIL_USER,
 				to,
-				subject: `Activision account ${process.env.API_URL_USER}`,
+				subject: `Activision account ${process.env.URL_CLIENT_API}`,
 				text: "",
 				html: `
         <div>

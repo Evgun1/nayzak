@@ -1,4 +1,4 @@
-import localStorageHandler from "@/tools/localStorage";
+import localStorageHandler from "../../../tools/localStorage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CustomerItem {
@@ -31,7 +31,7 @@ const customerSlice = createSlice({
 	reducers: {
 		setCustomer(state, action: PayloadAction<CustomerItem>) {
 			state.customerData = action.payload;
-			storage.set(state);
+			// storage.set(state);
 		},
 	},
 });

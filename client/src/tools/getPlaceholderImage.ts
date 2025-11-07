@@ -1,6 +1,8 @@
 "use server";
 
+import { getPlaiceholder } from "plaiceholder";
 import sharp from "sharp";
+// import { getPlaiceholder } from "plaiceholder";
 
 function bufferToBase64(buffer: Buffer): string {
 	return `data:image/png;base64,${buffer.toString("base64")}`;
@@ -30,4 +32,24 @@ export async function getPlaceholderImage(imageUrl: string) {
 				"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOsa2yqBwAFCAICLICSyQAAAABJRU5ErkJggg==",
 		};
 	}
+}
+
+export async function getImage(src: string) {
+	const buffer = await fetch(src).then(async (res) =>
+		Buffer.from(await res.arrayBuffer()),
+	);
+
+	const {
+		metadata: { height, width },
+		...plaiceholder
+	} = await getPlaiceholder(buffer, { size: 10 });
+
+	return {
+		...plaiceholder,
+		img: {
+			src,
+			height,
+			width,
+		},
+	};
 }

@@ -2,9 +2,9 @@ import {
 	AttributeDefinitions,
 	Categories,
 	Media,
-	Prisma,
 	Products,
 	ProductsAttribute,
+	ProductsRating,
 	Subcategories,
 } from "@prisma/client";
 
@@ -29,6 +29,12 @@ export type ProductsWhereInput = WhereParams<Products> & {
 	Subcategories?: SubcategoriesWhereInput;
 	Media?: MediaWhereInput;
 	ProductsAttribute?: ProductsAttributeWhereInput;
+	ProductsRating?: ProductsRatingWhereInput;
+};
+
+export type ProductsRatingWhereInput = WhereParams<ProductsRating> & {
+	AND?: ProductsRatingWhereInput[];
+	Products?: ProductsWhereInput;
 };
 
 export type CategoriesWhereInput = WhereParams<Categories> & {
@@ -57,11 +63,13 @@ export type ProductsAttributeWhereInput = WhereParams<ProductsAttribute> & {
 	AttributeDefinitions?: AttributeDefinitionsWhereInput;
 	Products?: ProductsAttribute;
 };
-export type AttributeDefinitionsWhereInput = WhereParams<AttributeDefinitions> & {
-	AND?: AttributeDefinitionsWhereInput[];
-	Subcategories?: SubcategoriesWhereInput;
-	ProductAttribute?: ProductsAttributeWhereInput;
-};
+
+export type AttributeDefinitionsWhereInput =
+	WhereParams<AttributeDefinitions> & {
+		AND?: AttributeDefinitionsWhereInput[];
+		Subcategories?: SubcategoriesWhereInput;
+		ProductAttribute?: ProductsAttributeWhereInput;
+	};
 
 export type Where = {
 	Products: Partial<ProductsWhereInput>;
@@ -70,4 +78,5 @@ export type Where = {
 	Media: Partial<MediaWhereInput>;
 	AttributeDefinitions: Partial<AttributeDefinitionsWhereInput>;
 	ProductsAttribute: Partial<ProductsAttributeWhereInput>;
+	ProductsRating: Partial<ProductsRatingWhereInput>;
 };

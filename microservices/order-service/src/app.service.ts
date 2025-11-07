@@ -122,12 +122,6 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 		}, [] as ValidationOrderUploadBodyDTO[]);
 
 		const order = await this.createOrderMany(orderManyBody);
-
-		// console.log(orderManyBody, "orderManyBody");
-		// console.log(order, "order");
-		// console.log(cartAndAddressesKafka, "cartAndAddressesKafka");
-		// console.log(productsKafka, "productsKafka");
-
 		const orderDTO = order.map((item) => new OrderDTO({ ...item }));
 
 		return orderDTO;

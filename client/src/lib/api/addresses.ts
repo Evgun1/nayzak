@@ -72,7 +72,7 @@ export const appAddressesPut = async (props: AppAddressesPutProps) => {
 };
 
 type AppAddressesDelete = {
-	deleteData: { addressId: number | number[] } | FormData;
+	deleteData: { addressesId: number };
 	token: string;
 };
 export const appAddressesDelete = async (props: AppAddressesDelete) => {
@@ -81,6 +81,7 @@ export const appAddressesDelete = async (props: AppAddressesDelete) => {
 
 	const { result } = await appFetchDelete<AddressItem>({
 		pathname: nginxPathname,
+		authorization: props.token,
 		deleteData,
 	});
 

@@ -1,4 +1,4 @@
-interface RegistrationCacheItem {
+export interface RegistrationCacheItem {
 	email: string;
 	password: string;
 	firstName: string;

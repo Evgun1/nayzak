@@ -6,11 +6,11 @@ export class ProductDTO {
 	createdAt: Date | string;
 	description: string;
 	discount: number;
-	rating: number;
 	Categories: { id: number; title: string };
 	Subcategories: { id: number; title: string };
 	Media: { src: string; name: string }[];
 	status: $Enums.ProductsStatus;
+	rating: { avg: number; count: number };
 
 	constructor(item: ProductDTO) {
 		for (const key in item) {

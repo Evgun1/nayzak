@@ -38,7 +38,7 @@ export default async function RootLayout(props: RootLayoutProps) {
 	];
 
 	return (
-		<section>
+		<section style={{ padding: "52px 0 250px" }}>
 			<div className={classes["profile-container"]}>
 				<div className={classes["profile"]}>
 					<h3 className={classes["profile__header"]}>My account</h3>
@@ -50,6 +50,7 @@ export default async function RootLayout(props: RootLayoutProps) {
 						<Tabs.Header>
 							{TABS.map((val, i) => (
 								<Tabs.Toggle
+									key={i}
 									index={i}
 									label={val.label}
 								/>

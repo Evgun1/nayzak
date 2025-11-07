@@ -4,16 +4,8 @@ import { MailService } from "./mail.service";
 import { SendActionLinkDTO } from "./dto/sendActionLink.dto";
 
 @Controller("mail")
-export class MailController implements OnModuleDestroy {
-	constructor(
-		private readonly mailService: MailService,
-		@Inject("MAIL_NOTIFICATION_SERVICE")
-		private readonly mainKafkaClient: ClientKafka,
-	) {}
-
-	async onModuleDestroy() {
-		await this.mainKafkaClient.connect();
-	}
+export class MailController {
+	constructor(private readonly mailService: MailService) {}
 
 	@MessagePattern("send-mail-action-link")
 	async sendActionLink(@Body() body: SendActionLinkDTO) {

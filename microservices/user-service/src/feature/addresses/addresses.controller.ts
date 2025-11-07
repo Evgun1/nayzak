@@ -5,6 +5,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	ParseIntPipe,
 	Post,
 	Put,
 	Req,
@@ -15,15 +16,14 @@ import {
 } from "@nestjs/common";
 import { Request, Response } from "express";
 import { JwtAuthGuard } from "src/guard/jwtAuth.guard";
-import { LocalAuthGuard } from "src/guard/localAuth.guard";
 import { IUserJwt } from "src/interface/credentialsJwt.interface";
-import { ValidationAddressesGetOneParamDTO } from "./validation/validationAddressesGetOne.dto";
 import { ValidationAddressesUploadBodyDTO } from "./validation/validationAddressesUpload.dto";
 import { ValidationAddressesUpdateBodyDTO } from "./validation/validationAddressesUpdate.dto";
 import { ValidationAddressesDeleteBodyDTO } from "./validation/validationAddressesDelete.dto";
 import { MessagePattern, Payload } from "@nestjs/microservices";
 import { validationExceptionFactory } from "src/utils/validationExceptionFactory";
 import { ValidationAddressesKafkaPayloadDTO } from "./validation/validationAddressesKafka.dto";
+import { use } from "passport";
 
 @Controller("addresses")
 export class AddressesController {
@@ -46,14 +46,7 @@ export class AddressesController {
 		return addresses;
 	}
 
-	@Get("/:id")
-	async getAddressesOne(@Param() param: ValidationAddressesGetOneParamDTO) {
-		const address = await this.addressesService.getOne(param.id);
-
-		return address;
-	}
-
-	@Post()
+	@Post("/")
 	@UseGuards(JwtAuthGuard)
 	async uploadAddresses(
 		@Req() req: Request,
@@ -63,6 +56,7 @@ export class AddressesController {
 
 		try {
 			const addresses = await this.addressesService.upload(body, user);
+
 			return addresses;
 		} catch (error) {
 			console.log(error);
@@ -88,6 +82,13 @@ export class AddressesController {
 	) {
 		const user = req.user as IUserJwt;
 		const address = await this.addressesService.delete(body, user);
+		return address;
+	}
+
+	@Get(":id")
+	async getAddressesOne(@Param("id", ParseIntPipe) id: number) {
+		const address = await this.addressesService.getOne(id);
+
 		return address;
 	}
 

@@ -67,11 +67,12 @@ const productsReducer: Reducer<ProductsState, ProductsAction> = (
 
 export const useLoadMoreReducer = <T extends { [key: string]: any }, P>(
 	loaderFn: FetchType<T, P>,
+	init?: { data: any[]; totalCount: number },
 ) => {
 	const [state, dispatch] = useReducer(productsReducer, {
-		fullData: [],
+		fullData: init ? init.data : [],
 		lastData: {} as ProductBase,
-		totalCount: 0,
+		totalCount: init ? init.totalCount : 0,
 		isLoading: false,
 	});
 

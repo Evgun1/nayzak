@@ -12,7 +12,7 @@ export interface ProductPreviewItem
 		| "createdAt"
 		| "description"
 	> {
-	Media: { src: string; name: string; blurImage: string };
+	Media: { src: string; name: string; blurImage?: string };
 }
 
 export type ProductPreviewProps = {

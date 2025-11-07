@@ -36,6 +36,33 @@ export class RedisService {
 		await this.client.hSet(key, field, JSON.stringify(value));
 	}
 
+	async hSetEx<T>(key: string, args: { [key: string]: T }, second?: number) {
+		const fields = Object.entries(args)
+			.map(([argsKey, value]) => {
+				return {
+					[argsKey]: JSON.stringify(value),
+				};
+			})
+			.reduce((acc, cur) => ({ ...acc, ...cur }));
+
+		const options:
+			| {
+					expiration?: {
+						type: "EX" | "PX";
+						value: number;
+					};
+			  }
+			| undefined = {};
+
+		if (second) options.expiration = { type: "EX", value: second };
+
+		await this.client.hSetEx(key, fields, options);
+	}
+
+	async hExpire(key: string, fields: string | string[], second: number) {
+		return await this.client.hExpire(key, fields, second);
+	}
+
 	async hDel(key: string, field: string | string[]) {
 		this.client.hDel(key, field);
 	}

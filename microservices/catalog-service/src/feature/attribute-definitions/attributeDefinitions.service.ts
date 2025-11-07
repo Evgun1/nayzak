@@ -107,7 +107,7 @@ export class AttributeDefinitionsService {
 			const products =
 				await this.productsService.getProductsAll(productsArgs);
 
-			const isActive = products.products.length > 0;
+			const isActive = products.productCounts > 0;
 
 			attributeDTO.attribute.push(
 				new AttributeDTO({ ...element, active: isActive }),

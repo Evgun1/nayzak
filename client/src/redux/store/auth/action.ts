@@ -4,10 +4,11 @@ import { authAction } from "./auth";
 import { useCookieSet as useCookieSet } from "@/hooks/useCookie";
 import {
 	appCredentialsInitGet,
+	appCredentialsLoginPost,
 	appCredentialsPasswordPut,
-	appCredentialsPost,
+	appCredentialsRegisterPost,
 } from "@/lib/api/credentials";
-import { appCookieDelete, appCookieGet, appCookieSet } from "@/lib/api/cookie";
+import { appCookieDelete, appCookieGet, appCookieSet } from "@/tools/cookie";
 import {
 	SignUp,
 	CredentialsPasswordDTO,
@@ -17,30 +18,38 @@ import {
 import { initCustomer } from "../customer/action";
 import { notificationAction } from "../notification/notification";
 import PopupNotification from "@/popups/popup-notifications/PopupNotifications";
-import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import { jwtSign } from "@/lib/jwt/jwt";
 import localStorageHandler from "@/tools/localStorage";
+import { popupActions } from "../popup/popup";
 
 export const registrationAction = (userData: SignUp) => {
 	return async function (dispatch: AppDispatch) {
 		try {
-			const token = await appCredentialsPost({ registration: userData });
-			if (!token) return;
+			const result = await appCredentialsRegisterPost(userData);
 
-			useCookieSet({
-				name: "user-token",
-				value: token,
-				options: { path: "/", maxAge: 3600 },
-			});
-
-			const data = jwtDecode<CredentialsStateItem>(token);
-
+			dispatch(
+				notificationAction.toggle(
+					PopupNotification({
+						icon: "CHECK",
+						text: result.message,
+					}),
+				),
+			);
+			dispatch(popupActions.toggle(null));
 			dispatch(authAction.writeErrorMessage(null));
-			dispatch(authAction.setCredentials(data));
 			dispatch(initCustomer());
 		} catch (error) {
-			console.log(error);
+			const err = error as Error;
+
+			const objErr: {
+				response: string;
+				status: number;
+				message: string;
+				name: string;
+			} = JSON.parse(err.message);
+
+			dispatch(authAction.writeErrorMessage(objErr.message));
 		}
 	};
 };
@@ -48,10 +57,8 @@ export const registrationAction = (userData: SignUp) => {
 export const loginAction = (userData: SignIn) => {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		try {
-			const token = await appCredentialsPost({ login: userData });
+			const token = await appCredentialsLoginPost(userData);
 			if (!token) return;
-
-			console.log(token);
 
 			appCookieSet({
 				name: "user-token",
@@ -65,10 +72,12 @@ export const loginAction = (userData: SignIn) => {
 			dispatch(authAction.setCredentials(data));
 			dispatch(initCustomer());
 		} catch (e) {
-			const error = e as Error;
-			console.log(error);
+			const err = e as Error;
+			const objErr: { statusCode: number; message: string } = JSON.parse(
+				err.message,
+			);
 
-			dispatch(authAction.writeErrorMessage(error.message));
+			dispatch(authAction.writeErrorMessage(objErr.message));
 		}
 	};
 };
@@ -139,11 +148,9 @@ export function initAuth() {
 			dispatch(initCustomer());
 		} catch (error) {
 			const err = error as Error;
-			// if (err.message === 'U') {
-
-			// }
 			appCookieDelete("user-token");
-			console.log(error, "error");
+
+			// appCookieDelete("user-token");
 		}
 	};
 }

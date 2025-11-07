@@ -3,7 +3,6 @@ import { QueryService } from "src/query/query.service";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { QueryDTO } from "src/query/dto/query.dto";
 import { ValidationAddressesUploadBodyDTO } from "./validation/validationAddressesUpload.dto";
 import { ValidationAddressesUpdateBodyDTO } from "./validation/validationAddressesUpdate.dto";
 import { ValidationAddressesDeleteBodyDTO } from "./validation/validationAddressesDelete.dto";
@@ -69,25 +68,11 @@ export class AddressesService {
 	}
 	async delete(body: ValidationAddressesDeleteBodyDTO, user: IUserJwt) {
 		try {
-			const sqlQuery = await this.prisma.sqlQuery("Addresses");
-			const sqlSelect = sqlQuery.select;
-			const sqlDelete = sqlQuery.delete;
-
-			sqlSelect.fields();
-			sqlSelect.where({
-				id: body.addressesId,
-				customersId: user.customerId,
+			const addresses = await this.prisma.addresses.delete({
+				where: { id: body.addressesId },
 			});
-			const selectQuery = await sqlSelect.query();
-
-			sqlDelete.where({
-				id: body.addressesId,
-				customersId: user.customerId,
-			});
-			sqlDelete.query();
-
 			await this.clientApiService.clearCache("addresses");
-			return selectQuery;
+			return addresses;
 		} catch (error) {
 			throw new UnauthorizedException(error);
 		}

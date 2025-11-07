@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from 'react';
+import { useState } from "react";
 import {
 	AutocompleteInput,
 	Create,
@@ -12,17 +12,16 @@ import {
 	SelectInput,
 	TextInput,
 	useCreate,
-} from 'react-admin';
-
-import { FieldValues } from 'react-hook-form';
+	UseFieldValueOptions,
+} from "react-admin";
 
 export default function ProductsCreate() {
 	const [create] = useCreate();
 
 	const [categoryId, setCategoryId] = useState<number>();
-	const submitHandler = async (event: FieldValues) => {
+	const submitHandler = async (event: UseFieldValueOptions) => {
 		try {
-			await create('products', { data: event });
+			await create("products", { data: event });
 		} catch (err) {
 			console.log(err);
 		}
@@ -40,9 +39,9 @@ export default function ProductsCreate() {
 					source="status"
 					validate={required()}
 					choices={[
-						{ id: 'inStock', name: 'in stock' },
-						{ id: 'discontinued', name: 'discontinued' },
-						{ id: 'outOfStock', name: 'out of stock' },
+						{ id: "inStock", name: "in stock" },
+						{ id: "discontinued", name: "discontinued" },
+						{ id: "outOfStock", name: "out of stock" },
 					]}
 				/>
 				<ReferenceInput reference="categories" source="categoriesId">
@@ -56,7 +55,7 @@ export default function ProductsCreate() {
 					source="subcategoriesId"
 					filter={{ categoriesId: categoryId }}
 				/>
-				<ReferenceInput reference={'media'} source={'mediaId'} />
+				<ReferenceInput reference={"media"} source={"mediaId"} />
 				<SaveButton />
 			</Form>
 		</Create>

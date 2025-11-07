@@ -21,7 +21,7 @@ import { MongoModule } from "./mongo/mongo.module";
 		KafkaModule,
 		ClientApiModule,
 		ScheduleModule.forRoot(),
-		ConfigModule.forRoot({envFilePath:"./.env.local", isGlobal: true}),
+		ConfigModule.forRoot({ isGlobal: true }),
 		MongoModule,
 		JwtModule.register({
 			secret: process.env.JWT_SECRET_KEY as string,

@@ -20,9 +20,9 @@ async function bootstrap() {
 	connectKafkaConsumer(app);
 	await app.startAllMicroservices();
 	app.enableCors({
-		origin: ["http://localhost:2999", "http://localhost:2998"],
+		// origin: process.env.CORS_URL,
+		origin: process.env.CORS_URL ? process.env.CORS_URL.split(", ") : true,
 		credentials: true,
-		exposedHeaders: ["Authorization"],
 	});
 
 	await app.listen(PORT, () =>

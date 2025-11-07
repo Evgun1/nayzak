@@ -51,8 +51,10 @@ export class CategoriesService {
 			});
 		});
 
-		await this.categoriesCache.uploadCategoriesCache(categoriesDTO);
-		console.log(categories, true);
+
+
+
+		// await this.categoriesCache.uploadCategoriesCache(categoriesDTO);
 
 		return { categoriesCount, categories: categoriesDTO };
 	}
@@ -81,14 +83,19 @@ export class CategoriesService {
 			name: media.name,
 		}));
 
-		const categoriesGapDTO = new CategoryCacheDTO({
-			id: categories.id,
-			title: categories.title,
-			Media: media[0],
-		});
+		if (categories.Media.length > 0) {
+			const categoriesGapDTO = new CategoryCacheDTO({
+				id: categories.id,
+				title: categories.title,
+				Media: media[0],
+			});
 
-		this.clientApi.clearCache("categories");
-		await this.categoriesCache.uploadCategoriesCache([categoriesGapDTO]);
+			this.clientApi.clearCache("categories");
+			await this.categoriesCache.uploadCategoriesCache([
+				categoriesGapDTO,
+			]);
+		}
+
 		return categories;
 	}
 }

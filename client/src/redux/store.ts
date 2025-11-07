@@ -9,11 +9,11 @@ import orders, { OrderState } from "./store/orders/orders";
 import notification from "./store/notification/notification";
 import localStorageHandler from "@/tools/localStorage";
 
-const storageCart = localStorageHandler<CartState>("cartState");
-const storageWishlist = localStorageHandler<CartState>("wishlistState");
-const storageAddress = localStorageHandler<AddressState>("addressState");
-const storageOrder = localStorageHandler<OrderState>("ordersState");
-const storageCustomer = localStorageHandler<CustomerState>("customerState");
+const storageCart = localStorageHandler("cartState");
+const storageWishlist = localStorageHandler("wishlistState");
+const storageAddress = localStorageHandler("addressState");
+const storageOrder = localStorageHandler("ordersState");
+const storageCustomer = localStorageHandler("customerState");
 
 const store = configureStore({
 	reducer: {

@@ -6,6 +6,9 @@ import { ValidationQueryDTO } from "src/query/validation/validationQuery.dto";
 export class ValidationProductsAllQueryDTO extends PartialType(
 	ValidationQueryDTO,
 ) {
+
+
+    
 	@IsOptional()
 	@IsArray()
 	@Transform(({ value }) => (value as string).split(",").map((item) => +item))

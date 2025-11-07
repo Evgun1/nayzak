@@ -1,13 +1,13 @@
-import { ZodEffects, ZodObject, ZodRawShape } from 'zod';
-import appEffectsValidation from './appEffectsValidation';
-import appObjectValidation from './appObjectValidation';
+import { ZodEffects, ZodObject, ZodRawShape } from "zod";
+import appEffectsValidation from "./appEffectsValidation";
+import appObjectValidation from "./appObjectValidation";
 
 type AppSchemaHandlerProps<T extends ZodRawShape> = {
 	formData: FormData;
 	schema: Array<ZodObject<T> | ZodEffects<ZodObject<T>>>;
 };
 
-const appSchemaHandler = <T extends ZodRawShape>({
+const validatorSchemaHandler = <T extends ZodRawShape>({
 	formData,
 	schema,
 }: AppSchemaHandlerProps<T>) => {
@@ -51,4 +51,4 @@ const appSchemaHandler = <T extends ZodRawShape>({
 	return { hasErrors, error };
 };
 
-export default appSchemaHandler;
+export default validatorSchemaHandler;

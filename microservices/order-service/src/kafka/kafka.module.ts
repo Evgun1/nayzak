@@ -1,32 +1,25 @@
 import { Module } from "@nestjs/common";
 import { ClientsModule, Transport } from "@nestjs/microservices";
 import { KafkaService } from "./kafka.service";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
 	imports: [
+		ConfigModule.forRoot({}),
 		ClientsModule.register([
 			{
 				name: "USER_SERVICE",
 				transport: Transport.KAFKA,
 				options: {
 					client: {
-						clientId: "user-order-service",
-						brokers: (process.env.KAFKA_BROKERS as string)
-							.split(",")
-							.map((broker) => broker.trim()),
+						clientId: "user-service",
+						brokers: (process.env.KAFKA_BROKERS as string).split(
+							", ",
+						),
 					},
 					consumer: {
-						groupId: "user-order-consumer",
-						// rebalanceTimeout: 60000,
-						// allowAutoTopicCreation: false,
-						// heartbeatInterval: 3000,
-						// sessionTimeout: 45000,
-						// retry: {
-						// 	initialRetryTime: 300,
-						// 	retries: 5,
-						// },
+						groupId: "user-order",
 					},
-					// subscribe: { fromBeginning: true },
 				},
 			},
 			{
@@ -35,22 +28,13 @@ import { KafkaService } from "./kafka.service";
 				options: {
 					client: {
 						clientId: "catalog-service",
-						brokers: (process.env.KAFKA_BROKERS as string)
-							.split(",")
-							.map((broker) => broker.trim()),
+						brokers: (process.env.KAFKA_BROKERS as string).split(
+							", ",
+						),
 					},
 					consumer: {
-						groupId: "catalog-consumer",
-						// rebalanceTimeout: 60000,
-						// allowAutoTopicCreation: false,
-						// heartbeatInterval: 3000,
-						// sessionTimeout: 45000,
-						// retry: {
-						// 	initialRetryTime: 300,
-						// 	retries: 5,
-						// },
+						groupId: "catalog-order",
 					},
-					// subscribe: { fromBeginning: true },
 				},
 			},
 		]),

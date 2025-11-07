@@ -11,9 +11,13 @@ import { FakerModule } from "./tools/fake/faker.module";
 import { MediaModule } from "./feature/media/media.module";
 import { AttributeDefinitionsModule } from "./feature/attribute-definitions/attributeDefinitions.module";
 import { CloudinaryModule } from "./cloudinary/cloudinary.module";
+import { KafkaModule } from "./kafka/kafka.module";
+import { RouterModule } from "@nestjs/core";
+import { RouterProxy } from "@nestjs/core/router/router-proxy";
 
 @Module({
 	imports: [
+		KafkaModule,
 		CloudinaryModule,
 		FakerModule,
 		MediaModule,
@@ -23,9 +27,7 @@ import { CloudinaryModule } from "./cloudinary/cloudinary.module";
 		PrismaModule,
 		RedisModule,
 		AttributeDefinitionsModule,
-		ConfigModule.forRoot({
-			isGlobal: true,
-		}),
+		ConfigModule.forRoot({ isGlobal: true }),
 	],
 
 	controllers: [AppController],

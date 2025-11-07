@@ -3,7 +3,7 @@
 import { useAppDispatch } from "@/redux/redux";
 import { initAuth } from "@/redux/store/auth/action";
 
-import { appCookieGet } from "@/lib/api/cookie";
+import { appCookieGet } from "@/tools/cookie";
 import { useEffect } from "react";
 
 const InitData = () => {

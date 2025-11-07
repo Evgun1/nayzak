@@ -20,13 +20,14 @@ export const appCartInitGet = async (token: string) => {
 };
 
 type AppCartPost = {
-	product: CartItemData;
+	product: Omit<CartItemData, "id">;
 };
 export const appCartPost = async ({ product }: AppCartPost, token: string) => {
 	const pathname = "cart";
 	const nginxPathname = `user/cart`;
 
 	const { productsId, amount } = product;
+
 
 	const { result } = await appFetchPost<CartItem>({
 		authorization: token,

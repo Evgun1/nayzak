@@ -1,8 +1,20 @@
-FROM node:22.13.1
-WORKDIR /app
-COPY package*.json ./ 
-RUN npm install 
+FROM node:24-alpine as build
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
-EXPOSE 3000
-CMD ["npm","run","start:dev"]
+RUN npm run build
+
+
+FROM node:24-alpine as production
+COPY package.json package-lock.json ./
+COPY --from=build /dist ./dist
+COPY --from=build /src/prisma ./prisma
+RUN npm ci --omit=dev
+EXPOSE 14000
+CMD ["sh", "-c", "npm run db:deploy && npm run kafka:deploy && npm run faker:deploy  && node dist/main.js"]
+
+
+
+
+
 

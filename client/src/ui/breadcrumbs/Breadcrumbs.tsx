@@ -32,7 +32,7 @@ export default function Breadcrumbs(props: BreadcrumbsProductProps) {
 
 		http += !element.href
 			? `/${element.title.toLowerCase()}`
-			: element.href;
+			: `/${element.href}`;
 
 		breadcrumbsArr.push({
 			href: http,

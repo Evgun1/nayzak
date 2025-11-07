@@ -2,15 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { Interval } from "@nestjs/schedule";
 import { RedisService } from "./redis/redis.service";
 import { CategoriesCache } from "./feature/categories/cache/categories.cache";
-import { ProductsCache } from "./feature/products/cache/products.cache";
+// import { ProductsCache } from "./feature/products/cache/productsCache.service";
 @Injectable()
 export class AppService {
 	categoriesCache: CategoriesCache;
-	productsCache: ProductsCache;
+	// productsCache: ProductsCache;
 
 	constructor(private readonly redis: RedisService) {
 		this.categoriesCache = new CategoriesCache(redis);
-		this.productsCache = new ProductsCache(redis);
+		// this.productsCache = new ProductsCache(redis);
 	}
 
 	@Interval(35e6)
@@ -28,20 +28,20 @@ export class AppService {
 		}
 	}
 
-	@Interval(6e5)
-	async thirtyMin() {
-		const cacheProduct = await this.productsCache.getCacheNewProducts();
-		const curDate = Date.now();
+	// @Interval(6e5)
+	// async thirtyMin() {
+	// 	const cacheProduct = await this.productsCache.getCacheNewProducts();
+	// 	const curDate = Date.now();
 
-		for (const element of cacheProduct) {
-			const cacheDate = element.createdCacheAt.getTime();
-			const passedMin = (curDate - cacheDate) / (1000 * 60);
+	// 	for (const element of cacheProduct) {
+	// 		const cacheDate = element.createdCacheAt.getTime();
+	// 		const passedMin = (curDate - cacheDate) / (1000 * 60);
 
-			if (passedMin >= 10) {
-				await this.productsCache.deleteCacheNewProducts(
-					element.id.toString(),
-				);
-			}
-		}
-	}
+	// 		if (passedMin >= 10) {
+	// 			await this.productsCache.deleteCacheNewProducts(
+	// 				element.id.toString(),
+	// 			);
+	// 		}
+	// 	}
+	// }
 }

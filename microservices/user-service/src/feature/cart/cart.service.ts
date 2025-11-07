@@ -3,15 +3,12 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { QueryDTO } from "src/query/dto/query.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UploadCartDTO } from "./dto/uploadCart.dto";
-import { CartDTO } from "./dto/cart.dto";
 import { UpdateCartDTO } from "./dto/updateCart.dto";
 import { QueryService } from "src/query/query.service";
 import { JwtService } from "@nestjs/jwt";
 import { UserJwtDTO } from "src/dto/userJwt.dto";
 import { Prisma } from "@prisma/client";
-import e from "express";
 import { IUserJwt } from "src/interface/credentialsJwt.interface";
-import { EventPattern, MessagePattern, Payload } from "@nestjs/microservices";
 import { ValidationCartKafkaPayloadDTO } from "./validation/validationCartKafka.dto";
 import { CartKafkaDTO } from "./dto/CartKafka.dto";
 
@@ -53,7 +50,9 @@ export class CartService {
 			await this.clientApiService.clearCache("cart");
 			return cart;
 		} catch (error) {
-			throw new UnauthorizedException(error);
+			console.log(error);
+
+			// throw new UnauthorizedException(error);
 		}
 	}
 	async updateCart(body: UpdateCartDTO, credential: IUserJwt) {

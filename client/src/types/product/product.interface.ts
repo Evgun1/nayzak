@@ -10,7 +10,7 @@ export interface IProduct {
 	categoriesId?: number;
 	subcategoriesId?: number;
 	Media: { src: string; name: string }[];
-	rating: number;
+	rating: { avg: number; count: number };
 
 	amount?: number;
 }

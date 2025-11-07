@@ -13,8 +13,9 @@ import { ClientApiModule } from "src/client-api/clientApi.module";
 	controllers: [WishlistController],
 	providers: [WishlistService],
 })
-export class WishlistModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		WishlistMiddlewareConfigure.configure(consumer);
-	}
-}
+export class WishlistModule {}
+// export class WishlistModule implements NestModule {
+// 	configure(consumer: MiddlewareConsumer) {
+// 		WishlistMiddlewareConfigure.configure(consumer);
+// 	}
+// }

@@ -8,7 +8,7 @@ import {
 	NestMiddleware,
 } from "@nestjs/common";
 import { NextFunction, Request } from "express";
-import { RegistrationBodyDTO } from "src/dto/registrationBody.dto";
+import { ValidationRegistrationBodyDTO } from "src/validation/validationRegistration.dto";
 import { RedisService } from "src/redis/redis.service";
 import { RegistrationCacheDTO } from "src/dto/registrationCache.dto";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -21,7 +21,7 @@ export class RegistrationMiddleware implements NestMiddleware {
 	) {}
 
 	async use(
-		req: Request<any, any, RegistrationBodyDTO>,
+		req: Request<any, any, ValidationRegistrationBodyDTO>,
 		res: Response,
 		next: NextFunction,
 	) {

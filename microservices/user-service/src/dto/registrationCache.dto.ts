@@ -1,3 +1,5 @@
+import { RegistrationCacheItem } from "src/interface/registrationCache.interface";
+
 export class RegistrationCacheDTO {
 	email: string;
 	password: string;

@@ -14,15 +14,12 @@ import { ConfigModule } from "@nestjs/config";
 				options: {
 					client: {
 						clientId: "catalog-service",
-						// brokers: JSON.parse(
-						// 	process.env.KAFKA_BROKERS as string,
-						// ),
 						brokers: (process.env.KAFKA_BROKERS as string).split(
 							", ",
 						),
 					},
 					consumer: {
-						groupId: "catalog-consumer",
+						groupId: "catalog-review",
 					},
 				},
 			},
@@ -32,17 +29,14 @@ import { ConfigModule } from "@nestjs/config";
 				transport: Transport.KAFKA,
 				options: {
 					client: {
-						clientId: "user-review-service",
+						clientId: "user-service",
 
-						// brokers: JSON.parse(
-						// 	process.env.KAFKA_BROKERS as string,
-						// ),
 						brokers: (process.env.KAFKA_BROKERS as string).split(
 							", ",
 						),
 					},
 					consumer: {
-						groupId: "user-review-consumer",
+						groupId: "user-review",
 					},
 				},
 			},

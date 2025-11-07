@@ -2,9 +2,10 @@ import {
 	Body,
 	Controller,
 	Get,
-	Inject,
-	OnModuleDestroy,
+	HttpCode,
 	Param,
+	ParseIntPipe,
+	ParseUUIDPipe,
 	Post,
 	Put,
 	Query,
@@ -16,82 +17,65 @@ import {
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { Request, Response } from "express";
-import { GetOneParamDTO } from "./dto/getOneParam.dto";
-import { RegistrationBodyDTO } from "./dto/registrationBody.dto";
-import { ActivationParamDTO } from "./dto/activationParam.dto";
-import { ClientKafka, MessagePattern, Payload } from "@nestjs/microservices";
-import { ChangePasswordBodyDTO } from "./dto/changePasswordBody.dto";
-import { QueryDTO } from "./query/dto/query.dto";
-import { LocalAuthGuard } from "./guard/localAuth.guard";
+import { ValidationRegistrationBodyDTO } from "./validation/validationRegistration.dto";
+import { MessagePattern, Payload } from "@nestjs/microservices";
+import { ValidationChangePasswordBodyDTO } from "./validation/validationChangePassword.dto";
 import { UserJwtDTO } from "./dto/userJwt.dto";
 import { JwtAuthGuard } from "./guard/jwtAuth.guard";
 import { ValidationCartAndAddressesPayloadDTO } from "./validation/validationCartAndAddressesKafka.dto";
 import { validationExceptionFactory } from "./utils/validationExceptionFactory";
+import { ValidationLoginBodyDTO } from "./validation/validationLogin.dto";
 
 @Controller("/")
 export class AppController {
 	constructor(private readonly appService: AppService) {}
 
-	@Get()
-	async getAll(
-		@Query() query: QueryDTO,
-		@Res({ passthrough: true }) res: Response,
-		@Req() req: Request,
-	) {
-		const { credentials, totalCount } = await this.appService.getAll(query);
-		res.setHeader("X-Total-Count", totalCount);
-		return credentials;
+	@Get("health")
+	@HttpCode(200)
+	async health() {
+		return "healthy";
 	}
 
-	@Get("init")
+	@Get("auth/init")
 	@UseGuards(JwtAuthGuard)
 	async init(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
 		const user = req.user as UserJwtDTO;
-		if (!user) throw new UnauthorizedException();
 		const token = await this.appService.init(user);
 
+		// return JSON.stringify(token);
 		return { access_token: token };
 	}
 
-	@Get("activation/:link")
-	async activation(@Param() param: ActivationParamDTO, @Res() res: Response) {
-		const credential = await this.appService.activation(param);
-		if (!credential) return;
-
-		return res
-			.status(302)
-			.cookie("user-token", credential, {
-				maxAge: 60 * 60 * 1000,
-				path: "/",
-			})
-			.redirect(`${process.env.API_CLIENT_URL}`);
-	}
-
-	@Get("/:params")
-	async getOne(@Param() params: GetOneParamDTO) {
-		return await this.appService.getOne(params);
-	}
-
-	@Post("registration")
-	async registration(@Body() body: RegistrationBodyDTO) {
-		return await this.appService.registration(body);
-	}
-
-	@UseGuards(LocalAuthGuard)
-	@Post("login")
-	async login(
-		@Req() req: Request,
+	@Get("auth/activation/:link")
+	async activation(
+		@Param("link", ParseUUIDPipe) param: string,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		const body = req.user as UserJwtDTO;
+		const credential = await this.appService.activation(param);
+		res.setHeader("Authorization", credential);
+
+		return JSON.stringify(credential);
+	}
+
+	@Post("auth/registration")
+	async registration(@Body() body: ValidationRegistrationBodyDTO) {
+		const result = await this.appService.registration(body);
+		return result;
+	}
+
+	@Post("auth/login")
+	async login(
+		@Body() body: ValidationLoginBodyDTO,
+		@Res({ passthrough: true }) res: Response,
+	) {
 		const userToken = await this.appService.login(body);
 		res.setHeader("Authorization", userToken);
 
 		return JSON.stringify(userToken);
 	}
 
-	@Put("change-password")
-	async changePassword(@Body() body: ChangePasswordBodyDTO) {
+	@Put("auth/change-password")
+	async changePassword(@Body() body: ValidationChangePasswordBodyDTO) {
 		return await this.appService.changePassword(body);
 	}
 
@@ -107,6 +91,7 @@ export class AppController {
 		const result = await this.appService.getCartAndAddressesKafka(payload);
 		return result;
 	}
+
 	// @MessagePattern("get.customers.data")
 	// kafkaGetCustomerData(
 	// 	@Payload()

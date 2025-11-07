@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class HttpClientService {
-	private url = process.env.API_CLIENT_URL;
+	private url = `${process.env.URL_CLIENT_API}`;
 	private method = {
 		get: "GET",
 		post: "POST",
@@ -19,10 +19,8 @@ export class HttpClientService {
 	}) {
 		try {
 			const url = `${this.url}/${pathname}`;
+
 			const response = await fetch(url, init);
-
-			console.log(url);
-
 			const headers = response.headers;
 			const result = await response.json();
 			return { result, headers };

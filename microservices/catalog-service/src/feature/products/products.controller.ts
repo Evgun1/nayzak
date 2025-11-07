@@ -4,6 +4,7 @@ import {
 	Param,
 	Query,
 	Res,
+	UseFilters,
 	UsePipes,
 	ValidationPipe,
 } from "@nestjs/common";
@@ -20,7 +21,7 @@ import { Response } from "express";
 import {
 	ValidationProductsKafkaPayloadDTO,
 	ValidationProductsKafkaRatingPayloadDTO,
-} from "./validation/validationProductsKafka.dto";
+} from "./validation/validationKafkaProducts.dto";
 import { validationExceptionFactory } from "src/utils/validationExceptionFactory";
 import { ValidationMinMaxPriceParamDTO } from "./validation/validationMinMaxPice.dto";
 import { ValidationProductParamDTO } from "./validation/validationProduct.dto";
@@ -42,9 +43,6 @@ export class ProductsController {
 	) {
 		const { productCounts, products } =
 			await this.productsService.getProductsAll(query);
-
-		console.log(query);
-
 		res.setHeader("X-Total-Count", productCounts);
 		res.setHeader("Access-Control-Expose-Headers", "X-Total-Count");
 
@@ -73,7 +71,6 @@ export class ProductsController {
 	@Get("/:id")
 	async getProduct(@Param() param: ValidationProductParamDTO) {
 		const product = await this.productsService.getProduct(param);
-
 		return { ...product };
 	}
 
@@ -94,12 +91,7 @@ export class ProductsController {
 		)
 		payload: ValidationProductsKafkaRatingPayloadDTO,
 	) {
-		console.log(payload);
-
-		await this.productsService.updateProduct({
-			id: payload.productsId,
-			rating: payload.rating,
-		});
+		await this.productsService.updateRatingProduct(payload);
 	}
 
 	@MessagePattern("get.products.catalog", Transport.KAFKA)
@@ -111,7 +103,8 @@ export class ProductsController {
 		)
 		payload: ValidationProductsKafkaPayloadDTO,
 	) {
-		const productsKafka = await this.productsService.productsKafka(payload);
+		const productsKafka =
+			await this.productsService.getProductCatalog(payload);
 
 		return productsKafka;
 	}

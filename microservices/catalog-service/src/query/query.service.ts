@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
 import { ValidationQueryDTO } from "./validation/validationQuery.dto";
-import { ModelArgsMap } from "../prisma/interface/modelArgsMap.type";
 import { QueryBuilder } from "./query.builder";
+import { ModelArgsMap } from "src/prisma/interface/modelArgsMap.type";
 
 // interface T {
 // 	address: keyof typeof Prisma.AddressesScalarFieldEnum;

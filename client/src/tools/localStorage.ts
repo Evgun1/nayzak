@@ -1,8 +1,8 @@
-import { AddressState } from "@/redux/store/address/address";
-import { CartState } from "@/redux/store/cart/cart";
-import { CustomerState } from "@/redux/store/customer/customer";
-import { OrderState } from "@/redux/store/orders/orders";
-import { WishlistState } from "@/redux/store/wishlist/wishlist";
+import { AddressState } from "../redux/store/address/address";
+import { CartState } from "../redux/store/cart/cart";
+import { CustomerState } from "../redux/store/customer/customer";
+import { OrderState } from "../redux/store/orders/orders";
+import { WishlistState } from "../redux/store/wishlist/wishlist";
 
 const keyLocalStorage = [
 	"customerState",

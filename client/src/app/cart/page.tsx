@@ -3,14 +3,13 @@
 import useFetchProductsById from "@/hooks/useFetchProductByID";
 import { useAppSelector } from "@/redux/redux";
 import { ButtonClassList } from "@/types/buttonClassList.enum";
-import { FC, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import classes from "./Cart.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
-import { log } from "console";
-import CartPreview, { CartItemProps } from "./_preview/CartPreview";
+import CartPreview, { CartItemProps } from "./components/CartPreview";
 
 export default function Page() {
 	const [isLoading, setIsLoading] = useState(true);

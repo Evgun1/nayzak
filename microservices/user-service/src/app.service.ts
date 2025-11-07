@@ -1,21 +1,21 @@
 import * as bcrypt from "bcrypt";
 
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
-import { RegistrationBodyDTO } from "./dto/registrationBody.dto";
+import {
+	HttpException,
+	Inject,
+	Injectable,
+	UnauthorizedException,
+} from "@nestjs/common";
+import { ValidationRegistrationBodyDTO } from "./validation/validationRegistration.dto";
 import { ClientKafka } from "@nestjs/microservices";
 import { randomUUID } from "crypto";
 import { RedisService } from "./redis/redis.service";
 import { RegistrationCacheDTO } from "./dto/registrationCache.dto";
-import { GetOneParamDTO } from "./dto/getOneParam.dto";
-import { ActivationParamDTO } from "./dto/activationParam.dto";
 import { CustomersService } from "./feature/customers/customers.service";
-import { Interval } from "@nestjs/schedule";
 import { JwtService } from "@nestjs/jwt";
-import { LoginBodyDTO } from "./dto/loginBody.dto";
-import { IUserJwt } from "./interface/credentialsJwt.interface";
+import { ValidationLoginBodyDTO } from "./validation/validationLogin.dto";
 import { UserJwtDTO } from "./dto/userJwt.dto";
-import { ChangePasswordBodyDTO } from "./dto/changePasswordBody.dto";
+import { ValidationChangePasswordBodyDTO } from "./validation/validationChangePassword.dto";
 import { QueryDTO } from "./query/dto/query.dto";
 import { PrismaService } from "./prisma/prisma.service";
 import { QueryService } from "./query/query.service";
@@ -37,7 +37,7 @@ export class AppService {
 		private readonly mailKafkaClient: ClientKafka,
 	) {}
 
-	async validateCredential(body: LoginBodyDTO) {
+	async validateCredential(body: ValidationLoginBodyDTO) {
 		const { email, password } = body;
 
 		const credential = await this.prisma.credentials
@@ -82,73 +82,104 @@ export class AppService {
 		});
 	}
 
-	async getAll(query: QueryDTO) {
-		const { orderBy, skip, take, where } = this.queryService.getQuery(
-			"Credentials",
-			query,
-		);
-
-		const credentials = await this.prisma.credentials.findMany({
-			orderBy,
-			skip,
-			take,
-			where,
-		});
-		const totalCount = await this.prisma.credentials.count({
-			where,
-		});
-
-		return { credentials, totalCount };
-	}
-
-	async getOne({ params }: GetOneParamDTO) {
-		return await this.prisma.credentials.findFirst({
-			where: { id: params },
-		});
-	}
-
-	async registration(body: RegistrationBodyDTO) {
+	async registration(body: ValidationRegistrationBodyDTO) {
 		const { email, password, firstName, lastName } = body;
 
 		const actionLink = randomUUID();
 		const saltRounds = Math.floor(Math.random() * (10 - 1) + 1);
 		const hashPassword = await bcrypt.hash(password, saltRounds);
 
-		const value = new RegistrationCacheDTO({
+		const registrationValue = new RegistrationCacheDTO({
 			email,
 			firstName,
 			lastName,
 			password: hashPassword,
 		});
 
-		await this.redisClient.hSet("registration-cache", actionLink, value);
+		const validReg = await this.prisma.credentials.findFirst({
+			where: { email },
+		});
+
+		if (validReg)
+			throw new HttpException("The user is already registered", 401);
+
+		const registerCache =
+			await this.redisClient.hGetAll<RegistrationCacheDTO>(
+				"registration-cache",
+			);
+
+		for (const element of registerCache) {
+			for (const value of Object.values(element)) {
+				if (value.email !== email) continue;
+				throw new HttpException("User at the activation stage", 401);
+			}
+		}
+
+		await this.redisClient.hSetEx(
+			"registration-cache",
+			{
+				[actionLink]: registrationValue,
+			},
+			120,
+		);
 
 		this.mailKafkaClient.emit("send-mail-action-link", {
 			email,
 			activeLink: actionLink,
 		});
+
+		return { message: "To confirm, open the email." };
 	}
 
-	async login(body: UserJwtDTO): Promise<string> {
-		const jwtCredentials = await this.jwtService.signAsync({ ...body });
-		return jwtCredentials;
-	}
+	async login(body: ValidationLoginBodyDTO): Promise<string> {
+		const user = await this.validateCredential(body);
 
-	async init(user: UserJwtDTO) {
 		const jwtCredentials = await this.jwtService.signAsync({ ...user });
 		return jwtCredentials;
 	}
 
-	async activation(param: ActivationParamDTO): Promise<string> {
+	async init(user: UserJwtDTO) {
+		const credentials: UserJwtDTO | undefined =
+			await this.prisma.credentials
+				.findUnique({
+					where: {
+						email: user.email,
+						Customers: {
+							some: { id: user.customerId },
+						},
+					},
+					include: { Customers: true },
+				})
+				.then((item) =>
+					item
+						? ({
+								...item,
+								customerId: item.Customers[0].id,
+							} as UserJwtDTO)
+						: undefined,
+				);
+
+		if (!credentials) return undefined;
+
+		const jwtCredentials = await this.jwtService.signAsync(credentials);
+		return jwtCredentials;
+	}
+
+	async activation(link: string): Promise<string> {
 		const redisCacheKey = "registration-cache";
 
 		const registrationCache =
 			await this.redisClient.hGet<RegistrationCacheDTO>(
 				redisCacheKey,
-				param.link,
+				link,
 			);
 
-		if (!registrationCache) throw new UnauthorizedException();
+		if (!registrationCache)
+			throw new HttpException(
+				"Activation time has passed or the link is invalid.",
+				409,
+			);
+
 		const credentials = await this.prisma.credentials.create({
 			data: {
 				email: registrationCache.email,
@@ -157,25 +188,26 @@ export class AppService {
 		});
 
 		const customer = await this.customersService.uploadCustomer({
-			...registrationCache.information,
 			credentialsId: credentials.id,
+			firstName: registrationCache.information.firstName,
+			lastName: registrationCache.information.lastName,
 		});
-		await this.redisClient.hDel(redisCacheKey, param.link);
+		await this.redisClient.hDel(redisCacheKey, link);
 
-		const credentialJwtDto = new UserJwtDTO({
+		const credentialJwtDTO: UserJwtDTO = {
 			id: credentials.id,
 			email: credentials.email,
 			role: credentials.role,
 			customerId: customer.id,
-		});
+		};
 
 		const jwtCredentials =
-			await this.jwtService.signAsync(credentialJwtDto);
+			await this.jwtService.signAsync(credentialJwtDTO);
 
 		return jwtCredentials;
 	}
 
-	async changePassword(body: ChangePasswordBodyDTO) {
+	async changePassword(body: ValidationChangePasswordBodyDTO) {
 		const { email, newPassword } = body;
 
 		const saltRounds = Math.floor(Math.random() * (10 - 1) + 1);
@@ -196,35 +228,5 @@ export class AppService {
 		const addresses =
 			await this.addressesService.getAddressesKafka(inputData);
 		return { cart, addresses };
-	}
-
-	@Interval(6e5)
-	async intervalRegistrationCache() {
-		const nowDate = new Date();
-		const nowMinutes = nowDate.getMinutes();
-
-		const registrationCache =
-			await this.redisClient.hGetAll<RegistrationCacheDTO>(
-				"registration-cache",
-			);
-
-		const registrationFields: string[] = [];
-		for (const element of registrationCache) {
-			Object.values(element).forEach((data) => {
-				const registrationDate = new Date(data.createAt);
-				const registrationMinutes = registrationDate.getMinutes();
-				if (nowMinutes - registrationMinutes >= 10) {
-					Object.keys(element).map((field) =>
-						registrationFields.push(field),
-					);
-				}
-			});
-		}
-
-		if (registrationFields.length <= 0) return;
-		return await this.redisClient.hDel(
-			"registration-cache",
-			registrationFields,
-		);
 	}
 }

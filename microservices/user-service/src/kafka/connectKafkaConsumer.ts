@@ -8,11 +8,12 @@ export default function connectKafkaConsumer(app: INestApplication) {
 		transport: Transport.KAFKA,
 		options: {
 			client: {
-				clientId: "user-order-service",
+				clientId: "user-service",
 				brokers: (process.env.KAFKA_BROKERS as string).split(", "),
 			},
 			consumer: {
-				groupId: "user-order-consumer",
+				groupId: "user-order",
+				allowAutoTopicCreation: true,
 			},
 		},
 	});
@@ -20,11 +21,12 @@ export default function connectKafkaConsumer(app: INestApplication) {
 		transport: Transport.KAFKA,
 		options: {
 			client: {
-				clientId: "user-review-service",
+				clientId: "user-service",
 				brokers: (process.env.KAFKA_BROKERS as string).split(", "),
 			},
 			consumer: {
-				groupId: "user-review-consumer",
+				groupId: "user-review",
+				allowAutoTopicCreation: true,
 			},
 		},
 	});

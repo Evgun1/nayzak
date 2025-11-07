@@ -10,6 +10,9 @@ export const authProvider: AuthProvider = {
 			(u) => u.username === username && u.password === password
 		);
 
+
+
+
 		if (user) {
 			const { password, ...userToPersist } = user;
 			localStorage.setItem('user', JSON.stringify(userToPersist));

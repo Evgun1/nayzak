@@ -46,8 +46,6 @@ export const appCustomersPut = async (
 	const nginxPathname = `user/customers/update`;
 	const pathname = "customers/update";
 
-	console.log(inputData);
-
 	const { result } = await appFetchPut<CustomerItem>({
 		authorization: token,
 		pathname: nginxPathname,
@@ -61,7 +59,7 @@ export const appCustomersInitGet = async (token: string) => {
 	const pathname = "customers/init";
 	const nginxPathname = `user/customers/init`;
 
-	const { result } = await appFetchGet<CustomerItem>({
+	const { result } = await appFetchGet<CustomerItem | null>({
 		pathname: nginxPathname,
 		authorization: token,
 		cache: { request: "no-cache" },

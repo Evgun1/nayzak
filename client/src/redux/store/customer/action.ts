@@ -1,4 +1,4 @@
-import { appCookieGet } from "@/lib/api/cookie";
+import { appCookieGet } from "@/tools/cookie";
 import { AppDispatch, RootState } from "../../store";
 import { appCustomersInitGet, appCustomersPut } from "@/lib/api/customer";
 import { customerAction, CustomerState } from "./customer";
@@ -16,21 +16,16 @@ export const initCustomer = () => {
 		const token = await appCookieGet("user-token");
 		const storage = localStorageHandler("customerState");
 		// const localStorageCustomer = storage.get();
-
 		if (!token) return storage.delete();
+		const customerInit = await appCustomersInitGet(token);
 
-		try {
-			const customerInit = await appCustomersInitGet(token);
-			if (!customerInit) return;
+		if (!customerInit) return;
 
-			dispatch(customerAction.setCustomer(customerInit));
-			dispatch(initAddress());
-			dispatch(initWishlist());
-			dispatch(initCart());
-			dispatch(initOrders());
-		} catch (error) {
-			console.log(error);
-		}
+		dispatch(customerAction.setCustomer(customerInit));
+		dispatch(initAddress());
+		dispatch(initWishlist());
+		dispatch(initCart());
+		dispatch(initOrders());
 	};
 };
 

@@ -65,7 +65,9 @@ const ProductPreviewDefault: FC<ProductPreviewProps> = (props) => {
 					<Rating
 						customClasses={classes["preview__info-item"]}
 						rating={
-							props.product.rating ? +props.product.rating : 0
+							props.product.rating.avg
+								? +props.product.rating.avg
+								: 0
 						}
 					/>
 				) : (

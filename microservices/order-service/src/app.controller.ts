@@ -2,6 +2,8 @@ import {
 	Body,
 	Controller,
 	Get,
+	Header,
+	HttpCode,
 	Post,
 	Req,
 	Res,
@@ -37,5 +39,11 @@ export class AppController {
 		const order = await this.appService.create(body, user);
 
 		return order;
+	}
+
+	@Get("health")
+	@HttpCode(200)
+	async health() {
+		return "healthy";
 	}
 }

@@ -1,7 +1,7 @@
 // "use client";
 
 import TabsHeader from "./TabsHeader";
-import { TabsProvider, useTabs } from "./TabsContext";
+import { TabsProvider } from "./TabsContext";
 import { ReactNode } from "react";
 import TabsBody from "./TabsBody";
 import TabsToggle from "./TabsToggle";

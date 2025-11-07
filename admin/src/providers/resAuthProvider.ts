@@ -1,8 +1,9 @@
-import { AuthProvider, fetchUtils } from 'react-admin';
+import { AuthProvider, fetchUtils } from "react-admin";
+import { jwtDecode } from "jwt-decode";
+// import dotenv from "dotenv";
+// dotenv.config();
 
-import { jwtDecode } from 'jwt-decode';
-
-const apiUrl = 'http://localhost:3030';
+const apiUrl = "http://localhost:8080/services";
 const httpClient = fetchUtils.fetchJson;
 
 const authProvider: AuthProvider = {
@@ -10,12 +11,12 @@ const authProvider: AuthProvider = {
 		const requestPayload = { email, password };
 
 		try {
-			const { json } = await httpClient(`${apiUrl}/credentials/login`, {
-				method: 'POST',
+			const { json } = await httpClient(`${apiUrl}/user/login`, {
+				method: "POST",
 				body: JSON.stringify(requestPayload),
 			});
 
-			localStorage.setItem('token', json); // Assuming json.token contains the JWT token
+			localStorage.setItem("token", json); // Assuming json.token contains the JWT token
 
 			// Decode the token to check the role
 			const decoded = jwtDecode(json) as {
@@ -28,49 +29,49 @@ const authProvider: AuthProvider = {
 			const role = decoded.role;
 
 			// Check if the role is 'admin', if not logout immediately
-			if (role !== 'admin') {
-				localStorage.removeItem('token');
-				throw new Error('You do not have the necessary permissions.');
+			if (role !== "admin") {
+				localStorage.removeItem("token");
+				throw new Error("You do not have the necessary permissions.");
 			}
 		} catch (error) {
-			throw new Error('Invalid credentials or unauthorized role.');
+			throw new Error("Invalid credentials or unauthorized role.");
 		}
 	},
 
 	logout: () => {
-		localStorage.removeItem('token');
+		localStorage.removeItem("token");
 		return Promise.resolve();
 	},
 
 	checkAuth: () => {
-		const token = localStorage.getItem('token');
+		const token = localStorage.getItem("token");
 		if (!token) {
-			return Promise.reject(new Error('No token found'));
+			return Promise.reject(new Error("No token found"));
 		}
 		try {
 			const decoded = jwtDecode(token) as { role: string };
-			if (decoded.role !== 'admin') {
-				localStorage.removeItem('token');
+			if (decoded.role !== "admin") {
+				localStorage.removeItem("token");
 				return Promise.reject(
-					new Error('You do not have the necessary permissions.')
+					new Error("You do not have the necessary permissions."),
 				);
 			}
 			return Promise.resolve();
 		} catch (error) {
-			return Promise.reject(new Error('Invalid token'));
+			return Promise.reject(new Error("Invalid token"));
 		}
 	},
 
 	checkError: (error) => {
 		if (error.status === 401) {
-			localStorage.removeItem('token');
+			localStorage.removeItem("token");
 			return Promise.reject();
 		}
 		return Promise.resolve();
 	},
 
 	getPermissions: () => {
-		const token = localStorage.getItem('token');
+		const token = localStorage.getItem("token");
 
 		if (!token) return Promise.resolve();
 
@@ -83,10 +84,10 @@ const authProvider: AuthProvider = {
 
 		const role = decoded.role;
 
-		if (!role.includes('admin'))
-			return Promise.reject(new Error('No admin role found'));
+		if (!role.includes("admin"))
+			return Promise.reject(new Error("No admin role found"));
 
-		return Promise.resolve('admin');
+		return Promise.resolve("admin");
 
 		//
 		// const decodedToken = jwt_decode(token);

@@ -5,7 +5,7 @@ import { logOutActive } from "@/redux/store/auth/action";
 import { cartAction } from "@/redux/store/cart/cart";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { appCookieGet } from "@/lib/api/cookie";
+import { appCookieGet } from "@/tools/cookie";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 
 const Logout = () => {

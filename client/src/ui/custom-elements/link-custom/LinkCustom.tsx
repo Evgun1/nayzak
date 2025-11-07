@@ -12,7 +12,7 @@ import {
 } from "../ActionElements.types";
 import IconsIdList from "@/components/icons/IconsIdList";
 import DisplayIcon from "@/components/icons/displayIcon";
-import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
+import { ReadonlyURLSearchParams } from "next/navigation";
 
 export interface HrefObject {
 	endpoint?: string;

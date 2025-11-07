@@ -68,4 +68,8 @@ export class ValidationUploadProductBodyDTO {
 	@IsInt({ message: "subcategoriesId must be an integer" })
 	@Min(1, { message: "subcategoriesId must be a positive number" })
 	subcategoriesId: number;
+	@Type(() => Number)
+	@IsInt({ message: "productsRatingId must be an integer" })
+	@Min(1, { message: "productsRatingId must be a positive number" })
+	productsRatingId: number;
 }

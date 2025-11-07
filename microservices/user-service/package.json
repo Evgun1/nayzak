@@ -6,11 +6,14 @@
     "private": true,
     "license": "UNLICENSED",
     "prisma": {
-        "schema": "./prisma/schema.prisma"
+        "schema": "./src/prisma/schema.prisma"
     },
     "scripts": {
-        "check-schema": "npx prisma validate --schema=./prisma/schema.prisma",
+        "createUsers:deploy:": "node ./dist/scripts/createUsers/createUsers.js",
+        "kafka:deploy": "node ./dist/scripts/kafka/createTopics.js",
         "db:deploy": "npx prisma migrate deploy --schema=prisma/schema.prisma && npx prisma generate --schema=prisma/schema.prisma",
+        "create-users": "ts-node -r tsconfig-paths/register ./src/scripts/createUsers/createUsers.ts",
+        "check-schema": "npx prisma validate --s chema=./prisma/schema.prisma",
         "build": "nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "nest start",
@@ -45,7 +48,7 @@
         "passport-jwt": "^4.0.1",
         "passport-local": "^1.0.0",
         "prisma": "^6.8.2",
-        "redis": "^5.0.1",
+        "redis": "^5.8.3",
         "reflect-metadata": "^0.2.2",
         "rxjs": "^7.8.1"
     },

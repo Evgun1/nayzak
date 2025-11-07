@@ -29,9 +29,6 @@ import { validationExceptionFactory } from "src/utils/validationExceptionFactory
 export class CartController {
 	constructor(private readonly cartService: CartService) {}
 
-	@Get()
-	async getCarts(@Query() query: QueryDTO) {}
-
 	@Get("init")
 	@UseGuards(JwtAuthGuard)
 	async initCart(@Req() req: Request) {
@@ -46,6 +43,7 @@ export class CartController {
 	async uploadCart(@Req() req: Request<any, any, UploadCartDTO>) {
 		const body = req.body;
 		const credential = req.user as IUserJwt;
+
 		return await this.cartService.uploadCart(body, credential);
 	}
 

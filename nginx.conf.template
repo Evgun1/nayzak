@@ -1,0 +1,137 @@
+
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+
+http {
+
+    resolver 127.0.0.11 valid=30s;
+    server {
+        # listen 8080;
+        listen ${LISTENER};
+        # listen [::]:8080;
+        server_name localhost;
+
+        set $upstream_client client:3000;
+        set $upstream_catalog catalog-microservice:14000;
+        set $upstream_review review-microservice:12000;
+        set $upstream_user user-microservice:11000;
+        set $upstream_order order-microservice:13000;
+
+
+        location / {
+            proxy_pass http://$upstream_client;
+
+            proxy_set_header Host $http_host;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header X-Forwarded-Host $host:$server_port;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            # proxy_read_timeout 300s;
+            # proxy_connect_timeout 300s;
+
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept, Authorization';
+
+            if ($request_method = OPTIONS) {
+                return 204;
+            }
+        }
+
+        location /health {
+            return 200 'healthy';
+            add_header Content-Type text/plain;
+        }
+
+        location /services/catalog/ {
+            rewrite ^/services/catalog/(.*)$ /$1 break;
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' "*";
+                add_header 'Access-Control-Allow-Credentials' 'true';
+                add_header 'Access-Control-Allow-Headers' "*";
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+                add_header 'Access-Control-Max-Age' 1728000;
+                add_header 'Content-Length' 0;
+                return 204;
+            }
+            proxy_pass http://$upstream_catalog;
+            # proxy_read_timeout 300s;
+            # proxy_connect_timeout 300s;
+
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /services/review/ {
+            rewrite ^/services/review/(.*)$ /$1 break;
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' "*";
+                add_header 'Access-Control-Allow-Credentials' 'true';
+                add_header 'Access-Control-Allow-Headers' "*";
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+                add_header 'Access-Control-Max-Age' 1728000;
+                add_header 'Content-Length' 0;
+                return 204;
+            }
+            proxy_pass http://$upstream_review;
+            # proxy_read_timeout 300s;
+            # proxy_connect_timeout 300s;
+
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /services/user/ {
+            rewrite ^/services/user/(.*)$ /$1 break;
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' "*";
+                add_header 'Access-Control-Allow-Credentials' 'true';
+                add_header 'Access-Control-Allow-Headers' "*";
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+                add_header 'Access-Control-Max-Age' 1728000;
+                add_header 'Content-Length' 0;
+                return 204;
+            }
+            proxy_pass http://$upstream_user;
+            # proxy_read_timeout 300s;
+            # proxy_connect_timeout 300s;
+
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /services/order/ {
+            rewrite ^/services/order/(.*)$ /$1 break;
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' "*";
+                add_header 'Access-Control-Allow-Credentials' 'true';
+                add_header 'Access-Control-Allow-Headers' "*";
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+                add_header 'Access-Control-Max-Age' 1728000;
+                add_header 'Content-Length' 0;
+                return 204;
+            }
+            proxy_pass http://$upstream_order;
+            # proxy_read_timeout 300s;
+            # proxy_connect_timeout 300s;
+
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}

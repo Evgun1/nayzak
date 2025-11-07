@@ -5,7 +5,7 @@ import {
 } from "@/lib/api/wishlist";
 import { AppDispatch, RootState } from "../../store";
 import { wishlistAction, WishlistItemData, WishlistState } from "./wishlist";
-import { appCookieGet } from "@/lib/api/cookie";
+import { appCookieGet } from "@/tools/cookie";
 import localStorageHandler from "@/tools/localStorage";
 
 export function initWishlist() {
@@ -47,6 +47,8 @@ export function saveWishlist({ productsId }: WishlistItemData) {
 					{ productsId },
 					userToken,
 				);
+
+				console.log(result);
 
 				if (!result) return;
 				productsWishlists.push(result);

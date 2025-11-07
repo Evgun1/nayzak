@@ -4,6 +4,7 @@ import { Include } from "./interface/include";
 import { Enums, ModelMap } from "./interface/modelMap.type";
 import { Where } from "./interface/where";
 import { checkTwoArraysForCompatibility } from "src/utils/checkTwoArraysForCompatibility";
+import { OrderBy } from "./interface/orderBy";
 
 interface WhereObjectItem {
 	in?: number[];
@@ -15,6 +16,10 @@ type WhereParams<T = Record<string, any>> = {
 };
 
 type OrderByParam<T> = {
+	[K in keyof T as T[K] extends number | Date ? K : never]?: "ASC" | "DESC";
+};
+
+type OrderByParamT<T> = {
 	[K in keyof T as T[K] extends number | Date ? K : never]?: "ASC" | "DESC";
 };
 
@@ -140,12 +145,12 @@ export class SqlSelect<M, K extends keyof ModelMap> {
 	private tableConfig: string;
 	private whereConfig?: string;
 	private whereExistsConfig: string[];
-	private orderByConfig?: string[];
+	private orderByConfig: string[];
 	private limitConfig?: number;
 	private offsetConfig?: number;
 	private selectConfig: string[];
 	private joinConfig: string[];
-	private groupByConfig?: string;
+	private groupByConfig: string[];
 	private includeConfig: {
 		table: string;
 		include: string;
@@ -159,13 +164,14 @@ export class SqlSelect<M, K extends keyof ModelMap> {
 		this.whereExistsConfig = [];
 		this.tableConfig = table;
 		this.whereConfig = undefined;
-		this.orderByConfig = undefined;
+		this.orderByConfig = [];
 		this.limitConfig = undefined;
 		this.offsetConfig = undefined;
 		this.selectConfig = [`"${table}".*`];
 		this.joinConfig = [];
 		this.includeConfig = [];
-		this.groupByConfig = undefined;
+		// this.groupByConfig = undefined;
+		this.groupByConfig = [];
 	}
 
 	private existBuild(
@@ -282,7 +288,7 @@ export class SqlSelect<M, K extends keyof ModelMap> {
 					include,
 					join,
 				});
-				this.groupByConfig = `GROUP BY "${this.tableConfig}"."id"`;
+				this.groupByConfig.push(`"${this.tableConfig}"."id"`);
 			} else {
 				const include: string = `json_build_object(
                     ${Object.keys(params[key as string])
@@ -317,7 +323,6 @@ export class SqlSelect<M, K extends keyof ModelMap> {
 		this.whereExistsConfig.push(clause);
 		return this;
 	}
-
 	where(conditions: Where[K]) {
 		const whereObj: WhereParams<M> = {};
 
@@ -348,13 +353,41 @@ export class SqlSelect<M, K extends keyof ModelMap> {
 		return this;
 	}
 
-	orderBy(object: OrderByParam<M>) {
-		const arr = Object.entries(object).map(([key, val]) => {
-			return `"${key}" ${val}`;
-		});
-		this.orderByConfig = [arr.join(", ")];
-		return this;
+	orderByJoin(param: Record<keyof OrderBy[K], Record<string, string>>) {
+		const result: string[] = [];
+		for (const keyOut in param) {
+			const join = this.joinBuild({ table: keyOut as keyof ModelMap });
+			this.joinConfig.push(join);
+
+			const element = param[keyOut];
+			for (const keyIns in element) {
+				result.push(`"${keyOut}"."${keyIns}" ${element[keyIns]} `);
+				this.groupByConfig.push(`"${keyOut}"."${keyIns}"`);
+			}
+		}
+
+		return result;
 	}
+
+	orderBy(param: OrderBy[K]) {
+		for (const key in param) {
+			if (!Object.hasOwn(param, key)) continue;
+			if (!Object.keys(Prisma.ModelName).includes(key)) {
+				this.orderByConfig.push(
+					Object.entries(param)
+						.map(([key, val]) => `"${key}" ${val}`)
+						.join(", "),
+				);
+				continue;
+			}
+			const orderByJoin = this.orderByJoin(
+				param as Record<keyof OrderBy[K], Record<string, string>>,
+			);
+
+			this.orderByConfig.push(orderByJoin.join(", "));
+		}
+	}
+
 	limit(limit: number) {
 		this.limitConfig = limit;
 
@@ -418,11 +451,12 @@ export class SqlSelect<M, K extends keyof ModelMap> {
 			sql += ` WHERE ${whereConfig} `;
 		}
 
-		if (groupByConfig) sql += ` ${groupByConfig} `;
+		if (groupByConfig) sql += `GROUP BY ${groupByConfig.join(", ")}`;
 
-		sql += orderByConfig
-			? ` ORDER BY ${orderByConfig.join(" ")} NULLS LAST `
-			: ` ORDER BY "${tableConfig}"."id" ASC `;
+		sql +=
+			orderByConfig.length > 0
+				? ` ORDER BY ${orderByConfig.join(", ")} NULLS LAST `
+				: ` ORDER BY "${tableConfig}"."id" ASC `;
 
 		if (limitConfig && !Number.isNaN(+limitConfig))
 			sql += ` LIMIT ${limitConfig} `;

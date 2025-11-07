@@ -45,7 +45,7 @@ export const appProductsGet = async ({
 		cache,
 	});
 
-	return { productCounts: totalCount, products: result, headers };
+	return { productCounts: totalCount, products: result };
 };
 
 export const appNewProductsGet = async () => {

@@ -44,9 +44,9 @@ export class CustomersService {
 		return { customers, totalCount };
 	}
 
-	async getOne(param: ValidationGetCustomerParamDTO) {
+	async getOne(param: number) {
 		const customer = await this.prisma.customers.findFirst({
-			where: { id: param.id },
+			where: { id: param },
 		});
 		return customer;
 	}
@@ -64,7 +64,7 @@ export class CustomersService {
 			},
 		});
 
-		await this.clientApiService.clearCache("customers");
+		// await this.clientApiService.clearCache("customers");
 		return customers;
 	}
 
@@ -100,20 +100,18 @@ export class CustomersService {
 	}
 
 	async delete(body: ValidationDeleteCustomersBodyDTO) {
-		try {
-			const sqlQuery = await this.prisma.sqlQuery("Customers");
-			const sqlSelect = sqlQuery.select;
-			sqlSelect.fields();
-			sqlSelect.where({ id: body.customersId });
-			const selectQuery = await sqlSelect.query();
+		const sqlQuery = await this.prisma.sqlQuery("Customers");
+		const sqlSelect = sqlQuery.select;
+		sqlSelect.fields();
+		sqlSelect.where({ id: body.customersId });
+		const selectQuery = await sqlSelect.query();
 
-			const sqlDelete = sqlQuery.delete;
-			sqlDelete.where({ id: body.customersId });
-			await sqlDelete.query();
+		const sqlDelete = sqlQuery.delete;
+		sqlDelete.where({ id: body.customersId });
+		await sqlDelete.query();
 
-			await this.clientApiService.clearCache("customers");
-			return selectQuery;
-		} catch (error) {}
+		await this.clientApiService.clearCache("customers");
+		return selectQuery;
 	}
 
 	async kafkaGetCustomerData(

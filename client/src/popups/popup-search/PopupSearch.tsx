@@ -3,7 +3,7 @@
 import IconsIdList from "../../components/icons/IconsIdList";
 import DisplayIcon from "../../components/icons/displayIcon";
 import classes from "./PopupSearch.module.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/redux/redux";

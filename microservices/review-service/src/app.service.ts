@@ -3,7 +3,7 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import { ValidationUploadReviewsBodyDTO } from "./validation/validationUploadReviews.dto";
 import { UserDTO } from "./dto/user.dto";
 import { ValidationQueryDTO } from "./validation/validationQuery.dto";
-import { ValidationGetReviewsQueryDTO } from "./validation/ValidationGetReviews.dto";
+import { ValidationGetReviewsQueryDTO } from "./validation/validationGetReviews.dto";
 import { ClientKafka } from "@nestjs/microservices";
 import { ValidationReviewsByProductParamsDTO } from "./validation/validationReviewsByProduct.dto";
 import { firstValueFrom } from "rxjs";
@@ -20,14 +20,15 @@ import { ReviewsMongoService } from "./mongo/reviews/reviewsMongo.service";
 import { KafkaService } from "./kafka/kafka.service";
 import { ClientApiService } from "./client-api/clientApi.service";
 import { ReviewDTO } from "./dto/reviews.dto";
-import { TProductRatingInput } from "./type/kafkaUpdateProductRatig.type";
+import { TProductRatingInput } from "./type/kafkaUpdateProductRating.type";
+import { ValidationKafkaGetRatingByProductPayloadDTO } from "./validation/validationKafkaGetRatingByProduct.dto";
 
 type GetReviewsAllParam = ValidationQueryDTO &
 	ValidationGetReviewsQueryDTO &
 	Partial<ValidationReviewsByProductParamsDTO>;
 
 @Injectable()
-export class AppService implements OnModuleInit, OnModuleDestroy {
+export class AppService implements OnModuleInit {
 	private catalogKafka: ClientKafka;
 	private userKafka: ClientKafka;
 
@@ -45,12 +46,9 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 		this.userKafka.subscribeToResponseOf("get.customers.data");
 		await this.userKafka.connect();
 	}
-	async onModuleDestroy() {
-		await this.userKafka.close();
-	}
 
 	private async kafkaUpdateRatingInProduct(param: { productId: number }) {
-		const { reviews } = await this.getReviewsAll({
+		const { reviews, reviewsCount } = await this.getReviewsAll({
 			productsId: param.productId,
 		});
 		const reviewObj = reviews
@@ -68,7 +66,8 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 			"update.product.rating",
 			{
 				productsId: reviewObj.productsId,
-				rating: ratingAvg,
+				avg: ratingAvg,
+				count: reviewsCount,
 			},
 		);
 	}
@@ -145,8 +144,10 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 		const user = await this.kafkaGetCustomersData(
 			reviews.map((item) => item.customersId),
 		);
+
 		const reviewsDTO: ReviewDTO[] = [];
 		for (const element of reviews) {
+			if (!user || user.length <= 0) continue;
 			const findUser = user.find(
 				(item) => item.id === element.customersId,
 			);
@@ -189,5 +190,42 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 		await this.kafkaUpdateRatingInProduct({ productId: body.productsId });
 		await this.clientApi.clearCache("reviews");
 		return review;
+	}
+
+	async kafkaGetRatingByProducts(
+		payload: ValidationKafkaGetRatingByProductPayloadDTO,
+	) {
+		const result: Array<{ productId: number; avg: number; count: number }> =
+			[];
+		for (const id of payload.ids) {
+			const ratings = await this.reviewsMongo.findAll({
+				where: { productsId: id },
+			});
+
+			const aggregated = ratings.reduce(
+				(acc, cur) => {
+					const find = acc.find(
+						(val) => val.productId === cur.productsId,
+					);
+					if (!find) {
+						acc.push({
+							productId: cur.productsId,
+							avg: cur.rating,
+							count: 1,
+						});
+					} else {
+						find.count += 1;
+						find.avg =
+							(find.avg * (find.count - 1) + cur.rating) /
+							find.count;
+					}
+					return acc;
+				},
+				[] as Array<{ productId: number; avg: number; count: number }>,
+			);
+
+			result.push(...aggregated);
+		}
+		return result;
 	}
 }

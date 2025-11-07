@@ -9,6 +9,7 @@
         "schema": "src/prisma/schema.prisma"
     },
     "scripts": {
+        "kafka:deploy": "node ./dist/scripts/kafka/createTopics.js",
         "create-faker-data": "ts-node src/tools/faker/create-faker-data.ts",
         "delete-faker-data": "ts-node src/tools/faker/delete-faker-data.ts",
         "drop-tables": "ts-node src/tools/faker/drop-tables.ts",

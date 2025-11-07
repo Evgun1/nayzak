@@ -16,7 +16,7 @@ import classes from "./Form.module.scss";
 import { InputType } from "./inputs/InputType";
 import Radio from "./inputs/Radio";
 import InputHidden from "./inputs/InputHidden";
-import appSchemaHandler from "@/lib/validator/appSchemaHandler";
+import validatorSchemaHandler from "@/lib/validator/appSchemaHandler";
 import Checkbox from "./inputs/Checkbox";
 import { it } from "node:test";
 
@@ -57,7 +57,7 @@ const Form = <T extends ZodRawShape>({
 
 		const formData = new FormData(event.currentTarget);
 
-		const { error, hasErrors } = appSchemaHandler({
+		const { error, hasErrors } = validatorSchemaHandler({
 			formData,
 			schema: schema ?? [],
 		});
@@ -114,7 +114,7 @@ const Form = <T extends ZodRawShape>({
 		if (onChange) onChange(event);
 		if (Object.keys(errorMessages).length > 0) {
 			const formData = new FormData(event.currentTarget);
-			const { error } = appSchemaHandler({
+			const { error } = validatorSchemaHandler({
 				formData,
 				schema: schema ?? [],
 			});

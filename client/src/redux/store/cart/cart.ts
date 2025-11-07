@@ -1,4 +1,4 @@
-import localStorageHandler from "@/tools/localStorage";
+import localStorageHandler from "../../../tools/localStorage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { stat } from "fs";
@@ -15,7 +15,7 @@ export type CartState = {
 	totalAmount: number;
 };
 
-const storage = localStorageHandler<CartState>("cartState");
+const storage = localStorageHandler("cartState");
 const localStorageCart = storage.get();
 
 const initialState: CartState = {
@@ -36,7 +36,7 @@ export const cartSlice = createSlice({
 
 	selectors: {
 		getCartSelector: (state: CartState) => {
-			const storage = localStorageHandler<CartState>("cartState");
+			const storage = localStorageHandler("cartState");
 			const localCart = storage.get();
 			return localCart ? localCart : state;
 		},
@@ -47,7 +47,7 @@ export const cartSlice = createSlice({
 			if (action.payload && action.payload.length) {
 				state.productsArray = action.payload;
 				state.totalAmount = action.payload.length;
-				const storage = localStorageHandler<CartState>("cartState");
+				const storage = localStorageHandler("cartState");
 
 				storage.set(state);
 			}
@@ -82,7 +82,7 @@ export const cartSlice = createSlice({
 					value(action.payload);
 				}
 			}
-			const storage = localStorageHandler<CartState>("cartState");
+			const storage = localStorageHandler("cartState");
 			storage.set(state);
 			const localStorage = storage.get();
 			state = localStorage ? localStorage : state;
@@ -91,7 +91,7 @@ export const cartSlice = createSlice({
 		cleanCart(state) {
 			state.productsArray.splice(0);
 			state.totalAmount = 0;
-			const storage = localStorageHandler<CartState>("cartState");
+			const storage = localStorageHandler("cartState");
 			storage.set(state);
 			const localStorage = storage.get();
 			state = localStorage ? localStorage : state;

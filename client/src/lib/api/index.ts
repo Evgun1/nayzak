@@ -1,7 +1,7 @@
-import { AppGetFetch, TagsItem } from "./interface/appGetFetch.interface";
+import { AppFetchGet, TagsItem } from "./interface/appGetFetch.interface";
 
-let BASE_URL = "http://localhost:3030";
-const BASE_URL_NGINX = "http://localhost:8080";
+// let BASE_URL = "http://192.168.0.107:3030";
+const BASE_URL_NGINX = process.env.NEXT_PUBLIC_NGINX_URL as string;
 
 type AppFetchProps = {
 	pathname: string;
@@ -39,7 +39,7 @@ const appFetch = async <T>({
 	}`;
 
 	// init.next = { revalidate: 1 };
-	// init.cache = "no-cache";
+	// init.cache = "no-cache";`
 
 	try {
 		const response = await fetch(url, init);
@@ -56,20 +56,17 @@ const appFetch = async <T>({
 			: NaN;
 
 		const result = (await response.json()) as T;
-		return { result, totalCount, headers };
-	} catch (error) {
-		console.log(error);
 
+		return { result: result, totalCount, headers };
+	} catch (error) {
 		throw error;
 	}
 };
 
-export const appFetchGet = async <T>({
-	pathname,
-	authorization,
-	searchParams,
-	cache,
-}: AppGetFetch) => {
+export const appFetchGet = async <T>(
+	{ pathname, authorization, searchParams, cache }: AppFetchGet,
+	options?: any,
+) => {
 	const init: RequestInit = {};
 	init.method = "GET";
 
@@ -79,9 +76,8 @@ export const appFetchGet = async <T>({
 		revalidate: cache?.revalidate,
 	};
 
-	if (authorization) {
+	if (authorization)
 		init.headers = { Authorization: `Bearer ${authorization}` };
-	}
 
 	const result = await appFetch<T>({ init, pathname, searchParams });
 
@@ -103,9 +99,8 @@ export const appFetchPost = async <T>({
 
 	init.method = "POST";
 
-	if (authorization) {
+	if (authorization)
 		headers.append("Authorization", `Bearer ${authorization}`);
-	}
 
 	if (sendData) {
 		if (!(sendData instanceof FormData)) {

@@ -7,6 +7,12 @@ export type ModelArgsMap = {
 		skip: number | undefined;
 		take: number | undefined;
 	};
+	[Prisma.ModelName.ProductsRating]: {
+		where: Prisma.ProductsRatingWhereInput;
+		orderBy: Prisma.ProductsRatingOrderByWithRelationInput;
+		skip: number | undefined;
+		take: number | undefined;
+	};
 	[Prisma.ModelName.Media]: {
 		where: Prisma.MediaWhereInput;
 		orderBy: Prisma.MediaOrderByWithRelationInput;

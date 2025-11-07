@@ -4,7 +4,7 @@ import { ordersAction, OrderState } from "./orders";
 import { removeCart } from "../cart/action";
 import { notificationAction } from "../notification/notification";
 import NotificationCheckout from "@/components/notification/NotificationCheckout";
-import { appCookieGet } from "@/lib/api/cookie";
+import { appCookieGet } from "@/tools/cookie";
 import {
 	appOrderInitGet,
 	appOrderUpload,
@@ -34,8 +34,6 @@ export function uploadOrders(currentOrders: OrdersUpload) {
 		const ordersArr = [...getState().orders.ordersData];
 		const token = await appCookieGet("user-token");
 		if (!token) return;
-
-		console.log(token);
 
 		try {
 			const { orders } = await appOrderUpload(currentOrders, token);

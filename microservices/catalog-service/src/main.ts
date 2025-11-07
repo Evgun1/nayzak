@@ -3,7 +3,9 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 import { Next, ValidationPipe } from "@nestjs/common";
-const PORT = process.env.PORT ?? 3000;
+import connectKafkaConsumer from "./kafka/connectKafkaConsumer";
+
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 10003;
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, { cors: true });
@@ -13,38 +15,13 @@ async function bootstrap() {
 		}),
 	);
 
-	app.connectMicroservice<MicroserviceOptions>({
-		transport: Transport.KAFKA,
-		options: {
-			client: {
-				clientId: "catalog-service",
-				brokers: ["localhost:29092", "localhost:39092"],
-			},
-			consumer: {
-				groupId: "catalog-consumer",
-			},
-			// 	rebalanceTimeout: 60000,
-			// 	allowAutoTopicCreation: false,
-			// 	heartbeatInterval: 3000,
-			// 	sessionTimeout: 45000,
-			// 	retry: {
-			// 		initialRetryTime: 300,
-			// 		retries: 5,
-			// 	},
-			// },
-			// subscribe: { fromBeginning: true },
-		},
-	});
+	connectKafkaConsumer(app);
 	await app.startAllMicroservices();
 
 	app.enableCors({
-		origin: ["http://localhost:2999", "http://localhost:2998"],
+		origin: process.env.CORS_URL ? process.env.CORS_URL.split(", ") : true,
 		credentials: true,
 	});
-	// app.enableCors({
-	// 	origin: "http://localhost:2998",
-	// 	credentials: true,
-	// });
 
 	await app.listen(PORT, () => {
 		console.log(`Server running on port: ${PORT}`);

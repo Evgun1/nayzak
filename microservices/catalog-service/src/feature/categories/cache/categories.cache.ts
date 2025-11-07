@@ -24,9 +24,13 @@ export class CategoriesCache {
 			);
 			if (findCache) continue;
 
-			await this.redis.hSet(this.cacheKeyCategoriesGap, {
-				[element.id.toString()]: element,
-			});
+			await this.redis.hSetEx(
+				this.cacheKeyCategoriesGap,
+				{
+					[element.id.toString()]: element,
+				},
+				1800,
+			);
 		}
 	}
 
@@ -38,9 +42,13 @@ export class CategoriesCache {
 			);
 			if (!findCache) continue;
 
-			await this.redis.hSet(this.cacheKeyCategoriesGap, {
-				[element.id.toString()]: element,
-			});
+			await this.redis.hSetEx(
+				this.cacheKeyCategoriesGap,
+				{
+					[element.id.toString()]: element,
+				},
+				1800,
+			);
 		}
 	}
 	async deleteCategories(id: number[] | number) {

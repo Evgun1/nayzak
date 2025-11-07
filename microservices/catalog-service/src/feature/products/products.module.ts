@@ -6,8 +6,17 @@ import { PrismaModule } from "src/prisma/prisma.module";
 import { ClientApiModule } from "src/client-api/clientApi.module";
 import { RedisModule } from "src/redis/redis.module";
 import { ProductPrisma } from "./prisma/product.prisma";
+import { ProductsCacheModule } from "./cache/productsCache.module";
+import { KafkaModule } from "src/kafka/kafka.module";
 @Module({
-	imports: [PrismaModule, QueryModule, ClientApiModule, RedisModule],
+	imports: [
+		KafkaModule,
+		PrismaModule,
+		QueryModule,
+		ClientApiModule,
+		RedisModule,
+		ProductsCacheModule,
+	],
 	controllers: [ProductsController],
 	providers: [ProductsService, ProductPrisma],
 	exports: [ProductsService],

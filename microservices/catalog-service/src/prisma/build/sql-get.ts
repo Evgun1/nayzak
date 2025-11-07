@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-type testT = {
+type ProductsArgs = {
 	select?: Prisma.ProductsSelect;
 	include?: {
 		Media?: Prisma.MediaFindManyArgs;
@@ -15,7 +15,7 @@ type testT = {
 export class SqlGet {
 	constructor() {}
 
-	async products(args: testT) {}
+	async products(args: ProductsArgs) {}
 	async subcategories(args: Prisma.SubcategoriesFindManyArgs) {}
 	async categories(args: Prisma.CategoriesFindManyArgs) {}
 	async media(args: Prisma.MediaFindManyArgs) {}
