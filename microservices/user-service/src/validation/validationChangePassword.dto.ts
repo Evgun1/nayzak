@@ -29,11 +29,8 @@ class PasswordsMatch implements ValidatorConstraintInterface {
 }
 
 export class ValidationChangePasswordBodyDTO {
-	@IsNotEmpty()
-	email: string;
-
-	@IsNotEmpty({ message: "The field must not be empty" })
-	password: string;
+	@IsString()
+	oldPassword: string;
 
 	@MinLength(3, { message: "Password less than three words" })
 	@Matches(/^\S+$/, { message: "Password should not include blank space" })

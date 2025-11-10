@@ -1,6 +1,7 @@
 import * as bcrypt from "bcrypt";
 
 import {
+	ForbiddenException,
 	HttpException,
 	Inject,
 	Injectable,
@@ -128,6 +129,8 @@ export class AppService {
 			activeLink: actionLink,
 		});
 
+		console.log(body);
+
 		return { message: "To confirm, open the email." };
 	}
 
@@ -207,14 +210,28 @@ export class AppService {
 		return jwtCredentials;
 	}
 
-	async changePassword(body: ValidationChangePasswordBodyDTO) {
-		const { email, newPassword } = body;
+	async changePassword(
+		body: ValidationChangePasswordBodyDTO,
+		user: UserJwtDTO,
+	) {
+		const { newPassword, oldPassword } = body;
+		const credentialPassword = (await this.prisma.credentials
+			.findUnique({ where: { id: user.id }, select: { password: true } })
+			.then((i) => i?.password)) as string;
+
+		const checkPassword = await bcrypt.compare(
+			oldPassword,
+			credentialPassword,
+		);
+
+		if (!checkPassword)
+			throw new ForbiddenException("Invalid current password");
 
 		const saltRounds = Math.floor(Math.random() * (10 - 1) + 1);
 		const hashPassword = await bcrypt.hash(newPassword, saltRounds);
 
 		await this.prisma.credentials.update({
-			where: { email: email },
+			where: { id: user.id },
 			data: { password: hashPassword },
 		});
 

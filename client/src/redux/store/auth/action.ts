@@ -10,24 +10,25 @@ import {
 } from "@/lib/api/credentials";
 import { appCookieDelete, appCookieGet, appCookieSet } from "@/tools/cookie";
 import {
-	SignUp,
-	CredentialsPasswordDTO,
 	CredentialsStateItem,
-	SignIn,
+	SignInParam,
+	CredentialsPasswordParam,
+	SignUpParam,
 } from "@/redux/store/auth/auth.type";
 import { initCustomer } from "../customer/action";
 import { notificationAction } from "../notification/notification";
 import PopupNotification from "@/popups/popup-notifications/PopupNotifications";
 import { jwtDecode } from "jwt-decode";
-import { jwtSign } from "@/lib/jwt/jwt";
 import localStorageHandler from "@/tools/localStorage";
+import isValidJSONObjectString from "@/tools/isValidJSONObjectString";
 import { popupActions } from "../popup/popup";
 
-export const registrationAction = (userData: SignUp) => {
+export const registrationAction = (userData: SignUpParam) => {
 	return async function (dispatch: AppDispatch) {
 		try {
-			const result = await appCredentialsRegisterPost(userData);
-
+			const result = await appCredentialsRegisterPost({
+				...userData,
+			});
 			dispatch(
 				notificationAction.toggle(
 					PopupNotification({
@@ -42,22 +43,26 @@ export const registrationAction = (userData: SignUp) => {
 		} catch (error) {
 			const err = error as Error;
 
-			const objErr: {
-				response: string;
-				status: number;
-				message: string;
-				name: string;
-			} = JSON.parse(err.message);
+			if (isValidJSONObjectString(err.message)) {
+				const objErr: {
+					response: string;
+					status: number;
+					message: string;
+					name: string;
+				} = JSON.parse(err.message);
 
-			dispatch(authAction.writeErrorMessage(objErr.message));
+				dispatch(authAction.writeErrorMessage(objErr.message));
+			} else {
+				console.log(err);
+			}
 		}
 	};
 };
 
-export const loginAction = (userData: SignIn) => {
+export const loginAction = (userData: SignInParam) => {
 	return async function (dispatch: AppDispatch, getState: () => RootState) {
 		try {
-			const token = await appCredentialsLoginPost(userData);
+			const token = await appCredentialsLoginPost({ ...userData });
 			if (!token) return;
 
 			appCookieSet({
@@ -73,30 +78,34 @@ export const loginAction = (userData: SignIn) => {
 			dispatch(initCustomer());
 		} catch (e) {
 			const err = e as Error;
-			const objErr: { statusCode: number; message: string } = JSON.parse(
-				err.message,
-			);
+			if (isValidJSONObjectString(err.message)) {
+				const objErr: { statusCode: number; message: string[] } =
+					JSON.parse(err.message);
 
-			dispatch(authAction.writeErrorMessage(objErr.message));
+				console.log(objErr.message);
+
+				dispatch(
+					authAction.writeErrorMessage(objErr.message.join(". ")),
+				);
+			} else {
+				console.log(err);
+			}
 		}
 	};
 };
 
-export const changePasswordAction = (passwordData: CredentialsPasswordDTO) => {
+export const changePasswordAction = (
+	passwordData: CredentialsPasswordParam,
+) => {
 	return async function (dispatch: AppDispatch) {
 		const userToken = appCookieGet("user-token");
 		if (!userToken) return;
 
-		const { email }: CredentialsStateItem = jwtDecode(userToken);
-
-		const token = jwtSign({
-			oldPassword: passwordData.oldPassword,
-			newPassword: passwordData.newPassword,
-			email,
-		});
-
 		try {
-			const { result } = await appCredentialsPasswordPut(token);
+			const { result } = await appCredentialsPasswordPut(
+				passwordData,
+				userToken,
+			);
 			dispatch(
 				notificationAction.toggle(
 					PopupNotification({

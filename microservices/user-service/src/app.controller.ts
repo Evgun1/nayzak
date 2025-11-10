@@ -4,11 +4,9 @@ import {
 	Get,
 	HttpCode,
 	Param,
-	ParseIntPipe,
 	ParseUUIDPipe,
 	Post,
 	Put,
-	Query,
 	Req,
 	Res,
 	UnauthorizedException,
@@ -41,8 +39,6 @@ export class AppController {
 	async init(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
 		const user = req.user as UserJwtDTO;
 		const token = await this.appService.init(user);
-
-		// return JSON.stringify(token);
 		return { access_token: token };
 	}
 
@@ -74,9 +70,19 @@ export class AppController {
 		return JSON.stringify(userToken);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Put("auth/change-password")
-	async changePassword(@Body() body: ValidationChangePasswordBodyDTO) {
-		return await this.appService.changePassword(body);
+	async changePassword(
+		@Body() body: ValidationChangePasswordBodyDTO,
+		@Req() req: Request,
+	) {
+		const user = req.user as UserJwtDTO;
+
+		try {
+			return await this.appService.changePassword(body, user);
+		} catch (error) {
+			throw new UnauthorizedException();
+		}
 	}
 
 	@MessagePattern("get.cart.and.addresses.user")

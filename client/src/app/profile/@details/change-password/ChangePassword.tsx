@@ -7,7 +7,7 @@ import { z, ZodEffects, ZodObject } from "zod";
 import { validation } from "@/lib/validator/validator";
 import { changePasswordAction } from "@/redux/store/auth/action";
 import { useAppDispatch } from "@/redux/redux";
-import { CredentialsPasswordDTO } from "@/redux/store/auth/auth.type";
+import { CredentialsPasswordParam } from "@/redux/store/auth/auth.type";
 
 const schemaConfirmPassword: Array<ZodObject<any> | ZodEffects<any>> = [];
 schemaConfirmPassword.push(
@@ -22,10 +22,11 @@ schemaConfirmPassword.push(
 const ChangePassword = () => {
 	const dispatch = useAppDispatch();
 
-	const onSubmitHandler = (event: { data: CredentialsPasswordDTO }) => {
+	const onSubmitHandler = (event: { data: CredentialsPasswordParam }) => {
 		if (event.data.newPassword && event.data.oldPassword)
 			dispatch(
 				changePasswordAction({
+					confirmPassword: event.data.confirmPassword,
 					newPassword: event.data.newPassword,
 					oldPassword: event.data.oldPassword,
 				}),

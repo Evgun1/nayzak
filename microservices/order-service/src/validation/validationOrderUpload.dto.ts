@@ -1,10 +1,10 @@
-import { $Enums, OrdersStatus } from "@prisma/client";
+import { $Enums } from "@prisma/client";
 import { IsInt, IsNotEmpty, IsString, Min, ValidateIf } from "class-validator";
 
 export class ValidationOrderUploadBodyDTO {
-	@ValidateIf((dto) => Object.values(OrdersStatus).includes(dto))
+	@ValidateIf((dto) => Object.values($Enums.OrdersStatus).includes(dto))
 	@IsString()
-	status?: OrdersStatus;
+	status?: $Enums.OrdersStatus;
 
 	@Min(1)
 	@IsNotEmpty()

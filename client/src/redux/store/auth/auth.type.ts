@@ -5,18 +5,22 @@ export interface CredentialsStateItem {
 	role?: string;
 }
 
-export interface SignUp {
+export interface SignUpParam {
+	// payload: string;
 	firstName: string;
 	lastName: string;
 	email: string;
 	password: string;
 }
-export interface SignIn {
+export interface SignInParam {
+	// payload: string;
+
 	email: string;
 	password: string;
 }
 
-export interface CredentialsPasswordDTO {
+export interface CredentialsPasswordParam {
 	newPassword: string;
 	oldPassword: string;
+	confirmPassword: string;
 }

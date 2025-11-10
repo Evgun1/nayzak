@@ -11,6 +11,7 @@ COPY --from=build /dist ./dist
 RUN npm ci --omit=dev
 EXPOSE 12000
 CMD [ "sh", "-c", "npm run kafka:deploy && node dist/main.js"]
+# CMD [  "npm run kafka:deploy && node dist/main.js"]
 
 
 

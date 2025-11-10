@@ -1,9 +1,11 @@
 import { Module } from "@nestjs/common";
 import { ClientsModule, Transport } from "@nestjs/microservices";
 import { KafkaService } from "./kafka.service";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
 	imports: [
+		ConfigModule.forRoot(),
 		ClientsModule.register([
 			{
 				name: "MAIL_NOTIFICATION_SERVICE",

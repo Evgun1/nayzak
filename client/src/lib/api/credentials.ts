@@ -1,10 +1,16 @@
+"use server";
 import { headers } from "next/headers";
 import { appFetchGet, appFetchPost, appFetchPut, AppPostFetch } from ".";
-import { SignIn, SignUp } from "@/redux/store/auth/auth.type";
+import {
+	CredentialsPasswordParam,
+	SignInParam,
+	SignUpParam,
+} from "@/redux/store/auth/auth.type";
+import { jwtSign } from "../jwt/jwt";
 
 type AppUserProps = {
-	registration?: SignUp;
-	login?: SignIn;
+	registration?: SignUpParam;
+	login?: SignInParam;
 	init?: string;
 };
 
@@ -57,20 +63,31 @@ const tag = "credentials";
 // 	// }
 // };
 
-export const appCredentialsLoginPost = async (param: SignIn) => {
+type AppCredentialsLoginPostParam = { payload: string };
+
+export const appCredentialsLoginPost = async (param: SignInParam) => {
 	const pathname = "user/auth/login";
+
+	const jwt = jwtSign(param);
+
 	const res = await appFetchPost<string>({
 		pathname,
-		sendData: param,
+		sendData: { payload: jwt },
 	});
 	return res.result;
 };
 
-export const appCredentialsRegisterPost = async (param: SignUp) => {
+type AppCredentialsRegisterPostParam = {
+	payload: string;
+};
+export const appCredentialsRegisterPost = async (param: SignUpParam) => {
 	const pathname = "user/auth/registration";
+
+	const jwt = jwtSign(param);
 	const res = await appFetchPost<{ message: string }>({
 		pathname,
-		sendData: param,
+		// sendData: param,
+		sendData: { payload: jwt },
 	});
 	return res.result;
 };
@@ -97,13 +114,21 @@ export const appCredentialsCheckGet = async (userToken: string) => {
 		authorization: userToken,
 	});
 };
-export const appCredentialsPasswordPut = async (passwordToken: string) => {
+
+type AppCredentialsPasswordPutParam = { payload: string };
+export const appCredentialsPasswordPut = async (
+	param: CredentialsPasswordParam,
+	userToken: string,
+) => {
 	// const pathname = "user/credentials/change-password";
 	const nginx = `user/auth/change-password`;
 
+	const jwt = jwtSign(param);
+
 	return await appFetchPut<string>({
 		pathname: nginx,
-		authorization: passwordToken,
+		putData: { payload: jwt },
+		authorization: userToken,
 	});
 };
 

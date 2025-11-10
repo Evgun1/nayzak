@@ -1,4 +1,4 @@
-import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
 
 import { Body, HttpException, NestMiddleware, Req, Res } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
@@ -8,12 +8,12 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class LoginMiddleware implements NestMiddleware {
 	constructor(private readonly prisma: PrismaService) {}
 
-	async use(
-		@Req() { body }: Request<any, any, ValidationLoginBodyDTO>,
-		@Res() res: Response,
-		next: NextFunction,
-	) {
-		// const { email, password } = body;
+	async use(@Req() req: Request, @Res() res: Response, next: NextFunction) {
+		const payload = req.body.payload;
+		const decode = jwt.decode(payload);
+		console.log(decode);
+
+		req.body = decode;
 
 		// const credentials = await this.prisma.credentials.findFirst({
 		// 	where: { email },

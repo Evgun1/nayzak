@@ -7,7 +7,7 @@ import { loginAction, registrationAction } from "@/redux/store/auth/action";
 import IconsIdList from "../../components/icons/IconsIdList";
 import { popupActions } from "@/redux/store/popup/popup";
 import { z, ZodEffects, ZodObject } from "zod";
-import { SignIn, SignUp } from "@/redux/store/auth/auth.type";
+import { SignInParam, SignUpParam } from "@/redux/store/auth/auth.type";
 import { validation } from "@/lib/validator/validator";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import Form from "@/ui/form/Form";
@@ -20,7 +20,7 @@ const PopupAuth = () => {
 	const [isRegister, setIsRegister] = useState<boolean>(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
-	const submitHandler = (event: { data: SignUp & SignIn }) => {
+	const submitHandler = (event: { data: SignUpParam & SignInParam }) => {
 		if (isRegister) {
 			dispatch(
 				registrationAction({
