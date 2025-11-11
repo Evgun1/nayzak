@@ -129,7 +129,6 @@ export class AppService {
 			activeLink: actionLink,
 		});
 
-		console.log(body);
 
 		return { message: "To confirm, open the email." };
 	}

@@ -19,10 +19,10 @@ export class ProductsCacheService {
 	) {
 		const allCache = await this.getCacheNewProducts();
 
-		if (allCache.length > 0) {
-			const ids = allCache.map((product) => product.id);
-			await this.deleteCacheNewProducts(ids.toString());
-		}
+		// if (allCache.length > 0) {
+		// 	const ids = allCache.map((product) => `${product.id}`);
+		// 	await this.deleteCacheNewProducts(ids);
+		// }
 
 		const cacheProducts = allCache
 			.map((data) => Object.values(data)[0])
@@ -41,11 +41,11 @@ export class ProductsCacheService {
 			.slice(0, count);
 
 		if (products.length <= count - cacheProducts.length) {
-			for (const element of products) {
+			for (const product of products) {
 				await this.redisService.hSetEx(
 					this.newProductsCacheKey,
 					{
-						[element.id.toString()]: element,
+						[`${product.id}`]: product,
 					},
 					86400,
 				);
@@ -53,6 +53,7 @@ export class ProductsCacheService {
 		} else {
 			for (let index = 0; index < count - cacheProducts.length; index++) {
 				const product = products[index];
+
 				if (!product) continue;
 
 				const findProduct = cacheProducts.find(
@@ -62,7 +63,7 @@ export class ProductsCacheService {
 					await this.redisService.hSetEx(
 						this.newProductsCacheKey,
 						{
-							[product.id.toString()]: product,
+							[`${product.id}`]: product,
 						},
 						86400,
 					);
@@ -82,14 +83,14 @@ export class ProductsCacheService {
 					const cacheProduct = cacheProducts[index];
 					await this.redisService.hDel(
 						this.newProductsCacheKey,
-						cacheProduct.id.toString(),
+						cacheProduct.id,
 					);
 				}
 
 				await this.redisService.hSetEx(
 					this.newProductsCacheKey,
 					{
-						[product.id.toString()]: product,
+						[`${product.id}`]: product,
 					},
 					86400,
 				);

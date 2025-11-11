@@ -11,7 +11,6 @@ export class LoginMiddleware implements NestMiddleware {
 	async use(@Req() req: Request, @Res() res: Response, next: NextFunction) {
 		const payload = req.body.payload;
 		const decode = jwt.decode(payload);
-		console.log(decode);
 
 		req.body = decode;
 

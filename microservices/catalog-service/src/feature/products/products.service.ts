@@ -246,9 +246,9 @@ export class ProductsService {
 	}
 
 	async getNewProducts() {
-		const cacheProducts = await this.productsCache.getCacheNewProducts();
+		// const cacheProducts = await this.productsCache.getCacheNewProducts();
 
-		if (cacheProducts.length >= 6) return cacheProducts;
+		// if (cacheProducts.length >= 6) return cacheProducts;
 
 		const products = await this.getProductsAll({
 			sortBy: "createdAt",

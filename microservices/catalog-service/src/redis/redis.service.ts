@@ -99,12 +99,18 @@ export class RedisService {
 	}
 
 	async hDel(key: string, field: string | string[] | number | number[]) {
-		await this.redisClient.hDel(
-			key,
-			typeof field === "object"
-				? field.map((data: string | number) => data.toString())
-				: field.toString(),
-		);
+		const fieldsArr: string[] = [];
+
+		if (Array.isArray(field)) {
+			const stringData = field.map((i: string | number) =>
+				typeof i === "string" ? i : `${i}`,
+			);
+			fieldsArr.push(...stringData);
+		} else {
+			fieldsArr.push(typeof field === "string" ? field : `${field}`);
+		}
+
+		await this.redisClient.hDel(key, fieldsArr);
 	}
 
 	async ttl<T>(key: string) {

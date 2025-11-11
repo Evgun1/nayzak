@@ -2,7 +2,7 @@
 import Image from "next/image";
 import classes from "./ImagePreview.module.scss";
 import { FunctionComponent, use } from "react";
-import { getImage } from "@/tools/getPlaceholderImage";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 
 interface ImagePreviewProps {
 	src: string;
@@ -11,14 +11,14 @@ interface ImagePreviewProps {
 
 const ImagePreview: FunctionComponent<ImagePreviewProps> = async (props) => {
 	const { alt, src } = props;
-	const { base64, img } = await getImage(src);
+	const { placeholder } = await getPlaceholderImage(src);
 
 	return (
 		<div className={classes["image-preview"]}>
 			<Image
-				src={img.src}
+				src={src}
 				placeholder="blur"
-				blurDataURL={base64}
+				blurDataURL={placeholder}
 				sizes="width: 100%; height:100%"
 				objectFit="cover"
 				priority

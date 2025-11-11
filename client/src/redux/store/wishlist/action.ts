@@ -48,8 +48,6 @@ export function saveWishlist({ productsId }: WishlistItemData) {
 					userToken,
 				);
 
-				console.log(result);
-
 				if (!result) return;
 				productsWishlists.push(result);
 			} else {

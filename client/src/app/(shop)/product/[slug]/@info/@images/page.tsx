@@ -2,7 +2,6 @@
 
 import classes from "./ProductImageSwiper.module.scss";
 import { appMediaByProductGet } from "@/lib/api/media";
-// import { getImage, getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import Image from "next/image";
 import { FC } from "react";
 import dynamic from "next/dynamic";

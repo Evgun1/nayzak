@@ -82,8 +82,6 @@ export const loginAction = (userData: SignInParam) => {
 				const objErr: { statusCode: number; message: string[] } =
 					JSON.parse(err.message);
 
-				console.log(objErr.message);
-
 				dispatch(
 					authAction.writeErrorMessage(objErr.message.join(". ")),
 				);

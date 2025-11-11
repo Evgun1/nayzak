@@ -10,10 +10,10 @@ import SwiperComponent from "./swiper/Swiper";
 import { FC } from "react";
 
 const Page: FC = async () => {
-
-
 	const productFetch = await appNewProductsGet();
+
 	const products: ProductPreviewItem[] = [];
+
 	for (const element of productFetch.products) {
 		const {
 			createdAt,
@@ -46,8 +46,7 @@ const Page: FC = async () => {
 	return (
 		<div className={classes["products-swiper"]}>
 			<SwiperComponent label="Latest Arrivals">
-				{
-					products.length > 0 &&
+				{products.length > 0 &&
 					products.map((product, i) => (
 						<ProductPreviewDefault
 							key={i}
