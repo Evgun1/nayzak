@@ -1,0 +1,11 @@
+.filter-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 32px;
+
+	svg {
+		width: 24px;
+		height: 24px;
+	}
+}

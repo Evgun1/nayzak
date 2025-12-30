@@ -1,6 +1,8 @@
 import classes from "./style.module.scss";
 import { ReactNode } from "react";
 import { FilterProvider } from "./tools/context/useFilterContext";
+import Popup from "@/components/popup/Popup";
+import { PopupLocalProvider } from "@/components/popup-local/tool/usePopupLocalContext";
 
 export default function RootLayout(props: {
 	params: { category: string; subcategory: string };
@@ -12,17 +14,15 @@ export default function RootLayout(props: {
 	const { products, filter, toolbar } = props;
 
 	return (
-		<div className={classes["products"]}>
-			<FilterProvider
-				searchParams={props.searchParams}
-				filter={filter}
-			>
-				<div className={classes["products__main"]}>
-					{toolbar}
-					{products}
-				</div>
-			</FilterProvider>
-		</div>
+		<FilterProvider
+			searchParams={props.searchParams}
+			filter={filter}
+		>
+			<div className={classes["products__main"]}>
+				{toolbar}
+				{products}
+			</div>
+		</FilterProvider>
 	);
 }
 

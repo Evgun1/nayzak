@@ -6,11 +6,19 @@ import { TextClassList } from "@/types/textClassList.enum";
 import { FC } from "react";
 import SelectSortBy from "./components/SelectSortBy";
 import SelectTypeList from "./components/SelectTypeList";
+import dynamic from "next/dynamic";
+import SelectTypeListSkeleton from "./skeleton/SelectTypeListSkeleton";
+
 
 type PageProps = {
 	searchParams: Record<string, any>;
 	params: { category: string; subcategory: string };
 };
+
+const SelectTypeListDynamic = dynamic(
+	() => import("./components/SelectTypeList"),
+	{ ssr: false, loading: () => <SelectTypeListSkeleton /> },
+);
 
 const Page: FC<PageProps> = async (props) => {
 	const urlSearchParams = new URLSearchParams(props.searchParams);
@@ -27,10 +35,8 @@ const Page: FC<PageProps> = async (props) => {
 			>
 				{productCounts} products
 			</div>
-			<div className={classes["toolbar__select-list"]}>
-				<SelectSortBy />
-				<SelectTypeList searchParams={props.searchParams} />
-			</div>
+			<SelectSortBy />
+			<SelectTypeList searchParams={props.searchParams} />
 		</div>
 	);
 };

@@ -1,13 +1,17 @@
 .subcategory {
 	// padding: 52px 0;
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 32px;
+
+	gap: 16px;
+	grid-template-columns: 1fr;
+
+	@media screen and (min-width: 1024px) {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 32px;
+	}
 
 	&__item {
 		position: relative;
-		// background: url("https://placehold.co/400") no-repeat center;
-		// background-size: cover;
 		height: 384px;
 		width: 100%;
 

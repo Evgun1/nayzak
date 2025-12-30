@@ -1,5 +1,7 @@
 import React, { FunctionComponent, ReactNode } from "react";
 import { log } from "util";
+import LatestArrivalsSkeleton from "./@arrivals/skeleton/LatestArrivalsSkeleton";
+import CategoryGridSkeleton from "./@categories/skeleton/CategoryGridSkeleton";
 
 interface LayoutHomeProps {
 	children: ReactNode;
@@ -13,16 +15,8 @@ interface LayoutHomeProps {
 }
 
 const LayoutHome: FunctionComponent<LayoutHomeProps> = (props) => {
-	const {
-		children,
-		arrivals,
-		banner,
-		categories,
-		icons,
-		packed,
-		products,
-		trending,
-	} = props;
+	const { arrivals, banner, categories, icons, packed, products, trending } =
+		props;
 
 	return (
 		<React.Fragment>

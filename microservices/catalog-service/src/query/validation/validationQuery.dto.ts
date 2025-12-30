@@ -23,8 +23,6 @@ export class ValidationQueryDTO {
 	@IsOptional()
 	@Type(() => Number)
 	@IsInt()
-	@Min(0)
-	@Transform(({ value }) => Number(value))
 	limit?: number;
 
 	@IsOptional()

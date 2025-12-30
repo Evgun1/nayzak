@@ -1,0 +1,36 @@
+.popup {
+	left: 50%;
+    top: 50%;
+	transform: translate(-50%, -50%);
+	position: fixed;
+	padding: 16px;
+	height: max-content;
+	max-width: 333px;
+	width: 100%;
+	background: white;
+	z-index: 4;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 10px;
+		&-icon {
+			width: 114px;
+			height: 22px;
+		}
+		&-btn {
+			max-width: 26px;
+			max-height: 26px;
+			svg {
+				max-width: 26px;
+				max-height: 26px;
+			}
+		}
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+	}
+}

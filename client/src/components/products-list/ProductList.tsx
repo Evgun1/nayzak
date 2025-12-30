@@ -6,12 +6,13 @@ import ProductPreviewDefault from "../product-preview/product-preview-default/Pr
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { ProductBase } from "@/types/product/productBase";
 import { ProductPreviewItem } from "../product-preview/ProductPreview.types";
-import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
+import { getImage, getPlaceholderImage } from "@/tools/getPlaceholderImage";
+import { useLoadMoreReducer } from "@/hooks/useProductsReducer";
 
 type ProductListProps = {
 	productsArray: ProductBase[];
 	rating?: boolean;
-	style: any;
+	style?: any;
 	stylePrice?: string;
 	stylePreview?: string;
 	totalCount: number;
@@ -29,21 +30,21 @@ const ProductList: FC<ProductListProps> = ({
 	count,
 	btnClickHandler,
 }) => {
-	const [products, setProducts] = useState<ProductPreviewItem[]>();
+	const [products, setProducts] = useState<ProductPreviewItem[]>([]);
 	useEffect(() => {
 		(async () => {
 			const products = await Promise.all(
 				productsArray.map(async (product) => {
-					const placeholder = await getPlaceholderImage(
+					const { img, base64 } = await getImage(
 						product.Media[0].src,
 					);
 
 					const obj: ProductPreviewItem = {
 						...product,
 						Media: {
-							src: product.Media[0].name,
+							src: img.src as string,
 							name: product.Media[0].name,
-							blurImage: placeholder.placeholder,
+							blurImage: base64,
 						},
 					};
 					return obj;
@@ -56,7 +57,7 @@ const ProductList: FC<ProductListProps> = ({
 
 	return (
 		<>
-			<ul className={`${style} ${classes.grid}`}>
+			<ul className={`${style ? style : ""} ${classes.grid}`}>
 				{products &&
 					products.length > 0 &&
 					products.map((product, index) => (

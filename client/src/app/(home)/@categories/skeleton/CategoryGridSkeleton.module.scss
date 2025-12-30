@@ -1,8 +1,12 @@
 .skeleton {
 	&__list {
 		display: grid;
-		grid-template-columns: repeat(2, 2fr);
 		gap: 32px;
+		grid-template-columns: 1fr;
+
+		@media screen and (min-width: 1024px) {
+			grid-template-columns: repeat(2, 2fr);
+		}
 	}
 
 	&__item {

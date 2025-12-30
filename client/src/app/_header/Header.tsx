@@ -3,15 +3,19 @@ import classes from "./Header.module.scss";
 import DisplayIcon from "@/components/icons/displayIcon";
 import IconsIdList from "@/components/icons/IconsIdList";
 import Link from "next/link";
-import HeaderAction from "./action/HeaderAction";
-import HeaderNavbar from "./navbar/HeaderNavbar";
+import HeaderAction from "./components/action/HeaderAction";
+import HeaderNavbar from "./components/navbar/HeaderNavbar";
 import dynamic from "next/dynamic";
-import HeaderActionSkeleton from "./action/skeleton/HeaderActionSkeleton";
+import HeaderActionSkeleton from "./components/action/skeleton/HeaderActionSkeleton";
+import TestComponent from "./Test";
 
-const HeaderActionDynamic = dynamic(() => import("./action/HeaderAction"), {
-	ssr: false,
-	loading: () => <HeaderActionSkeleton />,
-});
+const HeaderActionDynamic = dynamic(
+	() => import("./components/action/HeaderAction"),
+	{
+		ssr: false,
+		loading: () => <HeaderActionSkeleton />,
+	},
+);
 
 const Header = () => {
 	return (
@@ -27,8 +31,10 @@ const Header = () => {
 							iconName={IconsIdList.LOGOTYPE}
 						/>
 					</Link>
-					<HeaderNavbar />
-					<HeaderActionDynamic />
+					<TestComponent>
+						<HeaderNavbar />
+						<HeaderActionDynamic />
+					</TestComponent>
 				</div>
 			</div>
 		</header>

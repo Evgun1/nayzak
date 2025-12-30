@@ -30,6 +30,6 @@
 		"src/lib/ui/navbar/navbar-context/NavbarContext.tsx",
 		"src/lib/ui/navbar/NavbarContext.tsx",
 		"src/components/loader/loadMore"
-	],
+, "src/popups/popup-fly-menu/components/MenuSearch.module.scs"	],
 	"exclude": ["node_modules"]
 }

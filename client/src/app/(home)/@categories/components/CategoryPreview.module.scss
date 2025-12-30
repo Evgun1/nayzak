@@ -1,0 +1,31 @@
+.category-preview {
+	position: relative;
+	aspect-ratio: var(--image-ratio);
+
+	@media screen and (min-width: 1024px) {
+		aspect-ratio: 1.6979166667;
+	}
+
+	&__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.category-preview__link {
+		text-decoration: none;
+		left: 50%;
+		bottom: 24px;
+		min-width: 158px;
+		transform: translate(-50%, 0);
+		position: absolute;
+		z-index: 1;
+		padding: 4px;
+
+		@media screen and (min-width: 1024px) {
+			bottom: 40px;
+		}
+	}
+}

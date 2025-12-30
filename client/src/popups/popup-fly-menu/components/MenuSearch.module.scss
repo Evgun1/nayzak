@@ -1,0 +1,42 @@
+.menu-search {
+	margin-bottom: 16px;
+	&__form {
+		display: flex;
+		border: 1px solid var(--black-300);
+		border-radius: 6px;
+		padding: 11px 16px;
+		gap: 8px;
+
+		&:focus-within {
+			outline: 1px solid var(--black-500);
+		}
+	}
+	&__btn {
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		max-width: 24px;
+		max-height: 24px;
+		background: none;
+		border: none;
+		&-icon {
+			max-width: 24px;
+			max-height: 24px;
+		}
+	}
+
+	&__input {
+		width: 100%;
+		border: none;
+
+		&:focus-visible {
+			outline: none;
+		}
+	}
+
+	// &__input:focus + &__from {
+	// 	display: block;
+	// 	border-radius: 100%;
+	// }
+}

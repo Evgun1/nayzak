@@ -1,15 +1,26 @@
 .type-list {
-	display: flex;
 	align-items: center;
 	justify-content: center;
-	&__link {
-		display: block;
-		border: 1px solid var(--black-200);
-		width: 46px;
-		height: 40px;
-		padding: 8px 11px;
-		.icon-selector {
-			color: var(--black-400);
+	display: flex;
+
+	&__item {
+		&:not(:nth-child(4), :nth-child(5)) {
+			display: none;
+		}
+		@media screen and (min-width: 1024px) {
+			&:not(:nth-child(4), :nth-child(5)) {
+				display: block;
+			}
 		}
 	}
+	// &__link {
+	// 	// 	// display: block;
+	// 	// 	border: 1px solid var(--black-200);
+	// 	// 	width: 46px;
+	// 	// 	height: 40px;
+	// 	// 	padding: 8px 11px;
+	// 	// 	.icon-selector {
+	// 	// 		color: var(--black-400);
+	// 	// 	}
+	// }
 }

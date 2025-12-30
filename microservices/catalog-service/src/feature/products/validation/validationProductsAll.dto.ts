@@ -3,12 +3,7 @@ import { Transform, Type } from "class-transformer";
 import { IsArray, IsInt, IsNumber, IsOptional } from "class-validator";
 import { ValidationQueryDTO } from "src/query/validation/validationQuery.dto";
 
-export class ValidationProductsAllQueryDTO extends PartialType(
-	ValidationQueryDTO,
-) {
-
-
-    
+export class ValidationProductsAllQueryDTO extends ValidationQueryDTO {
 	@IsOptional()
 	@IsArray()
 	@Transform(({ value }) => (value as string).split(",").map((item) => +item))

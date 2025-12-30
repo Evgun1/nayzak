@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./styles/globals.scss";
 import StoreProvider from "./storeProvider";
 import IconsSprite from "../components/icons/IconsSprite";
 import Popup from "../components/popup/Popup";
 import Notification from "@/ui/notification/Notification";
-import InitData from "@/components/initData";
 import dynamic from "next/dynamic";
 import HeaderSkeleton from "./_header/skeleton/HeaderSkeleton";
-import dns from "dns/promises";
+import InitData from "@/components/InitData";
+import FooterSkeleton from "./_footer/skeleton/FooterSkeleton";
 
 export const metadata: Metadata = {
 	title: "Create Next App",
@@ -20,7 +20,17 @@ const HeaderDynamic = dynamic(() => import("./_header/Header"), {
 	loading: () => <HeaderSkeleton />,
 });
 const FooterDynamic = dynamic(() => import("./_footer/Footer"), {
-	ssr: true,
+	ssr: false,
+	loading: () => <FooterSkeleton />,
+});
+
+const inter = Inter({
+	subsets: ["latin"],
+	weight: ["400", "500", "600", "700"],
+});
+const spaceGrotesk = Space_Grotesk({
+	subsets: ["latin"],
+	weight: ["300", "400", "500", "600", "700"],
 });
 
 export default async function RootLayout(
@@ -32,8 +42,11 @@ export default async function RootLayout(
 
 	return (
 		<StoreProvider>
-			<html lang="en">
-				<head>
+			<html
+				lang="en"
+				className={`${inter.className} ${spaceGrotesk.className}`}
+			>
+				{/* <head>
 					<link
 						rel="preconnect"
 						href="https://fonts.googleapis.com"
@@ -51,13 +64,15 @@ export default async function RootLayout(
 						href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,700;1,14..32,700&family=Space+Grotesk:wght@300..700&display=swap"
 						rel="stylesheet"
 					></link>
-				</head>
-				<body>
+				</head> */}
+				<body id="body">
 					<div id="root">
+					
 						<div id="popup"></div>
 						<div id="overlay"></div>
 						<div id="notification-container"></div>
 						<HeaderDynamic />
+						{/* <HeaderSkeleton></HeaderSkeleton> */}
 						<main>{children}</main>
 						<FooterDynamic />
 					</div>

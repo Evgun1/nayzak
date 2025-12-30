@@ -9,7 +9,7 @@ export default async function RootLayout(props: { children: ReactNode }) {
 			<div className="container">
 				<div className={classes["category"]}>
 					<Header />
-					<div>{props.children}</div>
+					{props.children}
 				</div>
 			</div>
 		</section>

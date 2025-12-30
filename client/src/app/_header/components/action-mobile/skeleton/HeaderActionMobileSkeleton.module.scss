@@ -1,0 +1,9 @@
+.skeleton {
+	display: flex;
+	gap: 16px;
+	&__item {
+		width: 28px;
+		height: 28px;
+		border-radius: 100%;
+	}
+}

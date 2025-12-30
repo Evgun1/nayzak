@@ -81,7 +81,6 @@ const Select: FC<SelectComponentProps> = (props) => {
 				className={classes["select"]}
 			>
 				<SelectTrigger
-					defaultSelectKey={defaultSelectKey}
 					styleSetting={styleSetting}
 					label={label}
 				/>

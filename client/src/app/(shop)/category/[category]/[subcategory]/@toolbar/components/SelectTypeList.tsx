@@ -24,9 +24,12 @@ const SelectTypeList: React.FC<{ searchParams: Record<string, any> }> = (
 	return (
 		<ul className={classes["type-list"]}>
 			{SELECTOR.map((value, index) => (
-				<li key={index}>
+				<li
+					key={index}
+					className={classes["type-list__item"]}
+				>
 					<ListTypeButton
-						// searchParams={props.searchParams}
+						searchParams={props.searchParams}
 						icon={value.icon}
 						typeList={value.typeList}
 					/>

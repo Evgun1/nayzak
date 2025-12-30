@@ -6,11 +6,20 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import React, { FC, ReactElement, ReactNode } from "react";
+import React, {
+	FC,
+	ReactElement,
+	ReactNode,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 
 import classes from "./Swiper.module.scss";
 import DisplayIcon from "@/components/icons/displayIcon";
 import IconsIdList from "@/components/icons/IconsIdList";
+import { useAppSelector } from "@/redux/redux";
+import { ButtonClassList } from "@/types/buttonClassList.enum";
 
 type SwiperComponentProps = {
 	label: string;
@@ -19,14 +28,17 @@ type SwiperComponentProps = {
 
 const SwiperComponent: FC<SwiperComponentProps> = ({ children, label }) => {
 	const childrenArr = children as ReactElement[];
+	const responsive = useAppSelector((state) => state.responsive);
+
+	const clientLabel = useMemo(() => label, [label]);
+	const clientResponsive = useMemo(() => responsive, [responsive]);
 
 	return (
 		<div className={classes["swiper-custom"]}>
 			<Swiper
 				modules={[Navigation, Pagination]}
-				style={{}}
-				spaceBetween={32}
-				slidesPerView={4}
+				spaceBetween={clientResponsive.isDesktop ? 34 : 16}
+				slidesPerView={clientResponsive.isDesktop ? 4 : "auto"}
 				pagination={{
 					el: ".swiper-custom__pagination",
 					bulletClass: classes["swiper-custom__bullet"],
@@ -39,7 +51,9 @@ const SwiperComponent: FC<SwiperComponentProps> = ({ children, label }) => {
 				className={classes["swiper-custom__wrap"]}
 			>
 				<div className={classes["swiper-custom__header"]}>
-					<h5>{label}</h5>
+					<h5 className={classes["swiper-custom__header-title"]}>
+						{clientLabel}
+					</h5>
 
 					<div className={classes["swiper-custom__controls"]}>
 						<button
@@ -60,7 +74,7 @@ const SwiperComponent: FC<SwiperComponentProps> = ({ children, label }) => {
 
 				{childrenArr.map((child, i) => (
 					<SwiperSlide
-						className={classes["swiper-custom__slider"]}
+						className={`${classes["swiper-custom__slider"]}`}
 						key={i}
 					>
 						{child}

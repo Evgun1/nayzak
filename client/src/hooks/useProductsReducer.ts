@@ -75,12 +75,11 @@ export const useLoadMoreReducer = <T extends { [key: string]: any }, P>(
 		totalCount: init ? init.totalCount : 0,
 		isLoading: false,
 	});
-
-	const searchParams = useSearchParams();
+	const curSearchParams = useSearchParams();
 
 	const initData = useCallback(
-		async (params?: P) => {
-			const result = await loaderFn(params);
+		async (fetchParam?: P) => {
+			const result = await loaderFn(fetchParam);
 			const arrayKey = Object.keys(result).find((key) =>
 				Array.isArray(result[key]),
 			);
@@ -103,14 +102,24 @@ export const useLoadMoreReducer = <T extends { [key: string]: any }, P>(
 		[dispatch, loaderFn],
 	);
 
-	const loadMore = async (
-		offset: number,
-		limit: number = 8,
-		params?: string | string[],
-	) => {
+	const loadMore = async ({
+		offset,
+		limit = 8,
+		params,
+		searchParams,
+	}: {
+		offset: number;
+		limit: number;
+		searchParams?: URLSearchParams | string;
+		params?: string | string[];
+	}) => {
 		dispatch({ type: ProductsActionType.START_LOAD });
 		try {
-			const requestParams = new URLSearchParams(searchParams?.toString());
+			const requestParams = new URLSearchParams(
+				searchParams
+					? searchParams.toString()
+					: curSearchParams?.toString(),
+			);
 
 			requestParams.set("offset", offset.toString());
 			requestParams.set("limit", limit.toString());

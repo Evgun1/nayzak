@@ -1,0 +1,8 @@
+.banner-p {
+	color: white;
+
+	margin-bottom: 24px;
+	@media screen and (min-width: 1024px) {
+		margin-bottom: 28px;
+	}
+}

@@ -1,0 +1,14 @@
+.product-grid-header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 24px;
+	gap: 8px;
+	flex-wrap: wrap;
+
+	@media screen and (min-width: 1024px) {
+		margin-bottom: 52px;
+		gap: 12px;
+		flex-wrap: nowrap;
+	}
+}

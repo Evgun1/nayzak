@@ -13,7 +13,7 @@ type PageProps = {
 const Page: FC<PageProps> = async (props) => {
 	return (
 		<LoaderProducts
-			className={classes["products__preview"]}
+			className={classes["products"]}
 			showRating
 			searchParams={props.searchParams}
 			params={[props.params.category, props.params.subcategory]}

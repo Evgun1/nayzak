@@ -6,6 +6,8 @@ import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.
 import ProductPreviewDefault from "@/components/product-preview/product-preview-default/ProductsPreviewDefault";
 import { FC } from "react";
 import getIdByParams from "@/tools/getIdByParams";
+import { cookies } from "next/headers";
+import ProductPreviewList from "@/components/product-preview/product-preview-list/ProductPreviewList";
 export interface ListType {
 	five_grid: string;
 	four_grid: string;
@@ -14,16 +16,20 @@ export interface ListType {
 	list: string;
 }
 
-type LoaderProductsParams = {
+export type LoaderProductsParams = {
 	showRating?: boolean;
 	searchParams?: any;
 	params?: string[];
 	listType?: keyof ListType;
 	className?: string;
+	limit?: number;
 };
 
 const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
-	const { params, searchParams, listType } = props;
+	const { params, searchParams, listType, limit } = props;
+
+	const cookiesStorage = cookies();
+	const defaultListType = cookiesStorage.get("default-list-type");
 
 	const urlSearchParams = new URLSearchParams(searchParams);
 
@@ -43,9 +49,11 @@ const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
 
 	const getLimit = getListType
 		? (listTypeLimits.get(getListType) as string)
-		: (listTypeLimits.get(listType || "default") as string);
+		: (listTypeLimits.get(
+				listType || (defaultListType?.value ?? "default"),
+		  ) as string);
 
-	urlSearchParams.set("limit", getLimit);
+	urlSearchParams.set("limit", limit ? limit.toString() : getLimit);
 
 	const category = urlSearchParams.get("category");
 	const subcategory = urlSearchParams.get("subcategory");
@@ -65,7 +73,7 @@ const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
 		searchParams: urlSearchParams,
 	});
 
-	const initProductElement = await Promise.all(
+	const initProduct = await Promise.all(
 		fetchProducts.products.map(async (product, i) => {
 			const productParam: ProductPreviewItem = {
 				...product,
@@ -74,27 +82,17 @@ const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
 					name: product.Media[0].name,
 				},
 			};
-
 			const bluer = await getPlaceholderImage(productParam.Media.src);
 			productParam.Media.blurImage = bluer.placeholder;
-
-			return (
-				<li key={product.id}>
-					<ProductPreviewDefault
-						className={props.className}
-						product={productParam}
-						showRating={props.showRating}
-					/>
-				</li>
-			);
+			return productParam;
 		}),
 	);
 
 	return (
 		<LoaderProductsClient
 			listType={getListType}
-			limit={+getLimit}
-			initProductsElement={initProductElement}
+			limit={limit ? limit : +getLimit}
+			inputProduct={initProduct}
 			productsParams={params}
 			productsCount={fetchProducts.productCounts}
 			className={props.className}

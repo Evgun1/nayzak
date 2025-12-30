@@ -1,0 +1,49 @@
+@use "../abstracts/mixins" as mixins;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h7 {
+	@include mixins.heading-base-style;
+}
+
+h1 {
+	@include mixins.heading-1-style;
+}
+
+h2 {
+	@include mixins.heading-2-style;
+}
+
+h3 {
+	@include mixins.heading-3-style;
+}
+
+h4 {
+	@include mixins.heading-4-style;
+}
+
+h5 {
+	@include mixins.heading-5-style;
+}
+
+h6 {
+	@include mixins.heading-6-style;
+}
+
+.h7 {
+	@include mixins.heading-7-style;
+}
+
+section {
+	padding: 24px 0;
+	@media screen and (min-width: 1024px) {
+		padding: 52px 0;
+	}
+	@media screen and (min-width: 1440px) {
+		padding: 52px 0;
+	}
+}

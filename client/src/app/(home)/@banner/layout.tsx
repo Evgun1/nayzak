@@ -1,6 +1,5 @@
 import classes from "./Banner.module.scss";
 import { FunctionComponent, ReactNode } from "react";
-import Loading from "./loading";
 
 interface LayoutBannerProps {
 	children: ReactNode;

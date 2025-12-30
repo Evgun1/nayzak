@@ -4,20 +4,11 @@ import {
 	Param,
 	Query,
 	Res,
-	UseFilters,
-	UsePipes,
 	ValidationPipe,
 } from "@nestjs/common";
-import {
-	EventPattern,
-	MessagePattern,
-	Payload,
-	Transport,
-} from "@nestjs/microservices";
+import { MessagePattern, Payload, Transport } from "@nestjs/microservices";
 import { ProductsService } from "./products.service";
-
 import { Response } from "express";
-
 import {
 	ValidationProductsKafkaPayloadDTO,
 	ValidationProductsKafkaRatingPayloadDTO,
@@ -30,7 +21,6 @@ import {
 	ValidationProductsByParamsQueryDTO,
 } from "./validation/validationProductsByParams.dto";
 import { ValidationProductsAllQueryDTO } from "./validation/validationProductsAll.dto";
-import { ProductsKafkaDTO } from "./dto/productsKafka.dto";
 
 @Controller("products")
 export class ProductsController {
@@ -41,6 +31,8 @@ export class ProductsController {
 		@Query() query: ValidationProductsAllQueryDTO,
 		@Res({ passthrough: true }) res: Response,
 	) {
+		console.log(query);
+
 		const { productCounts, products } =
 			await this.productsService.getProductsAll(query);
 		res.setHeader("X-Total-Count", productCounts);

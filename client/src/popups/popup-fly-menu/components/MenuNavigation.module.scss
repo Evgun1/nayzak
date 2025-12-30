@@ -1,0 +1,32 @@
+.menu-nav {
+	&__header,
+	&__body {
+		width: 100%;
+		padding: 10px 0;
+	}
+
+	&__header {
+		position: relative;
+		&::after {
+			position: absolute;
+			content: "";
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 1px;
+			background-color: var(--black-300);
+		}
+
+		.menu-nav__header-btn {
+			width: 100%;
+			justify-content: space-between;
+		}
+	}
+
+	&__body {
+		&-link {
+			width: 100%;
+			margin-left: 10px;
+		}
+	}
+}

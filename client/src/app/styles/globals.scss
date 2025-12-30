@@ -1,3 +1,6 @@
+@use "./abstracts/mixins" as mixins;
+@use "./base/reset";
+@use "./base/typography";
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
@@ -12,7 +15,6 @@
 	--blue-200: #81b4fe;
 	--blue-100: #a8cbfe;
 	--blue-50: #e6f0ff;
-
 	--black-900: #121212;
 	--black-800: #2b2b2b;
 	--black-700: #454545;
@@ -22,7 +24,6 @@
 	--black-300: #eaeaea;
 	--black-200: #f5f5f5;
 	--black-100: #fafafb;
-
 	--red-900: #4f1319;
 	--red-800: #721c24;
 	--red-700: #96242f;
@@ -34,71 +35,69 @@
 	--red-100: #f2b6bc;
 	--red-50: #ffe0e3;
 }
+// * {
+// 	margin: 0;
+// 	box-sizing: border-box;
+// 	font-family: "Space Grotesk";
+// }
+// ul,
+// li {
+// 	list-style: none;
+// 	padding: 0;
+// 	margin: 0;
+// }
+// h1,
+// h2,
+// h3,
+// h4,
+// h5,
+// h6,
+// .h7 {
+// 	font-weight: 500;
+// 	color: var(--black-900);
+// }
+// h1 {
+// 	font-size: 80px;
+// 	line-height: 84px;
+// 	letter-spacing: -3px;
+// }
+// h2 {
+// 	font-size: 72px;
+// 	line-height: 76px;
+// 	letter-spacing: -2px;
+// }
+// h3 {
+// 	font-size: 54px;
+// 	line-height: 58px;
+// 	letter-spacing: -1px;
+// }
+// h4 {
+// 	font-size: 40px;
+// 	line-height: 44px;
+// 	letter-spacing: -0.4px;
+// }
+// h5 {
+// 	font-size: 34px;
+// 	line-height: 38px;
+// 	letter-spacing: -0.6px;
+// }
+// h6 {
+// 	font-size: 28px;
+// 	line-height: 34px;
+// 	letter-spacing: -0.6px;
+// }
+// .h7 {
+// 	font-size: 20px;
+// 	line-height: 28px;
+// }
 
-* {
-	margin: 0;
-	box-sizing: border-box;
-	font-family: "Space Grotesk";
-}
-
-ul,
-li {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h7 {
-	font-weight: 500;
-	color: var(--black-900);
-}
-
-h1 {
-	font-size: 80px;
-	line-height: 84px;
-	letter-spacing: -3px;
-}
-
-h2 {
-	font-size: 72px;
-	line-height: 76px;
-	letter-spacing: -2px;
-}
-
-h3 {
-	font-size: 54px;
-	line-height: 58px;
-	letter-spacing: -1px;
-}
-
-h4 {
-	font-size: 40px;
-	line-height: 44px;
-	letter-spacing: -0.4px;
-}
-
-h5 {
-	font-size: 34px;
-	line-height: 38px;
-	letter-spacing: -0.6px;
-}
-
-h6 {
-	font-size: 28px;
-	line-height: 34px;
-	letter-spacing: -0.6px;
-}
-
-.h7 {
-	font-size: 20px;
-	line-height: 28px;
-}
+// button {
+// 	padding: 0;
+// 	margin: 0;
+// }
+// img {
+// 	width: 100%;
+// }
 
 .text-regular-26,
 .text-regular-22,
@@ -107,43 +106,28 @@ h6 {
 .text-regular-16,
 .text-regular-14,
 .text-regular-12 {
-	font-family: "Inter";
-	font-weight: 400;
+	@include mixins.text-regular-base-style;
 }
-
 .text-regular-26 {
-	font-size: 26px;
-	line-height: 40px;
+	@include mixins.text-regular-26-style;
 }
-
 .text-regular-22 {
-	font-size: 22px;
-	line-height: 34px;
+	@include mixins.text-regular-22-style;
 }
-
 .text-regular-20 {
-	font-size: 20px;
-	line-height: 32px;
+	@include mixins.text-regular-20-style;
 }
-
 .text-regular-18 {
-	font-size: 18px;
-	line-height: 30px;
+	@include mixins.text-regular-18-style;
 }
-
 .text-regular-16 {
-	font-size: 16px;
-	line-height: 26px;
+	@include mixins.text-regular-16-style;
 }
-
 .text-regular-14 {
-	font-size: 14px;
-	line-height: 22px;
+	@include mixins.text-regular-14-style;
 }
-
 .text-regular-12 {
-	font-size: 12px;
-	line-height: 20px;
+	@include mixins.text-regular-12-style;
 }
 
 .text-semibold-26,
@@ -153,43 +137,28 @@ h6 {
 .text-semibold-16,
 .text-semibold-14,
 .text-semibold-12 {
-	font-family: "Inter";
-	font-weight: 600;
+	@include mixins.text-semibold-base-style;
 }
-
 .text-semibold-26 {
-	font-size: 26px;
-	line-height: 40px;
+	@include mixins.text-semibold-26-style;
 }
-
 .text-semibold-22 {
-	font-size: 22px;
-	line-height: 34px;
+	@include mixins.text-semibold-22-style;
 }
-
 .text-semibold-20 {
-	font-size: 20px;
-	line-height: 32px;
+	@include mixins.text-semibold-20-style;
 }
-
 .text-semibold-18 {
-	font-size: 18px;
-	line-height: 30px;
+	@include mixins.text-semibold-18-style;
 }
-
 .text-semibold-16 {
-	font-size: 16px;
-	line-height: 26px;
+	@include mixins.text-semibold-16-style;
 }
-
 .text-semibold-14 {
-	font-size: 14px;
-	line-height: 22px;
+	@include mixins.text-semibold-14-style;
 }
-
 .text-semibold-12 {
-	font-size: 12px;
-	line-height: 20px;
+	@include mixins.text-semibold-12-style;
 }
 
 .text-bold-26,
@@ -199,43 +168,28 @@ h6 {
 .text-bold-16,
 .text-bold-14,
 .text-bold-12 {
-	font-family: "Inter";
-	font-weight: 700;
+	@include mixins.text-bold-base-style;
 }
-
 .text-bold-26 {
-	font-size: 26px;
-	line-height: 40px;
+	@include mixins.text-bold-26-style;
 }
-
 .text-bold-22 {
-	font-size: 22px;
-	line-height: 34px;
+	@include mixins.text-bold-22-style;
 }
-
 .text-bold-20 {
-	font-size: 20px;
-	line-height: 32px;
+	@include mixins.text-bold-20-style;
 }
-
 .text-bold-18 {
-	font-size: 18px;
-	line-height: 30px;
+	@include mixins.text-bold-18-style;
 }
-
 .text-bold-16 {
-	font-size: 16px;
-	line-height: 26px;
+	@include mixins.text-bold-16-style;
 }
-
 .text-bold-14 {
-	font-size: 14px;
-	line-height: 22px;
+	@include mixins.text-bold-14-style;
 }
-
 .text-bold-12 {
-	font-size: 12px;
-	line-height: 20px;
+	@include mixins.text-bold-12-style;
 }
 
 .button-large,
@@ -243,35 +197,22 @@ h6 {
 .button-small,
 .button-xlarge,
 .button-xsmall {
-	font-weight: 500;
-	font-family: "Space Grotesk";
+	@include mixins.button-base-style;
 }
-
 .button-xlarge {
-	font-size: 26px;
-	line-height: 38px;
+	@include mixins.button-xlarge-style;
 }
-
 .button-large {
-	font-size: 22px;
-	line-height: 34px;
+	@include mixins.button-large-style;
 }
-
 .button-medium {
-	font-size: 18px;
-	line-height: 32px;
-	letter-spacing: -0.4px;
+	@include mixins.button-medium-style;
 }
-
 .button-small {
-	font-size: 16px;
-	line-height: 24px;
-	letter-spacing: -0.4px;
+	@include mixins.button-small-style;
 }
-
 .button-xsmall {
-	font-size: 14px;
-	line-height: 20px;
+	@include mixins.button-xsmall-style;
 }
 
 .sidebar-filter--hidden {
@@ -279,24 +220,23 @@ h6 {
 }
 
 .container {
-	max-width: 1336px;
 	width: 100%;
 	margin: 0 auto;
 	text-align: center;
+
+	@media screen and (min-width: 375px) {
+		// max-width: 343px;
+		max-width: 100%;
+		padding: 0 16px;
+	}
+	@media screen and (min-width: 1024px) {
+		max-width: 1336px;
+	}
+	@media screen and (min-width: 1440px) {
+		max-width: 1336px;
+	}
 }
 
-button {
-	padding: 0;
-	margin: 0;
-}
-
-img {
-	width: 100%;
-}
-
-section {
-	padding: 52px 0;
-}
 //@tailwind base;
 //@tailwind components;
 //@tailwind utilities;

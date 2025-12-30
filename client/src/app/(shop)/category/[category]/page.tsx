@@ -5,14 +5,14 @@ import { FC } from "react";
 import classes from "./SubcategoriesLayout.module.scss";
 import { appSubcategoryByCategoryGet } from "@/lib/api/subcategories";
 import { ISubcategory } from "@/types/subcategories.interface";
-import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
-import SubcategoryPreview from "./components/SubcategoryPreview";
+import { getImage, getPlaceholderImage } from "@/tools/getPlaceholderImage";
+import { SubcategoryPreviewItem } from "./components/SubcategoryPreview";
 import dynamic from "next/dynamic";
 import SubcategoriesSkeleton from "./components/SubcategoriesSkeleton";
 
 const SubcategoryPreviewDynamic = dynamic(
 	() => import("./components/SubcategoryPreview"),
-	{ ssr: true, loading: () => <SubcategoriesSkeleton /> },
+	{ ssr: false, loading: () => <SubcategoriesSkeleton /> },
 );
 
 type SubcategoriesGridProps = {
@@ -24,31 +24,29 @@ const Page: FC<SubcategoriesGridProps> = async ({ params }) => {
 		params.category,
 	);
 
-	const subcategories: Array<
-		ISubcategory & {
-			Media: { blurSrc: string; src: string; name: string };
-		}
-	> = await Promise.all(
+	const subcategories: Array<SubcategoryPreviewItem> = await Promise.all(
 		subcategoriesFetch.map(async (subcategory) => {
-			const blur = await getPlaceholderImage(subcategory.Media[0].src);
+			const image = await getImage(subcategory.Media[0].src);
+
 			return {
-				...subcategory,
+				id: subcategory.id,
+				title: subcategory.title,
+				categoriesId: subcategory.categoriesId,
 				Media: {
-					blurSrc: blur.placeholder,
+					base64: image.base64,
 					name: subcategory.Media[0].name,
 					src: subcategory.Media[0].src,
 				},
-			} as ISubcategory & {
-				Media: { blurSrc: string; src: string; name: string };
+				ImageSize: { height: image.img.height, width: image.img.width },
 			};
 		}),
 	);
 
 	return (
 		<div className={classes["subcategory"]}>
-			{subcategoriesFetch &&
-				subcategoriesFetch.length > 0 &&
-				subcategoriesFetch.map((subcategory, index) => (
+			{subcategories &&
+				subcategories.length > 0 &&
+				subcategories.map((subcategory, index) => (
 					<SubcategoryPreviewDynamic
 						key={index}
 						params={params}

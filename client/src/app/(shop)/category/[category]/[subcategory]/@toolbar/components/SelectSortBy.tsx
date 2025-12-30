@@ -1,14 +1,32 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFilterContext } from "../../tools/context/useFilterContext";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { Select, SelectItem } from "@/ui/select/Select";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
+import SelectSortByNav from "./SelectSortByNav";
+import { keyof } from "zod/v4";
+import { ar } from "zod/v4/locales";
+import { usePopupLocalContext } from "@/components/popup-local/tool/usePopupLocalContext";
+import { useAppSelector } from "@/redux/redux";
+import PopupFilter from "@/popups/popup-filter/PopupFilter";
+import PopupFilterSkeleton from "@/popups/popup-filter/skeleton/PopupFilterSkeleton";
+import dynamic from "next/dynamic";
 
-const sortData = [
+export type SortDataType = Array<{
+	id: number;
+	title: string;
+	valueName: {
+		sortBy: string;
+		sort: string;
+	};
+}>;
+
+const sortData: SortDataType = [
 	{
+		id: 1,
 		title: "Price: Ascending",
 		valueName: {
 			sortBy: "price",
@@ -16,6 +34,7 @@ const sortData = [
 		},
 	},
 	{
+		id: 2,
 		title: "Price: Descending",
 		valueName: {
 			sortBy: "price",
@@ -23,6 +42,7 @@ const sortData = [
 		},
 	},
 	{
+		id: 3,
 		title: "By Rating",
 		valueName: {
 			sortBy: "rating",
@@ -31,35 +51,65 @@ const sortData = [
 	},
 ];
 
-const SelectSortBy: React.FC = () => {
-	const [defaultKey, setDefaultKey] = useState<string | undefined>(undefined);
-	const { showFilter, setShowFilter } = useFilterContext();
-	const searchParams = useSearchParams() as ReadonlyURLSearchParams;
-	const btnClickFilter = () => setShowFilter(!showFilter);
+const PopupFilterDynamic = dynamic(
+	() => import("@/popups/popup-filter/PopupFilter"),
+	{
+		ssr: false,
+		loading: () => <PopupFilterSkeleton />,
+	},
+);
 
-	const getDefaultSelectKey = useCallback(() => {
-		const [sortBySearch, sortSearch] = searchParams
+const SelectSortBy: React.FC = () => {
+	const responsive = useAppSelector((state) => state.responsive);
+	const originalData = useRef<SortDataType>(sortData);
+	const { showFilter, setShowFilter } = useFilterContext();
+	const { setPopup: setTogglePopup } = usePopupLocalContext();
+	const searchParams = useSearchParams() as ReadonlyURLSearchParams;
+
+	const [labelState, setLabelState] = useState<string>("Sort by");
+
+	const [dataState, setDataState] = useState<SortDataType>(sortData);
+
+	const btnClickFilter = useCallback(() => {
+		// if (responsive.isMobile) setTogglePopup(<PopupFilter />);
+		if (responsive.isMobile) setTogglePopup(<PopupFilterDynamic />);
+		setShowFilter(!showFilter);
+	}, [responsive]);
+
+	const getSearchParamsData = useMemo(() => {
+		const result = searchParams
 			.toString()
 			.split("&")
 			.map((val) => val.split("="));
 
-		let title;
+		const [sortBySearch, sortSearch] = result.reduce((acc, curr) => {
+			if (curr.includes("sort") || curr.includes("sortBy"))
+				acc.push(curr);
 
-		for (const element of sortData) {
-			if (
-				sortBySearch.includes(element.valueName.sortBy) &&
-				sortSearch.includes(element.valueName.sort)
-			) {
-				title = element.title;
-			}
-		}
+			return acc;
+		}, [] as Array<Array<string>>);
 
-		return title?.toLocaleLowerCase();
+		return [sortBySearch, sortSearch];
 	}, [searchParams]);
 
 	useEffect(() => {
-		setDefaultKey(getDefaultSelectKey());
-	}, [getDefaultSelectKey]);
+		const [sort, sortBy] = getSearchParamsData;
+
+		let idSortData = -1;
+		for (const element of sortData) {
+			if (
+				sortBy?.includes(element.valueName.sortBy) &&
+				sort?.includes(element.valueName.sort)
+			) {
+				idSortData = element.id;
+				setLabelState(element.title);
+			}
+		}
+
+		setDataState(
+			originalData.current.filter((item) => item.id !== idSortData),
+		);
+	}, [getSearchParamsData, sortData]);
 
 	return (
 		<>
@@ -75,7 +125,7 @@ const SelectSortBy: React.FC = () => {
 			>
 				Filter
 			</ButtonCustom>
-			<Select
+			{/* <Select
 				label="Sort By"
 				defaultSelectKey={defaultKey}
 				styleSetting={{
@@ -107,7 +157,12 @@ const SelectSortBy: React.FC = () => {
 						</LinkCustom>
 					</SelectItem>
 				))}
-			</Select>
+			</Select> */}
+			<SelectSortByNav
+				data={dataState}
+				label={labelState}
+				searchParams={searchParams}
+			/>
 		</>
 	);
 };

@@ -8,6 +8,7 @@ import { MediaService } from "src/feature/media/media.service";
 import { SubcategoriesService } from "src/feature/subcategories/subcategories.service";
 import { AttributeDefinitionsService } from "src/feature/attribute-definitions/attributeDefinitions.service";
 import { ValidationAttributeUploadBodyDTO } from "src/feature/attribute-definitions/validation/validationAttributeUpload.dto";
+import { randomInt } from "crypto";
 
 @Injectable()
 export class FakerService {
@@ -76,6 +77,7 @@ export class FakerService {
 			await this.prisma.products.createMany({ data: result });
 		}
 	}
+
 	async generateCategoriesFaker() {
 		const categoriesCount = await this.prisma.categories.count();
 
@@ -150,11 +152,18 @@ export class FakerService {
 
 			if (categories.length > 0) {
 				for (const element of categories) {
+					const randomHeight = randomInt(150, 385);
+					const randomWidth = randomInt(652, 800);
+					// const randomHeight = Math.floor(
+					// 	Math.random() * (800 - 130) + 130,
+					// 	// Math.random() * (130 - 800) + 800,
+					// );
+
 					const src = faker.image.urlPicsumPhotos({
 						blur: 0,
 						grayscale: false,
-						height: 800,
-						width: 800,
+						height: randomHeight,
+						width: randomWidth,
 					});
 
 					arr.push({
@@ -167,11 +176,19 @@ export class FakerService {
 
 			if (subcategories.length > 0) {
 				for (const element of subcategories) {
+					const randomHeight = randomInt(150, 385);
+					const randomWidth = randomInt(652, 800);
+
+					// const randomHeight = Math.floor(
+					// 	Math.random() * (800 - 130) + 130,
+					// 	// Math.random() * (130 - 800) + 800,
+					// );
+
 					const src = faker.image.urlPicsumPhotos({
 						blur: 0,
 						grayscale: false,
-						height: 800,
-						width: 800,
+						height: randomHeight,
+						width: randomWidth,
 					});
 
 					arr.push({

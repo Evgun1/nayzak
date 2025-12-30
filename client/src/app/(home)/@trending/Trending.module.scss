@@ -1,50 +1,120 @@
+@use "../../styles/abstracts/mixins" as mixins;
 .trending {
 	display: grid;
-	grid-template-columns: 1fr max(766px);
+	// grid-template-columns: 1fr max(766px);
+	grid-template-columns: 1fr;
+	gap: 24px;
+
+	@media screen and (min-width: 1024px) {
+		grid-template-columns: 1fr max(766px);
+		gap: 0px;
+	}
 
 	&__info {
-		margin: auto 0;
-
-		max-width: 456px;
 		text-align: start;
 
-		&-header {
-			display: grid;
-			gap: 8px;
+		@media screen and (min-width: 1024px) {
+			margin: auto 0;
+			max-width: 456px;
 		}
 
-		&-header,
-		&-paragraph {
-			margin-bottom: 24px;
+		&-item {
+			&:nth-child(1) {
+				@include mixins.text-semibold-12-style;
+				margin-bottom: 4px;
+				@media screen and (min-width: 1024px) {
+					margin-bottom: 8px;
+					@include mixins.text-semibold-18-style;
+				}
+			}
+			&:nth-child(2) {
+				@include mixins.heading-5-style;
+				margin-bottom: 12px;
+				@media screen and (min-width: 1024px) {
+					margin-bottom: 24px;
+					@include mixins.heading-3-style;
+				}
+			}
+			&:nth-child(3) {
+				@include mixins.text-regular-14-style;
+				margin-bottom: 16px;
+				@media screen and (min-width: 1024px) {
+					margin-bottom: 24px;
+					@include mixins.text-regular-18-style;
+				}
+			}
 		}
+
+		// &-header {
+		// 	// display: grid;
+		// 	gap: 8px;
+		// }
+
+		// &-header,
+		// &-paragraph {
+		// 	margin-bottom: 24px;
+		// }
 	}
 
 	&__images {
 		position: relative;
 		height: 100vh;
-		max-height: 627px;
+		max-height: 280px;
+		@media screen and (min-width: 1024px) {
+			max-height: 627px;
+		}
+
+		&-wrap {
+			&:first-child {
+				position: absolute;
+				top: 0;
+				right: 0;
+				aspect-ratio: 1/1 auto;
+				width: 100%;
+				z-index: 1;
+
+				max-width: 248px;
+				@media screen and (min-width: 1024px) {
+					max-width: 570px;
+				}
+			}
+			&:last-child {
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				aspect-ratio: 0.8256;
+				width: 100%;
+				z-index: 2;
+
+				max-width: 146px;
+				@media screen and (min-width: 1024px) {
+					max-width: 337px;
+				}
+			}
+		}
 	}
 
 	&__image {
+		border: 1px solid white;
 		object-fit: cover;
 
-		&-back {
-			position: absolute;
-			top: 0;
-			right: 0;
-			aspect-ratio: 1/1 auto;
-			max-width: 570px;
-			width: 100%;
-			z-index: 1;
-		}
-		&-front {
-			position: absolute;
-			left: 0;
-			bottom: 0;
-			aspect-ratio: 0.8256;
-			max-width: 337px;
-			width: 100%;
-			z-index: 2;
-		}
+		// &-back {
+		// 	position: absolute;
+		// 	top: 0;
+		// 	right: 0;
+		// 	aspect-ratio: 1/1 auto;
+		// 	max-width: 570px;
+		// 	width: 100%;
+		// 	z-index: 1;
+		// }
+		// &-front {
+		// 	position: absolute;
+		// 	left: 0;
+		// 	bottom: 0;
+		// 	aspect-ratio: 0.8256;
+		// 	max-width: 337px;
+		// 	width: 100%;
+		// 	z-index: 2;
+		// }
 	}
 }

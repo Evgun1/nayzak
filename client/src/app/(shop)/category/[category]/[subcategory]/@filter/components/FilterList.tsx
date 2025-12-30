@@ -6,7 +6,10 @@ import { useFilterContext } from "../../tools/context/useFilterContext";
 import Form, { FormOnChangeParams } from "@/ui/form/Form";
 import PopupResultFilter from "./PopupResultFilter";
 import FilterListPreview from "./FilterListPreview";
+import dynamic from "next/dynamic";
+import { useAppSelector } from "@/redux/redux";
 
+const FilterListPreviewDynamic = dynamic(() => import("./FilterListPreview"));
 export type FilterAttributesItem = {
 	name: string;
 	value: { type: string; id: number; active: boolean; checked?: boolean }[];
@@ -24,6 +27,8 @@ type FilterListProps = {
 
 const FilterList: FC<FilterListProps> = (props) => {
 	const { fetchAttributes: setAttributesHandler } = useFilterContext();
+	const responsive = useAppSelector((state) => state.responsive);
+
 	const refTimeout = useRef<NodeJS.Timeout>();
 	const temporaryStorage = useRef<FindFilterInitState>();
 
@@ -43,7 +48,6 @@ const FilterList: FC<FilterListProps> = (props) => {
 		setFindFilterState(result);
 		return result;
 	}, [props.searchParams]);
-
 	const filterSearchParamsMemo = useMemo(() => {
 		if (!findFilterState) return;
 		const urlSearchParams = new URLSearchParams();
@@ -55,10 +59,9 @@ const FilterList: FC<FilterListProps> = (props) => {
 
 		return urlSearchParams;
 	}, [findFilterState]);
-
 	const filterListPreviewElementMemo = useMemo(() => {
 		return attributesState.map((attribute, i) => (
-			<FilterListPreview
+			<FilterListPreviewDynamic
 				key={i}
 				attribute={attribute}
 			/>
@@ -119,7 +122,7 @@ const FilterList: FC<FilterListProps> = (props) => {
 				}
 			});
 		},
-		[ props.attributes, props.price],
+		[props.attributes, props.price],
 	);
 	const attributesCallback = useCallback(
 		async (urlSearchParams: URLSearchParams) => {
@@ -128,7 +131,6 @@ const FilterList: FC<FilterListProps> = (props) => {
 		},
 		[setAttributesHandler],
 	);
-
 	const inputCheckedHandler = (
 		param: FindFilterInitState,
 		temporaryStorage: boolean,
@@ -154,7 +156,6 @@ const FilterList: FC<FilterListProps> = (props) => {
 	useEffect(() => {
 		if (filterSearchParamsMemo) attributesCallback(filterSearchParamsMemo);
 	}, [filterSearchParamsMemo, attributesCallback]);
-
 	useEffect(() => {
 		if (Object.keys(searchParamsObjMemo).length)
 			temporaryStorage.current = searchParamsObjMemo;
@@ -170,20 +171,20 @@ const FilterList: FC<FilterListProps> = (props) => {
 		return inputCheckedHandler(searchParamsObjMemo, true);
 	}, [searchParamsObjMemo, temporaryStorage]);
 
-	// useEffect(() => {
-	// 	setFindFilterState(searchParamsObjMemo);
-	// }, [searchParamsObjMemo]);
-
 	return (
 		<div className={classes["filter-list"]}>
 			<Form
 				onChange={onChangeCallback}
 				className={classes["filter-list__form"]}
 			>
-				<PopupResultFilter
-					findFilter={findFilterState}
-					lastTargetId={lastTargetId ?? ""}
-				/>
+				{responsive.isDesktop ||
+					(responsive.isTablet && (
+						<PopupResultFilter
+							findFilter={findFilterState}
+							lastTargetId={lastTargetId ?? ""}
+						/>
+					))}
+
 				{filterListPreviewElementMemo}
 			</Form>
 		</div>

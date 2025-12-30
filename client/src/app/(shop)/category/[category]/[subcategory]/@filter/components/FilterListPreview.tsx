@@ -1,10 +1,21 @@
 "use client";
-
-import { FC, RefObject, useEffect, useRef } from "react";
+import {
+	ChangeEvent,
+	FC,
+	RefObject,
+	useCallback,
+	useDebugValue,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { FilterAttributesItem } from "./FilterList";
 import classes from "./FilterListPreview.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import Form from "@/ui/form/Form";
+import { useAppSelector } from "@/redux/redux";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useFilterContext } from "../../tools/context/useFilterContext";
 
 interface FilterListPreviewProps {
 	attribute: FilterAttributesItem;
@@ -12,17 +23,22 @@ interface FilterListPreviewProps {
 
 const FilterListPreview: FC<FilterListPreviewProps> = (props) => {
 	const { attribute } = props;
-
+	const { onChangeCheckbox } = useFilterContext();
 	const ref = useRef() as RefObject<HTMLDivElement>;
 
 	useEffect(() => {
-		const html = ref.current;
-		if (!html) return;
+		const current = ref.current;
+		if (!current) return;
 
-		if (html.scrollHeight > 192)
-			html.classList.add(classes["filter-list-preview--scroll"]);
-	}, [ref]);
-
+		if (current.scrollHeight > 192)
+			if (
+				!current.classList.contains(
+					classes["filter-list-preview--scroll"],
+				)
+			) {
+				current.classList.add(classes["filter-list-preview--scroll"]);
+			}
+	}, []);
 
 	return (
 		<div className={classes["filter-list-preview"]}>
@@ -34,6 +50,7 @@ const FilterListPreview: FC<FilterListPreviewProps> = (props) => {
 
 			{attribute.name.includes("color") ? (
 				<div
+					id="filter-preview"
 					ref={ref}
 					className={`${classes["filter-list-preview__color"]}`}
 				>
@@ -61,11 +78,13 @@ const FilterListPreview: FC<FilterListPreviewProps> = (props) => {
 								} as React.CSSProperties
 							}
 							key={i}
+							onChange={onChangeCheckbox}
 						/>
 					))}
 				</div>
 			) : (
 				<div
+					id="filter-preview"
 					ref={ref}
 					className={`${classes["filter-list-preview__attribute"]}`}
 				>
@@ -87,6 +106,7 @@ const FilterListPreview: FC<FilterListPreviewProps> = (props) => {
 								roundness: "SHARP",
 								size: "SMALL",
 							}}
+							onChange={onChangeCheckbox}
 						>
 							{val.type}
 						</Form.Checkbox>

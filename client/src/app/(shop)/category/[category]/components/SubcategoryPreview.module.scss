@@ -1,17 +1,32 @@
 .subcategory-preview {
-	position: relative;
-	// background: url("https://placehold.co/400") no-repeat center;
-	// background-size: cover;
-	height: 384px;
-	width: 100%;
+	// position: relative;
+	// height: 300px;
 
+	position: relative;
+	aspect-ratio: var(--image-ratio);
+
+	@media screen and (min-width: 1024px) {
+		aspect-ratio: 1.6979166667;
+	}
+
+	// aspect-ratio: 0.9 auto;
+	// width: 100%;
+
+	// @media screen and (min-width: 1024px) {
+	// 	height: 384px;
+	// }
 	&__image {
-		position: absolute;
+		// position: absolute;
+		// width: 100%;
+		// height: 100%;
+		// object-fit: cover;
+		// display: block;
+		// z-index: 1;
+		display: block;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		display: block;
-		z-index: 1;
+		object-position: center;
 	}
 	&__btn {
 		// text-decoration: none;

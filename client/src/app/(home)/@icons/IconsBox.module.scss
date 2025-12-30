@@ -1,3 +1,4 @@
+@use "../../styles/abstracts/mixins" as mixins;
 .icon {
 	width: 32px;
 	height: 32px;
@@ -5,55 +6,86 @@
 
 .icon-box {
 	&__list {
-		display: flex;
-		justify-content: center;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
 		align-items: center;
-		text-align: left;
+		gap: 30px 31px;
+		// display: flex;
+		// justify-content: center;
+		// text-align: left;
+		@media screen and (min-width: 1024px) {
+			grid-template-columns: repeat(4, 1fr);
+			gap: 0;
+		}
 	}
 
 	&__item {
 		position: relative;
 		display: flex;
+		flex-direction: column;
 
-		&:not(:last-child)::after {
-			position: absolute;
-			content: "";
-			height: 100%;
-			width: 1px;
-			background-color: var(--black-300);
-			top: 0;
-			right: 0;
-		}
+		@media screen and (min-width: 1024px) {
+			flex-direction: row;
 
-		&:not(:first-child, :last-child) {
-			padding: 0 80px;
+			&:not(:last-child)::after {
+				position: absolute;
+				content: "";
+				height: 100%;
+				width: 1px;
+				background-color: var(--black-300);
+				top: 0;
+				right: 0;
+			}
+			&:not(:first-child, :last-child) {
+				padding: 0 80px;
+			}
 
-			// justify-content: center;
-		}
-
-		&:first-child {
-			padding-right: 80px;
-		}
-		&:last-child {
-			padding-left: 80px;
+			&:first-child {
+				padding-right: 80px;
+			}
+			&:last-child {
+				padding-left: 80px;
+			}
 		}
 	}
 
 	&__content {
-		width: 100vw;
-		max-width: 212px;
-		display: flex;
-		gap: 12px;
-		padding: 40px 0;
+		@media screen and (min-width: 1024px) {
+			width: 100vw;
+			max-width: 212px;
+			display: flex;
+			gap: 12px;
+			padding: 40px 0;
+		}
 	}
 
 	&__icon {
 		width: 32px;
 		height: 32px;
+		margin-bottom: 8px;
 	}
+
 	&__info {
-		display: grid;
-		gap: 2px;
-		text-align: left;
+		text-align: center;
+
+		@media screen and (min-width: 1024px) {
+			display: grid;
+			gap: 2px;
+			text-align: left;
+		}
+		&-item {
+			&:first-child {
+				@include mixins.button-xsmall-style;
+				@media screen and (min-width: 1024px) {
+					@include mixins.button-medium-style;
+				}
+			}
+			&:last-child {
+				@include mixins.text-regular-12-style;
+				@media screen and (min-width: 1024px) {
+					@include mixins.text-regular-14-style;
+				}
+			}
+		}
 	}
 }

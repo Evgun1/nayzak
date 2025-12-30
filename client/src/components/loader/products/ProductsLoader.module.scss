@@ -42,31 +42,30 @@
 }
 
 .five_grid {
-	grid-template-columns: repeat(5, 1fr);
-	// &-item {
-	//   max-width: 228px;
-	// }
+	grid-template-columns: repeat(2, 1fr);
+	@media screen and (min-width: 1024px) {
+		grid-template-columns: repeat(5, 1fr);
+	}
 }
 
 .four_grid {
-	grid-template-columns: repeat(4, 1fr);
-	// &-item {
-	//   max-width: 310px;
-	// }
+	grid-template-columns: repeat(2, 1fr);
+
+	@media screen and (min-width: 1024px) {
+		grid-template-columns: repeat(4, 1fr);
+	}
 }
 
 .three_grid {
-	grid-template-columns: repeat(3, 1fr);
-	// &-item {
-	//   max-width: 424px;
-	// }
+	grid-template-columns: repeat(2, 1fr);
+
+	@media screen and (min-width: 1024px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
 }
 
 .two_grid {
 	grid-template-columns: repeat(2, 1fr);
-	// &-item {
-	//   max-width: 652px;
-	// }
 }
 
 .list {

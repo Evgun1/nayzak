@@ -2,7 +2,7 @@
 
 import classes from "./ProductsLoader.module.scss";
 import LoaderButton from "../LoaderButton";
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { appProductsGet } from "@/lib/api/products";
 import ProductPreviewDefault from "@/components/product-preview/product-preview-default/ProductsPreviewDefault";
 import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
@@ -11,11 +11,13 @@ import Spinner from "@/components/loading/Spinner";
 import { useSearchParams } from "next/navigation";
 import { ProductBase } from "@/types/product/productBase";
 import getIdByParams from "@/tools/getIdByParams";
+import ProductPreviewList from "@/components/product-preview/product-preview-list/ProductPreviewList";
 
 type LoaderProductsClientProp = {
 	productsParams?: string[];
 	limit: number;
-	initProductsElement: ReactNode;
+	initProductsElement?: ReactNode;
+	inputProduct: Array<ProductPreviewItem>;
 	productsCount: number;
 	listType: string | null;
 	showRating?: boolean;
@@ -23,20 +25,20 @@ type LoaderProductsClientProp = {
 };
 
 const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
-	const [productsElements, setProductsElements] = useState<JSX.Element[]>([]);
-	const [products, setProducts] = useState<ProductBase[]>([]);
-
-	const [isLoading, setIsLoading] = useState(false);
+	// const [productsElements, setProductsElements] = useState<JSX.Element[]>([]);
 	const searchParams = useSearchParams();
+
+	const [products, setProducts] = useState<ProductBase[]>([]);
+	const [productsData, setProductsData] = useState<Array<ProductPreviewItem>>(
+		props.inputProduct,
+	);
+	const [isLoading, setIsLoading] = useState(false);
 
 	async function btnClickHandler() {
 		setIsLoading(true);
 		const urlSearchParams = new URLSearchParams(searchParams?.toString());
 
-		urlSearchParams.set(
-			"offset",
-			(productsElements.length + props.limit).toString(),
-		);
+		urlSearchParams.set("offset", productsData.length.toString());
 		urlSearchParams.set("limit", props.limit.toString());
 
 		const category = urlSearchParams.get("category");
@@ -59,6 +61,24 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 		setProducts(productsFetch);
 	}
 
+	const productsElements = useMemo(() => {
+		return productsData.map((product, i) => {
+			return (
+				<li key={i}>
+					{props.listType !== "list" ? (
+						<ProductPreviewDefault
+							className={props.className}
+							product={product}
+							showRating={props.showRating}
+						/>
+					) : (
+						<ProductPreviewList product={product} />
+					)}
+				</li>
+			);
+		});
+	}, [productsData, props.className, props.listType, props.showRating]);
+
 	useEffect(() => {
 		(async () => {
 			setIsLoading(true);
@@ -79,19 +99,11 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 							},
 						};
 
-						return (
-							<li key={product.id}>
-								<ProductPreviewDefault
-									product={productParam}
-									showRating={props.showRating}
-									className={props.className}
-								/>
-							</li>
-						);
+						return productParam;
 					}),
 				);
 
-				setProductsElements((prev) => prev.concat(result));
+				setProductsData((prev) => prev.concat(result));
 			} catch (error) {
 			} finally {
 				setIsLoading(false);
@@ -99,9 +111,7 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 		})();
 	}, [products, props.className, props.showRating]);
 
-	useEffect(() => {
-		setProductsElements([]);
-	}, [props.initProductsElement]);
+	console.log(props.productsCount, productsElements.length);
 
 	return (
 		<LoaderButton
@@ -115,7 +125,7 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 			totalCount={props.productsCount}
 			btnClickHandler={btnClickHandler}
 		>
-			{props.initProductsElement}
+			{/* {props.initProductsElement} */}
 			{productsElements}
 			{!isLoading ? (
 				<></>

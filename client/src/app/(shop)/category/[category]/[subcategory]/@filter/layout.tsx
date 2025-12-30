@@ -9,7 +9,7 @@ type RootLayoutProps = {
 	searchParams: Record<string, string>;
 };
 
-const RootLayout: FC<RootLayoutProps> = async (props) => {
+const FilterLayout: FC<RootLayoutProps> = async (props) => {
 	return (
 		<div className={classes["filter"]}>
 			<FilterHeader />
@@ -18,4 +18,4 @@ const RootLayout: FC<RootLayoutProps> = async (props) => {
 	);
 };
 
-export default RootLayout;
+export default FilterLayout;

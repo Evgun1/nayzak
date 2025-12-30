@@ -1,13 +1,22 @@
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
+import React, {
+	FC,
+	ReactElement,
+	ReactNode,
+	useCallback,
+	useEffect,
+	useState,
+} from "react";
 import classes from "./Popup.module.scss";
 import { useAppDispatch, useAppSelector } from "@/redux/redux";
 import { createPortal } from "react-dom";
 import { popupActions } from "@/redux/store/popup/popup";
+import { PopupProvider, usePopupContext } from "./context/usePopupContext";
 
-const Popup: FC = () => {
+const Popup: FC<{ popupChildren?: ReactNode }> = (props) => {
 	const popupContent = useAppSelector((state) => state.popup.popupContent);
+
 	const [popupElement, setPopupElement] = useState<Element>();
 	const [overlayElement, setOverlayElement] = useState<Element>();
 
@@ -29,11 +38,11 @@ const Popup: FC = () => {
 	return (
 		<>
 			{popupContent && (
-				<>
+				<PopupProvider>
 					{popupElement && createPortal(popupContent, popupElement)}
 					{overlayElement &&
 						createPortal(<Overlay />, overlayElement)}
-				</>
+				</PopupProvider>
 			)}
 		</>
 	);
@@ -41,12 +50,16 @@ const Popup: FC = () => {
 
 const Overlay: FC = () => {
 	const dispatch = useAppDispatch();
-	const togglePopupHandler = () => {
-		dispatch(popupActions.toggle(null));
-	};
+	const { toggle } = usePopupContext();
+
+	const togglePopupHandler = useCallback(() => {
+		if (toggle === "action") return dispatch(popupActions.toggle(null));
+		return undefined;
+	}, [toggle, dispatch]);
 
 	return (
 		<div
+			id="overlay-inside"
 			className={classes.overlay}
 			onClick={togglePopupHandler}
 		></div>

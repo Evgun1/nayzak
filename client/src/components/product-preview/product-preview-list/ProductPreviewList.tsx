@@ -33,21 +33,22 @@ const ProductPreviewList = (props: ProductPreviewProps) => {
 
 	return (
 		<div className={classes["preview"]}>
-			<Link href={`product/${product.title}`}>
-				<div className={classes["preview__img-wrapper"]}>
-					<Image
-						loading="lazy"
-						sizes=""
-						fill
-						className={classes["preview__img"]}
-						src={
-							product.Media.src
-								? product.Media.src
-								: "https://placehold.co/652x889"
-						}
-						alt={product.Media.name}
-					/>
-				</div>
+			<Link
+				className={classes["preview__img-link"]}
+				href={`product/${product.title}`}
+			>
+				<Image
+					loading="lazy"
+					sizes=""
+					fill
+					className={classes["preview__img"]}
+					src={
+						product.Media.src
+							? product.Media.src
+							: "https://placehold.co/652x889"
+					}
+					alt={product.Media.name}
+				/>
 			</Link>
 			<div className={classes["preview__info-wrapper"]}>
 				<div

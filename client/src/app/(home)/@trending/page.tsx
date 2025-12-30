@@ -10,19 +10,24 @@ const Page: FC = () => {
 	return (
 		<div className={classes["trending"]}>
 			<div className={classes["trending__info"]}>
-				<div className={classes["trending__info-header"]}>
-					<span className={TextClassList.SEMIBOLD_18}>TRENDING</span>
-					<h3>Made from the finest materials</h3>
-				</div>
+				<span
+					className={`${TextClassList.SEMIBOLD_18} ${classes["trending__info-item"]}`}
+				>
+					TRENDING
+				</span>
+				<h3 className={classes["trending__info-item"]}>
+					Made from the finest materials
+				</h3>
 				<p
 					className={`${classes[TextClassList.REGULAR_18]} ${
-						classes["trending__info-paragraph"]
+						classes["trending__info-item"]
 					}`}
 				>
 					Sed ut perspiciatis unde omnis iste natus error sit
 					voluptatem accusantium doloremque laudantium, totam rem
 					aperiam, eaque ipsa quae.
 				</p>
+
 				<LinkCustom
 					styleSettings={{
 						type: "TEXT",
@@ -37,8 +42,9 @@ const Page: FC = () => {
 					See collection
 				</LinkCustom>
 			</div>
+
 			<div className={classes["trending__images"]}>
-				<div className={classes["trending__image-back"]}>
+				<div className={classes["trending__images-wrap"]}>
 					<Image
 						sizes="width:100%; height:100%;"
 						loading="lazy"
@@ -48,7 +54,7 @@ const Page: FC = () => {
 						alt="#"
 					/>
 				</div>
-				<div className={classes["trending__image-front"]}>
+				<div className={classes["trending__images-wrap"]}>
 					<Image
 						sizes="width:100%; height:100%;"
 						loading="lazy"

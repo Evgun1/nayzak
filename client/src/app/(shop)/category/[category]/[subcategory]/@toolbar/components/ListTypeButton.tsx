@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import classes from "./ListTypeButton.module.scss";
 import IconsIdList from "@/components/icons/IconsIdList";
@@ -7,31 +7,27 @@ import { FC, useEffect, useState } from "react";
 import { TypeList } from "./SelectTypeList";
 import Link from "next/link";
 import DisplayIcon from "@/components/icons/displayIcon";
+import { cookies } from "next/headers";
 
 type ListTypeButtonProps = {
 	icon: IconsIdList;
 	typeList: string;
+	searchParams: Record<string, any>;
 };
 
 const ListTypeButton: FC<ListTypeButtonProps> = (props) => {
-	const { icon, typeList } = props;
-	const searchParams = useSearchParams();
-	const [isActive, setIsActive] = useState<boolean>();
+	const { icon, typeList, searchParams } = props;
+	const urlSearchParams = new URLSearchParams(searchParams);
 
-	// const urlSearchParams = useMemo(() => {
-	const urlSearchParams = new URLSearchParams(searchParams.toString());
+	const cookiesStorage = cookies();
+	const defaultListType = cookiesStorage.get("default-list-type");
+
 	urlSearchParams.set("list_type", typeList);
 
-	useEffect(() => {
-		if (
-			searchParams.has("list_type") &&
-			searchParams.get("list_type") !== null
-		) {
-			setIsActive(searchParams.get("list_type") === typeList);
-		} else {
-			setIsActive(TypeList.FIVE === typeList);
-		}
-	}, [searchParams, typeList]);
+	const isActive =
+		searchParams["list_type"] && searchParams["list_type"] !== null
+			? searchParams["list_type"] === typeList
+			: (defaultListType?.value || TypeList.FIVE) === typeList;
 
 	return (
 		<div className={`${classes["list-type-button"]}`}>

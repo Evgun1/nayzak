@@ -2,20 +2,19 @@
 
 import { FC, ReactNode, useEffect } from "react";
 import ButtonCustom, {
-    StyleSettingsObject,
+	StyleSettingsObject,
 } from "../custom-elements/button-custom/ButtonCustom";
 import { useSelect } from "./SelectContext";
 
 const SelectTrigger: FC<{
-    label: string;
-    styleSetting: StyleSettingsObject;
-    defaultSelectKey: string | undefined;
+	label: string;
+	styleSetting: StyleSettingsObject;
 }> = ({ styleSetting }) => {
-    const { defaultLabel } = useSelect();
+	const { defaultLabel } = useSelect();
 
-    return (
-        <ButtonCustom styleSettings={styleSetting}>{defaultLabel}</ButtonCustom>
-    );
+	return (
+		<ButtonCustom styleSettings={styleSetting}>{defaultLabel}</ButtonCustom>
+	);
 };
 
 export default SelectTrigger;

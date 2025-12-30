@@ -1,5 +1,6 @@
 "use server";
 
+import { getPlaiceholder } from "plaiceholder";
 import sharp from "sharp";
 
 function bufferToBase64(buffer: Buffer): string {
@@ -27,4 +28,20 @@ export async function getPlaceholderImage(imageUrl: string) {
 				"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOsa2yqBwAFCAICLICSyQAAAABJRU5ErkJggg==",
 		};
 	}
+}
+
+export async function getImage(src: string | URL) {
+	const buffer = await getBuffer(src);
+	const {
+		metadata: { height, width },
+		...placeholder
+	} = await getPlaiceholder(buffer, { size: 10 });
+	return {
+		...placeholder,
+		img: {
+			src,
+			height,
+			width,
+		},
+	};
 }

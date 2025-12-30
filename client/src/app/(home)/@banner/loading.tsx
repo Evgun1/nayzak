@@ -6,16 +6,16 @@ interface LoadingProps {}
 
 const Loading: FunctionComponent<LoadingProps> = () => {
 	return (
-		<React.Fragment>
-			<Skeleton className={classes["loading__item"]} />
-			<div className={classes["loading__list"]}>
-				<Skeleton className={classes["loading__item"]} />
-				<Skeleton className={classes["loading__item"]} />
-				<Skeleton className={classes["loading__item"]} />
+		<>
+			<Skeleton className={classes["skeleton__item"]} />
+			<div className={classes["skeleton__list"]}>
+				<Skeleton className={classes["skeleton__list-item"]} />
+				<Skeleton className={classes["skeleton__list-item"]} />
+				<Skeleton className={classes["skeleton__list-item"]} />
 
-				<Skeleton className={classes["loading__item"]} />
+				<Skeleton className={classes["skeleton__list-item"]} />
 			</div>
-		</React.Fragment>
+		</>
 	);
 };
 

@@ -33,6 +33,7 @@ import { IProductCache } from "./cache/interface/productCache";
 import { OrderBy, ProductsOrderBy } from "src/prisma/interface/orderBy";
 import { th } from "@faker-js/faker/.";
 import { ApiSwitchingProtocolsResponse } from "@nestjs/swagger";
+import { QueryService } from "src/query/query.service";
 
 export type GetProductsAllParams = Partial<ValidationProductsByParamsQueryDTO> &
 	Partial<ValidationProductsByParamsParamDTO> &
@@ -41,6 +42,7 @@ export type GetProductsAllParams = Partial<ValidationProductsByParamsQueryDTO> &
 @Injectable()
 export class ProductsService {
 	constructor(
+		private readonly queryService: QueryService,
 		private readonly kafka: KafkaService,
 		private readonly productsCache: ProductsCacheService,
 		private readonly productPrisma: ProductPrisma,
@@ -54,6 +56,9 @@ export class ProductsService {
 		const where: ProductsWhereInput = {};
 		const whereAnd: ProductsWhereInput[] = [];
 
+		if (params.search) {
+			where.title = `*${params.search}*`;
+		}
 		if (params.productsId) {
 			where.id = {
 				in: params.productsId,
@@ -70,7 +75,9 @@ export class ProductsService {
 			if (!Number.isNaN(+params.subcategoryId)) {
 				where.subcategoriesId = +params.subcategoryId;
 			} else {
-				where.Subcategories = { title: `*${params.subcategoryId}*` };
+				where.Subcategories = {
+					title: `*${params.subcategoryId}*`,
+				};
 			}
 		}
 		if (params.minPrice && params.maxPrice) {
@@ -78,7 +85,6 @@ export class ProductsService {
 				between: [+params.minPrice, +params.maxPrice],
 			};
 		}
-
 		if (params.color) {
 			whereAnd.push({
 				ProductsAttribute: {
@@ -142,7 +148,7 @@ export class ProductsService {
 
 		const args = {
 			includes: { Media: { src: true, name: true } },
-			where,
+			where: where,
 			limit: params.limit,
 			offset,
 			orderBy,

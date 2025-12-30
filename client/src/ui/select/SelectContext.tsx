@@ -30,8 +30,6 @@ export const SelectProvider: FC<{
 
 	const [defaultLabel, setDefaultLabel] = useState<string>(label);
 
-	const defaultLabelRef = useRef<string>(label);
-
 	function addItemKey(key: string | number) {
 		setItemKey(key);
 	}

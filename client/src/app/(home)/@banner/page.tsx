@@ -1,14 +1,17 @@
 "use server";
+
 import Image from "next/image";
 import classes from "./Banner.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import React, { FC } from "react";
+import BannerTitle from "./components/BannerTitle";
+import BannerSpan from "./components/BannerSpan";
+import BannerParagraph from "./components/BannerParagraph";
 
-const Page: FC = async () => {
+const Page: FC = async (props: any) => {
 	const src = "https://placehold.co/800";
-
 	const blur = await getPlaceholderImage(src);
 
 	return (
@@ -26,22 +29,18 @@ const Page: FC = async () => {
 				/>
 			</div>
 			<div className={classes["banner__content"]}>
-				{/* <div className={classes["banner__text-wrapper"]}> */}
-				<div
-					className={`${classes["banner__content-text"]} ${TextClassList.SEMIBOLD_16}`}
-				>
+				<span className={`${classes["banner__content-item"]}`}>
 					New Arrivals
-				</div>
-				<h3 className={classes["banner__content-text"]}>
+				</span>
+
+				<h3 className={`${classes["banner__content-item"]}`}>
 					Your dream shop is a click away.
 				</h3>
-				<p
-					className={`${classes["banner__content-text"]} ${TextClassList.REGULAR_18}`}
-				>
+
+				<p className={`${classes["banner__content-item"]}`}>
 					Keep your everyday style chic and on-trend with our
 					selection 20+ styles to choose from.
 				</p>
-				{/* </div> */}
 
 				<ButtonCustom
 					styleSettings={{

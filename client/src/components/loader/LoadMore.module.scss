@@ -1,6 +1,12 @@
 .load-more {
-    display: grid;
-    row-gap: 56px;
-    column-gap: 32px;
-    margin-bottom: 56px;
+	display: grid;
+	margin-bottom: 56px;
+
+	row-gap: 32px;
+	column-gap: 17px;
+
+	@media screen and (min-width: 1024px) {
+		row-gap: 56px;
+		column-gap: 32px;
+	}
 }

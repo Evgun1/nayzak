@@ -55,8 +55,6 @@ export const appNewProductsGet = async () => {
 		cache: { request: "no-cache" },
 	});
 
-	console.log(result);
-
 	return { products: result };
 };
 

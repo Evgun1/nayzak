@@ -1,3 +1,4 @@
+// @use '../../../styles/abstracts/mixins'
 .skeleton {
 	&__header {
 		display: flex;
@@ -5,25 +6,46 @@
 		justify-content: space-between;
 		margin-bottom: 32px;
 
+		&-title {
+		}
+
 		&-btn {
-			border-radius: 5px;
-			width: 130px;
-			height: 24px;
+			display: none;
+			@media screen and (min-width: 1024px) {
+				display: block;
+				border-radius: 5px;
+				width: 130px;
+				height: 24px;
+			}
 		}
 	}
 
 	&__list {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		display: flex;
 		gap: 32px;
+
+		@media screen and (min-width: 1024px) {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+		}
 	}
 
 	.skeleton__item {
 		display: grid;
-		width: 100%;
 		height: max-content;
 		gap: 4px;
+		width: 100%;
+		max-width: 310px;
 
+		&:not(:first-child) {
+			display: none;
+		}
+		@media screen and (min-width: 1024px) {
+			max-width: 100%;
+			&:not(:first-child) {
+				display: grid;
+			}
+		}
 		&-img {
 			margin-bottom: 8px;
 			width: 100%;
