@@ -19,6 +19,7 @@ import InputHidden from "./inputs/InputHidden";
 import validatorSchemaHandler from "@/lib/validator/appSchemaHandler";
 import Checkbox from "./inputs/Checkbox";
 import { it } from "node:test";
+import { FormProvider } from "./context/useFormContext";
 
 export type FormOnSubmitParams = (
 	data: { data: any },
@@ -28,6 +29,7 @@ export type FormOnSubmitParams = (
 export type FormOnChangeParams = (event: FormEvent<HTMLFormElement>) => void;
 
 type FormProps<T extends ZodRawShape> = {
+	id?: string;
 	children: ReactNode;
 	oneMessage?: boolean;
 	schema?: Array<ZodObject<T> | ZodEffects<ZodObject<T>>>;
@@ -44,6 +46,7 @@ const Form = <T extends ZodRawShape>({
 	onSubmit,
 	onChange,
 	customError,
+	id,
 	className,
 }: FormProps<T>) => {
 	const [errorMessages, setErrorMessages] = useState<
@@ -65,6 +68,8 @@ const Form = <T extends ZodRawShape>({
 		setErrorMessages(error);
 
 		if (!hasErrors && onSubmit) {
+			console.log(true);
+
 			const inputElements = event.currentTarget.querySelectorAll("input");
 			const textareaElements =
 				event.currentTarget.querySelectorAll("textarea");
@@ -83,6 +88,7 @@ const Form = <T extends ZodRawShape>({
 
 				delete object[""];
 			});
+			console.log(object);
 
 			onSubmit({ data: object }, event);
 		}
@@ -133,24 +139,24 @@ const Form = <T extends ZodRawShape>({
 					case InputHidden:
 						const inputChild = child as ReactElement<InputType>;
 
-						const name = inputChild.props.inputSettings?.name;
-						let error: string[] | undefined;
+						// const name = inputChild.props.inputSettings?.name;
+						// let error: string[] | undefined;
 
-						if (oneMessage) {
-							error = errorMessages[name]
-								? [errorMessages[name]?.[0]]
-								: undefined;
-						} else {
-							error = errorMessages[name]
-								? errorMessages[name]
-								: undefined;
-						}
+						// if (oneMessage) {
+						// 	error = errorMessages[name]
+						// 		? [errorMessages[name]?.[0]]
+						// 		: undefined;
+						// } else {
+						// 	error = errorMessages[name]
+						// 		? errorMessages[name]
+						// 		: undefined;
+						// }
 
-						if (customError) {
-							error = [customError];
-						}
+						// if (customError) {
+						// 	error = [customError];
+						// }
 
-						return React.cloneElement(inputChild, { error });
+						return React.cloneElement(inputChild);
 					case Radio:
 					case Checkbox:
 						const inputRadioChild = child as ReactElement<{
@@ -188,13 +194,19 @@ const Form = <T extends ZodRawShape>({
 	};
 
 	return (
-		<form
-			className={`${classes["form"]} ${className ? className : ""}`}
-			onChange={onChangeHandler}
-			onSubmit={onSubmitHandler}
+		<FormProvider
+			errorMessage={errorMessages}
+			oneMessage={oneMessage}
 		>
-			{formRecursion(children)}
-		</form>
+			<form
+				id={id}
+				className={`${classes["form"]} ${className ? className : ""}`}
+				onChange={onChangeHandler}
+				onSubmit={onSubmitHandler}
+			>
+				{formRecursion(children)}
+			</form>
+		</FormProvider>
 	);
 };
 

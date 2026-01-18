@@ -1,11 +1,33 @@
+@use "../../../../../styles/abstracts/mixins" as mixins;
 .attributes {
 	display: grid;
-	grid-template-columns: repeat(2, max-content);
-	text-align: start;
-	gap: 32px 57px;
+	grid-template-columns: max-content 1fr;
 
-	&__item {
+	// grid-template-columns: repeat(2, max-content);
+	text-align: start;
+	gap: 22px 47px;
+
+	@media screen and (min-width: 1024px) {
+		gap: 32px 57px;
+	}
+
+	&__name,
+	&__value {
 		color: #3e3e59;
+	}
+
+	&__name {
+		@include mixins.text-semibold-16-style;
+		@media screen and (min-width: 1024px) {
+			@include mixins.text-semibold-18-style;
+		}
+	}
+	&__value {
+		word-break: break-word;
+		@include mixins.text-regular-16-style;
+		@media screen and (min-width: 1024px) {
+			@include mixins.text-regular-18-style;
+		}
 	}
 }
 
@@ -13,8 +35,11 @@
 	display: grid;
 	grid-template-columns: 120px 200px;
 	text-align: start;
-	gap: 32px 57px;
 
+	gap: 22px 47px;
+	@media screen and (min-width: 1024px) {
+		gap: 32px 57px;
+	}
 	&__item {
 		border-radius: 5px;
 		width: 100%;

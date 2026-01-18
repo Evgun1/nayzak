@@ -6,6 +6,7 @@ import React, {
 	ReactElement,
 	RefObject,
 	useEffect,
+	useMemo,
 	useRef,
 	useState,
 } from "react";
@@ -15,6 +16,7 @@ import { InputType } from "./InputType";
 import { TextClassList } from "@/types/textClassList.enum";
 import DisplayIcon from "@/components/icons/displayIcon";
 import IconsIdList from "@/components/icons/IconsIdList";
+import { useFormContext } from "../context/useFormContext";
 
 interface ButtonItem {
 	icon?: IconsIdList;
@@ -43,10 +45,12 @@ const InputDefault: FC<InputDefaultProps> = ({
 	className,
 	error,
 }) => {
+	const { errors } = useFormContext();
 	const inputContainerRef = useRef(null) as RefObject<HTMLDivElement>;
 	const inputRef = useRef() as RefObject<HTMLInputElement>;
 
 	const [displayMessage, setDisplayMessage] = useState<any>("");
+	const [errorMessageState, setErrorMessagesState] = useState<string[]>([]);
 
 	const handleFocus = () => {
 		if (!inputContainerRef.current) return;
@@ -65,6 +69,9 @@ const InputDefault: FC<InputDefaultProps> = ({
 	}, [inputSettings.defaultValue]);
 
 	useEffect(() => {
+		const error: string[] | undefined = errors[inputSettings.name];
+		setErrorMessagesState(error ?? []);
+
 		if (error !== undefined) {
 			inputContainerRef.current?.classList.add(classes["input--error"]);
 		} else {
@@ -72,7 +79,7 @@ const InputDefault: FC<InputDefaultProps> = ({
 				classes["input--error"],
 			);
 		}
-	}, [error]);
+	}, [errors, inputSettings.name]);
 
 	const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
@@ -89,120 +96,150 @@ const InputDefault: FC<InputDefaultProps> = ({
 		}
 	};
 
-	const elements: ReactElement[] = [];
+	const elements = useMemo(() => {
+		const elements: ReactElement[] = [];
 
-	elements.push(
-		<input
-			ref={inputRef}
-			id={inputSettings?.id}
-			name={inputSettings?.name}
-			className={`${classes["input__item"]} ${
-				inputSettings.disabled && classes["input__item--disabled"]
-			}`}
-			placeholder={inputSettings?.placeholder}
-			type={inputSettings?.type}
-			onFocus={handleFocus}
-			onBlur={handleBlur}
-			required={inputSettings?.required}
-			autoComplete={inputSettings.autoComplete}
-			onChange={changeHandler}
-			value={displayMessage}
-		/>,
-	);
-	if (icon?.left && icon?.right) {
-		elements.unshift(
-			<button
-				type={icon?.left?.type}
-				className={`${classes["input__btn"]} ${
-					inputSettings.disabled && classes["input__btn--disabled"]
-				}`}
-				onClick={icon.left.onClick}
-			>
-				{icon.left.icon ? (
-					<DisplayIcon
-						className={classes["input__btn-icon"]}
-						iconName={icon.left.icon}
-					/>
-				) : (
-					<span className={ButtonClassList.BUTTON_SMALL}>
-						{icon.left.text}
-					</span>
-				)}
-			</button>,
-		);
 		elements.push(
-			<button
-				type={icon?.right?.type}
-				className={`${classes["input__btn"]} ${
-					inputSettings.disabled && classes["input__btn--disabled"]
+			<input
+				ref={inputRef}
+				id={inputSettings?.id}
+				name={inputSettings?.name}
+				className={`${classes["input__item"]} ${
+					inputSettings.disabled && classes["input__item--disabled"]
 				}`}
-				onClick={icon.right.onClick}
-			>
-				{icon.right.icon ? (
-					<DisplayIcon
-						className={classes["input__btn-icon"]}
-						iconName={icon.right.icon}
-					/>
-				) : (
-					<span className={ButtonClassList.BUTTON_SMALL}>
-						{icon.right.text}
-					</span>
-				)}
-			</button>,
+				placeholder={inputSettings?.placeholder}
+				type={inputSettings?.type}
+				onFocus={handleFocus}
+				onBlur={handleBlur}
+				required={inputSettings?.required}
+				autoComplete={inputSettings.autoComplete}
+				onChange={changeHandler}
+				value={displayMessage}
+			/>,
 		);
-	} else if (icon?.left) {
-		elements.unshift(
-			<button
-				type={icon?.left?.type}
-				className={`${classes["input__btn"]} ${
-					inputSettings.disabled && classes["input__btn--disabled"]
-				}`}
-				onClick={icon.left.onClick}
-			>
-				{icon.left.icon ? (
-					<DisplayIcon
-						className={classes["input__btn-icon"]}
-						iconName={icon.left.icon}
-					/>
-				) : (
-					<span className={ButtonClassList.BUTTON_SMALL}>
-						{icon.left.text}
-					</span>
-				)}
-			</button>,
-		);
-	} else if (icon?.right) {
-		elements.push(
-			<button
-				type={icon?.right?.type}
-				className={`${classes["input__btn"]} ${
-					inputSettings.disabled && classes["input__btn--disabled"]
-				}`}
-				onClick={icon.right.onClick}
-			>
-				{icon.right.icon ? (
-					<DisplayIcon
-						className={classes["input__btn-icon"]}
-						iconName={icon.right.icon}
-					/>
-				) : (
-					<span className={ButtonClassList.BUTTON_SMALL}>
-						{icon.right.text}
-					</span>
-				)}
-			</button>,
-		);
-	}
+		if (icon?.left && icon?.right) {
+			elements.unshift(
+				<button
+					type={icon?.left?.type}
+					className={`${classes["input__btn"]} ${
+						inputSettings.disabled &&
+						classes["input__btn--disabled"]
+					}`}
+					onClick={icon.left.onClick}
+				>
+					{icon.left.icon ? (
+						<DisplayIcon
+							className={classes["input__btn-icon"]}
+							iconName={icon.left.icon}
+						/>
+					) : (
+						<span className={ButtonClassList.BUTTON_SMALL}>
+							{icon.left.text}
+						</span>
+					)}
+				</button>,
+			);
+			elements.push(
+				<button
+					type={icon?.right?.type}
+					className={`${classes["input__btn"]} ${
+						inputSettings.disabled &&
+						classes["input__btn--disabled"]
+					}`}
+					onClick={icon.right.onClick}
+				>
+					{icon.right.icon ? (
+						<DisplayIcon
+							className={classes["input__btn-icon"]}
+							iconName={icon.right.icon}
+						/>
+					) : (
+						<span className={ButtonClassList.BUTTON_SMALL}>
+							{icon.right.text}
+						</span>
+					)}
+				</button>,
+			);
+		} else if (icon?.left) {
+			elements.unshift(
+				<button
+					type={icon?.left?.type}
+					className={`${classes["input__btn"]} ${
+						inputSettings.disabled &&
+						classes["input__btn--disabled"]
+					}`}
+					onClick={icon.left.onClick}
+				>
+					{icon.left.icon ? (
+						<DisplayIcon
+							className={classes["input__btn-icon"]}
+							iconName={icon.left.icon}
+						/>
+					) : (
+						<span className={ButtonClassList.BUTTON_SMALL}>
+							{icon.left.text}
+						</span>
+					)}
+				</button>,
+			);
+		} else if (icon?.right) {
+			elements.push(
+				<button
+					type={icon?.right?.type}
+					className={`${classes["input__btn"]} ${
+						inputSettings.disabled &&
+						classes["input__btn--disabled"]
+					}`}
+					onClick={icon.right.onClick}
+				>
+					{icon.right.icon ? (
+						<DisplayIcon
+							className={classes["input__btn-icon"]}
+							iconName={icon.right.icon}
+						/>
+					) : (
+						<span className={ButtonClassList.BUTTON_SMALL}>
+							{icon.right.text}
+						</span>
+					)}
+				</button>,
+			);
+		}
+		return elements;
+	}, [
+		inputSettings,
+		icon,
+		handleFocus,
+		handleBlur,
+		changeHandler,
+		displayMessage,
+		inputRef,
+	]);
 
+	const errorMessageElement = useMemo(() => {
+		if (!errorMessageState || errorMessageState.length <= 0) return <></>;
+
+		return (
+			<div className={classes["input__error-container"]}>
+				{errorMessageState.map((val, i) => (
+					<span
+						key={i}
+						className={`${TextClassList.REGULAR_12} ${classes["input__error"]}`}
+					>
+						{val}
+					</span>
+				))}
+			</div>
+		);
+	}, [errorMessageState, inputSettings.name]);
+    
 	return (
 		<div
-			className={`${classes["input"]} ${
-				className ? className : ""
-			} ${inputSettings.disabled && classes["input--disabled"]}`}
+			className={`${classes["input"]} ${className ? className : ""} ${
+				inputSettings.disabled && classes["input--disabled"]
+			}`}
 		>
-			{label && (
-				<span className={TextClassList.SEMIBOLD_16}>{label}</span>
-			)}
+			{label && <span id="input-label">{label}</span>}
 			<div
 				ref={inputContainerRef}
 				id="input-container"
@@ -220,7 +257,7 @@ const InputDefault: FC<InputDefaultProps> = ({
 				))}
 			</div>
 
-			{error && error.length > 0 && (
+			{/* {error && error.length > 0 && (
 				<div className={classes["input__error-container"]}>
 					{error.map((val, i) => (
 						<span
@@ -231,7 +268,8 @@ const InputDefault: FC<InputDefaultProps> = ({
 						</span>
 					))}
 				</div>
-			)}
+			)} */}
+			{errorMessageElement}
 		</div>
 	);
 };

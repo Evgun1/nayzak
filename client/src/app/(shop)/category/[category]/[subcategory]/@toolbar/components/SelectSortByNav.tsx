@@ -8,7 +8,7 @@ import { Select, SelectItem } from "@/ui/select/Select";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { SortDataType } from "./SelectSortBy";
 import { useAppDispatch, useAppSelector } from "@/redux/redux";
-import { ListLinkItem, popupActions } from "@/redux/store/popup/popup";
+import { ListLinkType, popupActions } from "@/redux/store/popup/popup";
 import PopupListLink from "@/popups/popup-data-list/PopupListLink";
 import { log } from "console";
 
@@ -25,7 +25,7 @@ const SelectSortByNav: React.FC<SelectSortByNavProps> = (props) => {
 	const dispatch = useAppDispatch();
 
 	const btnClickHandler = useCallback(() => {
-		const dataArray: ListLinkItem = [];
+		const dataArray: ListLinkType = [];
 
 		for (const element of data) {
 			dataArray.push({

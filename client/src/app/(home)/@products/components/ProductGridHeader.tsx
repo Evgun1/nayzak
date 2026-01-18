@@ -188,10 +188,9 @@ const ProductGridHeader: FC = () => {
 				You’re browsing
 			</div>
 			<HeaderNavButton
-				deleteQueryParams="subcategory"
+				href={{ deleteQuery: "subcategory", queryName: "category" }}
 				label={categoryLabel}
 				dataArray={categories}
-				queryParamsKey="category"
 				searchParams={searchParams}
 			/>
 			<div
@@ -206,7 +205,7 @@ const ProductGridHeader: FC = () => {
 			<HeaderNavButton
 				label={subcategoryLabel}
 				dataArray={subcategories}
-				queryParamsKey="subcategory"
+                href={{queryName:'subcategory'}}
 				searchParams={searchParams}
 			/>
 		</div>

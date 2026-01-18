@@ -12,6 +12,7 @@ import React, {
 import AccordionBody from "./AccordionBody";
 import AccordionHeader from "./AccordionHeader";
 import classes from "./Accordion.module.scss";
+import { AccordionProvider } from "./context/useAccordionContext";
 
 type AccordionProps = {
 	visibleBody?: boolean;
@@ -68,6 +69,7 @@ const AccordionComponent: FC<AccordionProps> = ({
 						accordionBody.classList.toggle(
 							classes["accordion__body--visible"],
 						);
+
 						if (
 							accordionBody.classList.contains(
 								classes["accordion__body--visible"],
@@ -87,6 +89,8 @@ const AccordionComponent: FC<AccordionProps> = ({
 	const childrenRecursion = (children: ReactNode): ReactNode => {
 		return React.Children.map(children, (child, i) => {
 			if (!React.isValidElement(child)) return child;
+
+			console.log(child);
 
 			if (
 				child.type === AccordionHeader ||
@@ -130,7 +134,8 @@ const AccordionComponent: FC<AccordionProps> = ({
 			id={accordionId}
 			className={className && className}
 		>
-			{childrenRecursion(children)}
+			{children}
+			{/* {childrenRecursion(children)} */}
 		</div>
 	);
 };

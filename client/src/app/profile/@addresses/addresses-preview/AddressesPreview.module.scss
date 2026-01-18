@@ -1,9 +1,17 @@
+@use "../../../styles/abstracts/mixins" as mixins;
+
 .address {
 	display: flex;
 	justify-content: space-between;
 	padding: 32px;
 	border: 1px solid var(--black-300);
 
+	&__title {
+		@include mixins.text-semibold-16-style;
+		@media screen and (min-width: 1024px) {
+			@include mixins.text-semibold-18-style;
+		}
+	}
 	&__info-wrap {
 		display: grid;
 		gap: 10px;
@@ -16,6 +24,11 @@
 			display: flex;
 			gap: 10px;
 			align-items: center;
+
+			@include mixins.text-regular-16-style;
+			@media screen and (min-width: 1024px) {
+				@include mixins.text-regular-18-style;
+			}
 		}
 	}
 

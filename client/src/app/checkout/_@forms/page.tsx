@@ -58,28 +58,32 @@ const Page = () => {
 	}, [cart, route]);
 
 	return (
-		<Form
-			schema={schemaCustomersArr}
-			onSubmit={submitHandler}
-			className={classes["checkout__form"]}
-		>
-			<div className={classes["checkout__input"]}>
-				<CheckoutFormContactInformation />
-				<CheckoutFormAddress />
-			</div>
-			<ButtonCustom
-				typeProperty="submit"
-				styleSettings={{
-					fill: "SOLID",
-					type: "DEFAULT",
-					color: "DARK",
-					size: "MEDIUM",
-					roundness: "ROUNDED",
-				}}
-			>
-				Place order
-			</ButtonCustom>
-		</Form>
+		// <Form
+		// 	schema={schemaCustomersArr}
+		// 	onSubmit={submitHandler}
+		// 	className={classes["checkout__form"]}
+		// >
+		// 	<div className={classes["checkout__input"]}>
+		// 		<CheckoutFormContactInformation />
+		// 		<CheckoutFormAddress />
+		// 	</div>
+		// 	<ButtonCustom
+		// 		typeProperty="submit"
+		// 		styleSettings={{
+		// 			fill: "SOLID",
+		// 			type: "DEFAULT",
+		// 			color: "DARK",
+		// 			size: "MEDIUM",
+		// 			roundness: "ROUNDED",
+		// 		}}
+		// 	>
+		// 		Place order
+		// 	</ButtonCustom>
+		// </Form>
+		<div className={classes["checkout__input"]}>
+			<CheckoutFormContactInformation />
+			<CheckoutFormAddress />
+		</div>
 	);
 };
 

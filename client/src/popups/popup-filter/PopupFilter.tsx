@@ -18,12 +18,12 @@ import filterAttributesHandler from "@/app/(shop)/category/[category]/[subcatego
 import { appAttributeBySubcategoryGet } from "@/lib/api/attribute";
 import PopupFilterHeader from "./components/PopupFilterHeader";
 import { usePopupLocalContext } from "@/components/popup-local/tool/usePopupLocalContext";
+import dynamic from "next/dynamic";
+import PopupFilterSkeleton from "./skeleton/PopupFilterSkeleton";
 
 interface PopupFilterProps {}
 
 const PopupFilter: FunctionComponent<PopupFilterProps> = () => {
-	const { setToggle, setPopup } = usePopupLocalContext();
-
 	const [filterAttributes, setFilterAttributes] = useState<
 		Array<FilterAttributesItem>
 	>([]);
@@ -31,7 +31,6 @@ const PopupFilter: FunctionComponent<PopupFilterProps> = () => {
 		maxPrice: 0,
 		minPrice: 0,
 	});
-	const ref = useRef() as RefObject<HTMLDivElement>;
 	const searchParams = useSearchParams();
 	const params = useParams();
 
@@ -43,28 +42,6 @@ const PopupFilter: FunctionComponent<PopupFilterProps> = () => {
 		}
 		return obj;
 	}, [searchParams]);
-
-	const closeOverlay = useCallback(() => {
-		const current = ref.current;
-		if (!current) return;
-		const classList = current.classList;
-
-		if (!classList.contains(classes["popup-filter--closing"])) {
-			classList.toggle(classes["popup-filter--closing"]);
-			setTimeout(() => {
-				setPopup(null);
-			}, 300);
-		}
-	}, []);
-
-	const eventListenerHandler = useCallback(
-		(event: MouseEvent) => {
-			const target = event.target as HTMLDListElement | null;
-			if (!target) return;
-			closeOverlay();
-		},
-		[closeOverlay],
-	);
 
 	useEffect(() => {
 		const urlSearchParams = new URLSearchParams(searchParams.toString());
@@ -89,33 +66,8 @@ const PopupFilter: FunctionComponent<PopupFilterProps> = () => {
 		})();
 	}, [searchParams, params]);
 
-	useEffect(() => {
-		const current = ref.current;
-		if (!current) return;
-
-		document.addEventListener(
-			"scroll",
-			(event) => {
-				current.style.top = `${window.scrollY}px`;
-			},
-			{ passive: true },
-		);
-	}, [ref]);
-
-	useEffect(() => {
-		setToggle("disable");
-		const overlayElement = document.getElementById("overlay-inside");
-		if (!overlayElement) return;
-		overlayElement.addEventListener("click", eventListenerHandler);
-		return () =>
-			overlayElement.removeEventListener("click", eventListenerHandler);
-	}, [eventListenerHandler, setToggle]);
 	return (
-		<div
-			ref={ref}
-			className={`${classes["popup-filter"]} `}
-			id="popup-filter"
-		>
+		<div>
 			<PopupFilterHeader />
 			<FilterList
 				attributes={filterAttributes}

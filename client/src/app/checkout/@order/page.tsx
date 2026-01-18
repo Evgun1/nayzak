@@ -92,12 +92,11 @@ const Page: FunctionComponent<PageProps> = () => {
 	}, [productsFetch]);
 
 	return (
-		<div className={classes["order"]}>
-			<div
-				className={`${ButtonClassList.BUTTON_LARGE} ${classes["order__header"]}`}
-			>
-				Order summary
-			</div>
+		<div
+			className={classes["order"]}
+			id="checkout-order"
+		>
+			<div className={`${classes["order__header"]}`}>Order summary</div>
 			<div
 				ref={orderRef}
 				className={classes["order__products-wrapper"]}

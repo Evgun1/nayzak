@@ -2,8 +2,8 @@
 	position: relative;
 	aspect-ratio: var(--image-ratio);
 
-	@media screen and (min-width: 1024px) {
-		aspect-ratio: 1.6979166667;
+	@media screen and (min-width: 768px) {
+		aspect-ratio: 1.70;
 	}
 
 	&__image {

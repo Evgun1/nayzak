@@ -2,7 +2,7 @@
 
 import classes from "./AddressesPreview.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
-import { useAppDispatch } from "@/redux/redux";
+import { useAppDispatch, useAppSelector } from "@/redux/redux";
 import { popupActions } from "@/redux/store/popup/popup";
 import PopupAddress from "@/popups/popup-address/PopupAddress";
 import { deleteAddresses } from "@/redux/store/address/action";
@@ -15,8 +15,8 @@ export default function AddressesPreview({
 }: {
 	address: AddressType;
 }) {
+	const responsive = useAppSelector((state) => state.responsive);
 	const dispatch = useAppDispatch();
-
 	const btnEditHandler = () => {
 		dispatch(popupActions.toggle(<PopupAddress data={address} />));
 	};
@@ -34,13 +34,10 @@ export default function AddressesPreview({
 
 		addressInfoItem.push(
 			<div className={classes["address__info-item"]}>
-				<span className={`${TextClassList.REGULAR_18}`}>
+				<span>
 					{key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
 				</span>
-				-
-				<span className={`${TextClassList.REGULAR_18}`}>
-					{address[keyType]}
-				</span>
+				-<span>{address[keyType]}</span>
 			</div>,
 		);
 	}
@@ -48,7 +45,8 @@ export default function AddressesPreview({
 	return (
 		<div className={classes.address}>
 			<div className={classes["address__info-wrap"]}>
-				<div className={TextClassList.SEMIBOLD_18}>Billing address</div>
+				{/* <div className={TextClassList.SEMIBOLD_18}>Billing address</div> */}
+				<div className={classes["address__title"]}>Billing address</div>
 				<div className={classes.address__info}>
 					{addressInfoItem.map((item, i) => (
 						<div key={i}>{item}</div>
@@ -59,7 +57,7 @@ export default function AddressesPreview({
 				<ButtonCustom
 					styleSettings={{
 						type: "TEXT",
-						size: "SMALL",
+						size: responsive.isMobile ? "X_SMALL" : "SMALL",
 						color: "DARK",
 						icon: { left: "DIT" },
 					}}
@@ -70,7 +68,7 @@ export default function AddressesPreview({
 				<ButtonCustom
 					styleSettings={{
 						type: "TEXT",
-						size: "SMALL",
+						size: responsive.isMobile ? "X_SMALL" : "SMALL",
 						color: "DARK",
 						icon: { left: "TRASH" },
 					}}

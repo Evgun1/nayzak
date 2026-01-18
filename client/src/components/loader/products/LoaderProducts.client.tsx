@@ -12,6 +12,9 @@ import { useSearchParams } from "next/navigation";
 import { ProductBase } from "@/types/product/productBase";
 import getIdByParams from "@/tools/getIdByParams";
 import ProductPreviewList from "@/components/product-preview/product-preview-list/ProductPreviewList";
+import { useAppSelector } from "@/redux/redux";
+import ProductPreviewDefaultSkeleton from "@/components/product-preview/product-preview-default/skeleton/ProductsPreviewDefaultSkeleton";
+import dynamic from "next/dynamic";
 
 type LoaderProductsClientProp = {
 	productsParams?: string[];
@@ -24,15 +27,27 @@ type LoaderProductsClientProp = {
 	className?: string;
 };
 
+const ProductPreviewDefaultDynamic = dynamic(
+	() =>
+		import(
+			"@/components/product-preview/product-preview-default/ProductsPreviewDefault"
+		),
+	{
+		ssr: false,
+		loading: () => <ProductPreviewDefaultSkeleton />,
+	},
+);
+
 const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
-	// const [productsElements, setProductsElements] = useState<JSX.Element[]>([]);
-	const searchParams = useSearchParams();
+	const responsive = useAppSelector((state) => state.responsive);
 
 	const [products, setProducts] = useState<ProductBase[]>([]);
 	const [productsData, setProductsData] = useState<Array<ProductPreviewItem>>(
 		props.inputProduct,
 	);
 	const [isLoading, setIsLoading] = useState(false);
+
+	const searchParams = useSearchParams();
 
 	async function btnClickHandler() {
 		setIsLoading(true);
@@ -61,23 +76,40 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 		setProducts(productsFetch);
 	}
 
-	const productsElements = useMemo(() => {
-		return productsData.map((product, i) => {
-			return (
-				<li key={i}>
-					{props.listType !== "list" ? (
-						<ProductPreviewDefault
-							className={props.className}
-							product={product}
-							showRating={props.showRating}
-						/>
-					) : (
-						<ProductPreviewList product={product} />
-					)}
-				</li>
-			);
-		});
-	}, [productsData, props.className, props.listType, props.showRating]);
+	// const productsElements = useMemo(() => {
+	// 	console.log(props.listType);
+
+	// 	return productsData.map((product, i) => {
+	// 		if (props.listType === "list") {
+	// 			if (responsive.isMobile) {
+	// 				return (
+	// 					<ProductPreviewDefault
+	// 						className={props.className}
+	// 						product={product}
+	// 					/>
+	// 				);
+	// 			}
+
+	// 			return <ProductPreviewList product={product} />;
+	// 		}
+
+	// 		return (
+	// 			<li key={i}>
+	// 				<ProductPreviewDefault
+	// 					className={props.className}
+	// 					product={product}
+	// 					showRating={props.showRating}
+	// 				/>
+	// 			</li>
+	// 		);
+	// 	});
+	// }, [
+	// 	productsData,
+	// 	props.className,
+	// 	props.listType,
+	// 	props.showRating,
+	// 	responsive,
+	// ]);
 
 	useEffect(() => {
 		(async () => {
@@ -111,8 +143,6 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 		})();
 	}, [products, props.className, props.showRating]);
 
-	console.log(props.productsCount, productsElements.length);
-
 	return (
 		<LoaderButton
 			className={`${classes["products-loader"]} ${
@@ -126,7 +156,24 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 			btnClickHandler={btnClickHandler}
 		>
 			{/* {props.initProductsElement} */}
-			{productsElements}
+			{/* {productsElements} */}
+
+			{productsData.map((product, i) =>
+				props.listType === "list" ? (
+					<ProductPreviewList
+						product={product}
+						key={i}
+						showRating
+					/>
+				) : (
+					<ProductPreviewDefault
+						key={i}
+						className={props.className}
+						product={product}
+						showRating={props.showRating}
+					/>
+				),
+			)}
 			{!isLoading ? (
 				<></>
 			) : (

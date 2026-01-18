@@ -2,17 +2,19 @@ import { title } from "process";
 import { Action, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ReactNode } from "react";
 
-export type ListLinkItem = {
+export interface ListLinkItem {
 	title: string;
 	href: {
 		queryParams: { [key: string]: string };
 		deleteQueryParams?: string;
 	};
-}[];
+}
+
+export type ListLinkType = Array<ListLinkItem>;
 
 type InitStateItem = {
 	popupContent: ReactNode | null;
-	listLink: ListLinkItem;
+	listLink: ListLinkType;
 };
 
 const initState: InitStateItem = {
@@ -27,7 +29,7 @@ const popup = createSlice({
 		toggle(state, action: PayloadAction<ReactNode | null>) {
 			state.popupContent = action.payload;
 		},
-		setListLink(state, action: PayloadAction<ListLinkItem>) {
+		setListLink(state, action: PayloadAction<ListLinkType>) {
 			state.listLink = action.payload;
 		},
 	},

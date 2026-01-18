@@ -13,7 +13,12 @@ export function initWishlist() {
 		const token = appCookieGet("user-token");
 		const storage = localStorageHandler("wishlistState");
 		if (!token) return storage.delete();
-		if (storage.get()) return;
+
+		if (
+			storage.get() !== null &&
+			(storage.get()?.productsArray.length as number) > 0
+		)
+			return;
 
 		const productsArray = [...getState().wishlist.productsArray];
 

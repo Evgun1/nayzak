@@ -3,36 +3,43 @@
 	color: var(--black-900);
 }
 @mixin heading-1-style {
+	@include heading-base-style;
 	font-size: 80px;
 	line-height: 84px;
 	letter-spacing: -3px;
 }
 @mixin heading-2-style {
+	@include heading-base-style;
 	font-size: 72px;
 	line-height: 76px;
 	letter-spacing: -2px;
 }
 @mixin heading-3-style {
+	@include heading-base-style;
 	font-size: 54px;
 	line-height: 58px;
 	letter-spacing: -1px;
 }
 @mixin heading-4-style {
+	@include heading-base-style;
 	font-size: 40px;
 	line-height: 44px;
 	letter-spacing: -0.4px;
 }
 @mixin heading-5-style {
+	@include heading-base-style;
 	font-size: 34px;
 	line-height: 38px;
 	letter-spacing: -0.6px;
 }
 @mixin heading-6-style {
+	@include heading-base-style;
 	font-size: 28px;
 	line-height: 34px;
 	letter-spacing: -0.6px;
 }
 @mixin heading-7-style {
+	@include heading-base-style;
 	font-size: 20px;
 	line-height: 28px;
 }
@@ -42,24 +49,29 @@
 	font-family: "Space Grotesk";
 }
 @mixin button-xlarge-style {
+	@include button-base-style;
 	font-size: 26px;
 	line-height: 38px;
 }
 @mixin button-large-style {
+	@include button-base-style;
 	font-size: 22px;
 	line-height: 34px;
 }
 @mixin button-medium-style {
+	@include button-base-style;
 	font-size: 18px;
 	line-height: 32px;
 	letter-spacing: -0.4px;
 }
 @mixin button-small-style {
+	@include button-base-style;
 	font-size: 16px;
 	line-height: 24px;
 	letter-spacing: -0.4px;
 }
 @mixin button-xsmall-style {
+	@include button-base-style;
 	font-size: 14px;
 	line-height: 20px;
 }
@@ -70,30 +82,37 @@
 }
 
 @mixin text-regular-26-style {
+	@include text-regular-base-style;
 	font-size: 26px;
 	line-height: 40px;
 }
 @mixin text-regular-22-style {
+	@include text-regular-base-style;
 	font-size: 22px;
 	line-height: 34px;
 }
 @mixin text-regular-20-style {
+	@include text-regular-base-style;
 	font-size: 20px;
 	line-height: 32px;
 }
 @mixin text-regular-18-style {
+	@include text-regular-base-style;
 	font-size: 18px;
 	line-height: 30px;
 }
 @mixin text-regular-16-style {
+	@include text-regular-base-style;
 	font-size: 16px;
 	line-height: 26px;
 }
 @mixin text-regular-14-style {
+	@include text-regular-base-style;
 	font-size: 14px;
 	line-height: 22px;
 }
 @mixin text-regular-12-style {
+	@include text-regular-base-style;
 	font-size: 12px;
 	line-height: 20px;
 }
@@ -103,6 +122,7 @@
 	font-weight: 600;
 }
 @mixin text-semibold-26-style {
+	@include text-semibold-base-style;
 	font-size: 26px;
 	line-height: 40px;
 }
@@ -115,18 +135,22 @@
 	line-height: 32px;
 }
 @mixin text-semibold-18-style {
+	@include text-semibold-base-style;
 	font-size: 18px;
 	line-height: 30px;
 }
 @mixin text-semibold-16-style {
+	@include text-semibold-base-style;
 	font-size: 16px;
 	line-height: 26px;
 }
 @mixin text-semibold-14-style {
+	@include text-semibold-base-style;
 	font-size: 14px;
 	line-height: 22px;
 }
 @mixin text-semibold-12-style {
+	@include text-semibold-base-style;
 	font-size: 12px;
 	line-height: 20px;
 }
@@ -136,30 +160,37 @@
 	font-weight: 700;
 }
 @mixin text-bold-26-style {
+	@include text-bold-base-style;
 	font-size: 26px;
 	line-height: 40px;
 }
 @mixin text-bold-22-style {
+	@include text-bold-base-style;
 	font-size: 22px;
 	line-height: 34px;
 }
 @mixin text-bold-20-style {
+	@include text-bold-base-style;
 	font-size: 20px;
 	line-height: 32px;
 }
 @mixin text-bold-18-style {
+	@include text-bold-base-style;
 	font-size: 18px;
 	line-height: 30px;
 }
 @mixin text-bold-16-style {
+	@include text-bold-base-style;
 	font-size: 16px;
 	line-height: 26px;
 }
 @mixin text-bold-14-style {
+	@include text-bold-base-style;
 	font-size: 14px;
 	line-height: 22px;
 }
 @mixin text-bold-12-style {
+	@include text-bold-base-style;
 	font-size: 12px;
 	line-height: 20px;
 }

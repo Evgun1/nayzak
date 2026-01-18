@@ -2,6 +2,7 @@ import { FC, ReactNode } from "react";
 import classes from "./Product.module.scss";
 import Loading from "./loading";
 import "../style.scss";
+import ProductsImageSkeleton from "./@images/skeleton/ProductsImageSkeleton";
 
 type LayoutInfoProps = {
 	children: ReactNode;

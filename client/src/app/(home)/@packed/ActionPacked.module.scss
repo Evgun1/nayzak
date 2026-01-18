@@ -12,6 +12,9 @@
 	grid-template-columns: 1fr;
 
 	@media screen and (min-width: 1024px) {
+		grid-template-columns: (1fr 1fr);
+	}
+	@media screen and (min-width: 1440px) {
 		grid-template-columns: (1fr 766px);
 	}
 	&__info {
@@ -51,19 +54,29 @@
 
 	&__video-wrap {
 		margin-bottom: 16px;
+		height: 100vh;
+		width: 100%;
+		max-height: 375px;
+
 		@media screen and (min-width: 1024px) {
+			max-width: 550px;
+			max-height: 315px;
 			margin-bottom: 0px;
+		}
+		@media screen and (min-width: 1440px) {
+			max-height: 494px;
+			max-width: 766px;
 		}
 	}
 	&__video {
 		right: 0;
 		width: 100%;
 		height: 100%;
+		// min-height: 375px;
 
-		min-height: 375px;
-		@media screen and (min-width: 1024px) {
-			min-height: 494px;
-			max-width: 766px;
-		}
+		// @media screen and (min-width: 1440px) {
+		// 	min-height: 494px;
+		// 	max-width: 766px;
+		// }
 	}
 }

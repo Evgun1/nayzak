@@ -1,0 +1,58 @@
+@use "../../styles/abstracts/mixins" as mixins;
+
+.contact {
+	text-align: start;
+	display: grid;
+	gap: 32px;
+	padding: 24px;
+	border: 1px solid var(--black-300);
+	border-radius: 6px;
+
+	// @media screen and (min-width: 1024px) {
+	// 	grid-column: 1 / 2;
+	// 	grid-row: 1 / 2;
+	// }
+
+	&__title {
+		@include mixins.button-medium-style;
+
+		@media screen and (min-width: 1024px) {
+			@include mixins.button-large-style;
+		}
+	}
+
+	&__input-wrap {
+		display: grid;
+		justify-content: space-between;
+		gap: 12px;
+		grid-template-columns: 1fr;
+		@media screen and (min-width: 1024px) {
+			gap: 32px;
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	&__input {
+		height: max-content;
+		width: 100%;
+
+		[id="input-label"] {
+			@include mixins.text-semibold-14-style;
+			@media screen and (min-width: 1024px) {
+				@include mixins.text-semibold-16-style;
+			}
+		}
+		[id="input-container"] {
+			max-height: 46px;
+			padding: 12px 16px;
+			@media screen and (min-width: 1024px) {
+				padding: 13px 16px;
+			}
+		}
+
+		&-phone {
+			@media screen and (min-width: 1024px) {
+				grid-column: 1 / -1;
+			}
+		}
+	}
+}

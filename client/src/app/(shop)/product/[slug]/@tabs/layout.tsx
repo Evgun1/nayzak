@@ -1,8 +1,9 @@
 "use server";
 
-import Tabs from "@/ui/tabs/Tabs";
+import classes from "./Tabs.module.scss";
 import React, { FC, ReactNode } from "react";
 import "../style.scss";
+import TabsNavigation from "./components/TabsNavigation";
 
 type TabsLayoutProps = {
 	description: ReactNode;
@@ -10,10 +11,16 @@ type TabsLayoutProps = {
 	reviews: ReactNode;
 };
 
+interface TabsMapItem {
+	label: string;
+	content: ReactNode;
+}
+export type TabsMapType = Array<TabsMapItem>;
+
 const TabsLayout: FC<TabsLayoutProps> = async (props) => {
 	const { description, info, reviews } = props;
 
-	const TABS_MAP = [
+	const TABS_MAP: TabsMapType = [
 		{
 			label: "Description",
 			content: description,
@@ -25,31 +32,13 @@ const TabsLayout: FC<TabsLayoutProps> = async (props) => {
 		{
 			label: "Reviews",
 			content: reviews,
-		
 		},
 	];
 
 	return (
 		<section>
-			<div className="product-container">
-				<Tabs>
-					<Tabs.Header>
-						{TABS_MAP.map((item, i) => (
-							<Tabs.Toggle
-								key={i}
-								index={i}
-								label={item.label}
-							/>
-						))}
-					</Tabs.Header>
-					<Tabs.Body>
-						{TABS_MAP.map((item, i) => (
-							<React.Fragment key={i}>
-								{item.content}
-							</React.Fragment>
-						))}
-					</Tabs.Body>
-				</Tabs>
+			<div className={`product-container`}>
+				<TabsNavigation tabs={TABS_MAP} />
 			</div>
 		</section>
 	);

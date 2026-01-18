@@ -10,52 +10,60 @@ import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import Spinner from "@/components/loading/Spinner";
 import WishlistPreview from "./wishlist-preview/WishlistPreview";
 import { getWishlistSelector } from "@/redux/store/wishlist/wishlist";
+import dynamic from "next/dynamic";
+
+const WishlistPreviewDynamic = dynamic(
+	() => import("./wishlist-preview/WishlistPreview"),
+	{ ssr: false, loading: () => <>Loading prev</> },
+);
 
 const Page: React.FC = () => {
-	const [products, setProducts] = useState<ProductPreviewItem[]>([]);
-	const [loading, setLoading] = useState(true);
 	const wishlist = useAppSelector((selector) => selector.wishlist);
 	const productsById = useFetchProductsById(wishlist.productsArray);
 
-	useEffect(() => {
-		(async () => {
-			setLoading(true);
+	// const [products, setProducts] = useState<ProductPreviewItem[]>([]);
+	// const [loading, setLoading] = useState(true);
 
-			try {
-				const products = await Promise.all(
-					productsById.map(async (product) => {
-						const blur = await getPlaceholderImage(
-							product.Media[0].src,
-						);
+	// useEffect(() => {
+	// 	(async () => {
+	// 		setLoading(true);
 
-						const newItem: ProductPreviewItem = {
-							...product,
-							Media: {
-								...product.Media[0],
-								blurImage: blur.placeholder,
-							},
-						};
+	// 		try {
+	// 			const products = await Promise.all(
+	// 				productsById.map(async (product) => {
+	// 					const blur = await getPlaceholderImage(
+	// 						product.Media[0].src,
+	// 					);
 
-						return newItem;
-					}),
-				);
-				setProducts(products);
-			} finally {
-				setLoading(false);
-			}
-		})();
-	}, [productsById]);
+	// 					const newItem: ProductPreviewItem = {
+	// 						...product,
+	// 						Media: {
+	// 							...product.Media[0],
+	// 							blurImage: blur.placeholder,
+	// 						},
+	// 					};
+
+	// 					return newItem;
+	// 				}),
+	// 			);
+	// 			setProducts(products);
+	// 		} finally {
+	// 			setLoading(false);
+	// 		}
+	// 	})();
+	// }, [productsById]);
 
 	return (
 		<div className={classes.wishlist}>
-			{products.length < 0 && productsById.length < 0 ? (
+			{productsById.length < 0 && productsById.length < 0 ? (
 				<div className={classes["wishlist__message"]}>
 					Wishlist is empty
 				</div>
 			) : (
-				products.map((product, index) => (
+				productsById.map((product, index) => (
 					<WishlistPreview
 						product={product}
+						// product={product}
 						key={index}
 					/>
 				))

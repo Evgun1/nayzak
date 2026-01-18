@@ -10,6 +10,7 @@ interface PageProps {
 
 const Page: FunctionComponent<PageProps> = async (props) => {
 	let message: string;
+console.log(props);
 
 	try {
 		await appCredentialsActivationGet(props.params.slug);

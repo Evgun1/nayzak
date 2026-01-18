@@ -33,7 +33,9 @@ const ReviewPreview: FC<PreviewReviewProps> = async (props) => {
 					/>
 				</div>
 				<div className={classes["review-preview__user"]}>
-					<div className={TextClassList.SEMIBOLD_18}>
+					<div
+						className={`${TextClassList.SEMIBOLD_18} ${classes["review-preview__user-name"]}`}
+					>
 						{review.fullName}
 					</div>
 					<div

@@ -1,15 +1,22 @@
 .preview {
 	display: grid;
-	grid-template-columns: 228px 2fr;
+	grid-template-columns: 1fr;
 	text-align: left;
-	gap: 40px;
 	padding: 24px 0;
+	gap: 12px;
+
+	@media screen and (min-width: 1024px) {
+		gap: 40px;
+		grid-template-columns: 228px 2fr;
+	}
 
 	&__img-link {
 		position: relative;
 		display: block;
 		aspect-ratio: 3 / 4 auto;
-		max-width: 228px;
+		@media screen and (min-width: 1024px) {
+			max-width: 228px;
+		}
 	}
 	&__img {
 		display: block;
@@ -33,11 +40,15 @@
 		margin-bottom: 16px;
 	}
 	&__description {
+		color: #3e3e59;
 		margin-bottom: 24px;
 	}
 
 	&__btn-wrapper {
 		display: grid;
-		max-width: 298px;
+
+		@media screen and (min-width: 1024px) {
+			max-width: 298px;
+		}
 	}
 }

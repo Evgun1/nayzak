@@ -3,7 +3,7 @@
 import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./CartPreview.module.scss";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
-import { useAppDispatch } from "@/redux/redux";
+import { useAppDispatch, useAppSelector } from "@/redux/redux";
 import { changeAmount, removeCart } from "@/redux/store/cart/action";
 import Image from "next/image";
 import Tooltip from "@/ui/tooltip/Tooltip";
@@ -29,6 +29,7 @@ export default function CartPreview({
 	productID,
 	Media,
 }: CartItemProps) {
+	const responsive = useAppSelector((state) => state.responsive);
 	const dispatch = useAppDispatch();
 	const [quantity, setQuantity] = useState(amount ?? 1);
 
@@ -62,75 +63,93 @@ export default function CartPreview({
 
 	return (
 		<div className={`${classes["cart-preview"]} ${className}`}>
-			<div className={classes["cart-preview__product"]}>
-				<div className={classes["cart-preview__img-wrapper"]}>
-					<Image
-						loading="eager"
-						fill
-						className={classes["cart-preview__img"]}
-						placeholder="blur"
-						blurDataURL={Media.blurSrc}
-						src={Media.src}
-						alt={Media.alt}
-					/>
-				</div>
-				<div className={classes["cart-preview__info"]}>
-					<LinkCustom
-						href={{
-							endpoint: `product/${title.toLowerCase()}-p${productID}`,
-						}}
-						styleSettings={{
-							color: "DARK",
-							type: "TEXT",
-							size: "SMALL",
-						}}
-					>
-						{title}
-					</LinkCustom>
-					<Tooltip value={description} />
+			{/* <div className={classes["cart-preview__product"]}> */}
+			<div className={classes["cart-preview__img"]}>
+				<Image
+					loading="eager"
+					fill
+					placeholder="blur"
+					blurDataURL={Media.blurSrc}
+					src={Media.src}
+					alt={Media.alt}
+				/>
+			</div>
+			<div className={classes["cart-preview__content"]}>
+				{/* <div className={classes["cart-preview__info"]}> */}
+				<LinkCustom
+					className={classes["cart-preview__title"]}
+					href={{
+						endpoint: `product/${title.toLowerCase()}-p${productID}`,
+					}}
+					styleSettings={{
+						color: "DARK",
+						type: "TEXT",
+						size: "SMALL",
+					}}
+				>
+					{title}
+				</LinkCustom>
+
+				<Tooltip className={classes["cart-preview__description"]}>
+					{description}
+				</Tooltip>
+				{/* </div> */}
+				<ButtonCustom
+					className={classes["cart-preview__btn"]}
+					styleSettings={{
+						color: "DARK",
+						roundness: "SHARP",
+						type: "TEXT",
+						size: !responsive.isMobile ? "X_SMALL" : "SMALL",
+						icon: { left: "TRASH" },
+					}}
+					onClick={btnRemoveProductCart}
+				>
+					{!responsive.isMobile && <>Remove</>}
+				</ButtonCustom>
+				{/* </div> */}
+				<div className={classes["cart-preview__amount"]}>
 					<ButtonCustom
+						id="minus-quantity"
 						styleSettings={{
 							color: "DARK",
 							roundness: "SHARP",
-							type: "TEXT",
 							size: "X_SMALL",
-							icon: { left: "TRASH" },
+							type: "TEXT",
+							icon: { left: "MINUS" },
 						}}
-						onClick={btnRemoveProductCart}
+						onClick={buttonChangeQuantity}
+						className={classes["cart-preview__amount-btn"]}
+					/>
+					<div
+						className={`${TextClassList.SEMIBOLD_12} ${classes["cart-preview__amount-quantity"]}`}
 					>
-						Remove
-					</ButtonCustom>
+						{quantity}
+					</div>
+					<ButtonCustom
+						id="plus-quantity"
+						styleSettings={{
+							color: "DARK",
+							roundness: "SHARP",
+							size: "X_SMALL",
+							type: "TEXT",
+							icon: { left: "ADD" },
+						}}
+						onClick={buttonChangeQuantity}
+						className={classes["cart-preview__amount-btn"]}
+					/>
 				</div>
+				{!responsive.isMobile && (
+					<span
+						className={`${TextClassList.REGULAR_18} ${classes["cart-preview__price"]}`}
+					>
+						${price}
+					</span>
+				)}
+				<span className={`${classes["cart-preview__subtotal-price"]}`}>
+					${subtotalPrice}
+				</span>
 			</div>
-			<div className={classes["cart-preview__amount"]}>
-				<ButtonCustom
-					id="minus-quantity"
-					styleSettings={{
-						color: "DARK",
-						roundness: "SHARP",
-						size: "X_SMALL",
-						type: "TEXT",
-						icon: { left: "MINUS" },
-					}}
-					onClick={buttonChangeQuantity}
-					className={classes["cart-preview__amount-btn"]}
-				/>
-				<div className={TextClassList.SEMIBOLD_12}>{quantity}</div>
-				<ButtonCustom
-					id="plus-quantity"
-					styleSettings={{
-						color: "DARK",
-						roundness: "SHARP",
-						size: "X_SMALL",
-						type: "TEXT",
-						icon: { left: "ADD" },
-					}}
-					onClick={buttonChangeQuantity}
-					className={classes["cart-preview__amount-btn"]}
-				/>
-			</div>
-			<span className={TextClassList.REGULAR_18}>${price}</span>
-			<span className={TextClassList.SEMIBOLD_18}>${subtotalPrice}</span>
 		</div>
 	);
 }

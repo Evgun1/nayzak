@@ -1,0 +1,39 @@
+.tabs-content {
+	.tabs-content__tabs {
+		display: none;
+		@media screen and (min-width: 1024px) {
+			display: block;
+
+			&-header {
+				margin-bottom: 32px;
+			}
+		}
+	}
+
+	&__accordion {
+		display: flex;
+		flex-direction: column;
+		// gap: 16px;
+		&:not(:last-child) {
+			margin-bottom: 16px;
+		}
+
+		@media screen and (min-width: 1024px) {
+			display: none;
+		}
+
+		.tabs__accordion-btn {
+			padding-bottom: 8px;
+			width: 100%;
+			gap: 0;
+			display: flex;
+			justify-content: space-between;
+
+			border-bottom: 1px solid var(--black-300);
+		}
+
+		&-body {
+			margin-top: 16px;
+		}
+	}
+}

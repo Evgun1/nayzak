@@ -185,7 +185,7 @@ export const FilterProvider: FC<{
 		timeoutRef.current = setTimeout(() => {
 			route.push(`?${query}`);
 		}, 500);
-	}, [query]);
+	}, [query, route]);
 	
 	return (
 		<FilterContext.Provider

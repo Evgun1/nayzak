@@ -20,6 +20,7 @@ type SubmitHandlerProps = {
 export default function PopupAddress({ data }: { data?: AddressType }) {
 	const dispatch = useAppDispatch();
 	const customer = useAppSelector((state) => state.customer.customerData);
+	const responsive = useAppSelector((state) => state.responsive);
 
 	const schemaAddAddress: Array<ZodObject<any> | ZodEffects<any>> = [
 		z.object(validation.addresses),
@@ -40,7 +41,23 @@ export default function PopupAddress({ data }: { data?: AddressType }) {
 	};
 
 	return (
-		<PopupPreview title={!data ? "Add address" : "Edit address"}>
+		// <PopupPreview title={!data ? "Add address" : "Edit address"}>
+		<div className={classes["popup-address"]}>
+			<div className={classes["popup-address__header"]}>
+				<h4 className={classes["popup-address__header-title"]}>
+					{!data ? "Add address" : "Edit address"}
+				</h4>
+				<ButtonCustom
+					className={classes["popup-address__header-btn"]}
+					styleSettings={{
+						type: "TEXT",
+						color: "DARK",
+						icon: { left: "CLOSE" },
+						size: "X_LARGE",
+						fill: "SOLID",
+					}}
+				/>
+			</div>
 			<Form
 				onSubmit={submitHandler}
 				oneMessage
@@ -91,7 +108,10 @@ export default function PopupAddress({ data }: { data?: AddressType }) {
 						color: "DARK",
 						fill: "SOLID",
 						roundness: "ROUNDED",
-						size: "MEDIUM",
+						size:
+							responsive.isDesktop || responsive.isTablet
+								? "MEDIUM"
+								: "SMALL",
 						type: "DEFAULT",
 					}}
 					typeProperty="submit"
@@ -99,6 +119,6 @@ export default function PopupAddress({ data }: { data?: AddressType }) {
 					{!data ? "Add" : "Update"}
 				</ButtonCustom>
 			</Form>
-		</PopupPreview>
+		</div>
 	);
 }

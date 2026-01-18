@@ -1,3 +1,5 @@
+@use "../../styles/abstracts/mixins" as mixins;
+
 .order {
 	padding: 16px 24px;
 	border: 1px solid var(--black-300);
@@ -7,8 +9,14 @@
 	text-align: start;
 	gap: 16px;
 
+	// @media screen and (min-width: 1024px) {
+	// 	grid-column: 2 / 3;
+	// 	grid-row: 1 / 2;
+	// }
+
 	&__header {
 		margin-bottom: 16px;
+		@include mixins.button-large-style;
 	}
 
 	&__products-wrapper {

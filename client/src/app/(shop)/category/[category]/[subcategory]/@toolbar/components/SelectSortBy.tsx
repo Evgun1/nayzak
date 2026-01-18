@@ -14,6 +14,7 @@ import { useAppSelector } from "@/redux/redux";
 import PopupFilter from "@/popups/popup-filter/PopupFilter";
 import PopupFilterSkeleton from "@/popups/popup-filter/skeleton/PopupFilterSkeleton";
 import dynamic from "next/dynamic";
+import PopupFilterLayout from "@/popups/popup-filter/PopupFilter.layout";
 
 export type SortDataType = Array<{
 	id: number;
@@ -51,14 +52,6 @@ const sortData: SortDataType = [
 	},
 ];
 
-const PopupFilterDynamic = dynamic(
-	() => import("@/popups/popup-filter/PopupFilter"),
-	{
-		ssr: false,
-		loading: () => <PopupFilterSkeleton />,
-	},
-);
-
 const SelectSortBy: React.FC = () => {
 	const responsive = useAppSelector((state) => state.responsive);
 	const originalData = useRef<SortDataType>(sortData);
@@ -72,9 +65,9 @@ const SelectSortBy: React.FC = () => {
 
 	const btnClickFilter = useCallback(() => {
 		// if (responsive.isMobile) setTogglePopup(<PopupFilter />);
-		if (responsive.isMobile) setTogglePopup(<PopupFilterDynamic />);
+		if (responsive.isMobile) setTogglePopup(<PopupFilterLayout />);
 		setShowFilter(!showFilter);
-	}, [responsive]);
+	}, [responsive, setShowFilter, setTogglePopup, showFilter]);
 
 	const getSearchParamsData = useMemo(() => {
 		const result = searchParams
@@ -109,7 +102,7 @@ const SelectSortBy: React.FC = () => {
 		setDataState(
 			originalData.current.filter((item) => item.id !== idSortData),
 		);
-	}, [getSearchParamsData, sortData]);
+	}, [getSearchParamsData]);
 
 	return (
 		<>

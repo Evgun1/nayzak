@@ -12,6 +12,7 @@ import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import CartPreview, { CartItemProps } from "./components/CartPreview";
 
 export default function Page() {
+	const responsive = useAppSelector((state) => state.responsive);
 	const [isLoading, setIsLoading] = useState(true);
 	const [cart, setCart] = useState<CartItemProps[]>([]);
 	const cartSelect = useAppSelector((select) => select.cart.productsArray);
@@ -75,15 +76,28 @@ export default function Page() {
 							<div className={ButtonClassList.BUTTON_SMALL}>
 								Product
 							</div>
-							<div className={ButtonClassList.BUTTON_SMALL}>
-								Quantity
-							</div>
-							<div className={ButtonClassList.BUTTON_SMALL}>
-								Price
-							</div>
-							<div className={ButtonClassList.BUTTON_SMALL}>
-								Subtotal
-							</div>
+
+							{responsive.isMobile ? (
+								<></>
+							) : (
+								<>
+									<div
+										className={ButtonClassList.BUTTON_SMALL}
+									>
+										Quantity
+									</div>
+									<div
+										className={ButtonClassList.BUTTON_SMALL}
+									>
+										Price
+									</div>
+									<div
+										className={ButtonClassList.BUTTON_SMALL}
+									>
+										Subtotal
+									</div>
+								</>
+							)}
 						</div>
 						{cart.map((item, index) => (
 							<CartPreview

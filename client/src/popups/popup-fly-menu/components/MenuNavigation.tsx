@@ -101,7 +101,7 @@ const MenuNavigation: FunctionComponent<MenuNavigationProps> = () => {
 												classes["menu-nav__body-link"]
 											}
 											href={{
-												endpoint: `category/${sub.url}`,
+												endpoint: `/category/${sub.url}`,
 											}}
 											styleSettings={{
 												color: "DARK",

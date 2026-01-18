@@ -1,0 +1,40 @@
+.avatar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	@media screen and (min-width: 1024px) {
+		display: none;
+	}
+	&__content {
+		position: relative;
+		width: 68px;
+		height: 68px;
+		@media screen and (min-width: 1024px) {
+			width: 82px;
+			height: 82px;
+		}
+
+		img {
+			border-radius: 100%;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		&-btn {
+			opacity: 80%;
+			max-width: 30px;
+			max-height: 30px;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			right: 0;
+			bottom: 0;
+
+			svg {
+				width: 16px;
+				height: 16px;
+			}
+		}
+	}
+}

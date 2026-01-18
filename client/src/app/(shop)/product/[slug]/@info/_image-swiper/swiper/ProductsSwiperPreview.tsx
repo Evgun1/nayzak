@@ -27,7 +27,7 @@ const ProductsSwiperPreview: FC<ProductSliderProps> = (props) => {
 	}, []);
 	return (
 		<div className={classes["product-slider"]}>
-			<Swiper
+			{/* <Swiper
 				loop={true}
 				spaceBetween={10}
 				thumbs={{
@@ -43,8 +43,8 @@ const ProductsSwiperPreview: FC<ProductSliderProps> = (props) => {
 						</div>
 					</SwiperSlide>
 				))}
-			</Swiper>
-			<Swiper
+			</Swiper> */}
+			{/* <Swiper
 				onSwiper={setThumbsSwiper}
 				loop={false}
 				spaceBetween={19}
@@ -61,7 +61,7 @@ const ProductsSwiperPreview: FC<ProductSliderProps> = (props) => {
 						</div>
 					</SwiperSlide>
 				))}
-			</Swiper>
+			</Swiper> */}
 		</div>
 	);
 };

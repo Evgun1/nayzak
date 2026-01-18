@@ -86,7 +86,7 @@ const Overlay: FC = () => {
 	const btnClickHandler = useCallback(() => {
 		if (toggle === "action") return setTogglePopup(null);
 		return undefined;
-	}, [toggle]);
+	}, [toggle, setTogglePopup]);
 
 	// const { setTogglePopup } = usePopupLocalContext();
 	// const btnClickHandler = () => {

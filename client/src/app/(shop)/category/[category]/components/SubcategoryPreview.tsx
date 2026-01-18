@@ -19,7 +19,7 @@ type SubcategoryPreviewProps = {
 	subcategory: SubcategoryPreviewItem;
 };
 
-const SubcategoryPreview: FC<SubcategoryPreviewProps> = async (props) => {
+const SubcategoryPreview: FC<SubcategoryPreviewProps> =  (props) => {
 	const { params, subcategory } = props;
 	const ref = useRef() as RefObject<HTMLDivElement>;
 
@@ -33,7 +33,7 @@ const SubcategoryPreview: FC<SubcategoryPreviewProps> = async (props) => {
 				  subcategory.ImageSize.height
 				: subcategory.ImageSize.width / subcategory.ImageSize.height
 		} auto`;
-	}, [ref]);
+	}, [ref,subcategory.ImageSize]);
 
 	return (
 		<div

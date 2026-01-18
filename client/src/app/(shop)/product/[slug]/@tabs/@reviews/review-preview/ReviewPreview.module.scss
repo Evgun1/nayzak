@@ -1,3 +1,4 @@
+@use "../../../../../../styles/abstracts/mixins" as mixins;
 .review-preview {
 	position: relative;
 	text-align: start;
@@ -38,10 +39,20 @@
 	}
 	&__user {
 		display: grid;
-		grid-template-columns: repeat(2, max-content);
 		grid-template-rows: max-content;
 		align-items: center;
 		gap: 8px 12px;
+		@media screen and (min-width: 1024px) {
+			grid-template-columns: 1fr;
+			grid-template-columns: repeat(2, max-content);
+		}
+
+		&-name {
+			@include mixins.text-semibold-14-style;
+			@media screen and (min-width: 1024px) {
+				@include mixins.text-semibold-18-style;
+			}
+		}
 
 		&-date {
 			color: var(--black-500);
@@ -56,6 +67,13 @@
 	}
 
 	&__text {
+		word-wrap: break-word;
 		color: #3e3e59;
+
+		@include mixins.text-regular-16-style;
+
+		@media screen and (min-width: 1024px) {
+			@include mixins.text-regular-18-style;
+		}
 	}
 }

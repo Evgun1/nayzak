@@ -1,11 +1,42 @@
-.popup-address {
-    &__form {
-        width: 700px;
-    }
+@use "../../app/styles/abstracts/mixins" as mixins;
 
-    &__input-wrap {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
+.popup-address {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: white;
+	z-index: 4;
+	padding: 24px 16px;
+	width: clamp(343px, 90%, 700px);
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 24px;
+
+		&-title {
+			@include mixins.button-xlarge-style;
+
+			@media screen and (min-width: 1024px) {
+				@include mixins.heading-4-style;
+			}
+		}
+	}
+
+	&__input-wrap {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 10px;
+
+		@media screen and (min-width: 1024px) {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+
+			:last-of-type {
+				grid-column: 1 / -1;
+			}
+		}
+	}
 }

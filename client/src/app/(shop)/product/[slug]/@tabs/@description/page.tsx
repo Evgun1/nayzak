@@ -15,22 +15,22 @@ const Page: FC = () => {
 					<li
 						className={`${TextClassList.REGULAR_18} ${classes["description__list-item"]}`}
 					>
-						value
+						value 1
 					</li>
 					<li
 						className={`${TextClassList.REGULAR_18} ${classes["description__list-item"]}`}
 					>
-						value
+						value 2
 					</li>
 					<li
 						className={`${TextClassList.REGULAR_18} ${classes["description__list-item"]}`}
 					>
-						value
+						value 3
 					</li>
 					<li
 						className={`${TextClassList.REGULAR_18} ${classes["description__list-item"]}`}
 					>
-						value
+						value 4
 					</li>
 				</ul>
 			</div>

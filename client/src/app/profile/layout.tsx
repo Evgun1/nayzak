@@ -4,6 +4,7 @@ import classes from "./Profile.module.scss";
 import Tabs from "@/ui/tabs/Tabs";
 import React, { ReactNode } from "react";
 import Logout from "./Logout";
+import Avatar from "./components/Avatar";
 
 type MenuContentType = {
 	label: string;
@@ -47,7 +48,10 @@ export default async function RootLayout(props: RootLayoutProps) {
 						isVertical
 						className={classes["profile__tabs"]}
 					>
-						<Tabs.Header>
+						<Tabs.Header
+							className={classes["profile__tabs-header"]}
+						>
+							<Avatar />
 							{TABS.map((val, i) => (
 								<Tabs.Toggle
 									key={i}
@@ -55,7 +59,6 @@ export default async function RootLayout(props: RootLayoutProps) {
 									label={val.label}
 								/>
 							))}
-
 							<Logout />
 						</Tabs.Header>
 						<Tabs.Body>

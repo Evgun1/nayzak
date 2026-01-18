@@ -35,8 +35,12 @@ export default async function Page(props: { params: { slug: string } }) {
 							},
 						]}
 					/>
-					<h5>{productFetch.title}</h5>
-					<p className={TextClassList.REGULAR_14}>
+					<h5 className={classes["product-info__info-title"]}>
+						{productFetch.title}
+					</h5>
+					<p
+						className={`${TextClassList.REGULAR_14} ${classes["product-info__info-paragraph"]}`}
+					>
 						{productFetch.description}
 					</p>
 					<div className={classes["product-info__info-rating"]}>

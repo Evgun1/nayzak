@@ -1,6 +1,7 @@
 import { CartItemData } from "@/redux/store/cart/cart";
 import { appFetchDelete, appFetchGet, appFetchPost, appFetchPut } from ".";
 import { CartItem } from "@/types/cart.types";
+import { id } from "zod/v4/locales";
 
 const tag = "cart";
 
@@ -28,12 +29,13 @@ export const appCartPost = async ({ product }: AppCartPost, token: string) => {
 
 	const { productsId, amount } = product;
 
-
 	const { result } = await appFetchPost<CartItem>({
 		authorization: token,
 		pathname: nginxPathname,
 		sendData: { productsId, amount },
 	});
+
+	console.log(result, productsId);
 
 	return result;
 };

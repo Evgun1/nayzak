@@ -8,12 +8,44 @@
 		grid-template-columns: 1fr 424px;
 		gap: 32px;
 	}
-
 	&__main {
 		padding: 52px 0;
 		gap: 32px;
 		display: grid;
-		grid-template-columns: 1fr 424px;
+		grid-template-columns: 1fr;
+	}
+
+	[id="checkout-form"] {
+		@media screen and (min-width: 768px) {
+			grid-template-columns: 1fr 1fr;
+		}
+		@media screen and (min-width: 1024px) {
+			grid-template-columns: 1fr 424px;
+		}
+	}
+	[id="checkout-order"] {
+		@media screen and (min-width: 768px) {
+			grid-column: 2 / 3;
+			grid-row: 1 / 2;
+		}
+	}
+	[id="checkout-contact"] {
+		@media screen and (min-width: 768px) {
+			grid-column: 1 / 2;
+			grid-row: 1 / 2;
+		}
+	}
+	[id="checkout-address"] {
+		@media screen and (min-width: 768px) {
+			grid-column: 1 / 2;
+			grid-row: 2 / 3;
+		}
+	}
+	&__main-btn {
+		@media screen and (min-width: 768px) {
+			grid-column: 1 / 2;
+			grid-row: 3 / 4;
+		}
 	}
 }
 

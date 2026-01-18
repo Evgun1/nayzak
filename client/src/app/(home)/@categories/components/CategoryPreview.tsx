@@ -4,6 +4,7 @@ import classes from "./CategoryPreview.module.scss";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import Image from "next/image";
 import React, { CSSProperties, RefObject, useEffect, useRef } from "react";
+import { useAppSelector } from "@/redux/redux";
 
 interface CategoryPreviewItem {
 	id: number;
@@ -18,24 +19,30 @@ type CategoryPreviewProps = {
 
 const CategoryPreview: React.FC<CategoryPreviewProps> = (props) => {
 	const { category } = props;
+	const responsive = useAppSelector((state) => state.responsive);
 	const ref = useRef() as RefObject<HTMLDivElement>;
 
 	useEffect(() => {
-		const current = ref.current;
-		if (!current) return;
+		if (responsive.isMobile) {
+			const current = ref.current;
+			if (!current) return;
 
-		const currentStyle = current.style;
+			const currentStyle = current.style;
 
-		if (document.documentElement.clientWidth <= category.ImageSize.width) {
-			currentStyle;
+			if (
+				document.documentElement.clientWidth <= category.ImageSize.width
+			) {
+				currentStyle;
+			}
+
+			current.style = `--image-ratio: ${
+				(document.documentElement.clientWidth <=
+				category.ImageSize.width
+					? document.documentElement.clientWidth
+					: category.ImageSize.width) / category.ImageSize.height
+			} auto`;
 		}
-
-		current.style = `--image-ratio: ${
-			(document.documentElement.clientWidth <= category.ImageSize.width
-				? document.documentElement.clientWidth
-				: category.ImageSize.width) / category.ImageSize.height
-		} auto`;
-	}, [ref]);
+	}, [ref, category.ImageSize, responsive]);
 
 	return (
 		<div

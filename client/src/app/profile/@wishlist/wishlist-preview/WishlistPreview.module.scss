@@ -1,3 +1,4 @@
+@use "../../../styles/abstracts/mixins" as mixins;
 .wishlist-preview {
 	display: flex;
 	justify-content: space-between;
@@ -34,15 +35,50 @@
 	}
 
 	&__info {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: repeat(4, max-content);
+		gap: 8px;
 		min-width: min-content;
 
 		&-item {
 			&:not(:first-child) {
 				color: var(--black-600);
 			}
-
 			&:not(:last-child) {
 				margin-bottom: 10px;
+			}
+
+			&:nth-child(1) {
+				@include mixins.text-semibold-16-style;
+				@media screen and (min-width: 1024px) {
+					@include mixins.text-semibold-18-style;
+				}
+				grid-row: 1 / 2;
+			}
+			&:nth-child(2) {
+				@include mixins.text-regular-12-style;
+				@media screen and (min-width: 1024px) {
+					@include mixins.text-regular-14-style;
+				}
+				grid-row: 2 / 3;
+			}
+			&:nth-child(3) {
+				grid-row: 4 / 5;
+			}
+			&:nth-child(4) {
+				@include mixins.text-regular-16-style;
+				@media screen and (min-width: 1024px) {
+					@include mixins.text-regular-18-style;
+				}
+				grid-row: 3 / 4;
+			}
+
+			&:nth-child(1),
+			&:nth-child(2),
+			&:nth-child(3),
+			&:nth-child(4) {
+				margin: 0;
 			}
 		}
 	}

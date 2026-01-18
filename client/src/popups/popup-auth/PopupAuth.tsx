@@ -14,8 +14,8 @@ import Form from "@/ui/form/Form";
 import { TextClassList } from "@/types/textClassList.enum";
 
 const PopupAuth = () => {
+	const responsive = useAppSelector((state) => state.responsive);
 	const errorMessage = useAppSelector((state) => state.auth.errorMessage);
-
 	const dispatch = useAppDispatch();
 	const [isRegister, setIsRegister] = useState<boolean>(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -48,44 +48,47 @@ const PopupAuth = () => {
 
 	return (
 		<div className={classes.auth}>
+			{/* <div className={classes["auth__header"]}> */}
 			<div className={classes["auth__header"]}>
-				<div className={classes["auth__title"]}>
-					<h4>{isRegister ? "Sing up" : "Sing in"}</h4>
-					<ButtonCustom
-						className={classes["auth__title-button"]}
-						styleSettings={{
-							color: "DARK",
-							fill: "SOLID",
-							type: "TEXT",
-							roundness: "SHARP",
-							size: "MEDIUM",
-							icon: { left: "CLOSE" },
-						}}
-						onClick={() => dispatch(popupActions.toggle(null))}
-					/>
-				</div>
-				<div className={classes["auth__info"]}>
-					<div className={TextClassList.REGULAR_16}>
-						{isRegister ? (
-							<>Already have an account?</>
-						) : (
-							<>Don’t have an accout yet?</>
-						)}
-					</div>
-					<ButtonCustom
-						className={TextClassList.REGULAR_16}
-						styleSettings={{
-							color: "DARK",
-							size: "SMALL",
-							type: "TEXT",
-						}}
-						onClick={() => setIsRegister((prev) => !prev)}
-					>
-						{isRegister ? "Sing in" : "Sing up"}
-					</ButtonCustom>
-				</div>
+				<h4 className={classes["auth__header-title"]}>
+					{isRegister ? "Sing up" : "Sing in"}
+				</h4>
+				<ButtonCustom
+					className={classes["auth__header-button"]}
+					styleSettings={{
+						color: "DARK",
+						fill: "SOLID",
+						type: "TEXT",
+						roundness: "SHARP",
+						size: responsive.isMobile ? "SMALL" : "MEDIUM",
+						icon: { left: "CLOSE" },
+					}}
+					onClick={() => dispatch(popupActions.toggle(null))}
+				/>
 			</div>
+			<div className={classes["auth__info"]}>
+				<div className={TextClassList.REGULAR_16}>
+					{isRegister ? (
+						<>Already have an account?</>
+					) : (
+						<>Don’t have an accout yet?</>
+					)}
+				</div>
+				<ButtonCustom
+					className={TextClassList.REGULAR_16}
+					styleSettings={{
+						color: "DARK",
+						size: "SMALL",
+						type: "TEXT",
+					}}
+					onClick={() => setIsRegister((prev) => !prev)}
+				>
+					{isRegister ? "Sing in" : "Sing up"}
+				</ButtonCustom>
+			</div>
+			{/* </div> */}
 			<Form
+				className={classes["auth__form"]}
 				schema={resSchema}
 				oneMessage
 				onSubmit={submitHandler}
@@ -151,7 +154,7 @@ const PopupAuth = () => {
 						color: "DARK",
 						fill: "SOLID",
 						roundness: "ROUNDED",
-						size: "LARGE",
+						size: responsive.isMobile ? "SMALL" : "LARGE",
 						type: "DEFAULT",
 					}}
 				>

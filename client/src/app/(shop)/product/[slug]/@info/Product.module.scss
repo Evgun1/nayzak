@@ -1,11 +1,17 @@
-.product-info-layout {
-	display: flex;
-	gap: 82px;
-}
+// .product-info-layout {
+// 	display: flex;
+// 	// gap: 82px;?
+// }
 
 .product-layout {
 	display: flex;
-	gap: 82px;
+
+	gap: 24px;
+	flex-direction: column;
+	@media screen and (min-width: 1024px) {
+		gap: 82px;
+		flex-direction: row;
+	}
 }
 
 .product-info {
@@ -35,7 +41,20 @@
 	&__info {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+
+		&-breadcrumbs {
+			margin-bottom: 8px;
+			@media screen and (min-width: 1024px) {
+				margin-bottom: 12px;
+			}
+		}
+
+		&-title,
+		&-paragraph,
+		&-rating {
+			margin-bottom: 12px;
+		}
+
 		&-rating {
 			display: flex;
 			align-items: center;

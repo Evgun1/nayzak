@@ -1,13 +1,21 @@
 "use client";
 import { TextClassList } from "@/types/textClassList.enum";
-import { FC, RefObject, useCallback, useEffect, useRef } from "react";
+import {
+	FC,
+	ReactNode,
+	RefObject,
+	useCallback,
+	useEffect,
+	useRef,
+} from "react";
 import classes from "./Tooltip.module.scss";
 
 type HoverTooltipProps = {
-	value: string;
+	children: ReactNode;
+	className?: string;
 };
 
-const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
+const Tooltip: FC<HoverTooltipProps> = ({ children, className }) => {
 	const ref = useRef() as RefObject<HTMLDivElement>;
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -59,16 +67,18 @@ const Tooltip: FC<HoverTooltipProps> = ({ value }) => {
 	}, [eventListenerHandler]);
 
 	return (
-		<div
-			ref={ref}
-			className={`${TextClassList.REGULAR_12} ${classes["tooltip__label"]}`}
-		>
-			{value}
+		<div className={`${classes["tooltip"]} ${className ? className : ""}`}>
+			<div
+				ref={ref}
+				className={`${TextClassList.REGULAR_12} ${classes["tooltip__label"]}`}
+			>
+				{children}
+			</div>
 			<div
 				className={`${TextClassList.REGULAR_12} ${classes["tooltip__full-value"]} `}
 				id={"tooltip__full-value"}
 			>
-				{value}
+				{children}
 			</div>
 		</div>
 	);

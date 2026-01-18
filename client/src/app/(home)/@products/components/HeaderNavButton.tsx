@@ -1,7 +1,11 @@
 "use client";
 import PopupListLink from "@/popups/popup-data-list/PopupListLink";
 import { useAppDispatch, useAppSelector } from "@/redux/redux";
-import { popupActions } from "@/redux/store/popup/popup";
+import {
+	ListLinkItem,
+	ListLinkType,
+	popupActions,
+} from "@/redux/store/popup/popup";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { Select, SelectItem } from "@/ui/select/Select";
@@ -11,8 +15,7 @@ interface HeaderNavProps {
 	label: string;
 	dataArray: Array<{ title: string; id: number }>;
 	searchParams: URLSearchParams;
-	queryParamsKey: string;
-	deleteQueryParams?: string;
+	href: { queryName: string; deleteQuery?: string };
 }
 
 export type DispatchSetData = {
@@ -22,21 +25,29 @@ export type DispatchSetData = {
 };
 
 const HeaderNavButton: FunctionComponent<HeaderNavProps> = (props) => {
-	const { dataArray, queryParamsKey, label, searchParams } = props;
+	const { dataArray, href, label, searchParams } = props;
 	const responsive = useAppSelector((state) => state.responsive);
 	const dispatch = useAppDispatch();
 	const labelMemo = useMemo(() => label, [label]);
 
 	const btnClickHandler = useCallback(() => {
-		dispatch(
-			popupActions.setListLink({
-				dataArray,
-				queryParamsKey,
-				deleteQuery: "subcategory",
-			}),
-		);
+		const listLinkData: ListLinkType = dataArray.map((data) => {
+			return {
+				title: data.title,
+				href: {
+					queryParams: {
+						[href.queryName]: `${data.title.toLowerCase()}-${href.queryName.charAt(
+							0,
+						)}${data.id}`,
+					},
+					deleteQueryParams: href.deleteQuery,
+				},
+			};
+		});
+
+		dispatch(popupActions.setListLink(listLinkData));
 		dispatch(popupActions.toggle(<PopupListLink />));
-	}, [dispatch, dataArray, queryParamsKey]);
+	}, [dispatch, dataArray, href]);
 
 	if (responsive.isDesktop || responsive.isTablet) {
 		return (
@@ -71,10 +82,10 @@ const HeaderNavButton: FunctionComponent<HeaderNavProps> = (props) => {
 									roundness: "SHARP",
 								}}
 								href={{
-									deleteQueryParams: props.deleteQueryParams,
+									deleteQueryParams: props.href.deleteQuery,
 									queryParams: {
-										[queryParamsKey]: `${data.title.toLowerCase()}-${
-											queryParamsKey[0]
+										[href.queryName]: `${data.title.toLowerCase()}-${
+											href.queryName[0]
 										}${data.id}`,
 									},
 								}}

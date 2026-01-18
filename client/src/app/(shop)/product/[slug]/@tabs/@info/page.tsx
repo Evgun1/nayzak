@@ -45,44 +45,16 @@ const Page: FC<PageProps> = async (props) => {
 		Promise.resolve([] as { name: string; value: string }[]),
 	);
 
-	// const transformAttribute: { name: string; value: string }[] = [];
-
-	// for (const attribute of attributes) {
-	// 	if (!attribute.name.includes("color")) {
-	// 		transformAttribute.push({
-	// 			name: attribute.name,
-	// 			value: attribute.value.map((item) => item.type).join(" "),
-	// 		});
-	// 		continue;
-	// 	}
-
-	// 	const color = await Promise.all(
-	// 		attribute.value.map(async (item) => {
-	// 			const color = await appColorGet({ hex: item.type });
-	// 			return color.name.value as string;
-	// 		}),
-	// 	);
-
-	// 	transformAttribute.push({
-	// 		name: attribute.name,
-	// 		value: color.join(", "),
-	// 	});
-	// }
-
 	return (
 		<div className={classes["attributes"]}>
 			{transformAttribute &&
 				transformAttribute.length > 0 &&
 				transformAttribute.map((item, i) => (
 					<React.Fragment key={i}>
-						<div
-							className={`${classes["attributes__item"]} ${TextClassList.SEMIBOLD_18}`}
-						>
+						<div className={`${classes["attributes__name"]}`}>
 							{capitalizeAndSeparateWords(item.name)}
 						</div>
-						<div
-							className={`${classes["attributes__item"]} ${TextClassList.REGULAR_18}`}
-						>
+						<div className={`${classes["attributes__value"]}`}>
 							{item.value}
 						</div>
 					</React.Fragment>
