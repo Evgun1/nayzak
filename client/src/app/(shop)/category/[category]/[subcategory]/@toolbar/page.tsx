@@ -6,26 +6,29 @@ import { TextClassList } from "@/types/textClassList.enum";
 import { FC } from "react";
 import SelectSortBy from "./components/SelectSortBy";
 import SelectTypeList from "./components/SelectTypeList";
-import dynamic from "next/dynamic";
-import SelectTypeListSkeleton from "./skeleton/SelectTypeListSkeleton";
-
+import { SearchParams } from "next/dist/server/request/search-params";
+// import dynamic from "next/dynamic";
+// import SelectTypeListSkeleton from "./skeleton/SelectTypeListSkeleton";
 
 type PageProps = {
-	searchParams: Record<string, any>;
-	params: { category: string; subcategory: string };
+	searchParams: Promise<SearchParams>;
+	params: Promise<{ category: string; subcategory: string }>;
 };
 
-const SelectTypeListDynamic = dynamic(
-	() => import("./components/SelectTypeList"),
-	{ ssr: false, loading: () => <SelectTypeListSkeleton /> },
-);
+// const SelectTypeListDynamic = dynamic(
+// 	() => import("./components/SelectTypeList"),
+// 	{ ssr: false, loading: () => <SelectTypeListSkeleton /> },
+// );
 
 const Page: FC<PageProps> = async (props) => {
-	const urlSearchParams = new URLSearchParams(props.searchParams);
+	const searchParams = await props.searchParams;
+	const { category, subcategory } = await props.params;
+
+	const urlSearchParams = new URLSearchParams(searchParams.toString());
 
 	const { productCounts } = await appProductsByParamsGet({
 		searchParams: urlSearchParams,
-		params: [props.params.category, props.params.subcategory],
+		params: [category, subcategory],
 	});
 
 	return (
@@ -36,7 +39,7 @@ const Page: FC<PageProps> = async (props) => {
 				{productCounts} products
 			</div>
 			<SelectSortBy />
-			<SelectTypeList searchParams={props.searchParams} />
+			<SelectTypeList searchParams={searchParams} />
 		</div>
 	);
 };

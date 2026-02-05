@@ -6,8 +6,10 @@ import IconsIdList from "@/components/icons/IconsIdList";
 export enum Color {
 	DARK_DEFAULT = "color__default-dark",
 	LIGHT_DEFAULT = "color__default-light",
+
 	DARK_TEXT = "color__text-dark",
 	LIGHT_TEXT = "color__text-light",
+
 	DARK_UNDERLINE = "color__underline-dark",
 	LIGHT_UNDERLINE = "color__underline-light",
 }

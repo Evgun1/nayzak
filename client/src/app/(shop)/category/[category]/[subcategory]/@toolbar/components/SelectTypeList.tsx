@@ -1,6 +1,7 @@
 import classes from "./SelectTypeList.module.scss";
 import IconsIdList from "@/components/icons/IconsIdList";
 import ListTypeButton from "./ListTypeButton";
+import { SearchParams } from "next/dist/server/request/search-params";
 
 export enum TypeList {
 	FIVE = "five_grid",
@@ -18,7 +19,7 @@ const SELECTOR = [
 	{ icon: IconsIdList.LIST_COLUMNS, typeList: TypeList.LIST },
 ];
 
-const SelectTypeList: React.FC<{ searchParams: Record<string, any> }> = (
+const SelectTypeList: React.FC<{ searchParams: SearchParams }> = (
 	props,
 ) => {
 	return (

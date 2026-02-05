@@ -6,19 +6,17 @@ import classes from "./ProductGridHeader.module.scss";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { CategoryItem } from "@/types/categories.types";
 import { ISubcategory } from "@/types/subcategories.interface";
-import { useSearchParams } from "next/navigation";
 import { appCategoriesGet } from "@/lib/api/categories";
 import { appSubcategoriesGet } from "@/lib/api/subcategories";
 import { appProductsGet } from "@/lib/api/products";
-import { Select, SelectItem } from "@/ui/select/Select";
-import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { useAppDispatch, useAppSelector } from "@/redux/redux";
-import HeaderNavButton from "./HeaderNavButton";
-import { log } from "console";
 import { popupActions } from "@/redux/store/popup/popup";
-import PopupLoading from "@/popups/popup-loading/PopupLoading";
+import { useSearchParams } from "next/navigation";
+import HeaderNavButton from "./HeaderNavButton";
 
-const ProductGridHeader: FC = () => {
+type ProductGridHeaderProps = {};
+
+const ProductGridHeader: FC<ProductGridHeaderProps> = (props) => {
 	const dispatch = useAppDispatch();
 	const responsive = useAppSelector((state) => state.responsive);
 	const searchParams = useSearchParams();
@@ -205,7 +203,7 @@ const ProductGridHeader: FC = () => {
 			<HeaderNavButton
 				label={subcategoryLabel}
 				dataArray={subcategories}
-                href={{queryName:'subcategory'}}
+				href={{ queryName: "subcategory" }}
 				searchParams={searchParams}
 			/>
 		</div>

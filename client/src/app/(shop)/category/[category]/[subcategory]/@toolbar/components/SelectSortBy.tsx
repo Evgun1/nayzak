@@ -4,16 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFilterContext } from "../../tools/context/useFilterContext";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
-import { Select, SelectItem } from "@/ui/select/Select";
-import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import SelectSortByNav from "./SelectSortByNav";
-import { keyof } from "zod/v4";
-import { ar } from "zod/v4/locales";
 import { usePopupLocalContext } from "@/components/popup-local/tool/usePopupLocalContext";
 import { useAppSelector } from "@/redux/redux";
-import PopupFilter from "@/popups/popup-filter/PopupFilter";
-import PopupFilterSkeleton from "@/popups/popup-filter/skeleton/PopupFilterSkeleton";
-import dynamic from "next/dynamic";
 import PopupFilterLayout from "@/popups/popup-filter/PopupFilter.layout";
 
 export type SortDataType = Array<{
@@ -75,12 +68,15 @@ const SelectSortBy: React.FC = () => {
 			.split("&")
 			.map((val) => val.split("="));
 
-		const [sortBySearch, sortSearch] = result.reduce((acc, curr) => {
-			if (curr.includes("sort") || curr.includes("sortBy"))
-				acc.push(curr);
+		const [sortBySearch, sortSearch] = result.reduce(
+			(acc, curr) => {
+				if (curr.includes("sort") || curr.includes("sortBy"))
+					acc.push(curr);
 
-			return acc;
-		}, [] as Array<Array<string>>);
+				return acc;
+			},
+			[] as Array<Array<string>>,
+		);
 
 		return [sortBySearch, sortSearch];
 	}, [searchParams]);

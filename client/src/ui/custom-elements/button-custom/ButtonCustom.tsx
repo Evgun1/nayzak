@@ -11,19 +11,20 @@ import {
 } from "../ActionElements.types";
 import IconsIdList from "@/components/icons/IconsIdList";
 import DisplayIcon from "@/components/icons/displayIcon";
+import classesCustomStyle, { StyleSettingsObject } from "../classesCustomStyle";
 
-export interface StyleSettingsObject {
-	size?: keyof typeof Size;
-	roundness?: keyof typeof Roundness;
-	fill?: keyof typeof Fill;
-	type?: keyof typeof Type;
-	color?: "DARK" | "LIGHT";
-	state?: Array<keyof typeof State>;
-	icon?: {
-		left?: keyof typeof IconsIdList;
-		right?: keyof typeof IconsIdList;
-	};
-}
+// export interface StyleSettingsObject {
+// 	size?: keyof typeof Size;
+// 	roundness?: keyof typeof Roundness;
+// 	fill?: keyof typeof Fill;
+// 	type?: keyof typeof Type;
+// 	color?: "DARK" | "LIGHT";
+// 	state?: Array<keyof typeof State>;
+// 	icon?: {
+// 		left?: keyof typeof IconsIdList;
+// 		right?: keyof typeof IconsIdList;
+// 	};
+// }
 
 interface TypeObject {
 	button: "button";
@@ -43,7 +44,7 @@ type SiteButtonProps = {
 };
 
 export const ButtonCustom: FC<SiteButtonProps> = ({
-	styleSettings: { color, roundness, size, type, icon, fill, state },
+	styleSettings,
 	className,
 	children,
 	btnRef,
@@ -52,36 +53,38 @@ export const ButtonCustom: FC<SiteButtonProps> = ({
 	onClick,
 	onSubmit,
 }) => {
-	let btnColor;
+	const classesCustom = classesCustomStyle(styleSettings);
 
-	if (type === "DEFAULT" || type === "SQUARE") {
-		color === "DARK"
-			? (btnColor = Color.DARK_DEFAULT)
-			: (btnColor = Color.LIGHT_DEFAULT);
-	}
+	// let btnColor;
 
-	if (type === "TEXT") {
-		color === "DARK"
-			? (btnColor = Color.DARK_TEXT)
-			: (btnColor = Color.LIGHT_TEXT);
-	}
+	// if (type === "DEFAULT" || type === "SQUARE") {
+	// 	color === "DARK"
+	// 		? (btnColor = Color.DARK_DEFAULT)
+	// 		: (btnColor = Color.LIGHT_DEFAULT);
+	// }
 
-	if (type === "UNDERLINE") {
-		color === "DARK"
-			? (btnColor = Color.DARK_UNDERLINE)
-			: (btnColor = Color.LIGHT_UNDERLINE);
-	}
+	// if (type === "TEXT") {
+	// 	color === "DARK"
+	// 		? (btnColor = Color.DARK_TEXT)
+	// 		: (btnColor = Color.LIGHT_TEXT);
+	// }
 
-	const classes: any[] = [
-		btnColor,
-		size && Size[size],
-		roundness && Roundness[roundness],
-		type && Type[type],
-		fill && Fill[fill],
-	];
+	// if (type === "UNDERLINE") {
+	// 	color === "DARK"
+	// 		? (btnColor = Color.DARK_UNDERLINE)
+	// 		: (btnColor = Color.LIGHT_UNDERLINE);
+	// }
 
-	if (state && state.length > 0)
-		for (const element of state) classes.push(State[element]);
+	// const classes: any[] = [
+	// 	btnColor,
+	// 	size && Size[size],
+	// 	roundness && Roundness[roundness],
+	// 	type && Type[type],
+	// 	fill && Fill[fill],
+	// ];
+
+	// if (state && state.length > 0)
+	// 	for (const element of state) classes.push(State[element]);
 
 	return (
 		<button
@@ -89,17 +92,17 @@ export const ButtonCustom: FC<SiteButtonProps> = ({
 			ref={btnRef}
 			onSubmit={onSubmit}
 			onClick={onClick ? (e) => onClick(e) : undefined}
-			className={`${className ?? ""} ${classes.join(" ")}`}
+			className={`${className ?? ""} ${classesCustom}`}
 			type={typeProperty ?? "button"}
 		>
-			{icon?.left ? (
-				<DisplayIcon iconName={IconsIdList[icon.left]} />
+			{styleSettings.icon?.left ? (
+				<DisplayIcon iconName={IconsIdList[styleSettings.icon.left]} />
 			) : (
 				""
 			)}
 			{children ?? ""}
-			{icon?.right ? (
-				<DisplayIcon iconName={IconsIdList[icon.right]} />
+			{styleSettings.icon?.right ? (
+				<DisplayIcon iconName={IconsIdList[styleSettings.icon.right]} />
 			) : (
 				""
 			)}

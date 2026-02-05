@@ -2,7 +2,6 @@
 
 import { useAppSelector } from "@/redux/redux";
 import React, { ReactNode, useMemo } from "react";
-import HeaderActionMobile from "./components/action-mobile/HeaderActionMobile";
 import dynamic from "next/dynamic";
 import HeaderActionMobileSkeleton from "./components/action-mobile/skeleton/HeaderActionMobileSkeleton";
 

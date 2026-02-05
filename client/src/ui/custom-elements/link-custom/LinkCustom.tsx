@@ -13,6 +13,7 @@ import {
 import IconsIdList from "@/components/icons/IconsIdList";
 import DisplayIcon from "@/components/icons/displayIcon";
 import { ReadonlyURLSearchParams } from "next/navigation";
+import classesCustomStyle from "../classesCustomStyle";
 
 export interface HrefObject {
 	endpoint?: string;
@@ -34,7 +35,7 @@ export interface StyleSettingsObject {
 
 export type LinkCustomProps = {
 	id?: string;
-	styleSettings?: StyleSettingsObject;
+	styleSettings: StyleSettingsObject;
 	className?: string;
 	children?: ReactNode;
 	target?: boolean;
@@ -58,34 +59,7 @@ const LinkCustom: FC<LinkCustomProps> = ({
 }) => {
 	const urlSearchParams = new URLSearchParams(searchParams?.toString());
 
-	let linkColor;
-	if (styleSettings?.type === "DEFAULT" || styleSettings?.type === "SQUARE") {
-		styleSettings?.color === "DARK"
-			? (linkColor = Color.DARK_DEFAULT)
-			: (linkColor = Color.LIGHT_DEFAULT);
-	}
-
-	if (styleSettings?.type === "TEXT") {
-		styleSettings?.color === "DARK"
-			? (linkColor = Color.DARK_TEXT)
-			: (linkColor = Color.LIGHT_TEXT);
-	}
-
-	if (styleSettings?.type === "UNDERLINE") {
-		styleSettings?.color === "DARK"
-			? (linkColor = Color.DARK_UNDERLINE)
-			: (linkColor = Color.LIGHT_UNDERLINE);
-	}
-
-	const classes: any[] = [
-		linkColor,
-		styleSettings && styleSettings.size && Size[styleSettings.size],
-		styleSettings &&
-			styleSettings.roundness &&
-			Roundness[styleSettings.roundness],
-		styleSettings && styleSettings.type && Type[styleSettings.type],
-		styleSettings && styleSettings.fill && Fill[styleSettings.fill],
-	];
+	const classesCustom = classesCustomStyle(styleSettings);
 
 	if (queryParams) {
 		for (const urlNameKey in queryParams) {
@@ -101,8 +75,6 @@ const LinkCustom: FC<LinkCustomProps> = ({
 			}
 		}
 	}
-	if (styleSettings?.state && styleSettings?.state.length > 0)
-		for (const element of styleSettings.state) classes.push(State[element]);
 
 	const setQueryParams = `?${urlSearchParams}`;
 
@@ -116,7 +88,7 @@ const LinkCustom: FC<LinkCustomProps> = ({
 			// 	query: urlSearchParams.size > 0 ? setQueryParams : undefined,
 			// 	pathname: endpoint,
 			// }}
-			className={`${className ?? ""} ${classes.join(" ")} `}
+			className={`${className ?? ""} ${classesCustom} `}
 			target={target ? "_blank" : "_self"}
 			onClick={onClick}
 		>

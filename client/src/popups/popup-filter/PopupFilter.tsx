@@ -2,24 +2,12 @@
 import FilterList, {
 	FilterAttributesItem,
 } from "@/app/(shop)/category/[category]/[subcategory]/@filter/components/FilterList";
-import classes from "./PopupFilter.module.scss";
-import {
-	FunctionComponent,
-	RefObject,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { appMinMaxPriceGet } from "@/lib/api/products";
 import filterAttributesHandler from "@/app/(shop)/category/[category]/[subcategory]/tools/filterAttributesHandler";
 import { appAttributeBySubcategoryGet } from "@/lib/api/attribute";
 import PopupFilterHeader from "./components/PopupFilterHeader";
-import { usePopupLocalContext } from "@/components/popup-local/tool/usePopupLocalContext";
-import dynamic from "next/dynamic";
-import PopupFilterSkeleton from "./skeleton/PopupFilterSkeleton";
 
 interface PopupFilterProps {}
 

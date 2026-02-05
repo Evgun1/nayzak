@@ -2,10 +2,8 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	@media screen and (min-width: 1024px) {
-		display: none;
-	}
-	&__content {
+
+	.avatar__content {
 		position: relative;
 		width: 68px;
 		height: 68px;
@@ -21,20 +19,28 @@
 			object-fit: cover;
 		}
 
-		&-btn {
+		.avatar__content-btn {
+			position: absolute;
 			opacity: 80%;
 			max-width: 30px;
 			max-height: 30px;
 			width: 100%;
 			height: 100%;
-			position: absolute;
 			right: 0;
 			bottom: 0;
+			padding: 0;
 
 			svg {
 				width: 16px;
 				height: 16px;
 			}
+		}
+	}
+
+	.avatar__btn {
+		display: block;
+		@media screen and (min-width: 1024px) {
+			display: none;
 		}
 	}
 }

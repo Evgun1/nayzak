@@ -5,17 +5,22 @@ import { FC } from "react";
 import filterAttributesHandler from "../tools/filterAttributesHandler";
 import { appMinMaxPriceGet } from "@/lib/api/products";
 import FilterList from "./components/FilterList";
+import { SearchParams } from "next/dist/server/request/search-params";
 
 type PageProps = {
-	params: { category: string; subcategory: string };
-	searchParams: Record<string, string>;
+	params: Promise<{ category: string; subcategory: string }>;
+	searchParams: Promise<SearchParams>;
 };
 
 const Page: FC<PageProps> = async (props) => {
-	const urlSearchParams = new URLSearchParams(props.searchParams);
+	const { category, subcategory } = await props.params;
+	const searchParams = await props.searchParams;
+	const urlSearchParams = new URLSearchParams(
+		searchParams ? searchParams.toString() : "",
+	);
 
 	const { attribute } = await appAttributeBySubcategoryGet({
-		param: { slug: props.params.subcategory },
+		param: { slug: subcategory },
 		searchParams: urlSearchParams,
 	});
 
@@ -25,14 +30,14 @@ const Page: FC<PageProps> = async (props) => {
 	);
 
 	const { minPrice, maxPrice } = await appMinMaxPriceGet(urlSearchParams, [
-		props.params.category,
-		props.params.subcategory,
+		category,
+		subcategory,
 	]);
 
 	return (
 		<FilterList
 			price={{ maxPrice, minPrice }}
-			searchParams={props.searchParams}
+			searchParams={searchParams}
 			attributes={filterAttributes}
 		/>
 	);

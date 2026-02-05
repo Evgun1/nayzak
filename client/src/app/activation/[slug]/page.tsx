@@ -5,15 +5,15 @@ import { cookies } from "next/headers";
 import { FunctionComponent } from "react";
 
 interface PageProps {
-	params: { slug: string };
+	params: Promise<{ slug: string }>;
 }
 
 const Page: FunctionComponent<PageProps> = async (props) => {
+	const slug = (await props.params).slug;
 	let message: string;
-console.log(props);
 
 	try {
-		await appCredentialsActivationGet(props.params.slug);
+		await appCredentialsActivationGet(slug);
 		message = "Activation was successful. You can close this page.";
 	} catch (error) {
 		const err = error as Error;

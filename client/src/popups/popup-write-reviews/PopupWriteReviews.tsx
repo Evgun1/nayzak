@@ -13,7 +13,7 @@ import { useParams, useRouter } from "next/navigation";
 import { appOneProductGet } from "@/lib/api/products";
 import { appReviewsPost } from "@/lib/api/reviews";
 import { popupActions } from "@/redux/store/popup/popup";
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 import { validation } from "@/lib/validator/validator";
 import Form, { FormOnSubmitParams } from "@/ui/form/Form";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
@@ -78,13 +78,13 @@ const PopupWriteReview = () => {
 
 			dispatch(popupActions.toggle(null));
 			route.refresh();
-			revalidatePath("/product/");
+			// revalidatePath("/product/");
 		} catch (error) {}
 	};
 
 	useEffect(() => {
 		(async () => {
-			if (params) {
+			if (params.slug) {
 				const product = await appOneProductGet({
 					slug: params.slug.toString().replaceAll("_", " "),
 				});

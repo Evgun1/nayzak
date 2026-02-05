@@ -5,6 +5,7 @@ import React, {
 	FC,
 	ReactElement,
 	RefObject,
+	useCallback,
 	useEffect,
 	useMemo,
 	useRef,
@@ -52,15 +53,15 @@ const InputDefault: FC<InputDefaultProps> = ({
 	const [displayMessage, setDisplayMessage] = useState<any>("");
 	const [errorMessageState, setErrorMessagesState] = useState<string[]>([]);
 
-	const handleFocus = () => {
+	const handleFocus = useCallback(() => {
 		if (!inputContainerRef.current) return;
 		inputContainerRef.current.classList.add(classes["input--focus"]);
-	};
+	}, [inputContainerRef]);
 
-	const handleBlur = () => {
+	const handleBlur = useCallback(() => {
 		if (!inputContainerRef.current) return;
 		inputContainerRef.current.classList.remove(classes["input--focus"]);
-	};
+	}, [inputContainerRef]);
 
 	useEffect(() => {
 		if (inputSettings.defaultValue) {
@@ -81,20 +82,23 @@ const InputDefault: FC<InputDefaultProps> = ({
 		}
 	}, [errors, inputSettings.name]);
 
-	const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value;
+	const changeHandler = useCallback(
+		(e: ChangeEvent<HTMLInputElement>) => {
+			const value = e.target.value;
 
-		if (
-			inputSettings.maxLength &&
-			displayMessage.length <= inputSettings.maxLength + 1
-		) {
-			if (value.length < inputSettings.maxLength + 1) {
+			if (
+				inputSettings.maxLength &&
+				displayMessage.length <= inputSettings.maxLength + 1
+			) {
+				if (value.length < inputSettings.maxLength + 1) {
+					setDisplayMessage(value);
+				}
+			} else {
 				setDisplayMessage(value);
 			}
-		} else {
-			setDisplayMessage(value);
-		}
-	};
+		},
+		[displayMessage, inputSettings.maxLength],
+	);
 
 	const elements = useMemo(() => {
 		const elements: ReactElement[] = [];
@@ -231,8 +235,8 @@ const InputDefault: FC<InputDefaultProps> = ({
 				))}
 			</div>
 		);
-	}, [errorMessageState, inputSettings.name]);
-    
+	}, [errorMessageState]);
+
 	return (
 		<div
 			className={`${classes["input"]} ${className ? className : ""} ${

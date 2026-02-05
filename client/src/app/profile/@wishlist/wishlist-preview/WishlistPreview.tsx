@@ -32,7 +32,7 @@ const WishlistPreview: FC<WishlistItemProps> = ({ product }) => {
 		return Math.round(
 			product.price - (product.price * product.discount) / 100,
 		);
-	}, [product.price, product.description]);
+	}, [product.price, product.discount]);
 
 	useEffect(() => {
 		(async () => {

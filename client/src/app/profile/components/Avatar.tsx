@@ -7,6 +7,8 @@ import { useAppDispatch } from "@/redux/redux";
 import { logOutActive } from "@/redux/store/auth/action";
 import { cartAction } from "@/redux/store/cart/cart";
 import { useRouter } from "next/navigation";
+import Form from "@/ui/form/Form";
+import InputFile from "@/ui/form/inputs/InputFile";
 
 interface AvatarProps {}
 
@@ -22,26 +24,33 @@ const Avatar: FunctionComponent<AvatarProps> = () => {
 
 	return (
 		<div className={classes["avatar"]}>
-			<div className={classes["avatar__content"]}>
+			<Form
+				className={classes["avatar__content"]}
+				onChange={(event) => {
+					const target = event.target as HTMLInputElement;
+					console.log(target.files);
+				}}
+			>
 				<Image
 					src={"https://placehold.co/100"}
 					alt="user avatar"
 					fill
 				/>
-				<ButtonCustom
+				<InputFile
 					className={classes["avatar__content-btn"]}
 					styleSettings={{
-						state: ["DISABLE"],
+						// state: ["DISABLE"],
 						icon: { left: "CAMERA" },
-						// size: "SMALL",
+						size: "SMALL",
 						color: "DARK",
 						fill: "SOLID",
 						roundness: "PILL",
 						type: "SQUARE",
 					}}
 				/>
-			</div>
+			</Form>
 			<ButtonCustom
+				className={classes["avatar__btn"]}
 				styleSettings={{
 					color: "DARK",
 					type: "TEXT",

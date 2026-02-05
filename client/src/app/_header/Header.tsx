@@ -1,3 +1,5 @@
+"use server";
+
 import classes from "./Header.module.scss";
 
 import DisplayIcon from "@/components/icons/displayIcon";
@@ -9,15 +11,15 @@ import dynamic from "next/dynamic";
 import HeaderActionSkeleton from "./components/action/skeleton/HeaderActionSkeleton";
 import TestComponent from "./Test";
 
-const HeaderActionDynamic = dynamic(
-	() => import("./components/action/HeaderAction"),
-	{
-		ssr: false,
-		loading: () => <HeaderActionSkeleton />,
-	},
-);
+// const HeaderActionDynamic = dynamic(
+// 	() => import("./components/action/HeaderAction"),
+// 	{
+// 		ssr: false,
+// 		loading: () => <HeaderActionSkeleton />,
+// 	},
+// );
 
-const Header = () => {
+const Header = async () => {
 	return (
 		<header>
 			<div className="container">
@@ -33,7 +35,7 @@ const Header = () => {
 					</Link>
 					<TestComponent>
 						<HeaderNavbar />
-						<HeaderActionDynamic />
+						<HeaderAction />
 					</TestComponent>
 				</div>
 			</div>

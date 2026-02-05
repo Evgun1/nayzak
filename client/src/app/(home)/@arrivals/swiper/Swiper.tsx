@@ -6,20 +6,12 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import React, {
-	FC,
-	ReactElement,
-	ReactNode,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import React, { FC, ReactElement, ReactNode, useMemo } from "react";
 
 import classes from "./Swiper.module.scss";
 import DisplayIcon from "@/components/icons/displayIcon";
 import IconsIdList from "@/components/icons/IconsIdList";
 import { useAppSelector } from "@/redux/redux";
-import { ButtonClassList } from "@/types/buttonClassList.enum";
 
 type SwiperComponentProps = {
 	label: string;

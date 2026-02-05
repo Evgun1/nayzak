@@ -1,66 +1,65 @@
 "use server";
-import classes from "./Product.module.scss";
-import { appOneProductGet } from "@/lib/api/products";
-import Breadcrumbs from "@/ui/breadcrumbs/Breadcrumbs";
-import { TextClassList } from "@/types/textClassList.enum";
-import Rating from "@/components/rating/Rating";
-import Price from "@/components/price/Price";
-import ProductActions from "./action/ProductActions";
+import classes from "./Info.module.scss";
+import { appAttributeByProductGet } from "@/lib/api/attribute";
+import appColorGet from "@/lib/api/color";
+import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
+import groupAttributes from "@/tools/groupAttributes";
+import React, { FC } from "react";
 
-export default async function Page(props: { params: { slug: string } }) {
-	const productFetch = await appOneProductGet({ slug: props.params.slug });
+type PageProps = {
+	params: Promise<{ slug: string }>;
+};
+
+const Page: FC<PageProps> = async (props) => {
+	const slug = (await props.params).slug;
+	const attributeFetch = await appAttributeByProductGet({
+		param: { slug },
+	});
+
+	const attributes = groupAttributes(attributeFetch.attributes);
+
+	const transformAttribute = await attributes.reduce(
+		async (accPromise, cur) => {
+			const acc = await accPromise;
+
+			if (!cur.name.includes("color")) {
+				acc.push({
+					name: cur.name,
+					value: cur.value.map((item) => item.type).join(" "),
+				});
+			} else {
+				const color = await Promise.all(
+					cur.value.map(async (item) => {
+						return appColorGet({ hex: item.type }).then(
+							(color) => color.name.value as string,
+						);
+					}),
+				);
+				acc.push({
+					name: cur.name,
+					value: color.join(", "),
+				});
+			}
+			return acc;
+		},
+		Promise.resolve([] as { name: string; value: string }[]),
+	);
 
 	return (
-		<div className={classes["product-info"]}>
-			<div className={classes["product-info__header"]}>
-				<div className={classes["product-info__info"]}>
-					<Breadcrumbs
-						className={classes["product-info__info-breadcrumbs"]}
-						path="category"
-						item={[
-							{
-								title: productFetch.Categories.title,
-								href: `${productFetch.Categories.title.toLowerCase()}-c${
-									productFetch.Categories.id
-								}`,
-							},
-							{
-								title: productFetch.Subcategories.title,
-								href: `${productFetch.Subcategories.title.toLowerCase()}-c${
-									productFetch.Subcategories.id
-								}`,
-							},
-							{
-								title: productFetch.title,
-							},
-						]}
-					/>
-					<h5 className={classes["product-info__info-title"]}>
-						{productFetch.title}
-					</h5>
-					<p
-						className={`${TextClassList.REGULAR_14} ${classes["product-info__info-paragraph"]}`}
-					>
-						{productFetch.description}
-					</p>
-					<div className={classes["product-info__info-rating"]}>
-						<Rating rating={productFetch.rating.avg} />
-					</div>
-				</div>
-				<div
-					className={`${classes["product-info__price"]} ${TextClassList.SEMIBOLD_26}`}
-				>
-					<Price
-						discount={productFetch.discount}
-						price={productFetch.price}
-					/>
-				</div>
-			</div>
-
-			<ProductActions
-				className={classes["product-info-action"]}
-				productsId={productFetch.id}
-			/>
+		<div className={classes["attributes"]}>
+			{transformAttribute &&
+				transformAttribute.length > 0 &&
+				transformAttribute.map((item, i) => (
+					<React.Fragment key={i}>
+						<div className={`${classes["attributes__name"]}`}>
+							{capitalizeAndSeparateWords(item.name)}
+						</div>
+						<div className={`${classes["attributes__value"]}`}>
+							{item.value}
+						</div>
+					</React.Fragment>
+				))}
 		</div>
 	);
-}
+};
+export default Page;

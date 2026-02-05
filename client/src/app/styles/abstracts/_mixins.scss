@@ -1,6 +1,6 @@
 @mixin heading-base-style {
 	font-weight: 500;
-	color: var(--black-900);
+	// color: var(--black-900);
 }
 @mixin heading-1-style {
 	@include heading-base-style;
@@ -80,7 +80,6 @@
 	font-family: "Inter";
 	font-weight: 400;
 }
-
 @mixin text-regular-26-style {
 	@include text-regular-base-style;
 	font-size: 26px;

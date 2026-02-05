@@ -2,13 +2,9 @@
 
 import Image from "next/image";
 import classes from "./Banner.module.scss";
-import { TextClassList } from "@/types/textClassList.enum";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import React, { FC } from "react";
-import BannerTitle from "./components/BannerTitle";
-import BannerSpan from "./components/BannerSpan";
-import BannerParagraph from "./components/BannerParagraph";
 
 const Page: FC = async (props: any) => {
 	const src = "https://placehold.co/800";

@@ -1,0 +1,40 @@
+.cart-header {
+	display: grid;
+	align-items: center;
+	padding-bottom: 24px;
+	position: relative;
+
+	&::before {
+		position: absolute;
+		content: "";
+		width: 100%;
+		height: 1px;
+		left: 0;
+		bottom: 0;
+		background: var(--black-300);
+	}
+
+	&:first-child {
+		text-align: start;
+	}
+
+	@media screen and (min-width: 768px) {
+		text-align: center;
+		grid-template-columns: 1fr repeat(3, 125px);
+
+		:first-child,
+		:nth-child(2) {
+			text-align: start;
+		}
+		:nth-child(3) {
+			text-align: center;
+		}
+		:last-child {
+			text-align: end;
+		}
+	}
+
+	@media screen and (min-width: 1024px) {
+		grid-template-columns: 3fr repeat(3, 180px);
+	}
+}

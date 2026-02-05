@@ -20,6 +20,7 @@ import validatorSchemaHandler from "@/lib/validator/appSchemaHandler";
 import Checkbox from "./inputs/Checkbox";
 import { it } from "node:test";
 import { FormProvider } from "./context/useFormContext";
+import InputFile from "./inputs/InputFile";
 
 export type FormOnSubmitParams = (
 	data: { data: any },
@@ -68,8 +69,6 @@ const Form = <T extends ZodRawShape>({
 		setErrorMessages(error);
 
 		if (!hasErrors && onSubmit) {
-			console.log(true);
-
 			const inputElements = event.currentTarget.querySelectorAll("input");
 			const textareaElements =
 				event.currentTarget.querySelectorAll("textarea");
@@ -96,6 +95,8 @@ const Form = <T extends ZodRawShape>({
 
 	const onChangeHandler = (event: FormEvent<HTMLFormElement>) => {
 		const target = event.target as HTMLInputElement;
+
+		// console.log(target.files);
 
 		switch (target.type) {
 			case "radio":
@@ -135,6 +136,7 @@ const Form = <T extends ZodRawShape>({
 			if (typeof child.type === "function") {
 				switch (child.type) {
 					case InputDefault:
+					case InputFile:
 					case InputTextArea:
 					case InputHidden:
 						const inputChild = child as ReactElement<InputType>;
@@ -167,6 +169,9 @@ const Form = <T extends ZodRawShape>({
 						return React.cloneElement(inputRadioChild, {
 							value: radioValue,
 						});
+					case InputFile:
+						console.log(child);
+
 					default:
 						const childTypeFunction = child.type as Function;
 						const clonedElement = childTypeFunction(
@@ -212,6 +217,7 @@ const Form = <T extends ZodRawShape>({
 
 export default Object.assign(Form, {
 	InputDefault: InputDefault,
+	InputFile: InputFile,
 	InputTextArea: InputTextArea,
 	InputHidden: InputHidden,
 	Radio: Radio,

@@ -47,6 +47,7 @@ import { LoginMiddleware } from "./middleware/login.middleware";
 	controllers: [AppController],
 	providers: [AppService, LocalStrategy, JwtStrategy, JwtModule],
 })
+
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer.apply(ChangePasswordMiddleware).forRoutes({

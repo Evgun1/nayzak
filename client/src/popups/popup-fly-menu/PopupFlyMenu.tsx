@@ -31,7 +31,7 @@ const PopupFlyMenu: FunctionComponent<PopupFlyMenuProps> = () => {
 		if (credentials !== null) return route.push("/profile");
 
 		dispatch(popupActions.toggle(<PopupAuth />));
-	}, [dispatch]);
+	}, [dispatch, credentials, route]);
 
 	return (
 		<div

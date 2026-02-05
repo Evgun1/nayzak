@@ -1,23 +1,6 @@
-import classes from "./Product.module.scss";
-import Skeleton from "@/components/skeleton/Skeleton";
+import InfoSkeleton from "./skeleton/InfoSkeleton";
 
 const Loading = () => {
-	return (
-		<div className={classes["loading"]}>
-			<div className={classes["loading__grid"]}>
-				<Skeleton className={classes["loading__grid-item"]} />
-				<Skeleton className={classes["loading__grid-item"]} />
-				<Skeleton className={classes["loading__grid-item"]} />
-				<Skeleton className={classes["loading__grid-item"]} />
-				<Skeleton className={classes["loading__grid-item"]} />
-			</div>
-
-			<div className={classes["loading__grid"]}>
-				<Skeleton className={classes["loading__grid-item"]} />
-				<Skeleton className={classes["loading__grid-item"]} />
-			</div>
-		</div>
-	);
+	return <InfoSkeleton />;
 };
-
 export default Loading;

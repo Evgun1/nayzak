@@ -1,0 +1,27 @@
+.cart-summary {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	// padding: 52px 0;
+	&__content {
+		grid-column: 2 / 3;
+		display: grid; 
+		gap: 12px;
+		border: 1px solid var(--black-300);
+		border-radius: 6px;
+		max-width: 538px;
+		width: 100%;
+		padding: 24px;
+	}
+
+	// &__info {
+	// 	display: flex;
+	// 	align-items: center;
+	// 	justify-content: space-between;
+	// }
+
+	&__price {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+}

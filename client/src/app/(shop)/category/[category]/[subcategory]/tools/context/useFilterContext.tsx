@@ -22,6 +22,7 @@ import { FilterAttributesState } from "../../@filter/components/FilterList";
 import filterAttributesHandler from "../filterAttributesHandler";
 import { useAppDispatch, useAppSelector } from "@/redux/redux";
 import { PopupLocalProvider } from "@/components/popup-local/tool/usePopupLocalContext";
+import { SearchParams } from "next/dist/server/request/search-params";
 
 type TFilterChips = {
 	name: string;
@@ -50,7 +51,7 @@ const FilterContext = createContext<SidebarContextItem | null | undefined>(
 export const FilterProvider: FC<{
 	children: ReactNode;
 	filter?: ReactNode;
-	searchParams: Record<string, string>;
+	// searchParams: SearchParams;
 }> = ({ children, filter }) => {
 	const dispatch = useAppDispatch();
 	const searchParam = useSearchParams();
@@ -84,9 +85,8 @@ export const FilterProvider: FC<{
 
 	const fetchAttributesHandler = useCallback(
 		async (searchParams: URLSearchParams) => {
-			const attributes = await appAttributeBySubcategoryHandler(
-				searchParams,
-			);
+			const attributes =
+				await appAttributeBySubcategoryHandler(searchParams);
 			if (!attributes) return;
 
 			const filterAttributes = filterAttributesHandler(
@@ -168,7 +168,7 @@ export const FilterProvider: FC<{
 
 		[urlSearchParamsMemo, responsive],
 	);
-    
+
 	useEffect(() => {
 		if (!responsive.isMobile) return;
 		if (showFilter) {
@@ -186,7 +186,7 @@ export const FilterProvider: FC<{
 			route.push(`?${query}`);
 		}, 500);
 	}, [query, route]);
-	
+
 	return (
 		<FilterContext.Provider
 			value={{

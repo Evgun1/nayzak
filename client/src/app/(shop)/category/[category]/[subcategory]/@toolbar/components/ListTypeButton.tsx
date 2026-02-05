@@ -2,24 +2,25 @@
 
 import classes from "./ListTypeButton.module.scss";
 import IconsIdList from "@/components/icons/IconsIdList";
-import { useSearchParams } from "next/navigation";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { TypeList } from "./SelectTypeList";
 import Link from "next/link";
 import DisplayIcon from "@/components/icons/displayIcon";
 import { cookies } from "next/headers";
+import { SearchParams } from "next/dist/server/request/search-params";
 
 type ListTypeButtonProps = {
 	icon: IconsIdList;
 	typeList: string;
-	searchParams: Record<string, any>;
+	searchParams: SearchParams;
 };
 
-const ListTypeButton: FC<ListTypeButtonProps> = (props) => {
-	const { icon, typeList, searchParams } = props;
-	const urlSearchParams = new URLSearchParams(searchParams);
+const ListTypeButton: FC<ListTypeButtonProps> = async (props) => {
+	const { icon, typeList } = props;
+	const searchParams = await props.searchParams;
+	const urlSearchParams = new URLSearchParams(searchParams.toString());
 
-	const cookiesStorage = cookies();
+	const cookiesStorage = await cookies();
 	const defaultListType = cookiesStorage.get("default-list-type");
 
 	urlSearchParams.set("list_type", typeList);

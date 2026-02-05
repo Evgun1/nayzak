@@ -6,16 +6,18 @@ import ProductGridHeader from "./components/ProductGridHeader";
 import dynamic from "next/dynamic";
 import LoaderProducts from "@/components/loader/products/LoaderProducts";
 import { FC } from "react";
+import { SearchParams } from "next/dist/server/request/search-params";
 
-const ProductGridHeaderDynamic = dynamic(
-	() => import("./components/ProductGridHeader"),
-	{ ssr: false },
-);
+// const ProductGridHeaderDynamic = dynamic(
+// 	() => import("./components/ProductGridHeader"),
+// 	{ ssr: false },
+// );
 
 type ProductGridProps = {
-	searchParams: Record<string, any>;
+	searchParams: Promise<SearchParams>;
 };
-const Page: FC<ProductGridProps> = ({ searchParams }) => {
+const Page: FC<ProductGridProps> = async (props) => {
+	const searchParams = await props.searchParams;
 	return (
 		<LoaderProducts
 			limit={8}

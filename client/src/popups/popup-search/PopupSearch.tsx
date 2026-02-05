@@ -5,7 +5,6 @@ import DisplayIcon from "../../components/icons/displayIcon";
 import classes from "./PopupSearch.module.scss";
 import { useState } from "react";
 
-import { useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/redux/redux";
 
 import ProductList from "../../components/products-list/ProductList";
@@ -19,7 +18,6 @@ const PopupSearch = () => {
 	const [message, setMessage] = useState<string>();
 	const [count, setCount] = useState<number>(0);
 	const [totalCount, setTotalCount] = useState<number>();
-	const searchParams = useSearchParams();
 
 	const togglePopupHandler = () => {
 		dispatch(popupActions.toggle(null));
@@ -36,7 +34,7 @@ const PopupSearch = () => {
 					`Product not found with this value: "${urlSearchParams.get(
 						"search",
 					)}"`,
-			  )
+				)
 			: setMessage(undefined);
 
 		setProductsArray(products);

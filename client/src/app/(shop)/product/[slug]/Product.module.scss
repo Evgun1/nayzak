@@ -1,0 +1,14 @@
+.product {
+	display: flex;
+	flex-direction: column;
+	gap: 104px;
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+		@media screen and (min-width: 1024px) {
+			gap: 82px;
+			flex-direction: row;
+		}
+	}
+}

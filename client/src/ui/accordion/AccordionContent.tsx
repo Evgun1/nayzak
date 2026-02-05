@@ -88,7 +88,7 @@ const AccordionContent: FunctionComponent<AccordionContentProps> = (props) => {
 				}
 			}
 		},
-		[accordionId],
+		[accordionId, setActiveId],
 	);
 
 	const childrenRecursion = (children: ReactNode): ReactNode => {

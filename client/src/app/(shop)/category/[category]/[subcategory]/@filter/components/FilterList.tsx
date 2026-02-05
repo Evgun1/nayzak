@@ -8,6 +8,7 @@ import PopupResultFilter from "./PopupResultFilter";
 import FilterListPreview from "./FilterListPreview";
 import dynamic from "next/dynamic";
 import { useAppSelector } from "@/redux/redux";
+import { SearchParams } from "next/dist/server/request/search-params";
 
 const FilterListPreviewDynamic = dynamic(() => import("./FilterListPreview"));
 export type FilterAttributesItem = {
@@ -22,7 +23,7 @@ type FindFilterInitState = Record<string, string[]>;
 type FilterListProps = {
 	price: { minPrice: number; maxPrice: number };
 	attributes: FilterAttributesState;
-	searchParams: Record<string, string>;
+	searchParams: SearchParams;
 };
 
 const FilterList: FC<FilterListProps> = (props) => {
@@ -42,7 +43,9 @@ const FilterList: FC<FilterListProps> = (props) => {
 		const result: FindFilterInitState = {};
 		for (const key in props.searchParams) {
 			if (!key) continue;
-			result[key] = props.searchParams[key].split(",");
+			if (typeof props.searchParams[key] === "string") {
+				result[key] = props.searchParams[key].split(",");
+			}
 		}
 
 		setFindFilterState(result);
@@ -177,13 +180,12 @@ const FilterList: FC<FilterListProps> = (props) => {
 				onChange={onChangeCallback}
 				className={classes["filter-list__form"]}
 			>
-				{responsive.isDesktop ||
-					(responsive.isTablet && (
-						<PopupResultFilter
-							findFilter={findFilterState}
-							lastTargetId={lastTargetId ?? ""}
-						/>
-					))}
+				{(responsive.isDesktop || responsive.isTablet) && (
+					<PopupResultFilter
+						findFilter={findFilterState}
+						lastTargetId={lastTargetId ?? ""}
+					/>
+				)}
 
 				{filterListPreviewElementMemo}
 			</Form>

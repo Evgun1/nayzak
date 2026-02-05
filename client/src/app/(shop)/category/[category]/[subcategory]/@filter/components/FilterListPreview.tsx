@@ -1,20 +1,9 @@
 "use client";
-import {
-	ChangeEvent,
-	FC,
-	RefObject,
-	useCallback,
-	useDebugValue,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { FC, RefObject, useEffect, useRef } from "react";
 import { FilterAttributesItem } from "./FilterList";
 import classes from "./FilterListPreview.module.scss";
 import { TextClassList } from "@/types/textClassList.enum";
 import Form from "@/ui/form/Form";
-import { useAppSelector } from "@/redux/redux";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useFilterContext } from "../../tools/context/useFilterContext";
 
 interface FilterListPreviewProps {
@@ -60,7 +49,7 @@ const FilterListPreview: FC<FilterListPreviewProps> = (props) => {
 								!val.active
 									? classes[
 											"filter-list-preview__color-item--disable"
-									  ]
+										]
 									: ""
 							} ${classes["filter-list-preview__color-item"]}`}
 							settingsStyle={{
@@ -94,7 +83,7 @@ const FilterListPreview: FC<FilterListPreviewProps> = (props) => {
 								!val.active
 									? classes[
 											"filter-list-preview__attribute--disable"
-									  ]
+										]
 									: ""
 							}
 							key={i}

@@ -56,7 +56,6 @@ const useFetchProductsById = (
 
 		if (!returnAmount) {
 			setProducts(productsFetch.products);
-
 			return;
 		}
 

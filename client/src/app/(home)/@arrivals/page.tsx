@@ -8,11 +8,11 @@ import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.
 import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import SwiperComponent from "./swiper/Swiper";
 import { FC } from "react";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 
-const SwiperComponentDynamic = dynamic(() => Promise.resolve(SwiperComponent), {
-	ssr: false,
-});
+// const SwiperComponentDynamic = dynamic(() => Promise.resolve(SwiperComponent), {
+// 	ssr: false,
+// });
 const Page: FC = async () => {
 	const productFetch = await appNewProductsGet();
 

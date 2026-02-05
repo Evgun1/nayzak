@@ -28,10 +28,10 @@ export type LoaderProductsParams = {
 const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
 	const { params, searchParams, listType, limit } = props;
 
-	const cookiesStorage = cookies();
+	const cookiesStorage = await cookies();
 	const defaultListType = cookiesStorage.get("default-list-type");
 
-	const urlSearchParams = new URLSearchParams(searchParams);
+	const urlSearchParams = new URLSearchParams(searchParams.toString());
 
 	const listTypeLimits = new Map([
 		["default", "15"],
@@ -51,7 +51,7 @@ const LoaderProducts: FC<LoaderProductsParams> = async (props) => {
 		? (listTypeLimits.get(getListType) as string)
 		: (listTypeLimits.get(
 				listType || (defaultListType?.value ?? "default"),
-		  ) as string);
+			) as string);
 
 	urlSearchParams.set("limit", limit ? limit.toString() : getLimit);
 

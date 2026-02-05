@@ -1,4 +1,3 @@
-
 import { ReactElement } from "react";
 import classes from "./ProductsLayout.module.scss";
 import Skeleton from "@/components/skeleton/Skeleton";
@@ -8,10 +7,7 @@ const Loading = (props: any) => {
 	const productsElementArr: ReactElement[] = [];
 
 	for (let index = 1; index <= 15; index++) {
-		productsElementArr.push(
-
-            <ProductPreviewDefaultSkeleton/>
-		);
+		productsElementArr.push(<ProductPreviewDefaultSkeleton key={index} />);
 	}
 
 	return (

@@ -3,15 +3,14 @@
 .banner {
 	background-color: var(--red-500);
 	display: flex;
-
-	&__img {
-		object-fit: cover;
-	}
-
 	flex-direction: column;
 
 	@media screen and (min-width: 768px) {
 		flex-direction: row;
+	}
+
+	&__img {
+		object-fit: cover;
 	}
 
 	&__img-wrapper {
@@ -61,8 +60,10 @@
 				margin-bottom: 4px;
 
 				@media screen and (min-width: 1024px) {
-					@include mixins.text-semibold-16-style;
 					margin-bottom: 8px;
+				}
+				@media screen and (min-width: 1440px) {
+					@include mixins.text-semibold-16-style;
 				}
 			}
 			&:nth-child(2) {
@@ -74,6 +75,8 @@
 				}
 				@media screen and (min-width: 1024px) {
 					margin-bottom: 8px;
+				}
+				@media screen and (min-width: 1440px) {
 					@include mixins.heading-3-style;
 				}
 			}
@@ -84,6 +87,8 @@
 
 				@media screen and (min-width: 1024px) {
 					margin-bottom: 28px;
+				}
+				@media screen and (min-width: 1440px) {
 					@include mixins.text-regular-18-style;
 				}
 			}

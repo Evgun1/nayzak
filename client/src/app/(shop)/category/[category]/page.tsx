@@ -6,23 +6,23 @@ import classes from "./SubcategoriesLayout.module.scss";
 import { appSubcategoryByCategoryGet } from "@/lib/api/subcategories";
 import { ISubcategory } from "@/types/subcategories.interface";
 import { getImage, getPlaceholderImage } from "@/tools/getPlaceholderImage";
-import { SubcategoryPreviewItem } from "./components/SubcategoryPreview";
-import dynamic from "next/dynamic";
-import SubcategoriesSkeleton from "./components/SubcategoriesSkeleton";
+import SubcategoryPreview, {
+	SubcategoryPreviewItem,
+} from "./components/SubcategoryPreview";
+// import dynamic from "next/dynamic";
+// import SubcategoriesSkeleton from "./components/SubcategoriesSkeleton";
 
-const SubcategoryPreviewDynamic = dynamic(
-	() => import("./components/SubcategoryPreview"),
-	{ ssr: false, loading: () => <SubcategoriesSkeleton /> },
-);
+// const SubcategoryPreviewDynamic = dynamic(
+// 	() => import("./components/SubcategoryPreview"),
+// 	{ ssr: false, loading: () => <SubcategoriesSkeleton /> },
+// );
 
 type SubcategoriesGridProps = {
-	params: { category: string };
+	params: Promise<{ category: string }>;
 };
-
 const Page: FC<SubcategoriesGridProps> = async ({ params }) => {
-	const subcategoriesFetch = await appSubcategoryByCategoryGet(
-		params.category,
-	);
+	const { category } = await params;
+	const subcategoriesFetch = await appSubcategoryByCategoryGet(category);
 
 	const subcategories: Array<SubcategoryPreviewItem> = await Promise.all(
 		subcategoriesFetch.map(async (subcategory) => {
@@ -47,9 +47,9 @@ const Page: FC<SubcategoriesGridProps> = async ({ params }) => {
 			{subcategories &&
 				subcategories.length > 0 &&
 				subcategories.map((subcategory, index) => (
-					<SubcategoryPreviewDynamic
+					<SubcategoryPreview
 						key={index}
-						params={params}
+						params={{ category }}
 						subcategory={subcategory}
 					/>
 				))}

@@ -1,14 +1,14 @@
 "use server";
-import { FC, ReactNode } from 'react';
-import classes from './FilterLayout.module.scss'
-import FilterHeader from './components/FilterHeader';
+import { FC, ReactNode } from "react";
+import classes from "./FilterLayout.module.scss";
+import FilterHeader from "./components/FilterHeader";
+import { SearchParams } from "next/dist/server/request/search-params";
 
 type RootLayoutProps = {
 	children: ReactNode;
-	params: Record<string, string>;
-	searchParams: Record<string, string>;
+	// params: Promise<Record<string, string>>;
+	// searchParams: Promise<SearchParams>;
 };
-
 const FilterLayout: FC<RootLayoutProps> = async (props) => {
 	return (
 		<div className={classes["filter"]}>

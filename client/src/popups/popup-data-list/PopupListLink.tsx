@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/redux";
 import classes from "./PopupListLink.module.scss";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { FunctionComponent, RefObject, useEffect, useRef } from "react";
-import { DispatchSetData } from "@/app/(home)/@products/components/HeaderNavButton";
 import { useSearchParams } from "next/navigation";
 import DisplayIcon from "@/components/icons/displayIcon";
 import IconsIdList from "@/components/icons/IconsIdList";

@@ -7,20 +7,35 @@ import appColorGet from "@/lib/api/color";
 import { capitalizeAndSeparateWords } from "@/tools/capitalizeAndSeparateWords";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { TextClassList } from "@/types/textClassList.enum";
+import { SearchParams } from "next/dist/server/request/search-params";
 
 type FilterButtonsProps = {
-	searchParams: Record<string, any>;
+	searchParams: Promise<SearchParams>;
 };
 
 const Page: FC<FilterButtonsProps> = async (props) => {
-	const { searchParams } = props;
+	const searchParams = await props.searchParams;
 	const urlSearchParams = new URLSearchParams();
 
-	if (searchParams.color) urlSearchParams.set("color", searchParams.color);
-	if (searchParams.manufacturer)
-		urlSearchParams.set("manufacturer", searchParams.manufacturer);
-	if (searchParams.material)
-		urlSearchParams.set("material", searchParams.material);
+	const getStringSearchParams = (searchParams: SearchParams, key: string) => {
+		if (!searchParams[key]) return;
+		if (typeof searchParams[key] === "string") return searchParams[key];
+		return searchParams[key].join(",");
+	};
+
+	const searchParamsColor = getStringSearchParams(searchParams, "color");
+	if (searchParamsColor) urlSearchParams.set("color", searchParamsColor);
+
+	const searchParamsManufacturer = getStringSearchParams(
+		searchParams,
+		"manufacturer",
+	);
+	if (searchParamsManufacturer)
+		urlSearchParams.set("manufacturer", searchParamsManufacturer);
+
+	const searchParamsMaterial = getStringSearchParams(searchParams, "color");
+	if (searchParamsMaterial)
+		urlSearchParams.set("material", searchParamsMaterial);
 
 	if (urlSearchParams.size === 0) return;
 
@@ -73,7 +88,7 @@ const Page: FC<FilterButtonsProps> = async (props) => {
 	}
 
 	function deleteUrlSearchParams(name: string, value: string) {
-		const urlSearchParams = new URLSearchParams(props.searchParams);
+		const urlSearchParams = new URLSearchParams(searchParams.toString());
 		const urlValue = urlSearchParams.get(name);
 		if (!urlValue) return urlSearchParams;
 		const updated = urlValue

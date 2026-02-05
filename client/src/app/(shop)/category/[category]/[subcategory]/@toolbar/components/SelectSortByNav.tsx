@@ -1,8 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useFilterContext } from "../../tools/context/useFilterContext";
-import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import { Select, SelectItem } from "@/ui/select/Select";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
@@ -10,7 +8,6 @@ import { SortDataType } from "./SelectSortBy";
 import { useAppDispatch, useAppSelector } from "@/redux/redux";
 import { ListLinkType, popupActions } from "@/redux/store/popup/popup";
 import PopupListLink from "@/popups/popup-data-list/PopupListLink";
-import { log } from "console";
 
 interface SelectSortByNavProps {
 	label: string;
@@ -43,7 +40,7 @@ const SelectSortByNav: React.FC<SelectSortByNavProps> = (props) => {
 		dispatch(popupActions.toggle(<PopupListLink />));
 	}, [dispatch, data]);
 
-	if (responsive.isDesktop && responsive.isTablet) {
+	if (responsive.isDesktop || responsive.isTablet) {
 		return (
 			<Select
 				label={label}

@@ -2,37 +2,38 @@
 
 import { TextClassList } from "@/types/textClassList.enum";
 import classes from "./CartPreview.module.scss";
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/redux";
 import { changeAmount, removeCart } from "@/redux/store/cart/action";
 import Image from "next/image";
 import Tooltip from "@/ui/tooltip/Tooltip";
 import ButtonCustom from "@/ui/custom-elements/button-custom/ButtonCustom";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
+import { ProductsById } from "@/hooks/useFetchProductByID";
+import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 
 export type CartItemProps = {
 	className: string;
-	title: string;
-	description: string;
-	amount: number;
-	mainPrice: number;
-	productID: number;
-	Media: { src: string; alt: string; blurSrc: string };
+	product: ProductsById;
 };
 
-export default function CartPreview({
-	className,
-	title,
-	description,
-	amount,
-	mainPrice,
-	productID,
-	Media,
-}: CartItemProps) {
+export default function CartPreview({ className, product }: CartItemProps) {
 	const responsive = useAppSelector((state) => state.responsive);
 	const dispatch = useAppDispatch();
-	const [quantity, setQuantity] = useState(amount ?? 1);
-
+	const [quantity, setQuantity] = useState(product.amount ?? 1);
+	const [cart, setCart] = useState<{
+		productId: number;
+		amount: number;
+		description: string;
+		title: string;
+		price: number;
+		subtotalPrice: number;
+		Media: {
+			alt: string;
+			blurSrc: string;
+			src: string;
+		};
+	}>();
 	const buttonChangeQuantity = useCallback(
 		(event: MouseEvent) => {
 			const currentTarget = event.currentTarget;
@@ -47,19 +48,42 @@ export default function CartPreview({
 		},
 		[quantity],
 	);
+	const btnRemoveProductCart = useCallback(() => {
+		if (!cart) return;
+		dispatch(removeCart(cart.productId));
+	}, [cart, dispatch]);
 
-	const btnRemoveProductCart = () => {
-		dispatch(removeCart(productID));
-	};
+	useEffect(() => {
+		(async () => {
+			const media = product.Media[0];
+			const placeholder = await getPlaceholderImage(media.src);
+			const price = Math.round(
+				product.price - product.price * (product.discount / 100),
+			);
+			setCart({
+				productId: product.id,
+				amount: product.amount as number,
+				description: product.description,
+				title: product.title,
+				price,
+				subtotalPrice: Math.round(price * (product.amount as number)),
+				Media: {
+					alt: media.name,
+					blurSrc: placeholder.placeholder,
+					src: media.src,
+				},
+			});
+			return {};
+		})();
+	}, [product]);
 
 	useEffect(() => {
 		dispatch(
-			changeAmount({ id: NaN, amount: quantity, productsId: productID }),
+			changeAmount({ id: NaN, amount: quantity, productsId: product.id }),
 		);
-	}, [dispatch, quantity, productID]);
+	}, [dispatch, quantity, product.id]);
 
-	const price = Math.round(mainPrice);
-	const subtotalPrice = Math.round(mainPrice * (amount as number));
+	if (!cart) return;
 
 	return (
 		<div className={`${classes["cart-preview"]} ${className}`}>
@@ -69,9 +93,9 @@ export default function CartPreview({
 					loading="eager"
 					fill
 					placeholder="blur"
-					blurDataURL={Media.blurSrc}
-					src={Media.src}
-					alt={Media.alt}
+					blurDataURL={cart.Media.blurSrc}
+					src={cart.Media.src}
+					alt={cart.Media.alt}
 				/>
 			</div>
 			<div className={classes["cart-preview__content"]}>
@@ -79,7 +103,7 @@ export default function CartPreview({
 				<LinkCustom
 					className={classes["cart-preview__title"]}
 					href={{
-						endpoint: `product/${title.toLowerCase()}-p${productID}`,
+						endpoint: `product/${cart.title.toLowerCase()}-p${cart.productId}`,
 					}}
 					styleSettings={{
 						color: "DARK",
@@ -87,11 +111,11 @@ export default function CartPreview({
 						size: "SMALL",
 					}}
 				>
-					{title}
+					{cart.title}
 				</LinkCustom>
 
 				<Tooltip className={classes["cart-preview__description"]}>
-					{description}
+					{cart.description}
 				</Tooltip>
 				{/* </div> */}
 				<ButtonCustom
@@ -143,11 +167,11 @@ export default function CartPreview({
 					<span
 						className={`${TextClassList.REGULAR_18} ${classes["cart-preview__price"]}`}
 					>
-						${price}
+						${cart.price}
 					</span>
 				)}
 				<span className={`${classes["cart-preview__subtotal-price"]}`}>
-					${subtotalPrice}
+					${cart.subtotalPrice}
 				</span>
 			</div>
 		</div>

@@ -2,7 +2,7 @@
 
 import classes from "./ProductsLoader.module.scss";
 import LoaderButton from "../LoaderButton";
-import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import { appProductsGet } from "@/lib/api/products";
 import ProductPreviewDefault from "@/components/product-preview/product-preview-default/ProductsPreviewDefault";
 import { ProductPreviewItem } from "@/components/product-preview/ProductPreview.types";
@@ -27,16 +27,14 @@ type LoaderProductsClientProp = {
 	className?: string;
 };
 
-const ProductPreviewDefaultDynamic = dynamic(
-	() =>
-		import(
-			"@/components/product-preview/product-preview-default/ProductsPreviewDefault"
-		),
-	{
-		ssr: false,
-		loading: () => <ProductPreviewDefaultSkeleton />,
-	},
-);
+// const ProductPreviewDefaultDynamic = dynamic(
+// 	() =>
+// 		import("@/components/product-preview/product-preview-default/ProductsPreviewDefault"),
+// 	{
+// 		ssr: false,
+// 		loading: () => <ProductPreviewDefaultSkeleton />,
+// 	},
+// );
 
 const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 	const responsive = useAppSelector((state) => state.responsive);
@@ -149,8 +147,8 @@ const LoaderProductsClient: FC<LoaderProductsClientProp> = (props) => {
 				props.listType
 					? classes[props.listType]
 					: props.listType
-					? classes[props.listType]
-					: ""
+						? classes[props.listType]
+						: ""
 			}`}
 			totalCount={props.productsCount}
 			btnClickHandler={btnClickHandler}
