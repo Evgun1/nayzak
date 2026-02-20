@@ -6,7 +6,7 @@ import Image from "next/image";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import { FC } from "react";
 
-const Page: FC = () => {
+const Page: FC = async () => {
 	return (
 		<div className={classes["trending"]}>
 			<div className={classes["trending__info"]}>

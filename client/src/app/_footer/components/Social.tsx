@@ -1,3 +1,4 @@
+"use client";
 import IconsIdList from "@/components/icons/IconsIdList";
 
 import classes from "./Social.module.scss";

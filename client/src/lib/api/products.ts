@@ -1,9 +1,7 @@
 import { ProductBase } from "@/types/product/productBase";
 import { appFetchGet } from ".";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { CacheItem } from "./interface/appGetFetch.interface";
 import { ProductDetails } from "@/types/product/productDetails";
-import { getPlaceholderImage } from "@/tools/getPlaceholderImage";
 import getIdByParams from "@/tools/getIdByParams";
 
 type AppProductsGetProps = {
@@ -23,6 +21,7 @@ type AppOneProductGetParam = {
 };
 
 const tag = "products";
+
 export const appProductsGet = async ({
 	params,
 	searchParams,

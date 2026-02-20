@@ -3,6 +3,7 @@
 import withPlaiceholder from "@plaiceholder/next";
 
 const nextConfig = {
+	turbopack: {},
 	output: "standalone",
 	// experimental: {
 	// 	workerThreads: false,

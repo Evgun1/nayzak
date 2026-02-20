@@ -14,6 +14,7 @@ const TestComponent = ({ children }: { children: ReactNode }) => {
 	const responsive = useAppSelector((selector) => selector.responsive);
 
 	const responsiveMemo = useMemo(() => responsive, [responsive]);
+	console.log(responsiveMemo.isDesktop);
 
 	return (
 		<React.Fragment>

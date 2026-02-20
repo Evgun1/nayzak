@@ -45,6 +45,7 @@ const PopupListLink: FunctionComponent<PopupDataListProps> = (props) => {
 					onClick={closePopup}
 					className={classes["popup__header-btn"]}
 					styleSettings={{
+						size: "MEDIUM",
 						color: "DARK",
 						icon: { left: "CLOSE" },
 						type: "TEXT",

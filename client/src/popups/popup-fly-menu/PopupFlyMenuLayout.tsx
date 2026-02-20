@@ -72,6 +72,7 @@ const PopupFlyMenuLayout: FunctionComponent<PopupFlyMenuProps> = () => {
 						onClick={() => closeOverlay()}
 						className={classes["popup-menu-layout__header-button"]}
 						styleSettings={{
+							size: "MEDIUM",
 							color: "DARK",
 							fill: "OUTLINE",
 							icon: { left: "CLOSE" },

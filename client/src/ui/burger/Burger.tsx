@@ -25,7 +25,7 @@ const Burger: FunctionComponent<BurgerProps> = (props) => {
 			className={` ${burgerActive ? classes["burger--active"] : ""} ${
 				classes["burger"]
 			}`}
-			styleSettings={{ type: "DEFAULT" }}
+			styleSettings={{ type: "DEFAULT", color: "DARK" }}
 		>
 			<span className={classes["burger__line"]}></span>
 			<span className={classes["burger__line"]}></span>

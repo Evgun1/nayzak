@@ -71,7 +71,7 @@ export default async function RootLayout(
 						<div id="overlay"></div>
 						<div id="notification-container"></div>
 						{/* <Suspense> */}
-							<Header />
+						<Header />
 						{/* </Suspense> */}
 						{/* <HeaderSkeleton></HeaderSkeleton> */}
 						<main>{children}</main>
