@@ -6,25 +6,34 @@ import {
 	Res,
 	ValidationPipe,
 } from "@nestjs/common";
-import { MessagePattern, Payload, Transport } from "@nestjs/microservices";
+import {
+	GrpcMethod,
+	MessagePattern,
+	Payload,
+	Transport,
+} from "@nestjs/microservices";
 import { ProductsService } from "./products.service";
 import { Response } from "express";
 import {
 	ValidationProductsKafkaPayloadDTO,
 	ValidationProductsKafkaRatingPayloadDTO,
-} from "./validation/validationKafkaProducts.dto";
+} from "./validation/validationKafkaProducts";
 import { validationExceptionFactory } from "src/utils/validationExceptionFactory";
-import { ValidationMinMaxPriceParamDTO } from "./validation/validationMinMaxPice.dto";
-import { ValidationProductParamDTO } from "./validation/validationProduct.dto";
+import { ValidationMinMaxPriceArgs } from "./validation/validationMinMaxPice";
+import { ValidationProductParamDTO } from "./validation/validationProduct";
 import {
 	ValidationProductsByParamsParamDTO,
 	ValidationProductsByParamsQueryDTO,
-} from "./validation/validationProductsByParams.dto";
-import { ValidationProductsAllQueryDTO } from "./validation/validationProductsAll.dto";
+} from "./validation/validationProductsByParams";
+import { ValidationProductsAllQueryDTO } from "./validation/validationProductsAll";
+import { GrpcService } from "src/grpc/grpc.service";
 
 @Controller("products")
 export class ProductsController {
-	constructor(private readonly productsService: ProductsService) {}
+	constructor(
+		private readonly productsService: ProductsService,
+		private readonly grpcService: GrpcService,
+	) {}
 
 	@Get()
 	async getProductsAll(
@@ -41,11 +50,11 @@ export class ProductsController {
 		return products;
 	}
 
-	@Get("new-products")
-	async getNewProducts() {
-		const newProducts = await this.productsService.getNewProducts();
-		return newProducts;
-	}
+	// @Get("new-`products")
+	// async getNewProducts() {
+	// 	const newProducts = await this.productsService.getNewProducts();
+	// 	return newProducts;
+	// }`
 
 	@Get("by-params/:categoryId/:subcategoryId")
 	async getProductsByParams(
@@ -67,37 +76,42 @@ export class ProductsController {
 	}
 
 	@Get("min-max-price/:categoryId/:subcategoryId")
-	async getMinMaxPrice(@Param() params: ValidationMinMaxPriceParamDTO) {
+	async getMinMaxPrice(@Param() params: ValidationMinMaxPriceArgs) {
 		const { minPrice, maxPrice } =
 			await this.productsService.getMinMaxPrice(params);
 
 		return { minPrice, maxPrice };
 	}
 
-	@MessagePattern("update.product.rating")
-	async updateRatingProduct(
-		@Payload(
-			new ValidationPipe({
-				exceptionFactory: validationExceptionFactory,
-			}),
-		)
-		payload: ValidationProductsKafkaRatingPayloadDTO,
-	) {
-		await this.productsService.updateRatingProduct(payload);
-	}
+	// @MessagePattern("update.product.rating")
+	// async updateRatingProduct(
+	// 	@Payload(
+	// 		new ValidationPipe({
+	// 			exceptionFactory: validationExceptionFactory,
+	// 		}),
+	// 	)
+	// 	payload: ValidationProductsKafkaRatingPayloadDTO,
+	// ) {
+	// 	await this.productsService.updateRatingProduct(payload);
+	// }
 
-	@MessagePattern("get.products.catalog", Transport.KAFKA)
-	async getProductCatalog(
-		@Payload(
-			new ValidationPipe({
-				exceptionFactory: validationExceptionFactory,
-			}),
-		)
-		payload: ValidationProductsKafkaPayloadDTO,
-	) {
-		const productsKafka =
-			await this.productsService.getProductCatalog(payload);
+	// @MessagePattern("get.products.catalog", Transport.KAFKA)
+	// async getProductCatalog(
+	// 	@Payload(
+	// 		new ValidationPipe({
+	// 			exceptionFactory: validationExceptionFactory,
+	// 		}),
+	// 	)
+	// 	payload: ValidationProductsKafkaPayloadDTO,
+	// ) {
+	// 	const productsKafka =
+	// 		await this.productsService.getProductCatalog(payload);
 
-		return productsKafka;
-	}
+	// 	return productsKafka;
+	// }
+
+	// @GrpcMethod("ReviewServices", "GetAvgRating")
+	// getAvgRating(product_ids: number[]) {
+	// 	return {};
+	// }
 }

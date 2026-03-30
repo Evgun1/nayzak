@@ -24,14 +24,27 @@ import { ValidationReviewsByProductParamsDTO } from "./validation/validationRevi
 import { MessagePattern, Payload } from "@nestjs/microservices";
 import { ValidationKafkaGetRatingByProductPayloadDTO } from "./validation/validationKafkaGetRatingByProduct.dto";
 import { validationExceptionFactory } from "./utils/validationExceptionFactory";
+import { GrpcService } from "./grpc/grpc.service";
 
 @Controller("/")
 export class AppController {
-	constructor(private readonly appService: AppService) {}
+	constructor(
+		private readonly grpc: GrpcService,
+		private readonly appService: AppService,
+	) {}
 	@Get("/health")
 	@HttpCode(200)
 	health() {
 		return "health";
+	}
+
+	@Get("/test")
+	async test() {
+		const t = await this.grpc.getCustomers({ customerIds: [1] });
+
+		console.log(t);
+
+		return "test";
 	}
 
 	@Get("/")

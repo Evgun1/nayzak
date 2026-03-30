@@ -6,6 +6,7 @@ import { ProductDTO } from "../dto/product.dto";
 import { Injectable } from "@nestjs/common";
 import { TProductRatingCache } from "./interface/productRatingCache";
 import { ProductRatingCacheDTO } from "./dto/productsRating.dto";
+import { ProductsModel } from "../products.model";
 
 @Injectable()
 export class ProductsCacheService {
@@ -97,7 +98,7 @@ export class ProductsCacheService {
 			}
 		}
 	}
-	async updateCacheNewProducts(body: NewProductsCacheParam[]) {
+	async updateCacheNewProducts(body: ProductsModel[]) {
 		const allCache = await this.redisService.hGetAll<NewProductsCacheDTO>(
 			this.newProductsCacheKey,
 		);
@@ -147,19 +148,21 @@ export class ProductsCacheService {
 
 		await this.deleteCacheNewProducts(Object.keys(newProducts));
 	}
-	async updateProductCache(body: ProductDTO) {
+	async updateProductCache(body: ProductsModel) {
 		await this.updateCacheNewProducts([
-			{
-				id: body.id,
-				title: body.title,
-				discount: body.discount,
-				price: body.price,
-				createdAt: body.createdAt as Date,
-				Media: body.Media.map((media) => ({
-					src: media.src,
-					name: media.name,
-				})),
-			},
+			// {
+			// 	id: body.id,
+			// 	title: body.title,
+			// 	discount: body.discount || 0,
+			// 	price: body.price,
+			// 	createdAt: body.createdAt as Date,
+			// 	Media: body.Media.map((media) => ({
+			// 		src: media.src,
+			// 		name: media.name,
+			// 	})),
+			// },
+
+			body,
 		]);
 
 		const productCache = await this.redisService.get<ProductCacheDTO>(

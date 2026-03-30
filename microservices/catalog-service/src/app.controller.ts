@@ -21,7 +21,7 @@ import { buffer } from "stream/consumers";
 import { MessagePattern, Payload } from "@nestjs/microservices";
 import { ProductsKafkaDTO } from "./feature/products/dto/productsKafka.dto";
 import { validationExceptionFactory } from "./utils/validationExceptionFactory";
-import { ValidationProductsKafkaPayloadDTO } from "./feature/products/validation/validationKafkaProducts.dto";
+import { ValidationProductsKafkaPayloadDTO } from "./feature/products/validation/validationKafkaProducts";
 import { Response } from "express";
 
 @Controller()

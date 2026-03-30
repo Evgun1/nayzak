@@ -43,6 +43,34 @@ const COLUMN_DATA = [
 const Columns: FC = () => {
 	const responsive = useAppSelector((state) => state.responsive);
 
+	if (responsive.isDesktop) {
+		return (
+			<div className={classes["columns"]}>
+				{COLUMN_DATA &&
+					COLUMN_DATA.length &&
+					COLUMN_DATA.map((data, i) => (
+						<div key={i}>
+							<div className={ButtonClassList.BUTTON_X_SMALL}>
+								{data.title}
+							</div>
+
+							<div className={classes[`columns__body`]}>
+								{data.item.map((item, i) => (
+									<div
+										key={i}
+										className={`${
+											classes[`columns__body-link`]
+										} ${TextClassList.REGULAR_14}`}
+									>
+										{item.title}
+									</div>
+								))}
+							</div>
+						</div>
+					))}
+			</div>
+		);
+	}
 	return (
 		<div className={classes["columns"]}>
 			{COLUMN_DATA &&
@@ -50,35 +78,35 @@ const Columns: FC = () => {
 				COLUMN_DATA.map((data, index) => (
 					<Accordion
 						key={index}
-						visibleBody={responsive.isDesktop}
+						// visibleBody={responsive.isDesktop}
 					>
-						{responsive.isDesktop ? (
+						{/* {responsive.isDesktop ? (
 							<div className={ButtonClassList.BUTTON_X_SMALL}>
 								{data.title}
 							</div>
-						) : (
-							<Accordion.Header
-								className={`${classes[`columns__header`]} ${
-									ButtonClassList.BUTTON_X_SMALL
-								}  `}
-							>
-								<ButtonCustom
-									className={classes[`columns__header-btn`]}
-									styleSettings={{
-										color: "DARK",
-										icon: {
-											right: "CHEVRON",
-										},
+						) : ( */}
+						<Accordion.Header
+							className={`${classes[`columns__header`]} ${
+								ButtonClassList.BUTTON_X_SMALL
+							}  `}
+						>
+							<ButtonCustom
+								className={classes[`columns__header-btn`]}
+								styleSettings={{
+									color: "DARK",
+									icon: {
+										right: "CHEVRON",
+									},
 
-										size: "X_SMALL",
-										type: "TEXT",
-										fill: "SOLID",
-									}}
-								>
-									{data.title}
-								</ButtonCustom>
-							</Accordion.Header>
-						)}
+									size: "X_SMALL",
+									type: "TEXT",
+									fill: "SOLID",
+								}}
+							>
+								{data.title}
+							</ButtonCustom>
+						</Accordion.Header>
+						{/* )} */}
 
 						<Accordion.Body className={classes[`columns__body`]}>
 							{data.item &&

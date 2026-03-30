@@ -8,7 +8,7 @@ export class ProductsAllDTO {
 	title: string;
 	price: number;
 	discount: number;
-	description: string;
+	description?: string;
 	status: $Enums.ProductsStatus;
 	createdAt: Date;
 	constructor(item: ProductsAllDTO) {

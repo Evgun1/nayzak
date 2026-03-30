@@ -2,7 +2,6 @@
 import { useAppSelector } from "@/redux/redux";
 import classes from "./MenuActions.module.scss";
 import React from "react";
-import ActionCart from "@/app/_header/components/action/ActionCart";
 import LinkCustom from "@/ui/custom-elements/link-custom/LinkCustom";
 import IconsIdList from "@/components/icons/IconsIdList";
 import DisplayIcon from "@/components/icons/displayIcon";

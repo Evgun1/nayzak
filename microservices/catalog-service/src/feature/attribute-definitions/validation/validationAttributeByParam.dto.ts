@@ -10,7 +10,7 @@ import {
 	IsString,
 	ValidateNested,
 } from "class-validator";
-import { ValidationProductsAllQueryDTO } from "src/feature/products/validation/validationProductsAll.dto";
+import { ValidationProductsAllQueryDTO } from "src/feature/products/validation/validationProductsAll";
 
 export class ValidationAttributeByParamParamDTO {
 	@IsNotEmpty()

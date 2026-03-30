@@ -1,45 +1,28 @@
-"use server";
+"use client";
+import { useAppSelector } from "@/redux/redux";
+import { FunctionComponent } from "react";
+import HeaderNav from "./components/nav/HeaderNav";
+import HeaderActionLaptop from "./components/action-laptop/HeaderActionLaptop";
+import HeaderActionMobile from "./components/action-mobile/HeaderActionMobile";
 
-import classes from "./Header.module.scss";
+interface HeaderProps {}
 
-import DisplayIcon from "@/components/icons/displayIcon";
-import IconsIdList from "@/components/icons/IconsIdList";
-import Link from "next/link";
-import HeaderAction from "./components/action/HeaderAction";
-import HeaderNavbar from "./components/navbar/HeaderNavbar";
-import dynamic from "next/dynamic";
-import HeaderActionSkeleton from "./components/action/skeleton/HeaderActionSkeleton";
-import TestComponent from "./Test";
+const Header: FunctionComponent<HeaderProps> = () => {
+	const responsive = useAppSelector((state) => state.responsive);
 
-// const HeaderActionDynamic = dynamic(
-// 	() => import("./components/action/HeaderAction"),
-// 	{
-// 		ssr: false,
-// 		loading: () => <HeaderActionSkeleton />,
-// 	},
-// );
-
-const Header = async () => {
+	if (responsive.isDesktop) {
+		return (
+			<>
+				<HeaderNav />
+				<HeaderActionLaptop />
+			</>
+		);
+	}
 	return (
-		<header>
-			<div className="container">
-				<div className={classes["header"]}>
-					<Link
-						href={"/"}
-						className={classes["header__logo"]}
-					>
-						<DisplayIcon
-							className={classes["header__icon"]}
-							iconName={IconsIdList.LOGOTYPE}
-						/>
-					</Link>
-					<TestComponent>
-						<HeaderNavbar />
-						<HeaderAction />
-					</TestComponent>
-				</div>
-			</div>
-		</header>
+		<>
+			<HeaderActionMobile />
+		</>
 	);
 };
+
 export default Header;

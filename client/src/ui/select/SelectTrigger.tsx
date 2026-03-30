@@ -1,10 +1,9 @@
 "use client";
 
 import { FC, ReactNode, useEffect } from "react";
-import ButtonCustom, {
-	StyleSettingsObject,
-} from "../custom-elements/button-custom/ButtonCustom";
+import ButtonCustom from "../custom-elements/button-custom/ButtonCustom";
 import { useSelect } from "./SelectContext";
+import { StyleSettingsObject } from "../custom-elements/classesCustomStyle";
 
 const SelectTrigger: FC<{
 	label: string;

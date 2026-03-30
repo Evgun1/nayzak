@@ -8,10 +8,10 @@ import {
 	ValidationPipe,
 } from "@nestjs/common";
 import { CategoriesService } from "./categories.service";
-import { ValidationCategoryParamParamDTO } from "./validation/validationCategoryByParam.dto";
+import { ValidationCategoryParamParam } from "./validation/validationCategoryByParam.dto";
 import { Transform } from "class-transformer";
 import { Response } from "express";
-import { ValidationQueryDTO } from "src/query/validation/validationQuery.dto";
+import { ValidationQuery } from "src/query/validation/validationQuery.dto";
 import { MessagePattern, Payload } from "@nestjs/microservices";
 import { validationExceptionFactory } from "src/utils/validationExceptionFactory";
 
@@ -20,7 +20,7 @@ export class CategoriesController {
 	constructor(private readonly categoriesService: CategoriesService) {}
 	@Get()
 	async getCategoriesAll(
-		@Query() query: ValidationQueryDTO,
+		@Query() query: ValidationQuery,
 		@Res({ passthrough: true }) res: Response,
 	) {
 		const { categories, categoriesCount } =
@@ -31,7 +31,7 @@ export class CategoriesController {
 	}
 
 	@Get("/:param")
-	async getCategory(@Param() params: ValidationCategoryParamParamDTO) {
+	async getCategory(@Param() params: ValidationCategoryParamParam) {
 		const categories = await this.categoriesService.getCategory(params);
 
 		return categories;

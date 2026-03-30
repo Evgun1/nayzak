@@ -1,0 +1,37 @@
+.header-actions {
+	display: none;
+
+	@media screen and (min-width: 1024px) {
+		display: flex;
+		gap: 20px;
+		max-width: max-content;
+	}
+
+	.header-actions__button {
+		gap: 2px;
+	}
+
+	.header-actions__cart {
+		position: relative;
+		padding-right: 22px;
+
+		.header-actions__cart-amount {
+			right: 0;
+			position: absolute;
+			padding: 0px 6px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-width: 20px;
+			min-height: 20px;
+			background: var(--black-900);
+			color: white;
+			border-radius: 1em;
+
+			font-size: 12px;
+			font-weight: 700;
+			line-height: 10px;
+			text-align: center;
+		}
+	}
+}

@@ -6,9 +6,11 @@ import { JwtModule } from "@nestjs/jwt";
 import { KafkaModule } from "./kafka/kafka.module";
 import { JwtStrategy } from "./strategy/jwt.strategy";
 import { ConfigModule } from "@nestjs/config";
+import { GrpcModule } from "./grpc/grpc.module";
 
 @Module({
 	imports: [
+        GrpcModule,
 		PrismaModule,
 		KafkaModule,
 		JwtModule.register({

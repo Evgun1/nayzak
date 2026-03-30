@@ -12,9 +12,9 @@ import React, {
 import DropDownBody from "./DropDownBody";
 
 import classes from "./DropDown.module.scss";
-import { StyleSettingsObject } from "../custom-elements/button-custom/ButtonCustom";
 import DropDownTrigger from "./DropDownTrigger";
 import DropDownItem from "./DropDownItem";
+import { StyleSettingsObject } from "../custom-elements/classesCustomStyle";
 
 type DropDownProps = {
 	btnCustomSettings?: StyleSettingsObject;

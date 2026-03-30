@@ -1,8 +1,8 @@
 import { QueryService } from "src/query/query.service";
 import { Prisma } from "@prisma/client";
-import { ValidationCategoryParamParamDTO } from "./validation/validationCategoryByParam.dto";
+import { ValidationCategoryParamParam } from "./validation/validationCategoryByParam.dto";
 import { Injectable } from "@nestjs/common";
-import { ValidationQueryDTO } from "src/query/validation/validationQuery.dto";
+import { ValidationQuery } from "src/query/validation/validationQuery.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { promises } from "dns";
 import { ValidationCategoriesUploadDTO } from "./validation/validationCategoriesUpload.dto";
@@ -51,14 +51,11 @@ export class CategoriesService {
 			});
 		});
 
-
-
-
 		// await this.categoriesCache.uploadCategoriesCache(categoriesDTO);
 
 		return { categoriesCount, categories: categoriesDTO };
 	}
-	async getCategory({ param }: ValidationCategoryParamParamDTO) {
+	async getCategory({ param }: ValidationCategoryParamParam) {
 		const args: Prisma.CategoriesFindFirstArgs = {};
 
 		if (!Number.isNaN(+param)) {

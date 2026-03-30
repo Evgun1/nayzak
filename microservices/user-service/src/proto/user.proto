@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package user;
+
+service UserServices {
+  rpc GetCustomers (GetCustomersRequest) returns (GetCustomersResponse){};
+  rpc GetCartsAndAddress (GetCartAndAddressesRequest) returns (GetCartAndAddressesResponse){}
+}
+
+message GetCustomersRequest {
+  repeated int32 customer_ids = 1;
+}
+
+message GetCustomersResponse {
+  repeated GetCustomersItem customers = 1;
+}
+
+message GetCustomersItem {
+  int32  customer_id = 1;
+  string first_name  = 2;
+  string last_name   = 3;
+  bytes  image       = 4;
+}
+
+message GetCartAndAddressesRequest {
+  int32          address_id = 1;
+  repeated int32 cart_ids   = 2;
+}
+
+message GetCartAndAddressesResponse {
+  repeated CartItem carts   = 1;
+  AddressItem       address = 2;
+}
+
+message CartItem {
+  int32 product_id = 1;
+  int32 amount     = 2;
+}
+
+message AddressItem {
+  string city        = 1;
+  string street      = 2;
+  int32  postal_code = 3;
+}

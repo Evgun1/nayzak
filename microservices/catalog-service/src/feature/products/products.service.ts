@@ -1,5 +1,5 @@
 import { NewProductsCacheDTO } from "src/feature/products/cache/dto/newProductsCache.dto";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 
 import { ProductCacheDTO } from "./dto/productCache.dto";
@@ -15,25 +15,25 @@ import { ProductsWhereInput } from "src/prisma/interface/where";
 import {
 	ValidationProductsKafkaPayloadDTO,
 	ValidationProductsKafkaRatingPayloadDTO,
-} from "./validation/validationKafkaProducts.dto";
-import { ValidationMinMaxPriceParamDTO } from "./validation/validationMinMaxPice.dto";
-import { ValidationProductParamDTO } from "./validation/validationProduct.dto";
-import { ValidationProductsAllQueryDTO } from "./validation/validationProductsAll.dto";
-import { ValidationUploadProductBodyDTO } from "./validation/validationProductUpload.dto";
-import { ValidationProductUpdateBodyDTO } from "./validation/validationProductUpdate.dto";
+} from "./validation/validationKafkaProducts";
+import { ValidationMinMaxPriceArgs } from "./validation/validationMinMaxPice";
+import { ValidationProductParamDTO } from "./validation/validationProduct";
+import { ValidationProductsAllQueryDTO } from "./validation/validationProductsAll";
+import { ValidationUploadProductBodyDTO } from "./validation/validationProductUpload";
+import { ValidationProductUpdateBodyDTO } from "./validation/validationProductUpdate";
 import {
 	ValidationProductsByParamsParamDTO,
 	ValidationProductsByParamsQueryDTO,
-} from "./validation/validationProductsByParams.dto";
+} from "./validation/validationProductsByParams";
 import { ProductsKafkaDTO } from "./dto/productsKafka.dto";
 import { ProductsCacheService } from "./cache/productsCache.service";
 import { KafkaService } from "src/kafka/kafka.service";
-import { ProductRatingCacheDTO } from "./cache/dto/productsRating.dto";
-import { IProductCache } from "./cache/interface/productCache";
-import { OrderBy, ProductsOrderBy } from "src/prisma/interface/orderBy";
-import { th } from "@faker-js/faker/.";
-import { ApiSwitchingProtocolsResponse } from "@nestjs/swagger";
+import { ProductsOrderBy } from "src/prisma/interface/orderBy";
 import { QueryService } from "src/query/query.service";
+import { ClientGrpc } from "@nestjs/microservices";
+import { GrpcService } from "src/grpc/grpc.service";
+import { ProductsModel } from "./products.model";
+import { MediaModel } from "src/graphql/models/media.model";
 
 export type GetProductsAllParams = Partial<ValidationProductsByParamsQueryDTO> &
 	Partial<ValidationProductsByParamsParamDTO> &
@@ -42,6 +42,7 @@ export type GetProductsAllParams = Partial<ValidationProductsByParamsQueryDTO> &
 @Injectable()
 export class ProductsService {
 	constructor(
+		private readonly grpc: GrpcService,
 		private readonly queryService: QueryService,
 		private readonly kafka: KafkaService,
 		private readonly productsCache: ProductsCacheService,
@@ -135,19 +136,13 @@ export class ProductsService {
 				orderBy[params.sortBy] = params.sort;
 			}
 		}
-		// const orderBy: ProductsOrderBy =
-		// 	params.sortBy && params.sort
-		// 		? params.searchBy?.includes("pice")
-		// 			? { ["ROUND(price - price * discount / 100)"]: params.sort }
-		// 			: params.searchBy?.includes("rating")
-		// 				? { ProductsRating: { avg: params.sort } }
-		// 				: {
-		// 						[params.sortBy]: params.sort,
-		// 					}
-		// 		: undefined;
 
 		const args = {
-			includes: { Media: { src: true, name: true } },
+			includes: {
+				Media: { src: true, name: true },
+				Categories: { id: true, title: true },
+				Subcategories: { id: true, title: true },
+			},
 			where: where,
 			limit: params.limit,
 			offset,
@@ -156,16 +151,103 @@ export class ProductsService {
 
 		const products = await this.productPrisma.getProducts(args);
 
-		const productsDTO: ProductsAllDTO[] = products.map(
-			(product) =>
-				new ProductsAllDTO({
-					...product,
-					rating: {
-						avg: product.ProductsRating?.avg ?? 0,
-						count: product.ProductsRating?.count ?? 0,
+		const productIds = products.map((i) => i.id);
+		const categoryIds = products.map((i) => i.categoriesId);
+		const subcategoryIds = products.map((i) => i.subcategoriesId);
+
+		const grpcRatingAvg = await this.grpc.reviewService.getAvgRating({
+			productIds,
+		});
+
+		const grpcProductsMedia =
+			await this.grpc.mediaService.getProductsMediaAll({
+				productIds,
+			});
+		const grpcCategoriesMedia =
+			await this.grpc.mediaService.getCategoriesMediaAll({ categoryIds });
+		const grpcSubcategoriesMedia =
+			await this.grpc.mediaService.getSubcategoriesMediaAll({
+				subcategoryIds,
+			});
+
+		const productsDTO = products.reduce((acc, curr) => {
+			const ratingById = grpcRatingAvg.items.find(
+				(item) => item.productId === curr.id,
+			);
+
+			const category = curr.Categories;
+			const subcategory = curr.Subcategories;
+
+			const findMediaProduct = grpcProductsMedia.products.find(
+				(i) => i?.productId === curr.id,
+			);
+			const findMediaCategory = grpcCategoriesMedia.categories.find(
+				(i) => i?.categoryId === curr.categoriesId,
+			);
+			const findMediaSubcategory =
+				grpcSubcategoriesMedia.subcategories.find(
+					(i) => i?.subcategoryId === curr.subcategoriesId,
+				);
+
+			const productsMedia = findMediaProduct?.media.map(
+				(item) =>
+					new MediaModel({
+						src: item.src.toString("base64"),
+						plaiceholder: item.plaiceholder.toString("base64"),
+						alt: item.alt,
+					}),
+			);
+
+			const categoryMedia = findMediaCategory?.media
+				? new MediaModel({
+						alt: findMediaCategory.media.alt,
+						src: findMediaCategory.media.src.toString("base64"),
+						plaiceholder:
+							findMediaCategory.media.plaiceholder.toString(
+								"base64",
+							),
+					})
+				: undefined;
+			const subcategoryMedia = findMediaSubcategory?.media
+				? new MediaModel({
+						alt: findMediaSubcategory.media.alt,
+						src: findMediaSubcategory.media.src.toString("base64"),
+						plaiceholder:
+							findMediaSubcategory.media.plaiceholder.toString(
+								"base64",
+							),
+					})
+				: undefined;
+
+			acc.push(
+				new ProductsModel({
+					...curr,
+					Media: productsMedia,
+					Categories: {
+						id: category.id,
+						title: category.title,
+						Media: categoryMedia,
 					},
+					Subcategories: {
+						id: subcategory.id,
+						title: subcategory.title,
+						Media: subcategoryMedia,
+					},
+
+					rating: ratingById?.avgRating
+						? {
+								avg: ratingById.avgRating,
+								count: grpcRatingAvg.count,
+							}
+						: undefined,
 				}),
-		);
+			);
+
+			return acc;
+		}, [] as ProductsModel[]);
+
+		for (const product of products) {
+		}
 
 		const count = await this.productPrisma.getProductsCount(args);
 
@@ -226,7 +308,6 @@ export class ProductsService {
 
 		const product = await this.prisma.products.findUnique({
 			include: {
-				Media: { select: { src: true, name: true } },
 				Categories: { select: { title: true, id: true } },
 				Subcategories: { select: { title: true, id: true } },
 				ProductsRating: { select: { avg: true, count: true } },
@@ -236,13 +317,58 @@ export class ProductsService {
 		});
 		if (!product) return;
 
+		const ratings = await this.grpc.reviewService.getAvgRating({
+			productIds: [product.id],
+		});
+		const [rating] = ratings.items;
+
+		const grpcProductMedia =
+			await this.grpc.mediaService.getProductsMediaOne({
+				productId: product.id,
+			});
+
+		const media = grpcProductMedia?.media.map(
+			(item) =>
+				new MediaModel({
+					src: item.src.toString("base64"),
+					plaiceholder: item.plaiceholder.toString("base64"),
+					alt: item.alt,
+				}),
+		);
+
+		const categoryMedia =
+			await this.grpc.mediaService.getCategoriesMediaOne({
+				categoryId: product.categoriesId,
+			});
+
 		const productCacheDTO = new ProductCacheDTO({
 			count: productCache?.count ? ++productCache.count : 1,
 			product: {
 				...product,
+				Categories: {
+					id: product.Categories.id,
+					title: product.Categories.title,
+					Media: categoryMedia?.media
+						? {
+								alt: categoryMedia?.media.alt,
+								src: categoryMedia?.media.src.toString(
+									"base64",
+								),
+								plaiceholder:
+									categoryMedia?.media.plaiceholder.toString(
+										"base64",
+									),
+							}
+						: undefined,
+				},
+				Subcategories: {
+					id: product.Subcategories.id,
+					title: product.Subcategories.title,
+				},
+				Media: media,
 				rating: {
-					avg: product.ProductsRating?.avg ?? 0,
-					count: product.ProductsRating?.count ?? 0,
+					avg: rating?.avgRating ?? 0,
+					count: ratings?.count ?? 0,
 				},
 			},
 		});
@@ -262,15 +388,85 @@ export class ProductsService {
 			limit: 6,
 		});
 
+		const ratingsGrpc = await this.grpc.reviewService.getAvgRating({
+			productIds: products.products.map((product) => product.id),
+		});
+
 		const newProductsCacheDTO = products.products.map((product) => {
-			return new NewProductsCacheDTO({
+			const rating = ratingsGrpc.items.find(
+				(item) => item.productId === product.id,
+			);
+
+			return new ProductsModel({
 				...product,
-				Media: product.Media,
+				Categories: {
+					id: product.Categories.id,
+					title: product.Categories.title,
+				},
+				Subcategories: {
+					id: product.Subcategories.id,
+					title: product.Subcategories.title,
+				},
+				rating: rating
+					? {
+							avg: rating.avgRating,
+							count: ratingsGrpc.count,
+						}
+					: undefined,
 			});
 		});
 
-		await this.productsCache.uploadCacheNewProducts(newProductsCacheDTO);
+		// await this.productsCache.uploadCacheNewProducts(newProductsCacheDTO);
 		return newProductsCacheDTO;
+	}
+
+	async getMinMaxPrice(params: ValidationMinMaxPriceArgs) {
+		const { categoryId, subcategoryId } = params;
+
+		const args: Prisma.ProductsFindManyArgs = {
+			select: { price: true, discount: true },
+		};
+
+		if (!Number.isNaN(categoryId) && !Number.isNaN(categoryId)) {
+			args.where = {
+				categoriesId: categoryId,
+				subcategoriesId: subcategoryId,
+			};
+		} else {
+			args.where = {
+				Categories: {
+					id: categoryId,
+				},
+			};
+			args.where = {
+				Subcategories: {
+					id: subcategoryId,
+				},
+			};
+		}
+
+		const products = await this.prisma.products.findMany(args);
+
+		const minPrice = Math.floor(
+			Math.min(
+				...products.map(
+					(value) =>
+						value.price -
+						(value.price * (value.discount ?? 0)) / 100,
+				),
+			),
+		);
+		const maxPrice = Math.floor(
+			Math.max(
+				...products.map(
+					(value) =>
+						value.price -
+						(value.price * (value.discount ?? 0)) / 100,
+				),
+			),
+		);
+
+		return { minPrice, maxPrice };
 	}
 
 	async uploadMany(body: any[]) {
@@ -324,16 +520,27 @@ export class ProductsService {
 			data: { ...body },
 		});
 
-		const productDTO = new ProductDTO({
+		const grpcProductMedia =
+			await this.grpc.mediaService.getProductsMediaOne({
+				productId: product.id,
+			});
+
+		const media = grpcProductMedia?.media.map(
+			(item) =>
+				new MediaModel({
+					src: item.src.toString("base64"),
+					plaiceholder: item.plaiceholder.toString("base64"),
+					alt: item.alt,
+				}),
+		);
+
+		const productDTO = new ProductsModel({
 			...product,
 			rating: {
 				avg: product.ProductsRating?.avg ?? 0,
 				count: product.ProductsRating?.count ?? 0,
 			},
-			Media: product.Media.map((media) => ({
-				src: media.src,
-				name: media.name,
-			})),
+			Media: media,
 		});
 
 		await this.productsCache.updateProductCache(productDTO);
@@ -341,158 +548,110 @@ export class ProductsService {
 		return product;
 	}
 
-	async getMinMaxPrice(params: ValidationMinMaxPriceParamDTO) {
-		const { categoryId, subcategoryId } = params;
+	// async getProductCatalog(payload: ValidationProductsKafkaPayloadDTO) {
+	// 	const { products } = await this.getProductsAll({
+	// 		productsId: payload.productsId,
+	// 	});
+	// 	const productsKafkaDTO = products.map(
+	// 		(product) => new ProductsKafkaDTO({ ...product }),
+	// 	);
+	// 	return productsKafkaDTO;
+	// }
 
-		const args: Prisma.ProductsFindManyArgs = {
-			select: { price: true, discount: true },
-		};
+	// async updateRatingProduct(
+	// 	payload: ValidationProductsKafkaRatingPayloadDTO,
+	// ) {
+	// 	const productsRating = await this.prisma.productsRating.findFirst({
+	// 		where: { Products: { id: payload.productsId } },
+	// 	});
 
-		if (!Number.isNaN(categoryId) && !Number.isNaN(categoryId)) {
-			args.where = {
-				categoriesId: categoryId,
-				subcategoriesId: subcategoryId,
-			};
-		} else {
-			args.where = {
-				Categories: {
-					id: categoryId,
-				},
-			};
-			args.where = {
-				Subcategories: {
-					id: subcategoryId,
-				},
-			};
-		}
+	// 	if (productsRating) {
+	// 		await this.prisma.productsRating.update({
+	// 			where: { id: productsRating.id },
+	// 			data: {
+	// 				avg: payload.avg,
+	// 				count: payload.count,
+	// 			},
+	// 		});
+	// 	} else {
+	// 		const productsRating = await this.prisma.productsRating.create({
+	// 			data: {
+	// 				avg: payload.avg,
+	// 				count: payload.count,
+	// 			},
+	// 		});
 
-		const products = await this.prisma.products.findMany(args);
-
-		const minPrice = Math.floor(
-			Math.min(
-				...products.map(
-					(value) =>
-						value.price -
-						(value.price * (value.discount ?? 0)) / 100,
-				),
-			),
-		);
-		const maxPrice = Math.floor(
-			Math.max(
-				...products.map(
-					(value) =>
-						value.price -
-						(value.price * (value.discount ?? 0)) / 100,
-				),
-			),
-		);
-
-		return { minPrice, maxPrice };
-	}
-
-	async getProductCatalog(payload: ValidationProductsKafkaPayloadDTO) {
-		const { products } = await this.getProductsAll({
-			productsId: payload.productsId,
-		});
-		const productsKafkaDTO = products.map(
-			(product) => new ProductsKafkaDTO({ ...product }),
-		);
-		return productsKafkaDTO;
-	}
-	async updateRatingProduct(
-		payload: ValidationProductsKafkaRatingPayloadDTO,
-	) {
-		const productsRating = await this.prisma.productsRating.findFirst({
-			where: { Products: { id: payload.productsId } },
-		});
-
-		if (productsRating) {
-			await this.prisma.productsRating.update({
-				where: { id: productsRating.id },
-				data: {
-					avg: payload.avg,
-					count: payload.count,
-				},
-			});
-		} else {
-			const productsRating = await this.prisma.productsRating.create({
-				data: {
-					avg: payload.avg,
-					count: payload.count,
-				},
-			});
-
-			await this.updateProduct({
-				id: payload.productsId,
-				productsRatingId: productsRating.id,
-			});
-		}
-
-		const product = await this.getProduct({
-			id: payload.productsId,
-		});
-
-		if (product) {
-			await this.productsCache.updateProductCache(product);
-			await this.clientApi.clearCache("products");
-		}
-
-		// await this.prisma.productsRating.update({
-		// 	where: { },
-		// 	data: {},
-		// });
-
-		// await this.prisma.products.update({
-		// 	where: {
-		// 		id: payload.productsId,
-		// 	},
-		// 	data: {
-		// 		ProductsRating: {
-		// 			update: {
-		// 				data: {
-		// 					avg: payload.avg,
-		// 					count: payload.count,
-		// 				},
-		// 			},
-		// 		},
-		// 	},
-		// });
-		// });
-		// await this.prisma.productsRating.update({
-		// 	where: { id },
-		// 	data: {
-		// 		avg: productsRatingDTO.rating.avg,
-		// 		count: productsRatingDTO.rating.count,
-		// 	},
-		// });
-		// await this.productsCache.uploadCacheProductRating(productsRatingDTO);
-	}
-
-	// @Cron("* * * * * 1")
-	// async checkCachePopularProduct() {
-	// 	const redisKey = "popular-products";
-	// 	const weekAgo = new Date();
-	// 	weekAgo.setDate(weekAgo.getDate() - 7);
-	// 	const cachePopularProducts =
-	// 		await this.redis.hGetAll<PopularProductsCacheDTO>(redisKey);
-
-	// 	const popularProductsFields: string[] = [];
-	// 	if (!cachePopularProducts) return;
-
-	// 	for (const element of cachePopularProducts) {
-	// 		Object.values(element).forEach((data) => {
-	// 			const createCacheAt = new Date(data.updateAt);
-
-	// 			if (createCacheAt <= weekAgo) {
-	// 				Object.keys(element).forEach((field) => {
-	// 					popularProductsFields.push(field);
-	// 				});
-	// 			}
+	// 		await this.updateProduct({
+	// 			id: payload.productsId,
+	// 			productsRatingId: productsRating.id,
 	// 		});
 	// 	}
 
-	// 	if (popularProductsFields.length <= 0) {
-	// 		return await this.redis.hDel(redisKey, popularProductsFields);
+	// 	const product = await this.getProduct({
+	// 		id: payload.productsId,
+	// 	});
+
+	// 	if (product) {
+	// 		await this.productsCache.updateProductCache(product);
+	// 		await this.clientApi.clearCache("products");
 	// 	}
-	// }
+
+	// await this.prisma.productsRating.update({
+	// 	where: { },
+	// 	data: {},
+	// });
+
+	// await this.prisma.products.update({
+	// 	where: {
+	// 		id: payload.productsId,
+	// 	},
+	// 	data: {
+	// 		ProductsRating: {
+	// 			update: {
+	// 				data: {
+	// 					avg: payload.avg,
+	// 					count: payload.count,
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// });
+	// });
+	// await this.prisma.productsRating.update({
+	// 	where: { id },
+	// 	data: {
+	// 		avg: productsRatingDTO.rating.avg,
+	// 		count: productsRatingDTO.rating.count,
+	// 	},
+	// });
+	// await this.productsCache.uploadCacheProductRating(productsRatingDTO);
 }
+
+// @Cron("* * * * * 1")
+// async checkCachePopularProduct() {
+// 	const redisKey = "popular-products";
+// 	const weekAgo = new Date();
+// 	weekAgo.setDate(weekAgo.getDate() - 7);
+// 	const cachePopularProducts =
+// 		await this.redis.hGetAll<PopularProductsCacheDTO>(redisKey);
+
+// 	const popularProductsFields: string[] = [];
+// 	if (!cachePopularProducts) return;
+
+// 	for (const element of cachePopularProducts) {
+// 		Object.values(element).forEach((data) => {
+// 			const createCacheAt = new Date(data.updateAt);
+
+// 			if (createCacheAt <= weekAgo) {
+// 				Object.keys(element).forEach((field) => {
+// 					popularProductsFields.push(field);
+// 				});
+// 			}
+// 		});
+// 	}
+
+// 	if (popularProductsFields.length <= 0) {
+// 		return await this.redis.hDel(redisKey, popularProductsFields);
+// 	}
+// }
+// }

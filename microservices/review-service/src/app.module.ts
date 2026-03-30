@@ -3,19 +3,18 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { KafkaModule } from "./kafka/kafka.module";
 import { RedisModule } from "./redis/redis.module";
-import { MongooseModule } from "@nestjs/mongoose";
-import { ReviewsMongoModule } from "./mongo/reviews/reviewsMongo.module";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule } from "@nestjs/config";
 import { JwtStrategy } from "./strategy/jwt.strategy";
 import { CacheModule } from "./cache/cache.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ClientApiModule } from "./client-api/clientApi.module";
-import { PrismaClient } from "@prisma/client";
 import { MongoModule } from "./mongo/mongo.module";
+import { GrpcModule } from "./grpc/grpc.module";
 
 @Module({
 	imports: [
+		GrpcModule,
 		RedisModule,
 		CacheModule,
 		KafkaModule,

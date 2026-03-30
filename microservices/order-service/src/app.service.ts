@@ -22,6 +22,7 @@ import {
 import { ValidationAddressesUploadBodyDTO } from "./validation/validationAddressesUpload.dto";
 import { ValidationOrderUploadBodyDTO } from "./validation/validationOrderUpload.dto";
 import { OrderDTO } from "./dto/order.dto";
+import { GrpcService } from "./grpc/grpc.service";
 
 @Injectable()
 export class AppService implements OnModuleInit, OnModuleDestroy {
@@ -29,6 +30,7 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 	private catalogKafka: ClientKafka;
 
 	constructor(
+		private readonly grpc: GrpcService,
 		private readonly prisma: PrismaService,
 		private readonly kafka: KafkaService,
 	) {
@@ -48,6 +50,14 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 		await this.userKafka.close();
 	}
 
+	private async createAddresses(inputData: ValidationAddressesUploadBodyDTO) {
+		const addresses = await this.prisma.addresses.create({
+			data: { ...inputData },
+		});
+
+		return addresses;
+	}
+
 	async init(user: IUserJwt) {
 		const order = await this.prisma.orders.findMany({
 			where: { customersId: user.customerId },
@@ -57,14 +67,6 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 
 		return orderDTO;
 	}
-
-	async createAddresses(inputData: ValidationAddressesUploadBodyDTO) {
-		const addresses = await this.prisma.addresses.create({
-			data: { ...inputData },
-		});
-
-		return addresses;
-	}
 	async createOrderMany(inputData: ValidationOrderUploadBodyDTO[]) {
 		const order = await this.prisma.orders.createManyAndReturn({
 			data: inputData,
@@ -73,38 +75,45 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 	}
 
 	async create(body: ValidationOrderKafkaBodyDTO, user: IUserJwt) {
-		const cartAndAddressesKafka = await lastValueFrom(
-			this.userKafka.send<
-				CartAndAddressesKafkaResult,
-				CartAndAddressesKafkaInput
-			>("get.cart.and.addresses.user", {
-				addressesId: body.addressesId,
-				cartId: body.cartId,
-				customersId: user.customerId,
-			}),
-		);
+		const cartsAndAddress = await this.grpc.getCartsAndAddress({
+			addressId: body.addressesId,
+			cartIds: body.cartId,
+		});
 
-		const productsKafka = await firstValueFrom(
-			this.catalogKafka.send<ProductsKafkaResult, ProductsKafkaInput>(
-				"get.products.catalog",
-				{
-					productsId: cartAndAddressesKafka.cart.map(
-						(cart) => cart.productsId,
-					),
-				},
-			),
-		);
+		const products = await this.grpc.getProducts({
+			productIds: cartsAndAddress.carts.map((cart) => cart.productId),
+		});
 
-		if (!cartAndAddressesKafka.addresses) return;
-		if (productsKafka.length <= 0) return;
+		// const cartAndAddressesKafka = await lastValueFrom(
+		// 	this.userKafka.send<
+		// 		CartAndAddressesKafkaResult,
+		// 		CartAndAddressesKafkaInput
+		// 	>("get.cart.and.addresses.user", {
+		// 		addressesId: body.addressesId,
+		// 		cartId: body.cartId,
+		// 		customersId: user.customerId,
+		// 	}),
+		// );
 
-		const addresses = await this.createAddresses(
-			cartAndAddressesKafka.addresses,
-		);
+		// const productsKafka = await firstValueFrom(
+		// 	this.catalogKafka.send<ProductsKafkaResult, ProductsKafkaInput>(
+		// 		"get.products.catalog",
+		// 		{
+		// 			productsId: cartAndAddressesKafka.cart.map(
+		// 				(cart) => cart.productsId,
+		// 			),
+		// 		},
+		// 	),
+		// );
 
-		const orderManyBody = productsKafka.reduce((acc, cur) => {
-			const findCart = cartAndAddressesKafka.cart.find(
-				(cart) => cart.productsId === cur.id,
+		if (!cartsAndAddress.address) return;
+		if (products.length <= 0) return;
+
+		const addresses = await this.createAddresses(cartsAndAddress.address);
+
+		const orderManyBody = products.reduce((acc, cur) => {
+			const findCart = cartsAndAddress.carts.find(
+				(cart) => cart.productId === cur.productId,
 			);
 			if (!findCart) return acc;
 			const totalPrice =
@@ -116,7 +125,7 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 				amount: findCart.amount,
 				customersId: user.customerId,
 				price: totalPrice,
-				productsId: cur.id,
+				productsId: cur.productId,
 			});
 			return acc;
 		}, [] as ValidationOrderUploadBodyDTO[]);

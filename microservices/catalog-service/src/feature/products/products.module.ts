@@ -8,8 +8,11 @@ import { RedisModule } from "src/redis/redis.module";
 import { ProductPrisma } from "./prisma/product.prisma";
 import { ProductsCacheModule } from "./cache/productsCache.module";
 import { KafkaModule } from "src/kafka/kafka.module";
+import { GrpcModule } from "src/grpc/grpc.module";
+import { ProductsResolver } from "./products.resolver";
 @Module({
 	imports: [
+		GrpcModule,
 		KafkaModule,
 		PrismaModule,
 		QueryModule,
@@ -18,7 +21,7 @@ import { KafkaModule } from "src/kafka/kafka.module";
 		ProductsCacheModule,
 	],
 	controllers: [ProductsController],
-	providers: [ProductsService, ProductPrisma],
+	providers: [ProductsResolver, ProductsService, ProductPrisma],
 	exports: [ProductsService],
 })
 export class ProductsModule {}

@@ -14,9 +14,9 @@ export class Review {
 	createAt?: Date;
 	@Prop({ type: Date, default: Date.now })
 	updateAt?: Date;
-	@Prop({ type: Number })
+	@Prop({ type: Number, required: true })
 	customersId: number;
-	@Prop({ type: Number })
+	@Prop({ type: Number, required: true })
 	productsId: number;
 }
 

@@ -1,10 +1,9 @@
 import { Prisma } from "@prisma/client";
-import { ValidationQueryDTO } from "./validation/validationQuery.dto";
+import { ValidationQuery } from "./validation/validationQuery.dto";
 import { ModelArgsMap } from "../prisma/interface/modelArgsMap.type";
 import { ModelMap } from "../prisma/interface/modelMap.type";
 
-export class QueryBuilder<TModel extends keyof typeof Prisma.ModelName> {
-	private model: TModel;
+export class QueryBuilder<TModel extends keyof ModelArgsMap> {
 	private where: ModelArgsMap[TModel]["where"];
 	private orderBy: ModelArgsMap[TModel]["orderBy"];
 	private skip: ModelArgsMap[TModel]["skip"];
@@ -12,7 +11,6 @@ export class QueryBuilder<TModel extends keyof typeof Prisma.ModelName> {
 	private enum: ModelMap[TModel];
 
 	private constructor(model: TModel) {
-		this.model = model;
 		this.enum as typeof this.enum;
 		this.where = {} as typeof this.where;
 		this.orderBy = {} as typeof this.orderBy;
@@ -20,10 +18,8 @@ export class QueryBuilder<TModel extends keyof typeof Prisma.ModelName> {
 		this.take = undefined as typeof this.take;
 	}
 
-	static create<T extends keyof typeof Prisma.ModelName>(
-		model: T,
-	): QueryBuilder<T> {
-		return new QueryBuilder(model);
+	static create<T extends keyof ModelArgsMap>(model: T): QueryBuilder<T> {
+		return new QueryBuilder(model); 
 	}
 
 	private clearArgs() {
@@ -58,7 +54,7 @@ export class QueryBuilder<TModel extends keyof typeof Prisma.ModelName> {
 		}
 	}
 
-	setQuery(query: ValidationQueryDTO) {
+	setQuery(query: ValidationQuery) {
 		this.clearArgs();
 		const { filter, limit, offset, page, search, sort, sortBy, searchBy } =
 			query;

@@ -1,0 +1,46 @@
+.header-skeleton {
+	display: flex;
+	padding: 19px 0;
+	justify-content: space-between;
+	align-items: center;
+
+	&__logo {
+		width: 155px;
+		height: 30px;
+		color: var(--black-900);
+	}
+
+	&__navbar {
+		display: none;
+
+		@media screen and (min-width: 1024px) {
+			display: flex;
+			gap: 40px;
+			&-item {
+				height: 20px;
+				width: 100px;
+				border-radius: 5px;
+			}
+		}
+	}
+
+	&__action {
+		display: flex;
+		gap: 16px;
+
+		@media screen and (min-width: 1024px) {
+			gap: 20px;
+		}
+		&-item {
+			border-radius: 100%;
+			width: 28px;
+			height: 28px;
+			&:last-child {
+				display: none;
+				@media screen and (min-width: 1024px) {
+					display: block;
+				}
+			}
+		}
+	}
+}

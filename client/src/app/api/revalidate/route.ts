@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 	}
 
 	try {
-		revalidateTag(tag);
+		revalidateTag(tag,{});
 		revalidatePath("/", "layout");
 
 		return NextResponse.json({

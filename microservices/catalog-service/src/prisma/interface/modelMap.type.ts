@@ -12,7 +12,12 @@ import {
 export type ModelMap = {
 	Categories: Categories;
 	Media: Media;
-	Products: Products & { Media?: Media[]; ProductsRating?: ProductsRating };
+	Products: Products & {
+		Media: Media[];
+		ProductsRating: ProductsRating;
+		Categories: Categories;
+		Subcategories: Subcategories;
+	};
 	Subcategories: Subcategories;
 	AttributeDefinitions: AttributeDefinitions;
 	ProductsAttribute: ProductsAttribute;

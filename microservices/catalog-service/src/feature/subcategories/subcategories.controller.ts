@@ -11,7 +11,7 @@ import { SubcategoriesService } from "./subcategories.service";
 import { ValidationSubcategoryParamDTO } from "./validation/validationSubcategory.dto";
 import { ValidationSubcategoriesQueryDTO } from "./validation/validationSubcategories.dto";
 import { Response } from "express";
-import { ValidationQueryDTO } from "src/query/validation/validationQuery.dto";
+import { ValidationQuery } from "src/query/validation/validationQuery.dto";
 import { ValidationSubcategoriesByCategoryParamDTO } from "./validation/validationnSubcategoryByCategory.dto";
 
 @Controller("subcategories")
@@ -20,7 +20,7 @@ export class SubcategoriesControllers {
 
 	@Get("/")
 	async getSubcategories(
-		@Query() query: ValidationQueryDTO & ValidationSubcategoriesQueryDTO,
+		@Query() query: ValidationQuery & ValidationSubcategoriesQueryDTO,
 		@Res({ passthrough: true }) res: Response,
 	) {
 		const { subcategories, totalCount } =

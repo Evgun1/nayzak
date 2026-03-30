@@ -7,13 +7,13 @@ import React, {
 	useId,
 	useLayoutEffect,
 } from "react";
-import { StyleSettingsObject } from "../custom-elements/button-custom/ButtonCustom";
 import classes from "./Select.module.scss";
 import { SelectProvider } from "./SelectContext";
 
 import SelectItem from "./SelectItem";
 import SelectBody from "./SelectBody";
 import SelectTrigger from "./SelectTrigger";
+import { StyleSettingsObject } from "../custom-elements/classesCustomStyle";
 
 type SelectComponentProps = {
 	styleSetting: StyleSettingsObject;

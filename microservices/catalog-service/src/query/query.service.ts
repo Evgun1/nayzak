@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
-import { ValidationQueryDTO } from "./validation/validationQuery.dto";
+import { ValidationQuery } from "./validation/validationQuery.dto";
 import { QueryBuilder } from "./query.builder";
 import { ModelArgsMap } from "src/prisma/interface/modelArgsMap.type";
 
@@ -10,9 +10,9 @@ import { ModelArgsMap } from "src/prisma/interface/modelArgsMap.type";
 
 @Injectable()
 export class QueryService {
-	getQuery<T extends keyof typeof Prisma.ModelName>(
+	getQuery<T extends keyof ModelArgsMap>(
 		model: T,
-		query: ValidationQueryDTO,
+		query: ValidationQuery,
 	): ModelArgsMap[T] {
 		const builder = QueryBuilder.create(model);
 		builder.setQuery(query);

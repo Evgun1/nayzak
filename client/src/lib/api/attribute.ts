@@ -1,8 +1,6 @@
-import { useSearchParams } from "next/navigation";
 import { appFetchGet } from ".";
 import { Attribute, IAttribute } from "@/types/attribute.interface";
 import getIdByParams from "@/tools/getIdByParams";
-import { partialRecord } from "zod/v4";
 
 type AttributesAllGetParams = {
 	searchParams?: URLSearchParams;

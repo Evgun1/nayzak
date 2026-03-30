@@ -1,13 +1,11 @@
-import { $Enums } from "@prisma/client";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
 import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 
 import * as bodyParser from "body-parser";
-import { retry } from "rxjs";
-import { PartitionAssigners } from "kafkajs";
 import connectKafkaConsumer from "./kafka/connectKafkaConsumer";
+import { join } from "path/win32";
 
 const PORT = process.env.PORT ?? 3002;
 
@@ -18,6 +16,14 @@ async function bootstrap() {
 	app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
 	connectKafkaConsumer(app);
+	app.connectMicroservice<MicroserviceOptions>({
+		transport: Transport.GRPC,
+		options: {
+			url: "localhost:50052",
+			package: "user",
+			protoPath: join(process.cwd(), "src/proto/user.proto"),
+		},
+	});
 	await app.startAllMicroservices();
 	app.enableCors({
 		// origin: process.env.CORS_URL,

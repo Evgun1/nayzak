@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["multiSchema"]
+    // output   = "../src/generated"
+    // previewFeatures = ["views"]
+}
+
+datasource db {
+    provider = "postgresql"
+    schemas  = ["media"]
+
+    // relationMode = "prisma"
+}
+
+model Media {
+    id                 Int                 @id @default(autoincrement())
+    name               String
+    src                String
+    plaiceholder       String
+    categoriesMedia    CategoriesMedia?
+    subcategoriesMedia SubcategoriesMedia?
+    customersMedia     CustomersMedia?
+    productsMedia      ProductsMedia?
+
+    // @@map("Media")
+    @@schema("media")
+}
+
+model CategoriesMedia {
+    id           Int   @id @default(autoincrement())
+    mediaId      Int   @unique
+    categoriesId Int   @unique
+    Media        Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+    @@schema("media")
+}
+
+model SubcategoriesMedia {
+    id              Int   @id @default(autoincrement())
+    subcategoriesId Int   @unique
+    mediaId         Int   @unique
+    Media           Media @relation(fields: [mediaId], references: [id])
+
+    @@schema("media")
+}
+
+model CustomersMedia {
+    id          Int   @id @default(autoincrement())
+    customersId Int   @unique
+    mediaId     Int   @unique
+    Media       Media @relation(fields: [mediaId], references: [id])
+
+    @@schema("media")
+}
+
+model ProductsMedia {
+    id         Int   @id @default(autoincrement())
+    productsId Int
+    mediaId    Int   @unique
+    Media      Media @relation(fields: [mediaId], references: [id])
+
+    @@schema("media")
+}

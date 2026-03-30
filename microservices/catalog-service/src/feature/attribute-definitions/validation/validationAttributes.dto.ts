@@ -1,11 +1,9 @@
 import { PartialType } from "@nestjs/swagger";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsInt, IsNumber, IsOptional } from "class-validator";
-import { ValidationQueryDTO } from "src/query/validation/validationQuery.dto";
+import { ValidationQuery } from "src/query/validation/validationQuery.dto";
 
-export class ValidationAttributesQueryDTO extends PartialType(
-	ValidationQueryDTO,
-) {
+export class ValidationAttributesQueryDTO extends PartialType(ValidationQuery) {
 	@IsOptional()
 	@Transform(({ value }) => (value as string).split(",").map((i) => +i))
 	@Type(() => Array<Number>)

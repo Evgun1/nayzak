@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package user;
+
+service UserServices {
+  rpc GetCustomers (GetCustomersRequest) returns (GetCustomersResponse){};
+}
+
+message GetCustomersRequest {
+  repeated int32 customer_ids = 1;
+}
+
+message GetCustomersResponse {
+  repeated GetCustomersItem customers = 1;
+}
+
+message GetCustomersItem {
+  int32  customer_id = 1;
+  string first_name  = 2;
+  string last_name   = 3;
+  bytes    image       = 4;
+}

@@ -19,7 +19,7 @@ const LayoutHome: FunctionComponent<LayoutHomeProps> = (props) => {
 		props;
 
 	return (
-		<React.Fragment>
+		<main>
 			{banner}
 			{arrivals}
 			{categories}
@@ -27,7 +27,7 @@ const LayoutHome: FunctionComponent<LayoutHomeProps> = (props) => {
 			{trending}
 			{packed}
 			{icons}
-		</React.Fragment>
+		</main>
 	);
 };
 

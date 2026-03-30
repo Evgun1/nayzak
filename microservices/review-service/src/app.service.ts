@@ -6,7 +6,6 @@ import { ValidationQueryDTO } from "./validation/validationQuery.dto";
 import { ValidationGetReviewsQueryDTO } from "./validation/validationGetReviews.dto";
 import { ClientKafka } from "@nestjs/microservices";
 import { ValidationReviewsByProductParamsDTO } from "./validation/validationReviewsByProduct.dto";
-import { firstValueFrom } from "rxjs";
 import {
 	CustomerKafkaInput,
 	CustomerKafkaResult,
@@ -22,6 +21,7 @@ import { ClientApiService } from "./client-api/clientApi.service";
 import { ReviewDTO } from "./dto/reviews.dto";
 import { TProductRatingInput } from "./type/kafkaUpdateProductRating.type";
 import { ValidationKafkaGetRatingByProductPayloadDTO } from "./validation/validationKafkaGetRatingByProduct.dto";
+import { firstValueFrom } from "rxjs";
 
 type GetReviewsAllParam = ValidationQueryDTO &
 	ValidationGetReviewsQueryDTO &
@@ -228,4 +228,6 @@ export class AppService implements OnModuleInit {
 		}
 		return result;
 	}
+
+	async test() {}
 }

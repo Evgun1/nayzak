@@ -24,9 +24,10 @@ import { CredentialsModule } from "./feature/credentials/credentials.module";
 import { ChangePasswordMiddleware } from "./middleware/changePassword.middleware";
 import { RegistrationMiddleware } from "./middleware/registration.middleware";
 import { LoginMiddleware } from "./middleware/login.middleware";
-
+import { GrpcModule } from "./grpc/grpc.module";
 @Module({
 	imports: [
+		GrpcModule,
 		CredentialsModule,
 		CreateUsersModule,
 		AddressesModel,
@@ -47,7 +48,6 @@ import { LoginMiddleware } from "./middleware/login.middleware";
 	controllers: [AppController],
 	providers: [AppService, LocalStrategy, JwtStrategy, JwtModule],
 })
-
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer.apply(ChangePasswordMiddleware).forRoutes({

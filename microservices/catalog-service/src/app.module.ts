@@ -12,11 +12,18 @@ import { MediaModule } from "./feature/media/media.module";
 import { AttributeDefinitionsModule } from "./feature/attribute-definitions/attributeDefinitions.module";
 import { CloudinaryModule } from "./cloudinary/cloudinary.module";
 import { KafkaModule } from "./kafka/kafka.module";
-import { RouterModule } from "@nestjs/core";
-import { RouterProxy } from "@nestjs/core/router/router-proxy";
+import { GrpcModule } from "./grpc/grpc.module";
+import { GraphQLModule } from "@nestjs/graphql";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 
 @Module({
 	imports: [
+		GraphQLModule.forRoot<ApolloDriverConfig>({
+			driver: ApolloDriver,
+			autoSchemaFile: true,
+			playground: true,
+		}),
+		GrpcModule,
 		KafkaModule,
 		CloudinaryModule,
 		FakerModule,

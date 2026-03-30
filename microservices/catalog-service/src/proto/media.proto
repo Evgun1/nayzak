@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package media;
+
+service MediaService {
+  rpc GetCategoriesMediaAll (GetCategoriesMediaAllRequest) returns (GetCategoriesMediaOneResponse){}
+  rpc GetCategoriesMediaOne (GetCategoriesMediaOneRequest) returns (GetCategoriesMediaAllResponse){}
+
+  rpc GetSubcategoriesMediaAll (GetSubcategoriesMediaAllRequest) returns (GetSubcategoriesMediaAllResponse){}
+  rpc GetSubcategoriesMediaOne (GetSubcategoriesMediaOneRequest) returns (GetSubcategoriesMediaOneResponse){}
+
+  rpc GetProductsMediaAll (GetProductsMediaAllRequest) returns (GetProductsMediaAllResponse){}
+  rpc GetProductsMediaOne (GetProductsMediaOneRequest) returns (GetProductsMediaOneResponse){}
+
+  rpc GetCustomersMediaAll (GetCustomersMediaAllRequest) returns (GetCustomersMediaAllResponse){}
+  rpc GetCustomersMediaOne (GetCustomersMediaOneRequest) returns (GetCustomersMediaOneResponse){}
+}
+
+message MediaItem {
+  int32  id           = 1;
+  string src          = 2;
+  string alt          = 3;
+  string plaiceholder = 4;
+}
+
+message GetProductsMediaOneRequest {
+  int32 product_id = 1;
+}
+
+message GetProductsMediaOneResponse {
+  int32              product_id = 1;
+  repeated MediaItem media      = 2;
+}
+
+message GetProductsMediaAllRequest {
+  repeated int32 product_ids = 1;
+}
+
+message GetProductsMediaAllResponse {
+  repeated GetProductsMediaOneResponse products = 1;
+}
+
+message GetCategoriesMediaOneRequest {
+  int32 category_id = 1;
+}
+
+message GetCategoriesMediaOneResponse {
+  int32     category_id = 1;
+  MediaItem media       = 2;
+}
+
+message GetCategoriesMediaAllRequest {
+  repeated int32 category_ids = 1;
+}
+
+message GetCategoriesMediaAllResponse {
+  repeated GetCategoriesMediaOneResponse categories = 1;
+}
+
+message GetSubcategoriesMediaOneRequest {
+  int32 subcategory_id = 1;
+}
+
+message GetSubcategoriesMediaOneResponse {
+  int32     subcategory_id = 1;
+  MediaItem media          = 2;
+}
+
+message GetSubcategoriesMediaAllRequest {
+  repeated int32 subcategory_ids = 1;
+}
+
+message GetSubcategoriesMediaAllResponse {
+  repeated GetSubcategoriesMediaOneResponse subcategories = 1;
+}
+
+message GetCustomersMediaOneRequest {
+  int32 customer_id = 1;
+}
+
+message GetCustomersMediaOneResponse {
+  int32     customer_id = 1;
+  MediaItem media       = 2;
+}
+
+message GetCustomersMediaAllRequest {
+  repeated int32 customer_ids = 1;
+}
+
+message GetCustomersMediaAllResponse {
+  repeated GetCustomersMediaOneResponse customers = 1;
+}

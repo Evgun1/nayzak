@@ -1,7 +1,7 @@
 import classes from "./HeaderActionMobile.module.scss";
 import Burger from "@/ui/burger/Burger";
-import ActionCart from "../action/ActionCart";
 import PopupFlyMenuLayout from "@/popups/popup-fly-menu/PopupFlyMenuLayout";
+import ActionCart from "../action-laptop/ActionCart";
 
 const HeaderActionMobile = () => {
 	return (

@@ -86,6 +86,10 @@ model Media {
     Subcategories   Subcategories? @relation(fields: [subcategoriesId], references: [id])
 }
 
+model CategoriesMedia {
+    id Int @id @default(autoincrement())
+}
+
 enum ProductsStatus {
     outOfStock
     inStock

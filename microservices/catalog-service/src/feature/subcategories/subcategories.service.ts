@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ValidationSubcategoryParamDTO } from "./validation/validationSubcategory.dto";
 import { ValidationSubcategoriesQueryDTO } from "./validation/validationSubcategories.dto";
 import { Prisma } from "@prisma/client";
-import { ValidationQueryDTO } from "src/query/validation/validationQuery.dto";
+import { ValidationQuery } from "src/query/validation/validationQuery.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { QueryService } from "src/query/query.service";
 import { th } from "@faker-js/faker/.";
@@ -16,7 +16,7 @@ export class SubcategoriesService {
 	) {}
 
 	async getSubcategories(
-		query: ValidationQueryDTO & ValidationSubcategoriesQueryDTO,
+		query: ValidationQuery & ValidationSubcategoriesQueryDTO,
 	) {
 		const getQuery = this.queryService.getQuery("Subcategories", query);
 

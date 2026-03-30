@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package review ;
+
+import "google/protobuf/timestamp.proto";
+service ReviewServices {
+  rpc GetAvgRating(AvgRatingRequest) returns (AvgRatingResponse){};
+  rpc GetProductReviews (ProductReviewRequest) returns (ProductReviewResponse){};
+
+}
+
+message AvgRatingRequest {
+  repeated int32 product_ids = 1;
+}
+
+message AvgRatingItem {
+  int32 product_id = 1;
+  int32 avg_rating = 2;
+
+}
+message AvgRatingResponse
+{
+  repeated AvgRatingItem items = 1;
+  int32                  count = 2;
+}
+// {
+//   map<string, int32> avg_rating = 1;
+//   map<string, int32> count      = 2;
+// }
+
+message ProductReviewRequest {
+  int32 product_id = 1;
+}
+
+message ProductReviewResponse {
+  repeated ReviewItem reviews     = 1;
+  double              avg_rating  = 2;
+  int32               total_count = 3;
+}
+
+message ReviewItem {
+  string                    full_name  = 1;
+  google.protobuf.Timestamp created_at = 2;
+  string                    text       = 3;
+  int32                     rating     = 4;
+  bytes                     image      = 5;
+}

@@ -1,6 +1,7 @@
+import { FilterQuery } from "mongoose";
 import { IReviewMongo } from "./reviews.type";
 
-export type ReviewMongoWhere = Partial<IReviewMongo>;
+export type ReviewMongoWhere = FilterQuery<IReviewMongo>;
 export type ReviewMongoSort = Partial<
 	Record<keyof IReviewMongo, "asc" | "desc">
 >;
